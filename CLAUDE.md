@@ -143,8 +143,9 @@ Rules:
 
 ```
 pnpm dev          # local dev
-pnpm typecheck    # tsc --noEmit
+pnpm typecheck    # next typegen && tsc --noEmit (run before lint on a fresh clone)
 pnpm lint
+pnpm format       # prettier --write (format:check in CI)
 pnpm test         # vitest
 pnpm test:e2e     # playwright
 pnpm build
