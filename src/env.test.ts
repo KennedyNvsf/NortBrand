@@ -1,9 +1,11 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
-vi.stubEnv("SKIP_ENV_VALIDATION", "1");
-
-const { parsePublicEnv, parseServerEnv, EnvValidationError } =
-  await import("./env");
+import {
+  EnvValidationError,
+  parsePublicEnv,
+  parseServerEnv,
+  validateEnv,
+} from "./env.schema";
 
 const validPublic = {
   NEXT_PUBLIC_SITE_URL: "https://nortbrand.com",
@@ -60,5 +62,26 @@ describe("parseServerEnv", () => {
     expect(() =>
       parseServerEnv({ ...validServer, RESEND_API_KEY: "sk_123" }),
     ).toThrow(/RESEND_API_KEY/);
+  });
+});
+
+describe("validateEnv", () => {
+  it("passes with every variable present", () => {
+    expect(() => {
+      validateEnv({ ...validPublic, ...validServer });
+    }).not.toThrow();
+  });
+
+  it("fails when a server-only variable is missing", () => {
+    const { IP_HASH_SALT: _omit, ...rest } = validServer;
+    expect(() => {
+      validateEnv({ ...validPublic, ...rest });
+    }).toThrow(/IP_HASH_SALT/);
+  });
+
+  it("can be skipped explicitly for tooling", () => {
+    expect(() => {
+      validateEnv({ SKIP_ENV_VALIDATION: "1" });
+    }).not.toThrow();
   });
 });

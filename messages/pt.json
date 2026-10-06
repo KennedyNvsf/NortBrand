@@ -1,0 +1,27 @@
+{
+  "Metadata": {
+    "siteName": "NortBrand",
+    "homeTitle": "NortBrand — Estúdio de design e tecnologia",
+    "homeDescription": "A NortBrand trata o site de uma empresa como um produto, não como um folheto."
+  },
+  "Common": {
+    "skipToContent": "Saltar para o conteúdo",
+    "bookConsultation": "Marcar uma consulta",
+    "sending": "A enviar…",
+    "close": "Fechar"
+  },
+  "LocaleSwitcher": {
+    "label": "Idioma",
+    "en": "English",
+    "pt": "Português"
+  },
+  "Placeholder": {
+    "eyebrow": "Fase 1 · Fundação",
+    "title": "Minimalismo, mas funcional.",
+    "lead": "Esta página provisória comprova o encaminhamento por idioma, o hreflang e os tokens de design. As páginas reais chegam na Fase 2.",
+    "switchLocale": "View in English",
+    "emailLabel": "Endereço de email",
+    "emailPlaceholder": "nome@empresa.pt",
+    "emailError": "Introduza um endereço de email válido"
+  }
+}

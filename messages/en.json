@@ -1,0 +1,27 @@
+{
+  "Metadata": {
+    "siteName": "NortBrand",
+    "homeTitle": "NortBrand — Design and technology studio",
+    "homeDescription": "NortBrand treats a business website as a product, not a brochure."
+  },
+  "Common": {
+    "skipToContent": "Skip to content",
+    "bookConsultation": "Book a Consultation",
+    "sending": "Sending…",
+    "close": "Close"
+  },
+  "LocaleSwitcher": {
+    "label": "Language",
+    "en": "English",
+    "pt": "Português"
+  },
+  "Placeholder": {
+    "eyebrow": "Phase 1 · Foundation",
+    "title": "Minimalism, but functional.",
+    "lead": "This placeholder proves locale routing, hreflang and the design tokens. Real pages arrive in Phase 2.",
+    "switchLocale": "Ver em português",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "you@company.com",
+    "emailError": "Please enter a valid email address"
+  }
+}
