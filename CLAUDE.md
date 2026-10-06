@@ -9,7 +9,7 @@ If anything here conflicts with a later instruction from the developer, ask befo
 ## Project
 
 - **Client:** NortBrand (internal project). **Product:** bilingual (EN/PT) studio website.
-- **Booking** means a *consultation request form*. Visitors submit a request, and the team
+- **Booking** means a _consultation request form_. Visitors submit a request, and the team
   replies within one business day with call times. There is no self-service scheduling
   in this release (ADR-001).
 - **Launch:** 10 November 2026. Week 1 starts 5 October 2026.
@@ -20,22 +20,22 @@ If anything here conflicts with a later instruction from the developer, ask befo
 
 File key `vMnAfadw2GU8sPDU1Ol0hU`. Read page **11 — Handoff** (`389:2`) before building any UI.
 
-| Page | Node |
-| --- | --- |
-| 01 Foundations (tokens, type, color) | `37:3` |
-| 02 Components | `37:4` |
-| 03 Home | `49:2` |
-| 04 Services | `129:2` |
-| 05 Blog | `204:2` |
-| 06 Contact | `278:69` |
-| 07 About | `300:2` |
-| 08 System / States | `320:2` |
-| 09 Legal | `323:2` |
-| 10 Motion Spec | `331:2` |
-| 11 Handoff | `389:2` |
+| Page                                 | Node     |
+| ------------------------------------ | -------- |
+| 01 Foundations (tokens, type, color) | `37:3`   |
+| 02 Components                        | `37:4`   |
+| 03 Home                              | `49:2`   |
+| 04 Services                          | `129:2`  |
+| 05 Blog                              | `204:2`  |
+| 06 Contact                           | `278:69` |
+| 07 About                             | `300:2`  |
+| 08 System / States                   | `320:2`  |
+| 09 Legal                             | `323:2`  |
+| 10 Motion Spec                       | `331:2`  |
+| 11 Handoff                           | `389:2`  |
 
 Never invent colors, type sizes, spacing, radii or shadows. Use the semantic CSS variables
-from the handover. Nav, Footer, CTA Band and Newsletter breakpoint variants are *design states*:
+from the handover. Nav, Footer, CTA Band and Newsletter breakpoint variants are _design states_:
 build each one once, using responsive classes.
 
 ## Stack
@@ -101,7 +101,7 @@ docs/                    README, adr/, runbook
 Client validation → server action → honeypot and minimum-fill-time check → zod → RPC insert →
 Resend team alert (EN) + visitor confirmation (visitor locale) → success state.
 
-- Insert fails: show the designed *Send failed* state and send no email.
+- Insert fails: show the designed _Send failed_ state and send no email.
 - Insert succeeds but email fails: keep the request, log the error (no personal data), and
   still show success.
 
@@ -114,6 +114,7 @@ Server-only: `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`, `RESEND_API_KE
 `RESEND_AUDIENCE_ID`, `NOTIFY_TO_EMAIL`, `IP_HASH_SALT`.
 
 Rules:
+
 - Never prefix a secret with `NEXT_PUBLIC_`.
 - Never commit `.env*` files. Keep `.env.example` up to date, with no values.
 
