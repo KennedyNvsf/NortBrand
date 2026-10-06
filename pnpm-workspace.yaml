@@ -63,4 +63,6 @@ minimumReleaseAgeExclude:
   - eslint-config-next@16.4.0
   - next@16.4.0
   - radix-ui@1.7.0
+  - "@shadcn/registry@0.1.2"
+  - shadcn@4.21.3
 engineStrict: true
