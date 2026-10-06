@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
+import { validateEnv } from "./src/env";
+
+// Fail `next dev` and `next build` early on missing or malformed variables.
+validateEnv();
+
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {
