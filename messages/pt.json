@@ -1,27 +1,27 @@
 {
   "Metadata": {
-    "siteName": "NortBrand",
-    "homeTitle": "NortBrand — Estúdio de design e tecnologia",
-    "homeDescription": "A NortBrand trata o site de uma empresa como um produto, não como um folheto."
+    "siteName": "[[NortBrand ~~~]]",
+    "homeTitle": "[[NortBrand — Design and technology studio ~~~~ ~~~~ ~~~~]]",
+    "homeDescription": "[[NortBrand treats a business website as a product, not a brochure. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]"
   },
   "Common": {
-    "skipToContent": "Saltar para o conteúdo",
-    "bookConsultation": "Marcar uma consulta",
-    "sending": "A enviar…",
-    "close": "Fechar"
+    "skipToContent": "[[Skip to content ~~~~ ~]]",
+    "bookConsultation": "[[Book a Consultation ~~~~ ~~]]",
+    "sending": "[[Sending… ~~]]",
+    "close": "[[Close ~~]]"
   },
   "LocaleSwitcher": {
-    "label": "Idioma",
-    "en": "English",
-    "pt": "Português"
+    "label": "[[Language ~~]]",
+    "en": "[[English ~~]]",
+    "pt": "[[Português ~~~]]"
   },
   "Placeholder": {
-    "eyebrow": "Fase 1 · Fundação",
-    "title": "Minimalismo, mas funcional.",
-    "lead": "Esta página provisória comprova o encaminhamento por idioma, o hreflang e os tokens de design. As páginas reais chegam na Fase 2.",
-    "switchLocale": "View in English",
-    "emailLabel": "Endereço de email",
-    "emailPlaceholder": "nome@empresa.pt",
-    "emailError": "Introduza um endereço de email válido"
+    "eyebrow": "[[Phase 1 · Foundation ~~~~ ~~]]",
+    "title": "[[Minimalism, but functional. ~~~~ ~~~~]]",
+    "lead": "[[This placeholder proves locale routing, hreflang and the design tokens. Real pages arrive in Phase 2. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+    "switchLocale": "[[Ver em português ~~~~ ~]]",
+    "emailLabel": "[[Email address ~~~~]]",
+    "emailPlaceholder": "[[you@company.com ~~~~ ~]]",
+    "emailError": "[[Please enter a valid email address ~~~~ ~~~~ ~~]]"
   }
 }
