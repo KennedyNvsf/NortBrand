@@ -288,6 +288,7 @@ Ticket → Branch → Implement → Validate → Push → Pull Request → Revie
   exactly one H1.
 - Reduced motion is respected.
 - Works in both EN and PT, with `hreflang` and canonical present on every page.
-- Tests added or updated. New pages are added to the shared Playwright harness.
+- Tests added or updated. New pages are added to the shared Playwright harness
+  (`tests/e2e/routes.ts`).
 - README, `docs/tech-debt.md` and this file are updated when they're affected.
 - Typecheck, lint, format:check, tests and build all pass.

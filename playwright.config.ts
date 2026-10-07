@@ -3,7 +3,8 @@ import { defineConfig, devices } from "@playwright/test";
 const PORT = 3000;
 const baseURL = `http://localhost:${PORT}`;
 
-// Set up only in Phase 1. Browsers are installed with `pnpm exec playwright install`.
+// Chromium desktop + WebKit mobile (brief, "Testing"). Install browsers with
+// `pnpm exec playwright install chromium webkit`.
 export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: true,
@@ -13,7 +14,7 @@ export default defineConfig({
   use: { baseURL, trace: "on-first-retry" },
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
-    { name: "mobile", use: { ...devices["Pixel 7"] } },
+    { name: "mobile", use: { ...devices["iPhone 14"] } },
   ],
   webServer: {
     command: "pnpm build && pnpm start",

@@ -27,13 +27,4 @@ test.describe("locale routing", () => {
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
     await context.close();
   });
-
-  test("emits hreflang alternates", async ({ page }) => {
-    await page.goto("/en");
-    for (const hreflang of ["en", "pt", "x-default"]) {
-      await expect(
-        page.locator(`link[rel="alternate"][hreflang="${hreflang}"]`),
-      ).toHaveCount(1);
-    }
-  });
 });

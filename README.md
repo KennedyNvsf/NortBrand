@@ -47,10 +47,24 @@ installs and can lock files during builds.
 | `pnpm lint`                         | ESLint with the Next.js config and strict typescript-eslint, zero warnings allowed. Run `pnpm typecheck` once first so route types exist. |
 | `pnpm format` / `pnpm format:check` | Prettier with Tailwind class sorting.                                                                                                     |
 | `pnpm test`                         | Vitest unit tests (`src/**/*.test.ts`).                                                                                                   |
-| `pnpm test:e2e`                     | Playwright against a production build. Run `pnpm exec playwright install chromium` once first. Needs the env vars.                        |
+| `pnpm test:e2e`                     | Playwright against a production build. Run `pnpm exec playwright install chromium webkit` once first. Needs the env vars.                 |
 
 The pre-commit hook (simple-git-hooks + lint-staged) runs `eslint --fix` and Prettier on
 staged files. If you skip it in an emergency, CI still runs the same checks.
+
+### Page harness
+
+`tests/e2e/pages.spec.ts` runs the per-page checks from the definition of done for every
+route in `tests/e2e/routes.ts`, in both locales, on Chromium desktop and WebKit mobile
+(iPhone 14, 390 px):
+
+- no axe violations for WCAG 2.0, 2.1 and 2.2 A/AA
+- exactly one `h1`, and `<html lang>` matches the locale
+- a canonical link and `hreflang` alternates for `en`, `pt` and `x-default`
+- no horizontal overflow at 390 px
+
+To cover a new page, add one entry to `routes.ts`. Page-specific behavior, such as opening
+a dialog, goes in its own spec file.
 
 ## Environment variables
 
@@ -90,7 +104,7 @@ src/lib/            utilities (cn)
 src/env.ts          validated environment
 src/proxy.ts        locale negotiation for the bare / only (ADR-006)
 messages/           en.json, pt.json
-tests/e2e/          Playwright
+tests/e2e/          Playwright (routes.ts + pages.spec.ts = shared page harness)
 docs/               ADRs, tech debt
 ```
 
