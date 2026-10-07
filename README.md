@@ -48,6 +48,8 @@ installs and can lock files during builds.
 | `pnpm format` / `pnpm format:check` | Prettier with Tailwind class sorting.                                                                                                     |
 | `pnpm test`                         | Vitest unit tests (`src/**/*.test.ts`).                                                                                                   |
 | `pnpm test:e2e`                     | Playwright against a production build. Run `pnpm exec playwright install chromium webkit` once first. Needs the env vars.                 |
+| `pnpm i18n:pseudo`                  | Regenerate `messages/pt.json` from `en.json`, keeping real translations. `--reset` replaces every key.                                    |
+| `pnpm check:release`                | Strict release guard: fails while any pseudo translation remains. Must pass before launch.                                                |
 
 The pre-commit hook (simple-git-hooks + lint-staged) runs `eslint --fix` and Prettier on
 staged files. If you skip it in an emergency, CI still runs the same checks.
@@ -65,6 +67,24 @@ route in `tests/e2e/routes.ts`, in both locales, on Chromium desktop and WebKit 
 
 To cover a new page, add one entry to `routes.ts`. Page-specific behavior, such as opening
 a dialog, goes in its own spec file.
+
+## Translations
+
+`messages/en.json` is the source. Until the professional Portuguese translation arrives,
+`messages/pt.json` holds pseudo strings: the English text wrapped in `[[ ]]` and padded
+about 30% with `~` runs, so longer Portuguese layouts get tested early.
+
+- After adding or changing English keys, run `pnpm i18n:pseudo`. Keys English no longer
+  has are dropped, and new keys become pseudo strings.
+- Real translations in `pt.json` are kept, so partial deliveries from the translator
+  survive. The script cannot tell when the English behind a real translation changes:
+  when you change the meaning of an English string, delete its Portuguese value so it
+  becomes pseudo again and goes back to the translator.
+- `src/i18n/messages.test.ts` fails if the two files don't have exactly the same keys.
+
+**Release guard.** `pnpm build` prints a warning listing the pseudo keys. With
+`VERCEL_ENV=production` or `RELEASE_BUILD=1` it fails instead, and `pnpm check:release`
+always fails while any remain.
 
 ## Environment variables
 

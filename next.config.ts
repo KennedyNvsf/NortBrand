@@ -1,11 +1,9 @@
 import type { NextConfig } from "next";
+import { PHASE_PRODUCTION_BUILD } from "next/constants";
 import createNextIntlPlugin from "next-intl/plugin";
 
 import { validateEnv } from "./src/env.schema";
-
-// Fail `next dev` and `next build` early on missing or malformed variables.
-// `next typegen` loads this file in the build phase too, but only needs route types.
-if (!process.argv.includes("typegen")) validateEnv();
+import { isReleaseBuild, runReleaseGuard } from "./src/i18n/release-guard";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
@@ -22,4 +20,25 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withNextIntl(nextConfig);
+export default function config(phase: string): NextConfig {
+  // `next typegen` loads this file in the build phase too, but only needs route types.
+  const isTypegen = process.argv.includes("typegen");
+
+  // Fail `next dev` and `next build` early on missing or malformed variables.
+  if (!isTypegen) validateEnv();
+
+  // Pseudo translations fail release builds and only warn on other builds. Next.js
+  // loads this file again in its build workers, which inherit the env flag below, so
+  // the warning prints once.
+  const strict = isReleaseBuild(process.env);
+  if (
+    phase === PHASE_PRODUCTION_BUILD &&
+    !isTypegen &&
+    (strict || process.env.RELEASE_GUARD_CHECKED !== "1")
+  ) {
+    runReleaseGuard("./messages", { strict });
+    process.env.RELEASE_GUARD_CHECKED = "1";
+  }
+
+  return withNextIntl(nextConfig);
+}
