@@ -18,6 +18,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "i18n:pseudo": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/i18n-pseudo.mts",
+    "check:release": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-release.mts",
     "prepare": "simple-git-hooks"
   },
   "dependencies": {
