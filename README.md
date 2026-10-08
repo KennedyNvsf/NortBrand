@@ -38,18 +38,18 @@ installs and can lock files during builds.
 
 ## Commands
 
-| Command                             | What it does                                                                                                                              |
-| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm dev`                          | Start the dev server (Turbopack).                                                                                                         |
-| `pnpm build`                        | Production build. Fails if any environment variable is missing.                                                                           |
-| `pnpm start`                        | Serve the production build.                                                                                                               |
-| `pnpm typecheck`                    | Generate route types (`next typegen`), then run `tsc --noEmit`.                                                                           |
-| `pnpm lint`                         | ESLint with the Next.js config and strict typescript-eslint, zero warnings allowed. Run `pnpm typecheck` once first so route types exist. |
-| `pnpm format` / `pnpm format:check` | Prettier with Tailwind class sorting.                                                                                                     |
-| `pnpm test`                         | Vitest unit tests (`src/**/*.test.ts`).                                                                                                   |
-| `pnpm test:e2e`                     | Playwright against a production build. Run `pnpm exec playwright install chromium webkit` once first. Needs the env vars.                 |
-| `pnpm i18n:pseudo`                  | Regenerate `messages/pt.json` from `en.json`, keeping real translations. `--reset` replaces every key.                                    |
-| `pnpm check:release`                | Strict release guard: fails while any pseudo translation remains. Must pass before launch.                                                |
+| Command                             | What it does                                                                                                                                                                    |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm dev`                          | Start the dev server (Turbopack).                                                                                                                                               |
+| `pnpm build`                        | Production build. Fails if any environment variable is missing.                                                                                                                 |
+| `pnpm start`                        | Serve the production build.                                                                                                                                                     |
+| `pnpm typecheck`                    | Generate route types (`next typegen`), then run `tsc --noEmit`.                                                                                                                 |
+| `pnpm lint`                         | ESLint with the Next.js config and strict typescript-eslint, zero warnings allowed. Run `pnpm typecheck` once first so route types exist.                                       |
+| `pnpm format` / `pnpm format:check` | Prettier with Tailwind class sorting.                                                                                                                                           |
+| `pnpm test`                         | Vitest unit tests (`src/**/*.test.ts`).                                                                                                                                         |
+| `pnpm test:e2e`                     | Playwright against a production build. Run `pnpm exec playwright install chromium webkit` once first. Needs the env vars. Set `E2E_PORT=3100` while `pnpm dev` holds port 3000. |
+| `pnpm i18n:pseudo`                  | Regenerate `messages/pt.json` from `en.json`, keeping real translations. `--reset` replaces every key.                                                                          |
+| `pnpm check:release`                | Strict release guard: fails while any pseudo translation remains. Must pass before launch.                                                                                      |
 
 The pre-commit hook (simple-git-hooks + lint-staged) runs `eslint --fix` and Prettier on
 staged files. If you skip it in an emergency, CI still runs the same checks.
