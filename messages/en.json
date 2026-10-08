@@ -38,6 +38,17 @@
     "socialMedia": "Social Media Management",
     "maintenance": "Website Maintenance"
   },
+  "CtaBand": {
+    "headline": "Got a project in mind? Let’s <highlight>talk</highlight>.",
+    "subtext": "Reading is a great start. A conversation is better — book a free consultation and let’s figure out what your business actually needs.",
+    "cardText": "30 minutes. No pressure. Just a real conversation about your project."
+  },
+  "StickyCta": {
+    "label": "Book a free consultation",
+    "title": "Free consultation",
+    "meta": "30 minutes · No pressure",
+    "action": "Book now"
+  },
   "LocaleSwitcher": {
     "label": "Language"
   },
