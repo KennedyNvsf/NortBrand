@@ -1,0 +1,13 @@
+# Developer guides
+
+Living, topic-based explanations of how the code works, written for a developer joining
+the project. Each ticket's walkthrough lands here (see the workflow rules in
+`CLAUDE.md`). When a ticket changes a topic, update its guide in the same pull request so
+the guides always match the code.
+
+| Guide                             | Covers                                                                |
+| --------------------------------- | --------------------------------------------------------------------- |
+| [Localization](./localization.md) | EN/PT routing, messages, hreflang, pseudo-localization, release guard |
+
+Each guide follows the same shape: what we built, how it works at runtime, the files one
+by one (and why), how the tests protect it, and day-to-day rules.

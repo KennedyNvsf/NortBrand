@@ -86,6 +86,12 @@ about 30% with `~` runs, so longer Portuguese layouts get tested early.
 `VERCEL_ENV=production` or `RELEASE_BUILD=1` it fails instead, and `pnpm check:release`
 always fails while any remain.
 
+## Developer guides
+
+[`docs/guides/`](docs/guides/README.md) explains how each part of the code works, one
+guide per topic, written for a developer joining the project. Start with
+[Localization](docs/guides/localization.md).
+
 ## Environment variables
 
 `src/env.schema.ts` defines the contract and `src/env.ts` exposes the validated values.
@@ -126,7 +132,7 @@ src/env.ts          validated environment
 src/proxy.ts        locale negotiation for the bare / only (ADR-006)
 messages/           en.json, pt.json
 tests/e2e/          Playwright (routes.ts + pages.spec.ts = shared page harness)
-docs/               ADRs, tech debt
+docs/               ADRs, developer guides (docs/guides/), tech debt
 ```
 
 ## Design tokens
