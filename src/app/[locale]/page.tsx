@@ -6,6 +6,7 @@ import { locale as rootLocale } from "next/root-params";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Logo } from "@/components/site/logo";
 import { localeAlternates } from "@/i18n/metadata";
 import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
@@ -33,6 +34,15 @@ export default async function PlaceholderPage() {
 
   return (
     <main id="main" className="container-page py-(--section-y)">
+      <div className="mb-2xl flex flex-wrap items-center gap-lg">
+        <Logo className="text-text-primary" />
+        <div
+          data-surface="dark"
+          className="rounded-md bg-text-primary px-lg py-md text-text-on-accent"
+        >
+          <Logo decorative />
+        </div>
+      </div>
       <p className="text-overline text-text-accent">{t("eyebrow")}</p>
       <h1 className="mt-md text-display text-text-primary">{t("title")}</h1>
       <p className="mt-lg max-w-(--container-reading) text-lead text-text-muted">

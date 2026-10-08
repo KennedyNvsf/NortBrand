@@ -118,6 +118,7 @@ never used by the app.
 ```
 src/app/[locale]/   pages (Phase 1: placeholder only)
 src/components/ui/  shadcn primitives restyled to the Figma tokens
+src/components/site/ site-wide components (Logo; nav, footer and CTAs follow)
 src/content/        typed content and site config (contact details live only here)
 src/i18n/           next-intl routing, request config, navigation, hreflang helper
 src/lib/            utilities (cn)
