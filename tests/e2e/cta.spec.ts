@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 /*
- * CtaBand (ticket #8). It ends the placeholder home page today; Home (#9) keeps it.
+ * CtaBand (ticket #8), checked on Home, which ends with it.
  * StickyCta behaviour is unit-tested (sticky-cta.test.tsx); it is mounted on the blog
  * listing in the blog milestone, where it gets its e2e test.
  */
