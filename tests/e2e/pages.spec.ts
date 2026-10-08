@@ -36,9 +36,12 @@ for (const route of routes) {
         expect(summary).toEqual([]);
       });
 
-      test("has exactly one h1 and the right lang", async ({ page }) => {
+      test("has exactly one h1, one site header and the right lang", async ({
+        page,
+      }) => {
         await page.goto(url);
         await expect(page.locator("h1")).toHaveCount(1);
+        await expect(page.getByRole("banner")).toHaveCount(1);
         await expect(page.locator("html")).toHaveAttribute("lang", locale);
       });
 
