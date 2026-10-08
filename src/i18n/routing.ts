@@ -20,3 +20,12 @@ export const routing = defineRouting({
 });
 
 export type Locale = (typeof routing.locales)[number];
+
+/**
+ * Each language named in itself (endonyms). Never translated: a Portuguese speaker on
+ * the English site must still find "Português".
+ */
+export const localeNames = {
+  en: "English",
+  pt: "Português",
+} as const satisfies Record<Locale, string>;

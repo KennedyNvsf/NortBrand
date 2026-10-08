@@ -1,7 +1,7 @@
 {
   "Metadata": {
     "siteName": "NortBrand",
-    "homeTitle": "[[NortBrand — Design and Web Studio ~~~~ ~~~~ ~~]]",
+    "homeTitle": "[[NortBrand — A Digital Brand Experience ~~~~ ~~~~ ~~~]]",
     "homeDescription": "[[NortBrand treats a business website as a product, not a brochure. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]"
   },
   "Common": {
@@ -10,10 +10,19 @@
     "sending": "[[Sending… ~~]]",
     "close": "[[Close ~~]]"
   },
+  "Nav": {
+    "label": "[[Main ~]]",
+    "home": "[[NortBrand home ~~~~]]",
+    "services": "[[Services ~~]]",
+    "about": "[[About ~~]]",
+    "blog": "[[Blog ~]]",
+    "contact": "[[Contact ~~]]",
+    "openMenu": "[[Open menu ~~~]]",
+    "closeMenu": "[[Close menu ~~~]]",
+    "menuTitle": "[[Menu ~]]"
+  },
   "LocaleSwitcher": {
-    "label": "[[Language ~~]]",
-    "en": "[[English ~~]]",
-    "pt": "[[Português ~~~]]"
+    "label": "[[Language ~~]]"
   },
   "Placeholder": {
     "eyebrow": "[[Phase 1 · Foundation ~~~~ ~~]]",

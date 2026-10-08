@@ -5,9 +5,11 @@ the project. Each ticket's walkthrough lands here (see the workflow rules in
 `CLAUDE.md`). When a ticket changes a topic, update its guide in the same pull request so
 the guides always match the code.
 
-| Guide                             | Covers                                                                |
-| --------------------------------- | --------------------------------------------------------------------- |
-| [Localization](./localization.md) | EN/PT routing, messages, hreflang, pseudo-localization, release guard |
+| Guide                             | Covers                                                                     |
+| --------------------------------- | -------------------------------------------------------------------------- |
+| [Localization](./localization.md) | EN/PT routing, messages, hreflang, pseudo-localization, release guard      |
+| [Components](./components.md)     | Logo, Badge, FieldError, Select, icons, TextLink, ServiceCard, ArticleCard |
+| [Navigation](./navigation.md)     | SiteNav, sticky header, active links, mobile menu, language switcher       |
 
 Each guide follows the same shape: what we built, how it works at runtime, the files one
 by one (and why), how the tests protect it, and day-to-day rules.
