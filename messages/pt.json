@@ -1,7 +1,7 @@
 {
   "Metadata": {
-    "siteName": "[[NortBrand ~~~]]",
-    "homeTitle": "[[NortBrand — Design and technology studio ~~~~ ~~~~ ~~~~]]",
+    "siteName": "NortBrand",
+    "homeTitle": "[[NortBrand — Design and Web Studio ~~~~ ~~~~ ~~]]",
     "homeDescription": "[[NortBrand treats a business website as a product, not a brochure. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]"
   },
   "Common": {
@@ -22,6 +22,30 @@
     "switchLocale": "[[Ver em português ~~~~ ~]]",
     "emailLabel": "[[Email address ~~~~]]",
     "emailPlaceholder": "[[you@company.com ~~~~ ~]]",
-    "emailError": "[[Please enter a valid email address ~~~~ ~~~~ ~~]]"
+    "emailError": "[[Please enter a valid email address ~~~~ ~~~~ ~~]]",
+    "preview": {
+      "badgeNew": "[[New ~]]",
+      "serviceTitle": "[[Booking & Scheduling ~~~~ ~~]]",
+      "serviceDescription": "[[Turn your services into a clear, bookable experience your clients actually enjoy using. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+      "learnMore": "[[Learn More ~~~]]",
+      "articleTitle": "[[5 Signs Your Brand Needs a Refresh ~~~~ ~~~~ ~~]]",
+      "articleExcerpt": "[[Some signals are obvious. Most aren’t. Here’s how to tell the difference before… ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
+      "articleCategory": "[[Branding ~~]]",
+      "articleByline": "[[NortBrand · Sep 2026 ~~~~ ~~]]",
+      "readMore": "[[Read More ~~~]]",
+      "selectLabel": "[[I’m interested in ~~~~ ~]]",
+      "selectPlaceholder": "[[Select a service ~~~~ ~]]",
+      "selectError": "[[Please choose a service ~~~~ ~~~]]",
+      "serviceOptions": {
+        "webDesign": "[[Web Design ~~~]]",
+        "webDevelopment": "[[Web Development ~~~~ ~]]",
+        "contentWriting": "[[Content Writing ~~~~ ~]]",
+        "socialMedia": "[[Social Media Management ~~~~ ~~~]]",
+        "maintenance": "[[Website Maintenance ~~~~ ~~]]"
+      },
+      "messageLabel": "[[Message ~~]]",
+      "messagePlaceholder": "[[Tell us about your project ~~~~ ~~~~]]",
+      "messageError": "[[Please write at least 10 characters ~~~~ ~~~~ ~~~]]"
+    }
   }
 }

@@ -72,6 +72,9 @@
   /* ── Elevation ── */
   --shadow-card: 0 8px 24px -4px rgb(13 8 8 / 0.08);
   --shadow-overlay: 0 24px 64px -8px rgb(13 8 8 / 0.28);
+  /* Card interaction states, from the designed Service Card states (02 Components). */
+  --shadow-card-hover: 0 16px 36px -4px rgb(15 10 10 / 0.16); /* Hover 398:161 */
+  --shadow-card-pressed: 0 2px 6px 0 rgb(15 10 10 / 0.08); /* Pressed 398:174 */
 
   /* ── Breakpoints: mobile < 768 (base) · tablet 768–1023 (md) · desktop ≥ 1024 (lg) ── */
   --breakpoint-md: 48rem;
