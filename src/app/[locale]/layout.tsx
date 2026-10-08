@@ -5,7 +5,6 @@ import { Instrument_Sans } from "next/font/google";
 import { notFound } from "next/navigation";
 import { locale as rootLocale } from "next/root-params";
 
-import { SiteNav } from "@/components/site/site-nav";
 import { Toaster } from "@/components/ui/sonner";
 import { publicEnv } from "@/env";
 import { routing } from "@/i18n/routing";
@@ -50,10 +49,7 @@ export default async function LocaleLayout({
         >
           {t("skipToContent")}
         </a>
-        <NextIntlClientProvider>
-          <SiteNav />
-          {children}
-        </NextIntlClientProvider>
+        <NextIntlClientProvider>{children}</NextIntlClientProvider>
         <Toaster />
       </body>
     </html>

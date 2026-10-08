@@ -91,6 +91,7 @@ React Email · Sanity (blog only) · Sentry · Vitest · Playwright · pnpm · N
 
 ```
 src/app/[locale]/        pages: home, services, about, blog, contact, legal
+  (site)/                route group: pages with SiteNav + SiteFooter (404 sits outside)
 src/app/studio/[[...tool]]/  embedded Sanity Studio (noindex, excluded from i18n middleware)
 src/app/api/revalidate/  signed Sanity webhook
 src/components/ui/       shadcn primitives restyled to tokens

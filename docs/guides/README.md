@@ -10,6 +10,7 @@ the guides always match the code.
 | [Localization](./localization.md) | EN/PT routing, messages, hreflang, pseudo-localization, release guard      |
 | [Components](./components.md)     | Logo, Badge, FieldError, Select, icons, TextLink, ServiceCard, ArticleCard |
 | [Navigation](./navigation.md)     | SiteNav, sticky header, active links, mobile menu, language switcher       |
+| [Page layout](./layout.md)        | The (site) route group, SiteFooter, services and legal links, cached year  |
 
 Each guide follows the same shape: what we built, how it works at runtime, the files one
 by one (and why), how the tests protect it, and day-to-day rules.

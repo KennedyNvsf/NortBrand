@@ -20,6 +20,12 @@ export const overlayNavRoutes = ["/services"] as const;
 
 export const BOOKING_HREF = "/contact";
 
+/** Footer bottom bar (Figma 337:122). Pages ship with the legal ticket (#13). */
+export const legalLinks = [
+  { key: "privacy", href: "/legal/privacy" },
+  { key: "terms", href: "/legal/terms" },
+] as const satisfies readonly { key: string; href: `/${string}` }[];
+
 /**
  * A nav item is active on its own page and on any page below it, so /blog stays active
  * on /blog/some-post. `pathname` is the locale-free path from usePathname().

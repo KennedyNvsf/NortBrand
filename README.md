@@ -122,7 +122,7 @@ never used by the app.
 ## Project layout
 
 ```
-src/app/[locale]/   pages (Phase 1: placeholder only)
+src/app/[locale]/   root locale layout; pages live in (site)/ with nav + footer
 src/components/ui/  shadcn primitives restyled to the Figma tokens
 src/components/site/ site-wide components (Logo; nav, footer and CTAs follow)
 src/content/        typed content and site config (contact details live only here)
