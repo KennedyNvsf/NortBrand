@@ -106,7 +106,7 @@ sanity/                  schemas + Studio config
 supabase/                migrations/, seed.sql, tests/ (pgTAP)
 emails/                  React Email templates
 tests/e2e/               Playwright
-docs/                    README, adr/, runbook, tech-debt.md
+docs/                    README, adr/, guides/, runbook, tech-debt.md
 ```
 
 ## Content, translation and assets
@@ -220,7 +220,7 @@ supabase start / supabase db reset / supabase test db
 Every change follows this lifecycle:
 
 ```
-Ticket → Branch → Implement → Validate → Push → Pull Request → Review → Merge → Close
+Ticket → Branch → Implement → Validate → Push → Pull Request → Walkthrough → Review → Merge → Close
 ```
 
 - **Tickets**
@@ -252,6 +252,13 @@ Ticket → Branch → Implement → Validate → Push → Pull Request → Revie
     - how it was tested
     - any deviations or technical debt
   - CI must pass.
+- **Walkthrough (after the PR is open, before I merge)**
+  - Explain the ticket as if guiding a junior developer: what was built, how it works at
+    runtime (request or data flow), how it was implemented file by file, why each
+    decision was made, the trade-offs, and how to use or extend it.
+  - Post it in the conversation, and save it in the same PR under `docs/guides/<topic>.md`.
+    Guides are organised by topic, not by ticket: extend the existing guide when a ticket
+    changes a topic, and keep `docs/guides/README.md` listing every guide.
 - **Merging**
   - Squash-merge only after my explicit approval in the conversation.
   - After merging, delete the branch and confirm the ticket closed.
@@ -291,4 +298,5 @@ Ticket → Branch → Implement → Validate → Push → Pull Request → Revie
 - Tests added or updated. New pages are added to the shared Playwright harness
   (`tests/e2e/routes.ts`).
 - README, `docs/tech-debt.md` and this file are updated when they're affected.
+- The walkthrough is posted and its guide in `docs/guides/` is added or updated.
 - Typecheck, lint, format:check, tests and build all pass.
