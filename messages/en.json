@@ -21,6 +21,23 @@
     "closeMenu": "Close menu",
     "menuTitle": "Menu"
   },
+  "Footer": {
+    "tagline": "NortBrand is a digital product and web design studio for local and service-based businesses.",
+    "services": "Services",
+    "company": "Company",
+    "follow": "Follow us",
+    "rights": "© {year} NortBrand. All rights reserved.",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use"
+  },
+  "ServiceNames": {
+    "webDesign": "Web Design",
+    "webDevelopment": "Web Development",
+    "contentWriting": "Content Writing",
+    "socialMedia": "Social Media Management",
+    "maintenance": "Website Maintenance"
+  },
   "LocaleSwitcher": {
     "label": "Language"
   },
@@ -45,13 +62,6 @@
       "selectLabel": "I’m interested in",
       "selectPlaceholder": "Select a service",
       "selectError": "Please choose a service",
-      "serviceOptions": {
-        "webDesign": "Web Design",
-        "webDevelopment": "Web Development",
-        "contentWriting": "Content Writing",
-        "socialMedia": "Social Media Management",
-        "maintenance": "Website Maintenance"
-      },
       "messageLabel": "Message",
       "messagePlaceholder": "Tell us about your project",
       "messageError": "Please write at least 10 characters"

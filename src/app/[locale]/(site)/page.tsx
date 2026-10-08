@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { services } from "@/content/services";
 import { localeAlternates } from "@/i18n/metadata";
 import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
@@ -47,13 +48,7 @@ export default async function PlaceholderPage() {
   const t = await getTranslations("Placeholder");
   const common = await getTranslations("Common");
   const p = await getTranslations("Placeholder.preview");
-  const serviceOptions = [
-    "webDesign",
-    "webDevelopment",
-    "contentWriting",
-    "socialMedia",
-    "maintenance",
-  ] as const;
+  const serviceNames = await getTranslations("ServiceNames");
 
   return (
     <main id="main" className="container-page py-(--section-y)">
@@ -189,9 +184,9 @@ export default async function PlaceholderPage() {
               <SelectValue placeholder={p("selectPlaceholder")} />
             </SelectTrigger>
             <SelectContent>
-              {serviceOptions.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {p(`serviceOptions.${option}`)}
+              {services.map(({ slug, key }) => (
+                <SelectItem key={slug} value={slug}>
+                  {serviceNames(key)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -208,9 +203,9 @@ export default async function PlaceholderPage() {
               <SelectValue placeholder={p("selectPlaceholder")} />
             </SelectTrigger>
             <SelectContent>
-              {serviceOptions.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {p(`serviceOptions.${option}`)}
+              {services.map(({ slug, key }) => (
+                <SelectItem key={slug} value={slug}>
+                  {serviceNames(key)}
                 </SelectItem>
               ))}
             </SelectContent>
