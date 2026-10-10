@@ -14,6 +14,7 @@ const twMerge = extendTailwindMerge({
       "font-size": [
         {
           text: [
+            "numeral",
             "display-xl",
             "display",
             "display-section",

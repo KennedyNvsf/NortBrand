@@ -1,22 +1,15 @@
 import type { Metadata } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
-import { Instrument_Sans } from "next/font/google";
-import { notFound } from "next/navigation";
 import { locale as rootLocale } from "next/root-params";
 
+import { LoadingSplash, splashScript } from "@/components/site/loading-splash";
 import { Toaster } from "@/components/ui/sonner";
 import { publicEnv } from "@/env";
 import { routing } from "@/i18n/routing";
 
+import { instrumentSans } from "../fonts";
 import "../globals.css";
-
-const instrumentSans = Instrument_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-  variable: "--font-instrument-sans",
-});
 
 // Required with Cache Components: every root param needs at least one static value.
 export function generateStaticParams() {
@@ -35,14 +28,30 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function LocaleLayout({
   children,
 }: LayoutProps<"/[locale]">) {
-  const locale = await rootLocale();
-  if (!hasLocale(routing.locales, locale)) notFound();
+  // Any first segment reaches this layout (/blog → locale "blog"). It renders in the
+  // default locale for an unknown one, and (site)/layout.tsx then calls notFound(),
+  // so every 404 goes through the one localized [locale]/not-found.tsx. A notFound()
+  // here would bypass it (nothing sits above the root layout).
+  const requested = await rootLocale();
+  const locale = hasLocale(routing.locales, requested)
+    ? requested
+    : routing.defaultLocale;
 
   const t = await getTranslations("Common");
 
   return (
-    <html lang={locale} className={instrumentSans.variable}>
+    // suppressHydrationWarning: the splash script sets data-splash on <html> before
+    // React hydrates (one level only; children are still checked).
+    <html
+      lang={locale}
+      className={instrumentSans.variable}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: splashScript }} />
+      </head>
       <body>
+        <LoadingSplash label={t("loading")} />
         <a
           href="#main"
           className="sr-only rounded-md bg-bg-surface px-md py-sm text-label text-text-primary shadow-overlay focus-visible:not-sr-only focus-visible:fixed focus-visible:top-md focus-visible:left-md focus-visible:z-50"
