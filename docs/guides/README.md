@@ -13,6 +13,7 @@ the guides always match the code.
 | [Page layout](./layout.md)              | The (site) route group, SiteFooter, services and legal links, cached year                   |
 | [Calls to action](./calls-to-action.md) | CtaBand (rich headline, photo, scrim), StickyCta (IntersectionObserver, inert)              |
 | [Home page](./home-page.md)             | Home sections, FeatureSplit, SectionHeader, highlight tags, process steps, sticky CTA scope |
+| [Services page](./services-page.md)     | Photo hero, service blocks, Dialog/Drawer details, Tabs/Accordion, useMediaQuery, `cn` fix  |
 
 Each guide follows the same shape: what we built, how it works at runtime, the files one
 by one (and why), how the tests protect it, and day-to-day rules.

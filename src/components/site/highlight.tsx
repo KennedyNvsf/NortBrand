@@ -22,4 +22,21 @@ export const highlightTags = {
       {chunks}
     </span>
   ),
+  /* Services details dialog (317:73): green keyword with a 3 px green underline. */
+  greenUnderline: (chunks: ReactNode) => (
+    <span className="text-action-secondary underline decoration-action-secondary decoration-3 underline-offset-[0.15em]">
+      {chunks}
+    </span>
+  ),
 };
+
+/** Renders every highlight tag as plain text, for places that show a title unstyled. */
+export const plainTags = {
+  red: (chunks: ReactNode) => chunks,
+  green: (chunks: ReactNode) => chunks,
+  underline: (chunks: ReactNode) => chunks,
+  greenUnderline: (chunks: ReactNode) => chunks,
+} satisfies Record<
+  keyof typeof highlightTags,
+  (chunks: ReactNode) => ReactNode
+>;

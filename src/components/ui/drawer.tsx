@@ -4,10 +4,19 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Drawer as DrawerPrimitive } from "vaul";
 
+/*
+ * `autoFocus` defaults to true here (vaul defaults to false). Without it vaul cancels
+ * the open auto-focus, nothing inside the drawer holds focus, and the focus trap never
+ * engages: Tab walks the page behind the sheet. The Handoff requires sheets to trap
+ * focus.
+ */
 function Drawer({
+  autoFocus = true,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) {
-  return <DrawerPrimitive.Root data-slot="drawer" {...props} />;
+  return (
+    <DrawerPrimitive.Root data-slot="drawer" autoFocus={autoFocus} {...props} />
+  );
 }
 
 function DrawerTrigger({
@@ -57,7 +66,11 @@ function DrawerContent({
         )}
         {...props}
       >
-        <div className="mx-auto mt-4 hidden h-1 w-[100px] shrink-0 rounded-full bg-border-default group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
+        {/* Grab handle (Figma 362:327): 40 × 4, text/muted at 35%. */}
+        <div
+          aria-hidden
+          className="mx-auto mt-3 mb-1 hidden h-1 w-10 shrink-0 rounded-full bg-text-muted/35 group-data-[vaul-drawer-direction=bottom]/drawer-content:block"
+        />
         {children}
       </DrawerPrimitive.Content>
     </DrawerPortal>

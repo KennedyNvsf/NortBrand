@@ -2,7 +2,9 @@
   "Metadata": {
     "siteName": "NortBrand",
     "homeTitle": "NortBrand — A Digital Brand Experience",
-    "homeDescription": "NortBrand treats a business website as a product, not a brochure."
+    "homeDescription": "NortBrand treats a business website as a product, not a brochure.",
+    "servicesTitle": "Services",
+    "servicesDescription": "Web design, web development, content writing, social media management and website maintenance for local and service-based businesses."
   },
   "Common": {
     "skipToContent": "Skip to content",
@@ -109,6 +111,99 @@
           "body": "We launch, then keep improving — content, performance, and features that grow with your business."
         }
       }
+    }
+  },
+  "Services": {
+    "hero": {
+      "eyebrow": "Services",
+      "title": "<red>Everything</red> your business needs to show up <green>online</green>.",
+      "lead": "From your first landing page to ongoing maintenance — pick what you need now, add the rest as you grow.",
+      "quote": "The businesses that grow fastest aren’t always the best. They’re the clearest.",
+      "quoteSource": "On branding"
+    },
+    "blocks": {
+      "label": "Our services",
+      "eyebrow": "{number} — {name}",
+      "moreDetails": "More Details",
+      "moreDetailsLabel": "More Details: {name}"
+    },
+    "details": {
+      "position": "{current} / {total}",
+      "included": "What’s included"
+    },
+    "items": {
+      "webDesign": {
+        "title": "Interfaces People Actually <greenUnderline>Enjoy</greenUnderline> Using",
+        "details": "Clean, modern interfaces built around your business and your customers — not a template with your logo on it. Every layout decision ties back to what you actually need people to do.",
+        "included": {
+          "first": "Custom visual design",
+          "second": "Mobile-first layouts",
+          "third": "Up to 3 rounds of revisions"
+        }
+      },
+      "webDevelopment": {
+        "title": "Built to Perform, Built to <greenUnderline>Last</greenUnderline>",
+        "details": "Fast, reliable builds with real product architecture underneath, ready to grow with you — from a simple landing page to a full booking system.",
+        "included": {
+          "first": "Responsive development",
+          "second": "Performance optimization",
+          "third": "Clean, maintainable code"
+        }
+      },
+      "contentWriting": {
+        "title": "Words That Do Their <greenUnderline>Job</greenUnderline>",
+        "details": "Clear, on-brand copy that explains what you do and why it matters — without the filler. Every page says exactly what it needs to, and nothing more.",
+        "included": {
+          "first": "Website copywriting",
+          "second": "Tone & voice guidance",
+          "third": "SEO-aware structure"
+        }
+      },
+      "socialMedia": {
+        "title": "Stay Visible, Stay <greenUnderline>Consistent</greenUnderline>",
+        "details": "Consistent, on-brand content that keeps your business visible between projects — so people don’t forget you exist the moment they leave your site.",
+        "included": {
+          "first": "Content calendar & planning",
+          "second": "Post design & copy",
+          "third": "Monthly performance review"
+        }
+      },
+      "maintenance": {
+        "title": "<greenUnderline>Peace of Mind</greenUnderline>, Built In",
+        "details": "Ongoing updates, monitoring, and small fixes, so your site keeps working as hard as you do — without you having to think about it.",
+        "included": {
+          "first": "Regular updates & backups",
+          "second": "Uptime monitoring",
+          "third": "Priority support for fixes"
+        }
+      }
+    },
+    "approach": {
+      "eyebrow": "Our approach",
+      "title": "Every detail has a reason behind it.",
+      "body": "None of it is arbitrary. Here’s what actually goes into the work.",
+      "points": {
+        "brandIdentity": {
+          "title": "Brand Identity",
+          "body": "Your logo, colors, and typography aren’t decoration — they’re the visual shorthand people use to recognize and trust you before they’ve read a single word."
+        },
+        "visualDesign": {
+          "title": "Color & Visual Design",
+          "body": "Color, type and spacing do quiet work: they guide the eye, signal what matters, and make your business feel the same everywhere it shows up."
+        },
+        "contentStrategy": {
+          "title": "Content Strategy",
+          "body": "We plan what each page needs to say, and in what order, so visitors find their answers before they think to ask the question."
+        },
+        "growth": {
+          "title": "Growth & Marketing",
+          "body": "Launch is the starting line. Search visibility, clear calls to action and simple measurement keep your site bringing in work long after day one."
+        }
+      }
+    },
+    "cta": {
+      "headline": "Ready to pick your starting point?",
+      "subtext": "You don’t need all five services on day one. Book a free consultation and we’ll figure out what actually matters first."
     }
   },
   "LocaleSwitcher": {

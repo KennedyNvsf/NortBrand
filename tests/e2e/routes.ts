@@ -7,6 +7,7 @@ import { routing, type Locale } from "../../src/i18n/routing";
  */
 export const routes = [
   { name: "Home", path: "/" },
+  { name: "Services", path: "/services" },
 ] as const satisfies readonly {
   name: string;
   path: `/${string}`;
