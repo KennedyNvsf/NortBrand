@@ -243,6 +243,16 @@
   font-weight: 400;
 }
 
+/* Centred page intros (Figma About hero lead 300:26 / 377:268): 18 → 22 on desktop. */
+@utility text-intro {
+  font-size: 18px;
+  line-height: 1.5;
+  font-weight: 400;
+  @media (width >= 64rem) {
+    font-size: 22px;
+  }
+}
+
 @utility text-body {
   font-size: 16px;
   line-height: 1.5;
