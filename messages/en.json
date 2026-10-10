@@ -6,7 +6,9 @@
     "servicesTitle": "Services",
     "servicesDescription": "Web design, web development, content writing, social media management and website maintenance for local and service-based businesses.",
     "aboutTitle": "About",
-    "aboutDescription": "NortBrand designs digital work for small businesses with the same care they give their own products and services."
+    "aboutDescription": "NortBrand designs digital work for small businesses with the same care they give their own products and services.",
+    "contactTitle": "Contact",
+    "contactDescription": "Book a free 30-minute consultation with NortBrand. We reply within one business day."
   },
   "Common": {
     "skipToContent": "Skip to content",
@@ -235,6 +237,79 @@
     "cta": {
       "headline": "Let’s start with <highlight>your business</highlight>.",
       "subtext": "Book a free consultation and tell us what your business does, who it serves, and what actually needs to work."
+    }
+  },
+  "Contact": {
+    "hero": {
+      "title": "Let’s start with a <greenUnderline>conversation</greenUnderline>.",
+      "lead": "Tell us a bit about your business and what you’re hoping to achieve. We’ll reply within one business day — no sales pitch, just a real answer.",
+      "detailsLabel": "Contact details",
+      "email": "Email",
+      "phone": "Phone",
+      "availability": "Availability",
+      "hours": "Mon – Fri · {opens} – {closes}"
+    },
+    "form": {
+      "title": "Book a Consultation",
+      "subtitle": "A free 30-minute call. No pressure, no obligation.",
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "emailPlaceholder": "you@company.com",
+      "phone": "Phone (optional)",
+      "phonePlaceholder": "+351 000 000 000",
+      "service": "I’m interested in",
+      "servicePlaceholder": "Select a service",
+      "message": "Tell us about your project",
+      "messagePlaceholder": "What does your business do, and what are you hoping to achieve?",
+      "submit": "Send Request",
+      "unavailable": "Online requests open soon. Until then, email us at <email></email>."
+    },
+    "steps": {
+      "eyebrow": "What happens next",
+      "title": "Three steps. <indent>No <greenUnderline>surprises</greenUnderline>.</indent>",
+      "items": {
+        "request": {
+          "title": "You send a request",
+          "body": "Fill in the form with a few details about your business and what you need. It takes about two minutes."
+        },
+        "reply": {
+          "title": "We reply within a day",
+          "body": "A real person reads your message and replies with a few questions and some times that work for a call."
+        },
+        "call": {
+          "title": "We talk it through",
+          "body": "A relaxed 30-minute call to understand your goals. You’ll leave with a clear next step, whether or not we work together."
+        }
+      }
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Frequently asked <red>questions</red>",
+      "body": "Can’t find what you’re looking for? Send us a message and we’ll answer you directly.",
+      "link": "Send us a message",
+      "items": {
+        "cost": {
+          "question": "How much does a website cost?",
+          "answer": "It depends on scope. A focused landing page costs far less than a multi-page build with booking features. After a short call we send a clear, itemised proposal, with no hidden fees."
+        },
+        "timeline": {
+          "question": "How long does a project take?",
+          "answer": "It depends on scope and on how quickly content and feedback come together. The proposal includes a timeline with clear milestones, so you know what happens when."
+        },
+        "content": {
+          "question": "Do I need to have my content ready?",
+          "answer": "No. Bring what you have, and we’ll work out together what’s missing. Content writing is one of our services if you’d rather we handle it."
+        },
+        "international": {
+          "question": "Do you work with businesses outside Portugal?",
+          "answer": "Yes. We work in English and Portuguese, and calls happen online, so where your business is based isn’t a barrier."
+        },
+        "afterLaunch": {
+          "question": "What happens after the site launches?",
+          "answer": "We don’t disappear. Website maintenance keeps your site updated, monitored and backed up, and we can keep improving it as your business grows."
+        }
+      }
     }
   },
   "LocaleSwitcher": {
