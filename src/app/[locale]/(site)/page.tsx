@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { locale as rootLocale } from "next/root-params";
 
 import { CtaBand } from "@/components/site/cta-band";
 import { FeatureSplit } from "@/components/site/feature-split";
 import { highlightTags } from "@/components/site/highlight";
-import { localeAlternates } from "@/i18n/metadata";
-import { routing, type Locale } from "@/i18n/routing";
+import { localizedPageMetadata } from "@/i18n/page-metadata";
 
 import { HomeHero } from "./_components/home-hero";
 import { HomeProcess } from "./_components/home-process";
@@ -18,13 +16,11 @@ import { HomeServices } from "./_components/home-services";
  * layout. Static for both locales.
  */
 
-async function currentLocale(): Promise<Locale> {
-  const locale = await rootLocale();
-  return routing.locales.find((l) => l === locale) ?? routing.defaultLocale;
-}
-
-export async function generateMetadata(): Promise<Metadata> {
-  return { alternates: localeAlternates(await currentLocale(), "/") };
+export function generateMetadata(): Promise<Metadata> {
+  return localizedPageMetadata("/", (t) => ({
+    title: { absolute: t("homeTitle") },
+    description: t("homeDescription"),
+  }));
 }
 
 export default async function HomePage() {

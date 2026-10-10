@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
-import { locale as rootLocale } from "next/root-params";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { CtaBand } from "@/components/site/cta-band";
+import { JsonLd } from "@/components/site/json-ld";
+import { services } from "@/content/services";
+import { publicEnv } from "@/env";
 import { localeAlternates } from "@/i18n/metadata";
-import { routing, type Locale } from "@/i18n/routing";
+import { localizedPageMetadata } from "@/i18n/page-metadata";
+import { servicesJsonLd } from "@/lib/seo/structured-data";
 
 import { ServiceBlocks } from "./_components/service-blocks";
 import { ServicesApproach } from "./_components/services-approach";
@@ -15,27 +18,36 @@ import { ServicesHero } from "./_components/services-hero";
  * details Dialog/Drawer each · Our approach · CTA band. Nav (transparent over the
  * hero), footer and the mobile sticky CTA come from the (site) layout. Static for both
  * locales; the only client code is ServiceDetails and the Tabs/Accordion primitives.
+ * Service JSON-LD lists each offering, addressed at its block (#slug).
  */
 
-async function currentLocale(): Promise<Locale> {
-  const locale = await rootLocale();
-  return routing.locales.find((l) => l === locale) ?? routing.defaultLocale;
-}
-
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("Metadata");
-  return {
+export function generateMetadata(): Promise<Metadata> {
+  return localizedPageMetadata("/services", (t) => ({
     title: t("servicesTitle"),
     description: t("servicesDescription"),
-    alternates: localeAlternates(await currentLocale(), "/services"),
-  };
+  }));
 }
 
 export default async function ServicesPage() {
   const t = await getTranslations("Services.cta");
+  const names = await getTranslations("ServiceNames");
+  const summaries = await getTranslations("ServiceSummaries");
+  const siteUrl = publicEnv.NEXT_PUBLIC_SITE_URL;
+  const { canonical } = localeAlternates(await getLocale(), "/services");
 
   return (
     <main id="main">
+      <JsonLd
+        data={servicesJsonLd({
+          siteUrl,
+          pageUrl: new URL(canonical, siteUrl).toString(),
+          services: services.map(({ slug, key }) => ({
+            slug,
+            name: names(key),
+            description: summaries(key),
+          })),
+        })}
+      />
       <ServicesHero />
       <ServiceBlocks />
       <ServicesApproach />

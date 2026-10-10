@@ -9,10 +9,15 @@ import { routing, type Locale } from "./routing";
  * x-default points at the language-negotiating root for the home page, and at the
  * default locale for every other page (only the bare `/` is negotiated, ADR-006).
  */
+export type LocaleAlternates = {
+  canonical: string;
+  languages: Record<string, string>;
+};
+
 export function localeAlternates(
   locale: Locale,
   path: `/${string}`,
-): NonNullable<Metadata["alternates"]> {
+): LocaleAlternates {
   const suffix = path === "/" ? "" : path;
   const languages: Record<string, string> = {};
   for (const l of routing.locales) languages[l] = `/${l}${suffix}`;
@@ -20,4 +25,84 @@ export function localeAlternates(
     path === "/" ? "/" : `/${routing.defaultLocale}${suffix}`;
 
   return { canonical: `/${locale}${suffix}`, languages };
+}
+
+/** Open Graph locale codes (language_TERRITORY): a Portuguese studio, so en_GB/pt_PT. */
+export const openGraphLocales = {
+  en: "en_GB",
+  pt: "pt_PT",
+} as const satisfies Record<Locale, string>;
+
+/**
+ * The share image (app/[locale]/opengraph-image.tsx). A page that sets its own
+ * `openGraph` replaces the one inherited from the layout, image included, so
+ * pageMetadata references the image explicitly.
+ */
+export const SHARE_IMAGE_SIZE = { width: 1200, height: 630 } as const;
+
+export function shareImagePath(locale: Locale): `/${string}` {
+  return `/${locale}/opengraph-image`;
+}
+
+type PageMetadataInput = {
+  locale: Locale;
+  path: `/${string}`;
+  /**
+   * The page's own title; the layout template adds " · NortBrand". Pass
+   * `{ absolute }` for a title used as is (the home page).
+   */
+  title: string | { absolute: string };
+  description: string;
+  siteName: string;
+  /** Vercel preview build: noindex (see src/lib/seo/deployment.ts). */
+  preview: boolean;
+};
+
+/**
+ * Everything a page needs for search and sharing (brief, "SEO"): title, description,
+ * canonical and hreflang alternates, Open Graph and Twitter card fields, and noindex
+ * on preview deployments, plus the share image (see SHARE_IMAGE_SIZE).
+ */
+export function pageMetadata({
+  locale,
+  path,
+  title,
+  description,
+  siteName,
+  preview,
+}: PageMetadataInput): Metadata {
+  const alternates = localeAlternates(locale, path);
+  const shareTitle =
+    typeof title === "string" ? `${title} · ${siteName}` : title.absolute;
+  const image = {
+    url: shareImagePath(locale),
+    ...SHARE_IMAGE_SIZE,
+    type: "image/png",
+    alt: siteName,
+  };
+
+  return {
+    title,
+    description,
+    alternates,
+    openGraph: {
+      type: "website",
+      siteName,
+      title: shareTitle,
+      description,
+      url: alternates.canonical,
+      locale: openGraphLocales[locale],
+      alternateLocale: routing.locales
+        .filter((other) => other !== locale)
+        .map((other) => openGraphLocales[other]),
+      images: [image],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: shareTitle,
+      description,
+      images: [image],
+    },
+    ...(preview && { robots: { index: false, follow: false } }),
+  };
 }

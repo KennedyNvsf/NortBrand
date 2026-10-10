@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { locale as rootLocale } from "next/root-params";
 
 import { CtaBand, CtaHighlight } from "@/components/site/cta-band";
-import { localeAlternates } from "@/i18n/metadata";
-import { routing, type Locale } from "@/i18n/routing";
+import { localizedPageMetadata } from "@/i18n/page-metadata";
 
 import { AboutHero } from "./_components/about-hero";
 import { AboutPrinciple } from "./_components/about-principle";
@@ -17,18 +15,11 @@ import { AboutStory } from "./_components/about-story";
  * its own.
  */
 
-async function currentLocale(): Promise<Locale> {
-  const locale = await rootLocale();
-  return routing.locales.find((l) => l === locale) ?? routing.defaultLocale;
-}
-
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("Metadata");
-  return {
+export function generateMetadata(): Promise<Metadata> {
+  return localizedPageMetadata("/about", (t) => ({
     title: t("aboutTitle"),
     description: t("aboutDescription"),
-    alternates: localeAlternates(await currentLocale(), "/about"),
-  };
+  }));
 }
 
 export default async function AboutPage() {

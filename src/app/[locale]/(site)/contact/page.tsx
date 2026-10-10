@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
-import { locale as rootLocale } from "next/root-params";
 
-import { localeAlternates } from "@/i18n/metadata";
-import { routing, type Locale } from "@/i18n/routing";
+import { localizedPageMetadata } from "@/i18n/page-metadata";
 
 import { ContactFaq } from "./_components/contact-faq";
 import { ContactHero } from "./_components/contact-hero";
@@ -16,18 +13,11 @@ import { ContactSteps } from "./_components/contact-steps";
  * consultation-form-layout.tsx). Static for both locales.
  */
 
-async function currentLocale(): Promise<Locale> {
-  const locale = await rootLocale();
-  return routing.locales.find((l) => l === locale) ?? routing.defaultLocale;
-}
-
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("Metadata");
-  return {
+export function generateMetadata(): Promise<Metadata> {
+  return localizedPageMetadata("/contact", (t) => ({
     title: t("contactTitle"),
     description: t("contactDescription"),
-    alternates: localeAlternates(await currentLocale(), "/contact"),
-  };
+  }));
 }
 
 export default function ContactPage() {

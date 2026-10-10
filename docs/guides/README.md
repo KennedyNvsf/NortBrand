@@ -17,6 +17,7 @@ the guides always match the code.
 | [Contact page](./contact-page.md)       | Contact details from site.ts, the disabled form layout, steps, FAQ accordion, `LogoMark`, `indentTag` |
 | [Legal pages](./legal-pages.md)         | Privacy and Terms layout, typed legal content, `TableOfContents`, draft release guard                 |
 | [System states](./system-states.md)     | The localized 404 (catch-all, `ensureStatic`), loading splash, `LogoMark` drawing                     |
+| [SEO](./seo.md)                         | Page metadata, share image, sitemap, robots, JSON-LD, preview noindex                                 |
 | [Services page](./services-page.md)     | Photo hero, service blocks, Dialog/Drawer details, Tabs/Accordion, useMediaQuery, `cn` fix            |
 
 Each guide follows the same shape: what we built, how it works at runtime, the files one
