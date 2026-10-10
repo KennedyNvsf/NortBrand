@@ -3,7 +3,8 @@ import { routing, type Locale } from "../../src/i18n/routing";
 /**
  * Every page under /[locale], as a locale-independent path. The shared page harness
  * (pages.spec.ts) runs each entry in every locale, so adding a page means adding one
- * line here.
+ * line here. `notFound` entries are unbuilt paths that must serve the designed 404:
+ * the harness expects a 404 status and noindex instead of canonical and hreflang.
  */
 export const routes = [
   { name: "Home", path: "/" },
@@ -12,9 +13,11 @@ export const routes = [
   { name: "Contact", path: "/contact" },
   { name: "Privacy Policy", path: "/legal/privacy" },
   { name: "Terms of Use", path: "/legal/terms" },
+  { name: "404 (Blog, not built yet)", path: "/blog", notFound: true },
 ] as const satisfies readonly {
   name: string;
   path: `/${string}`;
+  notFound?: true;
 }[];
 
 export const locales = routing.locales;

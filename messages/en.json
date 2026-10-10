@@ -12,13 +12,15 @@
     "privacyTitle": "Privacy Policy",
     "privacyDescription": "What personal information NortBrand collects through this website, why, and the choices you have.",
     "termsTitle": "Terms of Use",
-    "termsDescription": "The terms that apply when you use the NortBrand website."
+    "termsDescription": "The terms that apply when you use the NortBrand website.",
+    "notFoundTitle": "Page not found"
   },
   "Common": {
     "skipToContent": "Skip to content",
     "bookConsultation": "Book a Consultation",
     "sending": "Sending…",
-    "close": "Close"
+    "close": "Close",
+    "loading": "Loading"
   },
   "Nav": {
     "label": "Main",
@@ -407,6 +409,12 @@
         }
       }
     }
+  },
+  "NotFound": {
+    "title": "We couldn’t <greenUnderline>find that page</greenUnderline>.",
+    "lead": "The link may be broken, or the page may have moved. Here’s where you can go instead.",
+    "home": "Back to home",
+    "contact": "Contact us"
   },
   "LocaleSwitcher": {
     "label": "Language"

@@ -91,6 +91,41 @@
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
   --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
   --animate-spin: spin 800ms linear infinite;
+  /* Logomark stroke drawing (Motion Spec › System: 404 and loading splash). */
+  --animate-mark-draw: mark-draw 900ms var(--ease-emphasized) both;
+  --animate-mark-draw-loop: mark-draw-loop 1.4s ease-in-out infinite;
+  --animate-splash-progress: splash-progress 1.4s ease-in-out infinite;
+
+  @keyframes mark-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* Draws in, then the line leaves from its start, so the loop has no jump. */
+  @keyframes mark-draw-loop {
+    from {
+      stroke-dashoffset: 1;
+    }
+    50% {
+      stroke-dashoffset: 0;
+    }
+    to {
+      stroke-dashoffset: -1;
+    }
+  }
+
+  @keyframes splash-progress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
 }
 
 /* Fonts and shadcn/ui aliases resolve at runtime, so they live in an inline theme. */
@@ -243,6 +278,20 @@
   font-weight: 400;
 }
 
+/* The 404 numerals (Figma 320:21 / 380:81 / 380:133): decorative display figures. */
+@utility text-numeral {
+  font-size: 120px;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  font-weight: 700;
+  @media (width >= 48rem) {
+    font-size: 200px;
+  }
+  @media (width >= 64rem) {
+    font-size: 280px;
+  }
+}
+
 /* Centred page intros (Figma About hero lead 300:26 / 377:268): 18 → 22 on desktop. */
 @utility text-intro {
   font-size: 18px;
@@ -353,6 +402,32 @@
         rgb(8 5 5 / 0) 90%
       ),
       linear-gradient(rgb(8 5 5 / 0.14), rgb(8 5 5 / 0.14));
+  }
+}
+
+/*
+ * Loading splash (src/components/site/loading-splash.tsx). Hidden unless the inline
+ * head script marked the first load as pending; then it fades in only after 400 ms, so
+ * fast loads never see it.
+ */
+.splash {
+  display: none;
+}
+
+/* pointer-events: none: the cover is decorative and transparent during its delay, so it
+   must never swallow a click meant for the page underneath. */
+[data-splash="pending"] .splash {
+  display: flex;
+  pointer-events: none;
+  animation: splash-in var(--duration-fast) linear 400ms both;
+}
+
+@keyframes splash-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

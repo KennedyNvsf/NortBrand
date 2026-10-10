@@ -21,10 +21,13 @@ const MOBILE_VIEWPORT = { width: 390, height: 844 } as const;
 for (const route of routes) {
   for (const locale of locales) {
     const url = localizedPath(locale, route.path);
+    const isNotFound = "notFound" in route;
 
     test.describe(`${route.name} (${locale})`, () => {
       test("has no axe violations", async ({ page }) => {
         await page.goto(url);
+        // Audit the rendered page: the 404 boundary renders in the browser.
+        await expect(page.locator("h1")).toBeVisible();
         const { violations } = await new AxeBuilder({ page })
           .withTags([...WCAG_TAGS])
           .analyze();
@@ -46,6 +49,7 @@ for (const route of routes) {
       });
 
       test("emits canonical and hreflang alternates", async ({ page }) => {
+        test.skip(isNotFound, "a 404 is noindex and has no canonical URL");
         await page.goto(url);
 
         const canonical = page.locator('link[rel="canonical"]');
@@ -59,9 +63,21 @@ for (const route of routes) {
         }
       });
 
+      test("answers with the right status and indexing", async ({ page }) => {
+        const response = await page.goto(url);
+        expect(response?.status()).toBe(isNotFound ? 404 : 200);
+        const robots = page.locator('meta[name="robots"]');
+        if (isNotFound) {
+          await expect(robots).toHaveAttribute("content", /noindex/);
+        } else {
+          await expect(robots).toHaveCount(0);
+        }
+      });
+
       test("does not overflow horizontally at 390 px", async ({ page }) => {
         await page.setViewportSize(MOBILE_VIEWPORT);
         await page.goto(url);
+        await expect(page.locator("h1")).toBeVisible();
 
         const overflow = await page.evaluate(
           () =>

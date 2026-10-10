@@ -54,12 +54,28 @@ export function Logo({
 }
 
 /*
- * The squiggle mark on its own (Figma Contact "Brand Squiggle" 283:39): decorative,
- * always brand red. The view box crops the logo's view box to the mark.
+ * The squiggle mark on its own (Figma Contact "Brand Squiggle" 283:39, 404 320:22,
+ * splash 320:75): decorative, always brand red. The view box crops the logo's view box
+ * to the mark.
+ * `draw` animates the stroke with CSS (Motion Spec › System): "once" on the 404
+ * (900 ms, emphasized), "loop" on the splash (1.4 s, ease in-out). pathLength="1" makes
+ * the dash maths independent of the path's real length. Reduced motion: no animation,
+ * so the mark is simply drawn.
  */
 const MARK_VIEW_BOX = "68.36 141.12 45.5 43.24";
 
-export function LogoMark({ className }: { className?: string }) {
+const drawClassName = {
+  once: "[stroke-dasharray:1] motion-safe:animate-mark-draw",
+  loop: "[stroke-dasharray:1] motion-safe:animate-mark-draw-loop",
+} as const;
+
+export function LogoMark({
+  className,
+  draw,
+}: {
+  className?: string;
+  draw?: keyof typeof drawClassName;
+}) {
   return (
     <svg
       viewBox={MARK_VIEW_BOX}
@@ -70,7 +86,8 @@ export function LogoMark({ className }: { className?: string }) {
     >
       <path
         d={MARK}
-        className="stroke-action-primary"
+        pathLength={1}
+        className={cn("stroke-action-primary", draw && drawClassName[draw])}
         strokeWidth={4.4}
         strokeLinecap="round"
         strokeLinejoin="round"
