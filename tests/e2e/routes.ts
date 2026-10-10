@@ -10,6 +10,8 @@ export const routes = [
   { name: "Services", path: "/services" },
   { name: "About", path: "/about" },
   { name: "Contact", path: "/contact" },
+  { name: "Privacy Policy", path: "/legal/privacy" },
+  { name: "Terms of Use", path: "/legal/terms" },
 ] as const satisfies readonly {
   name: string;
   path: `/${string}`;

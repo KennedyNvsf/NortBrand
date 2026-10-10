@@ -8,7 +8,11 @@
     "aboutTitle": "[[About ~~]]",
     "aboutDescription": "[[NortBrand designs digital work for small businesses with the same care they give their own products and services. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
     "contactTitle": "[[Contact ~~]]",
-    "contactDescription": "[[Book a free 30-minute consultation with NortBrand. We reply within one business day. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+    "contactDescription": "[[Book a free 30-minute consultation with NortBrand. We reply within one business day. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
+    "privacyTitle": "[[Privacy Policy ~~~~]]",
+    "privacyDescription": "[[What personal information NortBrand collects through this website, why, and the choices you have. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
+    "termsTitle": "[[Terms of Use ~~~~]]",
+    "termsDescription": "[[The terms that apply when you use the NortBrand website. ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
   },
   "Common": {
     "skipToContent": "[[Skip to content ~~~~ ~]]",
@@ -308,6 +312,98 @@
         "afterLaunch": {
           "question": "[[What happens after the site launches? ~~~~ ~~~~ ~~~]]",
           "answer": "[[We don’t disappear. Website maintenance keeps your site updated, monitored and backed up, and we can keep improving it as your business grows. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+        }
+      }
+    }
+  },
+  "Legal": {
+    "eyebrow": "[[Legal ~~]]",
+    "lastUpdated": "[[Last updated: {date} ~~~~ ~~]]",
+    "onThisPage": "[[On this page ~~~~]]",
+    "questionsTitle": "[[Questions about this page? ~~~~ ~~~~]]",
+    "questionsBody": "[[Write to <email></email> and we’ll answer directly. ~~~~ ~~~~ ~~~~ ~~~]]",
+    "privacy": {
+      "title": "[[<greenUnderline>Privacy</greenUnderline> Policy ~~~~ ~~~~ ~~~~ ~~]]",
+      "lead": "[[This policy explains what personal information NortBrand collects through this website, why we collect it, and the choices you have. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
+      "sections": {
+        "whoWeAre": {
+          "title": "[[Who we are ~~~]]",
+          "body": "[[NortBrand Studio (“NortBrand”, “we”, “us”) is a digital product and web design studio based in Portugal. We are responsible for the personal information collected through this website. You can reach us at <email></email>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]"
+        },
+        "collect": {
+          "title": "[[Information we collect ~~~~ ~~~]]",
+          "body": "[[We only collect information you choose to give us, plus basic technical data needed to run the site. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+          "items": {
+            "contactForm": "[[Contact details and messages you send through the contact form (name, email, phone number, project details) ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
+            "newsletter": "[[Your email address, if you subscribe to the newsletter ~~~~ ~~~~ ~~~~ ~~~~]]",
+            "usage": "[[Basic usage data such as pages visited and device type [analytics provider to be confirmed] ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+          }
+        },
+        "use": {
+          "title": "[[How we use your information ~~~~ ~~~~]]",
+          "body": "[[We use your information to reply to your enquiries, deliver the services you ask for, send the newsletter you subscribed to, and improve how this website works. We do not sell your personal information. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+        },
+        "cookies": {
+          "title": "[[Cookies and analytics ~~~~ ~~]]",
+          "body": "[[This website may use cookies and similar technologies to remember your preferences and understand how the site is used. Where required, we ask for your consent before using non-essential cookies. [Cookie details to be confirmed.] ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+        },
+        "sharing": {
+          "title": "[[Sharing your information ~~~~ ~~~]]",
+          "body": "[[We only share personal information with service providers who help us operate the website and our business, such as hosting and email providers, and only as needed to provide those services. [List of providers to be confirmed.] ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]"
+        },
+        "retention": {
+          "title": "[[How long we keep it ~~~~ ~~]]",
+          "body": "[[We keep personal information only for as long as needed for the purposes described above, or as required by law. [Retention periods to be confirmed.] ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+        },
+        "rights": {
+          "title": "[[Your rights ~~~]]",
+          "body": "[[Under the GDPR you can ask to access, correct, delete, or export your personal information, and to object to or restrict how we use it. You can withdraw consent at any time, and you can lodge a complaint with the Portuguese data protection authority (CNPD). ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+        },
+        "contact": {
+          "title": "[[Contact us ~~~]]",
+          "body": "[[For any questions about this policy or your data, write to <email></email>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+        }
+      }
+    },
+    "terms": {
+      "title": "[[<greenUnderline>Terms</greenUnderline> of Use ~~~~ ~~~~ ~~~~ ~~]]",
+      "lead": "[[By using this website you agree to the terms below. We’ve kept them clear and short, because they’re meant to be read. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
+      "sections": {
+        "acceptance": {
+          "title": "[[Acceptance of these terms ~~~~ ~~~~]]",
+          "body": "[[By accessing or using the NortBrand website, you agree to these Terms of Use. If you don’t agree, please don’t use the site. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+        },
+        "use": {
+          "title": "[[Using the website ~~~~ ~]]",
+          "body": "[[You may use this website for lawful purposes only. Please don’t attempt to disrupt the site, access areas you aren’t authorised to, or use it in a way that harms NortBrand or other visitors. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+        },
+        "ip": {
+          "title": "[[Intellectual property ~~~~ ~~]]",
+          "body": "[[All content on this website, including text, graphics, logos, and designs, belongs to NortBrand or its licensors and is protected by intellectual property laws. You may not copy or reuse it without written permission. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+        },
+        "enquiries": {
+          "title": "[[Enquiries and proposals ~~~~ ~~~]]",
+          "body": "[[Sending a contact request doesn’t create a client relationship. Any project work is covered by a separate written agreement. [To be confirmed.] ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+        },
+        "links": {
+          "title": "[[Third-party links ~~~~ ~]]",
+          "body": "[[This website may link to third-party sites. We aren’t responsible for their content or privacy practices. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]"
+        },
+        "liability": {
+          "title": "[[Limitation of liability ~~~~ ~~~]]",
+          "body": "[[We do our best to keep the information on this website accurate and up to date, but we provide it “as is”, without warranties. To the extent permitted by law, NortBrand is not liable for losses arising from your use of the site. [To be reviewed by legal counsel.] ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+        },
+        "changes": {
+          "title": "[[Changes to these terms ~~~~ ~~~]]",
+          "body": "[[We may update these terms from time to time. The latest version will always be available on this page, with the date of the last update. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+        },
+        "law": {
+          "title": "[[Governing law ~~~~]]",
+          "body": "[[These terms are governed by the laws of Portugal. [Jurisdiction to be confirmed.] ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]"
+        },
+        "contact": {
+          "title": "[[Contact ~~]]",
+          "body": "[[Questions about these terms? Write to <email></email>. ~~~~ ~~~~ ~~~~ ~~~~]]"
         }
       }
     }

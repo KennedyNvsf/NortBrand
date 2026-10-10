@@ -214,7 +214,7 @@ pnpm test           # vitest
 pnpm test:e2e       # playwright
 pnpm build
 pnpm i18n:pseudo    # regenerate placeholder pt.json from en.json (keeps real translations; --reset for all)
-pnpm check:release  # strict placeholder/content guard; must pass before launch
+pnpm check:release  # strict guard: pseudo translations + draft legal text; must pass before launch
 supabase start / supabase db reset / supabase test db
 ```
 
