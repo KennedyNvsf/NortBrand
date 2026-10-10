@@ -30,6 +30,16 @@ export const highlightTags = {
   ),
 };
 
+/*
+ * Body-copy emphasis (Figma About 312:33, 301:50): key words in SemiBold, text/primary,
+ * inside muted paragraphs. `"... the <strong>brand</strong> ..."` with t.rich.
+ */
+export const emphasisTags = {
+  strong: (chunks: ReactNode) => (
+    <strong className="font-semibold text-text-primary">{chunks}</strong>
+  ),
+};
+
 /** Renders every highlight tag as plain text, for places that show a title unstyled. */
 export const plainTags = {
   red: (chunks: ReactNode) => chunks,

@@ -4,7 +4,9 @@
     "homeTitle": "NortBrand — A Digital Brand Experience",
     "homeDescription": "NortBrand treats a business website as a product, not a brochure.",
     "servicesTitle": "Services",
-    "servicesDescription": "Web design, web development, content writing, social media management and website maintenance for local and service-based businesses."
+    "servicesDescription": "Web design, web development, content writing, social media management and website maintenance for local and service-based businesses.",
+    "aboutTitle": "About",
+    "aboutDescription": "NortBrand designs digital work for small businesses with the same care they give their own products and services."
   },
   "Common": {
     "skipToContent": "Skip to content",
@@ -204,6 +206,35 @@
     "cta": {
       "headline": "Ready to pick your starting point?",
       "subtext": "You don’t need all five services on day one. Book a free consultation and we’ll figure out what actually matters first."
+    }
+  },
+  "About": {
+    "hero": {
+      "eyebrow": "About NortBrand",
+      "title": "Digital work, designed with the <greenUnderline>same care</greenUnderline>.",
+      "lead": "NortBrand started with a simple belief: small businesses deserve digital experiences that are designed with the same care as the products and services they provide."
+    },
+    "story": {
+      "eyebrow": "Our story",
+      "title": "<green>More</green> than a finished project.",
+      "statement": "NortBrand was created to approach digital work <red>differently</red>.",
+      "intro": "Instead of starting with templates or trends, we start by understanding the business:",
+      "understanding": {
+        "does": "What it does",
+        "serves": "Who it serves",
+        "interacts": "How people interact with it",
+        "works": "What actually needs to work"
+      },
+      "outro": "From there, we shape the <strong>brand</strong>, <strong>experience</strong>, <strong>interface</strong>, and <strong>technology</strong> around that reality."
+    },
+    "principle": {
+      "eyebrow": "Our principle",
+      "title": "Minimalism, but <indent><greenUnderline>functional</greenUnderline> products.</indent>",
+      "body": "Every NortBrand project should be clear, purposeful, and built around the people who will actually use it — whether that means a focused business website <strong>today</strong> or a complete digital product that grows into bookings, customer experiences, and mobile applications <strong>tomorrow</strong>."
+    },
+    "cta": {
+      "headline": "Let’s start with <highlight>your business</highlight>.",
+      "subtext": "Book a free consultation and tell us what your business does, who it serves, and what actually needs to work."
     }
   },
   "LocaleSwitcher": {
