@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
+import { Reveal } from "@/components/motion/reveal";
 import { emphasisTags, highlightTags } from "@/components/site/highlight";
 
 /*
@@ -24,7 +25,7 @@ export async function AboutStory() {
     >
       <div className="container-page">
         <div className="flex flex-col gap-7 border-t border-border-default pt-xl md:gap-9 md:pt-10 lg:flex-row lg:items-start lg:gap-24">
-          <div className="flex flex-col gap-lg lg:w-90 lg:shrink-0">
+          <Reveal className="flex flex-col gap-lg lg:w-90 lg:shrink-0">
             <p className="text-overline text-text-accent">{t("eyebrow")}</p>
             <h2
               id="about-story-title"
@@ -32,9 +33,12 @@ export async function AboutStory() {
             >
               {t.rich("title", highlightTags)}
             </h2>
-          </div>
+          </Reveal>
 
-          <div className="flex min-w-0 flex-1 flex-col gap-lg lg:gap-xl">
+          <Reveal
+            index={1}
+            className="flex min-w-0 flex-1 flex-col gap-lg lg:gap-xl"
+          >
             <div className="flex gap-lg py-md md:py-5 lg:py-7">
               <span
                 aria-hidden
@@ -68,7 +72,7 @@ export async function AboutStory() {
             <p className="text-body text-text-muted lg:text-lead">
               {t.rich("outro", emphasisTags)}
             </p>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Calendar } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
+import { Reveal } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
 import { BOOKING_HREF } from "@/content/navigation";
 import { Link } from "@/i18n/navigation";
@@ -21,6 +22,7 @@ import seaCoast from "@/assets/images/sea-coast.jpg";
  *   photo-scrim utility keeps white text readable: vertical on touch, horizontal on
  *   desktop.
  * - data-sticky-cta-hide: the mobile StickyCta hides while this band is on screen.
+ * - The card reveals on scroll (Motion Spec › Global).
  */
 
 export function CtaHighlight({ children }: { children: ReactNode }) {
@@ -45,7 +47,7 @@ export async function CtaBand({ headline, subtext, className }: CtaBandProps) {
       className={cn("bg-bg-surface px-(--gutter) py-lg lg:py-xl", className)}
     >
       {/* Full-width white band; the card stops at the 1440 canvas minus gutters. */}
-      <div className="relative isolate mx-auto max-w-[calc(var(--container-canvas)-2*var(--gutter))] overflow-hidden rounded-xl shadow-card">
+      <Reveal className="relative isolate mx-auto max-w-[calc(var(--container-canvas)-2*var(--gutter))] overflow-hidden rounded-xl shadow-card">
         <Image
           src={seaCoast}
           alt=""
@@ -89,7 +91,7 @@ export async function CtaBand({ headline, subtext, className }: CtaBandProps) {
             </Button>
           </div>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

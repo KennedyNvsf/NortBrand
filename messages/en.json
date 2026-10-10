@@ -133,6 +133,7 @@
     },
     "blocks": {
       "label": "Our services",
+      "jump": "Jump to a service",
       "eyebrow": "{number} — {name}",
       "moreDetails": "More Details",
       "moreDetailsLabel": "More Details: {name}"

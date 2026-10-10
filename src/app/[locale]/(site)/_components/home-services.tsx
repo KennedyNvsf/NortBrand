@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
+import { Reveal } from "@/components/motion/reveal";
 import { highlightTags } from "@/components/site/highlight";
 import { SectionHeader } from "@/components/site/section-header";
 import { ServiceCard } from "@/components/site/service-card";
@@ -28,18 +29,20 @@ export async function HomeServices() {
           weight="semibold"
         />
         <ul className="grid gap-3.5 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-xl">
-          {services.map(({ slug, key, icon }) => (
+          {services.map(({ slug, key, icon }, index) => (
             <li
               key={slug}
               className="flex md:last:col-span-2 lg:last:col-span-1"
             >
-              <ServiceCard
-                href={{ pathname: "/services", hash: slug }}
-                icon={icon}
-                title={names(key)}
-                description={summaries(key)}
-                actionLabel={t("learnMore")}
-              />
+              <Reveal index={index} className="flex w-full">
+                <ServiceCard
+                  href={{ pathname: "/services", hash: slug }}
+                  icon={icon}
+                  title={names(key)}
+                  description={summaries(key)}
+                  actionLabel={t("learnMore")}
+                />
+              </Reveal>
             </li>
           ))}
         </ul>

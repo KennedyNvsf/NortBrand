@@ -18,6 +18,7 @@ the guides always match the code.
 | [Legal pages](./legal-pages.md)         | Privacy and Terms layout, typed legal content, `TableOfContents`, draft release guard                 |
 | [System states](./system-states.md)     | The localized 404 (catch-all, `ensureStatic`), loading splash, `LogoMark` drawing                     |
 | [SEO](./seo.md)                         | Page metadata, share image, sitemap, robots, JSON-LD, preview noindex                                 |
+| [Motion](./motion.md)                   | Motion Spec: tokens, `MotionProvider`, `<Reveal>`, journey line, Services stage, menu stagger         |
 | [Services page](./services-page.md)     | Photo hero, service blocks, Dialog/Drawer details, Tabs/Accordion, useMediaQuery, `cn` fix            |
 
 Each guide follows the same shape: what we built, how it works at runtime, the files one

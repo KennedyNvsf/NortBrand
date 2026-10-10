@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
+import { Reveal } from "@/components/motion/reveal";
 import { highlightTags, indentTag } from "@/components/site/highlight";
 
 /*
@@ -35,22 +36,24 @@ export async function ContactSteps() {
 
         <ol className="grid gap-md md:grid-cols-3 md:gap-sm lg:gap-lg">
           {stepKeys.map((key, index) => (
-            <li
-              key={key}
-              className="flex flex-col gap-md rounded-lg border border-border-default bg-bg-surface px-lg pt-6 pb-7 shadow-card md:px-md lg:px-7 lg:pt-7 lg:pb-8"
-            >
-              <span
-                aria-hidden
-                className="flex size-12 items-center justify-center rounded-md bg-action-primary-subtle text-lead font-bold text-text-accent"
+            <li key={key} className="flex">
+              <Reveal
+                index={index}
+                className="flex w-full flex-col gap-md rounded-lg border border-border-default bg-bg-surface px-lg pt-6 pb-7 shadow-card md:px-md lg:px-7 lg:pt-7 lg:pb-8"
               >
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <h3 className="text-h4 font-semibold text-text-primary">
-                {t(`items.${key}.title`)}
-              </h3>
-              <p className="text-small text-text-muted">
-                {t(`items.${key}.body`)}
-              </p>
+                <span
+                  aria-hidden
+                  className="flex size-12 items-center justify-center rounded-md bg-action-primary-subtle text-lead font-bold text-text-accent"
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 className="text-h4 font-semibold text-text-primary">
+                  {t(`items.${key}.title`)}
+                </h3>
+                <p className="text-small text-text-muted">
+                  {t(`items.${key}.body`)}
+                </p>
+              </Reveal>
             </li>
           ))}
         </ol>

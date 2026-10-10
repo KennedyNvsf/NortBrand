@@ -3,6 +3,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { locale as rootLocale } from "next/root-params";
 
+import { MotionProvider } from "@/components/motion/motion-provider";
 import { JsonLd } from "@/components/site/json-ld";
 import { LoadingSplash, splashScript } from "@/components/site/loading-splash";
 import { Toaster } from "@/components/ui/sonner";
@@ -62,7 +63,9 @@ export default async function LocaleLayout({
         >
           {t("skipToContent")}
         </a>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <MotionProvider>{children}</MotionProvider>
+        </NextIntlClientProvider>
         {/* Organization on every page (brief, "SEO"). */}
         <JsonLd
           data={organizationJsonLd({

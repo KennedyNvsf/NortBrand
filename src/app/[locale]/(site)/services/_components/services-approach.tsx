@@ -1,6 +1,7 @@
 import Image, { type StaticImageData } from "next/image";
 import { getTranslations } from "next-intl/server";
 
+import { Reveal } from "@/components/motion/reveal";
 import { MarkPanel } from "@/components/site/mark-panel";
 import {
   Accordion,
@@ -90,7 +91,7 @@ export async function ServicesApproach() {
         orientation="vertical"
         className="container-page flex-col gap-lg md:grid md:grid-cols-[--spacing(75)_minmax(0,1fr)] md:grid-rows-[auto_1fr] md:gap-x-10 md:gap-y-7 lg:grid-cols-[--spacing(119.5)_--spacing(120)] lg:gap-x-20 lg:gap-y-xl"
       >
-        <div className="flex flex-col gap-lg md:col-start-1 md:gap-lg">
+        <Reveal className="flex flex-col gap-lg md:col-start-1 md:gap-lg">
           <p className="text-overline text-action-secondary">{t("eyebrow")}</p>
           <h2
             id="approach-title"
@@ -99,7 +100,7 @@ export async function ServicesApproach() {
             {t("title")}
           </h2>
           <p className="text-body text-text-muted">{t("body")}</p>
-        </div>
+        </Reveal>
 
         {/* Tablet and desktop */}
         <TabsList

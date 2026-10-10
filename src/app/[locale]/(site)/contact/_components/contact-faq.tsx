@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
+import { Reveal } from "@/components/motion/reveal";
 import { highlightTags } from "@/components/site/highlight";
 import { LINK_ROOT, TextLinkContent } from "@/components/site/text-link";
 import {
@@ -30,7 +31,7 @@ export async function ContactFaq() {
       className="bg-bg-surface pb-18 md:pb-22 lg:pt-5 lg:pb-15"
     >
       <div className="container-page flex flex-col gap-7 md:gap-9 lg:flex-row lg:items-start lg:gap-24">
-        <div className="flex flex-col items-start gap-lg lg:w-100 lg:shrink-0">
+        <Reveal className="flex flex-col items-start gap-lg lg:w-100 lg:shrink-0">
           <p className="text-overline text-action-secondary">{t("eyebrow")}</p>
           <h2
             id="contact-faq-title"
@@ -48,7 +49,7 @@ export async function ContactFaq() {
           >
             <TextLinkContent>{t("link")}</TextLinkContent>
           </a>
-        </div>
+        </Reveal>
 
         <Accordion
           type="single"
