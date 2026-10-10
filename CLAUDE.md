@@ -197,7 +197,9 @@ Rules:
 - Single office, Europe/Lisbon. Store UTC; show Lisbon time in emails.
 - 3 blog posts per language at launch.
 - Blog page size is 8 at every breakpoint.
-- Sticky CTA on the blog listing only, not on posts. It links to `/[locale]/contact`.
+- Sticky CTA (mobile) on every page except Contact, Legal, the 404 and blog posts (decided
+  2026-10-08, following Figma Home and the Handoff). A page opts in by marking its hero with
+  `data-sticky-cta-trigger`. It links to `/[locale]/contact`.
 - Contact email and phone are placeholders until provided. Read them from
   `src/content/site.ts` only.
 

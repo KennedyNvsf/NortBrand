@@ -42,12 +42,10 @@ export async function CtaBand({ headline, subtext, className }: CtaBandProps) {
     <section
       aria-labelledby="cta-band-title"
       data-sticky-cta-hide
-      className={cn(
-        "mx-auto w-full max-w-(--container-canvas) px-(--gutter) py-lg lg:py-xl",
-        className,
-      )}
+      className={cn("bg-bg-surface px-(--gutter) py-lg lg:py-xl", className)}
     >
-      <div className="relative isolate overflow-hidden rounded-xl shadow-card">
+      {/* Full-width white band; the card stops at the 1440 canvas minus gutters. */}
+      <div className="relative isolate mx-auto max-w-[calc(var(--container-canvas)-2*var(--gutter))] overflow-hidden rounded-xl shadow-card">
         <Image
           src={seaCoast}
           alt=""

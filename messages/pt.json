@@ -38,6 +38,13 @@
     "socialMedia": "[[Social Media Management ~~~~ ~~~]]",
     "maintenance": "[[Website Maintenance ~~~~ ~~]]"
   },
+  "ServiceSummaries": {
+    "webDesign": "[[Clean, modern interfaces built around your business and your customers — not a template with your logo on it. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
+    "webDevelopment": "[[Fast, reliable builds with real product architecture underneath, ready to grow with you. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+    "contentWriting": "[[Clear, on-brand copy that explains what you do and why it matters — without the filler. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+    "socialMedia": "[[Consistent, on-brand content that keeps your business visible between projects. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
+    "maintenance": "[[Ongoing updates, monitoring, and small fixes, so your site keeps working as hard as you do. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+  },
   "CtaBand": {
     "headline": "[[Got a project in mind? Let’s <highlight>talk</highlight>. ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
     "subtext": "[[Reading is a great start. A conversation is better — book a free consultation and let’s figure out what your business actually needs. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
@@ -49,33 +56,62 @@
     "meta": "[[30 minutes · No pressure ~~~~ ~~~]]",
     "action": "[[Book now ~~]]"
   },
+  "Home": {
+    "hero": {
+      "eyebrow": "[[Digital product & web design studio ~~~~ ~~~~ ~~~]]",
+      "title": "[[Websites built like <green>products</green>, not brochures. ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+      "lead": "[[We design and build modern websites, landing pages, and digital products for local and service-based businesses — functional from day one, built to grow. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+      "secondary": "[[View Services ~~~~]]"
+    },
+    "why": {
+      "eyebrow": "[[Why it matters ~~~~]]",
+      "title": "[[The <red>businesses</red> that grow fastest aren’t always the best. They’re <underline>the clearest</underline>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+      "body": "[[A strong digital brand isn’t about looking nice — it’s about being instantly understood. When your website, your content and your presence all say the same thing clearly, people trust you faster, hesitate less, and choose you instead of the next tab over. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
+      "points": {
+        "first": "[[First impressions form in milliseconds ~~~~ ~~~~ ~~~]]",
+        "second": "[[Consistency builds trust faster than content ~~~~ ~~~~ ~~~~ ~]]",
+        "third": "[[Clarity converts better than cleverness ~~~~ ~~~~ ~~~~]]"
+      }
+    },
+    "services": {
+      "eyebrow": "[[What we do ~~~]]",
+      "title": "[[One <green>studio</green>, the full stack of your digital presence. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
+      "learnMore": "[[Learn More ~~~]]"
+    },
+    "philosophy": {
+      "eyebrow": "[[Our philosophy ~~~~]]",
+      "title": "[[We don’t <red>guess</red> what your business needs. We <underline>ask</underline>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
+      "body": "[[Every NortBrand project starts with a real conversation — about your customers, your goals, and what success actually looks like for your business. That’s how we make sure what we build doesn’t just look good, it performs. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
+      "points": {
+        "first": "[[Every project starts with a conversation, not a template ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
+        "second": "[[Design decisions are tied to your actual business goals ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
+        "third": "[[Success is measured in results, not just good looks ~~~~ ~~~~ ~~~~ ~~~]]"
+      }
+    },
+    "process": {
+      "eyebrow": "[[How it works ~~~~]]",
+      "title": "[[A clear process, from first call to launch. ~~~~ ~~~~ ~~~~ ~]]",
+      "steps": {
+        "discover": {
+          "title": "[[Discover ~~]]",
+          "body": "[[We start by understanding your business, your customers, and what success actually looks like for you. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+        },
+        "design": {
+          "title": "[[Design ~~]]",
+          "body": "[[A clear visual direction and structure, built around your content and your goals — not a template. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+        },
+        "build": {
+          "title": "[[Build ~~]]",
+          "body": "[[A fast, reliable, functional website or product, built on solid technical foundations. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]"
+        },
+        "launch": {
+          "title": "[[Launch & Grow ~~~~]]",
+          "body": "[[We launch, then keep improving — content, performance, and features that grow with your business. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+        }
+      }
+    }
+  },
   "LocaleSwitcher": {
     "label": "[[Language ~~]]"
-  },
-  "Placeholder": {
-    "eyebrow": "[[Phase 1 · Foundation ~~~~ ~~]]",
-    "title": "[[Minimalism, but functional. ~~~~ ~~~~]]",
-    "lead": "[[This placeholder proves locale routing, hreflang and the design tokens. Real pages arrive in Phase 2. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-    "switchLocale": "[[Ver em português ~~~~ ~]]",
-    "emailLabel": "[[Email address ~~~~]]",
-    "emailPlaceholder": "[[you@company.com ~~~~ ~]]",
-    "emailError": "[[Please enter a valid email address ~~~~ ~~~~ ~~]]",
-    "preview": {
-      "badgeNew": "[[New ~]]",
-      "serviceTitle": "[[Booking & Scheduling ~~~~ ~~]]",
-      "serviceDescription": "[[Turn your services into a clear, bookable experience your clients actually enjoy using. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-      "learnMore": "[[Learn More ~~~]]",
-      "articleTitle": "[[5 Signs Your Brand Needs a Refresh ~~~~ ~~~~ ~~]]",
-      "articleExcerpt": "[[Some signals are obvious. Most aren’t. Here’s how to tell the difference before… ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-      "articleCategory": "[[Branding ~~]]",
-      "articleByline": "[[NortBrand · Sep 2026 ~~~~ ~~]]",
-      "readMore": "[[Read More ~~~]]",
-      "selectLabel": "[[I’m interested in ~~~~ ~]]",
-      "selectPlaceholder": "[[Select a service ~~~~ ~]]",
-      "selectError": "[[Please choose a service ~~~~ ~~~]]",
-      "messageLabel": "[[Message ~~]]",
-      "messagePlaceholder": "[[Tell us about your project ~~~~ ~~~~]]",
-      "messageError": "[[Please write at least 10 characters ~~~~ ~~~~ ~~~]]"
-    }
   }
 }

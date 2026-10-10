@@ -7,6 +7,19 @@ import { expect, test, type Page } from "@playwright/test";
 
 const isDesktop = (page: Page) => (page.viewportSize()?.width ?? 0) >= 1024;
 
+/*
+ * Opens the mobile menu. A tap that lands before React has hydrated the page does
+ * nothing, so retry the tap until the dialog is open instead of racing hydration.
+ */
+async function openMenu(page: Page) {
+  const dialog = page.getByRole("dialog", { name: "Menu" });
+  await expect(async () => {
+    await page.getByRole("button", { name: "Open menu" }).click();
+    await expect(dialog).toBeVisible({ timeout: 1_000 });
+  }).toPass();
+  return dialog;
+}
+
 test.describe("site nav", () => {
   test("is sticky and shows the hairline only after scrolling", async ({
     page,
@@ -28,9 +41,7 @@ test.describe("site nav", () => {
     context,
   }) => {
     await page.goto("/en");
-    if (!isDesktop(page)) {
-      await page.getByRole("button", { name: "Open menu" }).click();
-    }
+    if (!isDesktop(page)) await openMenu(page);
     await page
       .getByRole("group", { name: "Language" })
       .getByRole("link", { name: /PT/ })
@@ -60,9 +71,7 @@ test.describe("site nav", () => {
     test.skip(isDesktop(page), "tablet and mobile only");
 
     const trigger = page.getByRole("button", { name: "Open menu" });
-    await trigger.click();
-    const dialog = page.getByRole("dialog", { name: "Menu" });
-    await expect(dialog).toBeVisible();
+    const dialog = await openMenu(page);
     await expect(dialog.getByRole("link", { name: "Services" })).toBeVisible();
 
     for (let i = 0; i < 12; i += 1) await page.keyboard.press("Tab");
@@ -79,8 +88,7 @@ test.describe("site nav", () => {
     await page.goto("/en");
     test.skip(isDesktop(page), "tablet and mobile only");
 
-    await page.getByRole("button", { name: "Open menu" }).click();
-    const dialog = page.getByRole("dialog", { name: "Menu" });
+    const dialog = await openMenu(page);
     await dialog.getByRole("link", { name: "Contact" }).click();
 
     await expect(page).toHaveURL(/\/en\/contact$/);
