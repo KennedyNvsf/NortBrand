@@ -318,6 +318,34 @@
   }
 }
 
+/*
+ * Services photo hero (Figma 149:45–46, 359:152–153): a 14% ink tint plus a gradient
+ * behind the white hero text. Top-down below desktop, where the text and quote stack
+ * over the lower photo; left-to-right from desktop, where the text sits on the left.
+ */
+@utility hero-scrim {
+  background-image:
+    linear-gradient(
+      180deg,
+      rgb(8 5 5 / 0.4) 0%,
+      rgb(8 5 5 / 0.5) 50%,
+      rgb(8 5 5 / 0.86) 100%
+    ),
+    linear-gradient(rgb(8 5 5 / 0.14), rgb(8 5 5 / 0.14));
+  @media (width >= 64rem) {
+    background-image:
+      linear-gradient(
+        90deg,
+        rgb(8 5 5 / 0.55) 0%,
+        rgb(8 5 5 / 0.4) 32%,
+        rgb(8 5 5 / 0.2) 55%,
+        rgb(8 5 5 / 0.05) 75%,
+        rgb(8 5 5 / 0) 90%
+      ),
+      linear-gradient(rgb(8 5 5 / 0.14), rgb(8 5 5 / 0.14));
+  }
+}
+
 /* The sticky CTA steps aside while a dialog, sheet or menu is open (Handoff › Sticky
    CTA). Radix scroll locking marks <body> with data-scroll-locked. */
 body[data-scroll-locked] [data-slot="sticky-cta"] {
