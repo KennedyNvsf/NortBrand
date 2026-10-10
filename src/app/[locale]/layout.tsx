@@ -3,10 +3,13 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { locale as rootLocale } from "next/root-params";
 
+import { JsonLd } from "@/components/site/json-ld";
 import { LoadingSplash, splashScript } from "@/components/site/loading-splash";
 import { Toaster } from "@/components/ui/sonner";
 import { publicEnv } from "@/env";
+import { site } from "@/content/site";
 import { routing } from "@/i18n/routing";
+import { organizationJsonLd } from "@/lib/seo/structured-data";
 
 import { instrumentSans } from "../fonts";
 import "../globals.css";
@@ -38,6 +41,7 @@ export default async function LocaleLayout({
     : routing.defaultLocale;
 
   const t = await getTranslations("Common");
+  const metadata = await getTranslations("Metadata");
 
   return (
     // suppressHydrationWarning: the splash script sets data-splash on <html> before
@@ -59,6 +63,14 @@ export default async function LocaleLayout({
           {t("skipToContent")}
         </a>
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        {/* Organization on every page (brief, "SEO"). */}
+        <JsonLd
+          data={organizationJsonLd({
+            siteUrl: publicEnv.NEXT_PUBLIC_SITE_URL,
+            description: metadata("homeDescription"),
+            config: site,
+          })}
+        />
         <Toaster />
       </body>
     </html>
