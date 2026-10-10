@@ -1,7 +1,10 @@
-import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 
-import { emphasisTags, highlightTags } from "@/components/site/highlight";
+import {
+  emphasisTags,
+  highlightTags,
+  indentTag,
+} from "@/components/site/highlight";
 
 /*
  * Figma About › Our Principle (desktop 301:43, tablet 377:112, mobile 377:295).
@@ -12,11 +15,8 @@ import { emphasisTags, highlightTags } from "@/components/site/highlight";
  *   sections share one vertical edge.
  */
 
-const indentTag = {
-  indent: (chunks: ReactNode) => (
-    <span className="md:block md:pl-12 lg:pl-22.5">{chunks}</span>
-  ),
-};
+/* Inline on mobile, so the sentence flows; its own line from tablet. */
+const titleIndent = indentTag("md:block md:pl-12 lg:pl-22.5");
 
 export async function AboutPrinciple() {
   const t = await getTranslations("About.principle");
@@ -34,7 +34,7 @@ export async function AboutPrinciple() {
               id="about-principle-title"
               className="text-display-xl text-text-primary"
             >
-              {t.rich("title", { ...highlightTags, ...indentTag })}
+              {t.rich("title", { ...highlightTags, ...titleIndent })}
             </h2>
           </div>
           <p className="text-body text-text-muted lg:ml-114 lg:max-w-170 lg:text-lead">

@@ -10,8 +10,9 @@ import { cn } from "@/lib/utils";
 /*
  * shadcn Accordion on Radix (Handoff: "FAQ · Talking Points (mobile): shadcn Accordion,
  * type=single, collapsible"). Items are separated by a hairline; the chevron turns up
- * when open (Figma 359:726). Opening uses the tw-animate accordion keyframes at
- * --duration-base; reduced motion shortens them to a 150 ms fade (globals.css).
+ * and red when open (Figma 359:726, 280:63). Opening uses the tw-animate accordion
+ * keyframes at --duration-base; reduced motion shortens them to a 150 ms fade
+ * (globals.css).
  */
 
 function Accordion(
@@ -53,7 +54,7 @@ function AccordionTrigger({
       >
         {children}
         <ChevronDown
-          className="size-6 shrink-0 text-icon-default transition-transform duration-(--duration-base) ease-standard group-data-[state=open]/accordion-trigger:rotate-180"
+          className="size-6 shrink-0 text-icon-default transition-[rotate,color] duration-(--duration-base) ease-standard group-data-[state=open]/accordion-trigger:rotate-180 group-data-[state=open]/accordion-trigger:text-action-primary"
           strokeWidth={ICON_STROKE}
           aria-hidden
         />

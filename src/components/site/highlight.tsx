@@ -50,3 +50,14 @@ export const plainTags = {
   keyof typeof highlightTags,
   (chunks: ReactNode) => ReactNode
 >;
+
+/*
+ * A headline line that starts further in (Figma About 301:48, Contact 283:42). The
+ * message wraps the line in <indent>, so the sentence stays whole for translators;
+ * each page passes its own indent per breakpoint.
+ */
+export function indentTag(className: string) {
+  return {
+    indent: (chunks: ReactNode) => <span className={className}>{chunks}</span>,
+  };
+}

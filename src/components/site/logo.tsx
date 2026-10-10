@@ -52,3 +52,29 @@ export function Logo({
     </svg>
   );
 }
+
+/*
+ * The squiggle mark on its own (Figma Contact "Brand Squiggle" 283:39): decorative,
+ * always brand red. The view box crops the logo's view box to the mark.
+ */
+const MARK_VIEW_BOX = "68.36 141.12 45.5 43.24";
+
+export function LogoMark({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox={MARK_VIEW_BOX}
+      fill="none"
+      aria-hidden
+      focusable="false"
+      className={cn("shrink-0", className)}
+    >
+      <path
+        d={MARK}
+        className="stroke-action-primary"
+        strokeWidth={4.4}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
