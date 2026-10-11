@@ -18,7 +18,8 @@ import servicesHero from "@/assets/images/services-hero.jpg";
  *   rasterisation on slower devices (measured in #27). The section's dark fill shows
  *   until the (priority) photo arrives.
  * - data-sticky-cta-trigger: the mobile StickyCta appears once this has scrolled away.
- * - Entrance (CSS, first paint): eyebrow, headline, lead, then the quote card.
+ * - Entrance (CSS, first paint): eyebrow, headline, lead, then the quote card, while
+ *   the photo settles from a slight zoom (1.08 → 1, 1.6 s).
  * Holds the page's only H1.
  */
 export async function ServicesHero() {
@@ -37,7 +38,7 @@ export async function ServicesHero() {
         fill
         priority
         sizes="100vw"
-        className="-z-10 object-cover"
+        className="-z-10 object-cover motion-safe:animate-hero-settle"
       />
       <div aria-hidden className="absolute inset-0 -z-10 hero-scrim" />
 

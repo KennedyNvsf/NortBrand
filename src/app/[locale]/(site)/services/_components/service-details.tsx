@@ -172,7 +172,7 @@ function DetailsBody({
 }) {
   const Icon = icons[icon];
   return (
-    <div className={cn("flex min-w-0 flex-col", className)}>
+    <div className={cn("stagger-in flex min-w-0 flex-col", className)}>
       <div className="flex items-center justify-between gap-md">
         <div className="flex items-center gap-3">
           <span className="flex size-11 shrink-0 items-center justify-center rounded-md bg-text-primary lg:hidden">

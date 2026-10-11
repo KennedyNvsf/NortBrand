@@ -1,3 +1,4 @@
+import { Parallax } from "@/components/motion/parallax";
 import { revealItem } from "@/components/motion/reveal-item";
 import { cn } from "@/lib/utils";
 
@@ -6,6 +7,7 @@ import { cn } from "@/lib/utils";
  * 97:105). A placeholder for photography (CLAUDE.md, Images): decorative, so hidden
  * from assistive tech. The path is the Figma "Mark" export, stroked with currentColor.
  * `draw`: inside a RevealGroup the mark draws itself once the panel arrives.
+ * `parallax`: on desktop the mark drifts slower than the page as it scrolls by.
  */
 export const MARK_VIEW_BOX = "0 0 221 221";
 
@@ -15,10 +17,31 @@ export const MARK_PATH =
 export function MarkPanel({
   className,
   draw = false,
+  parallax = false,
 }: {
   className?: string;
   draw?: boolean;
+  parallax?: boolean;
 }) {
+  const mark = (
+    <svg
+      viewBox={MARK_VIEW_BOX}
+      fill="none"
+      className="size-34 md:size-44 lg:size-55"
+    >
+      <path
+        {...(draw && revealItem("draw"))}
+        pathLength={1}
+        strokeDasharray={1}
+        d={MARK_PATH}
+        stroke="currentColor"
+        strokeWidth={17}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+
   return (
     <div
       aria-hidden
@@ -28,22 +51,7 @@ export function MarkPanel({
         className,
       )}
     >
-      <svg
-        viewBox={MARK_VIEW_BOX}
-        fill="none"
-        className="size-34 md:size-44 lg:size-55"
-      >
-        <path
-          {...(draw && revealItem("draw"))}
-          pathLength={1}
-          strokeDasharray={1}
-          d={MARK_PATH}
-          stroke="currentColor"
-          strokeWidth={17}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
+      {parallax ? <Parallax>{mark}</Parallax> : mark}
     </div>
   );
 }

@@ -10,12 +10,11 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import { m, useInView, useReducedMotion } from "motion/react";
+import { m, useMotionValue, useReducedMotion } from "motion/react";
 
 import { RevealGroup } from "@/components/motion/reveal-group";
 import {
   hide,
-  isBelowFold,
   play,
   prefersReducedMotion,
   revealItemsOf,
@@ -36,7 +35,8 @@ import { cn } from "@/lib/utils";
  *   title, summary and button rise in, 100 ms apart (revised after #27 review, which
  *   found the plain crossfade too subtle). The outgoing block fades out in 150 ms.
  * - Dot navigation: the active dot grows 7 → 12 px and fills red (spring, snappy);
- *   clicking jumps to that block.
+ *   clicking jumps to that block. A hairline behind the dots fills red with the
+ *   reader's progress through the stage.
  * - Below desktop, or with reduced motion, the same markup is a plain vertical stack,
  *   and each block plays the same pop-and-stagger as it scrolls in (RevealGroup).
  *
@@ -68,6 +68,10 @@ export function ServiceStage({
   const pinned = useMediaQuery(PINNED_QUERY);
   const reduced = useReducedMotion() ?? false;
   const [active, setActive] = useState(0);
+  /* Where the reader is relative to the pinned range. */
+  const [phase, setPhase] = useState<"before" | "in" | "after">("before");
+  /* 0 → 1 through the pinned range, for the dot progress line. */
+  const progressValue = useMotionValue(0);
   const blocks = Children.toArray(children);
   const count = blocks.length;
   const sectionStyle: CSSProperties & { "--steps": number } = {
@@ -108,6 +112,12 @@ export function ServiceStage({
         const bounds = range();
         if (!bounds) return;
         const progress = (window.scrollY - bounds.start) / bounds.distance;
+        // A 2 px tolerance: anchors and dots land exactly on the boundary.
+        const tolerance = 2 / bounds.distance;
+        setPhase(
+          progress < -tolerance ? "before" : progress > 1 ? "after" : "in",
+        );
+        progressValue.set(Math.min(1, Math.max(0, progress)));
         setActive(
           Math.min(count - 1, Math.max(0, Math.floor(progress * count))),
         );
@@ -121,7 +131,7 @@ export function ServiceStage({
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
     };
-  }, [pinned, count, range]);
+  }, [pinned, count, range, progressValue]);
 
   // /services#<slug>: the browser jumps to the article; move to its step instead.
   useEffect(() => {
@@ -143,37 +153,32 @@ export function ServiceStage({
     };
   }, [pinned, steps, scrollToStep]);
 
-  // Before the stage arrives, hide the first block's items so they can play in.
-  // The section is five screens tall, so "in view" means its top has passed 60% of
-  // the viewport (and it has not scrolled away entirely).
-  const stageInView = useInView(sectionRef, { margin: "0px 0px -40% 0px" });
+  // A block only appears once the stage has pinned: approaching from above, the
+  // block waits hidden (revised after review: "not supposed to be in view before
+  // arriving at the section"), then plays as the stage locks in place; scrolling back
+  // above the stage hides it again so the next arrival replays.
+  // Hiding is a passive effect on purpose: it must run after the blocks' own
+  // RevealGroups have cleaned up (they are enabled for the first commit, until the
+  // media query resolves, and restore their items when disabled).
   const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
   useEffect(() => {
-    const first = blockRefs.current[0];
-    const section = sectionRef.current;
-    if (!pinned || !first || !section || !isBelowFold(section)) return;
-    const items = revealItemsOf(first);
-    hide(items, prefersReducedMotion());
-    return () => {
-      for (const item of items) {
-        item.style.opacity = "";
-        item.style.transform = "";
-      }
-    };
-  }, [pinned]);
+    const block = blockRefs.current[active];
+    if (!pinned || phase !== "before" || !block) return;
+    hide(revealItemsOf(block), prefersReducedMotion());
+  }, [pinned, phase, active]);
 
-  // Play the active block's entrance whenever it changes while the stage is on
-  // screen. Layout effect: items are hidden before the browser paints the swap.
+  // Each step plays its entrance. Layout effect: items are hidden before the
+  // browser paints the swap.
   useLayoutEffect(() => {
     const block = blockRefs.current[active];
-    if (!pinned || !stageInView || !block) return;
+    if (!pinned || phase !== "in" || !block) return;
     const controls = play(revealItemsOf(block), {
       reduced: prefersReducedMotion(),
     });
     return () => {
       stopAll(controls);
     };
-  }, [pinned, stageInView, active]);
+  }, [pinned, phase, active]);
 
   return (
     <section
@@ -207,8 +212,26 @@ export function ServiceStage({
         ))}
 
         <div className="pointer-events-none absolute inset-0 container-page hidden items-center justify-end lg:motion-safe:flex">
-          <nav aria-label={dotsLabel} className="pointer-events-auto">
-            <ol className="flex flex-col">
+          <nav
+            aria-label={dotsLabel}
+            className={cn(
+              "pointer-events-auto transition-opacity duration-(--duration-base) ease-standard",
+              // Arrive with the stage, like its blocks; keyboard focus always shows them.
+              phase === "before" && "opacity-0 focus-within:opacity-100",
+            )}
+          >
+            <ol className="relative flex flex-col">
+              {/* Progress through the five blocks: a hairline between the first and
+                  last dot centres, filling red as the reader scrolls. */}
+              <span
+                aria-hidden
+                className="absolute inset-y-3 left-1/2 w-px -translate-x-1/2 bg-border-default"
+              />
+              <m.span
+                aria-hidden
+                style={{ scaleY: progressValue }}
+                className="absolute inset-y-3 left-1/2 w-px origin-top -translate-x-1/2 bg-action-primary"
+              />
               {steps.map((step, index) => {
                 const current = index === active;
                 return (
@@ -220,7 +243,7 @@ export function ServiceStage({
                       onClick={() => {
                         scrollToStep(index, reduced ? "auto" : "smooth");
                       }}
-                      className="flex size-6 cursor-pointer items-center justify-center rounded-full"
+                      className="relative flex size-6 cursor-pointer items-center justify-center rounded-full"
                     >
                       <m.span
                         aria-hidden
@@ -231,7 +254,7 @@ export function ServiceStage({
                           "size-3 rounded-full transition-colors duration-(--duration-fast) ease-standard",
                           current
                             ? "bg-action-primary"
-                            : "border-[2.5px] border-border-default bg-transparent",
+                            : "border-[2.5px] border-border-default bg-bg-surface",
                         )}
                       />
                     </button>

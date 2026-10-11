@@ -213,6 +213,24 @@ test.describe("services page", () => {
       );
     });
 
+    test("a block stays hidden until the stage pins, then plays in", async ({
+      page,
+    }) => {
+      await page.goto("/en/services");
+      const title = page.locator("#web-design h2");
+      const stage = page.getByRole("region", { name: "Our services" });
+      // Approaching: the stage is on screen but not pinned yet.
+      await untilHydrated(async () => {
+        await stage.evaluate((element) => {
+          const top = element.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo(0, top - window.innerHeight / 2);
+        });
+        await expect(title).toHaveCSS("opacity", "0", { timeout: 1000 });
+      });
+      await enterStage(page);
+      await expect(title).toHaveCSS("opacity", "1");
+    });
+
     test("a dot jumps to its block", async ({ page }) => {
       await page.goto("/en/services");
       const dot = page.getByRole("button", {

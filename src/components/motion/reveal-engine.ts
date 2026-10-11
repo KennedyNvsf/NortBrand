@@ -47,18 +47,28 @@ export function isBelowFold(element: Element) {
   return element.getBoundingClientRect().top > window.innerHeight;
 }
 
-const hiddenTransform: Record<Exclude<RevealKind, "draw">, string> = {
+const hiddenTransform: Record<
+  Exclude<RevealKind, "draw" | "underline">,
+  string
+> = {
   up: `translateY(${revealSpec.distance}px)`,
   left: `translateX(${-revealSpec.slide}px)`,
   right: `translateX(${revealSpec.slide}px)`,
   pop: `scale(${revealSpec.popScale})`,
 };
 
+/** Seconds an underline waits after its turn, so its headline is in place first. */
+const UNDERLINE_LAG = 0.25;
+
 export function hide(items: HTMLElement[], reduced: boolean) {
   for (const item of items) {
     const kind = kindOf(item);
     if (kind === "draw") {
       if (!reduced) item.style.strokeDashoffset = "1";
+      continue;
+    }
+    if (kind === "underline") {
+      if (!reduced) item.style.setProperty("--draw", "0");
       continue;
     }
     item.style.opacity = "0";
@@ -90,6 +100,8 @@ export function play(
     if (reduced) {
       if (kind === "draw")
         return animate(item, { strokeDashoffset: 0 }, { duration: 0 });
+      if (kind === "underline")
+        return animate(item, { "--draw": 1 }, { duration: 0 });
       return animate(
         item,
         { opacity: [0, 1] },
@@ -112,6 +124,17 @@ export function play(
             ...reveal,
             duration: revealSpec.drawDuration,
             ease: revealSpec.drawEase,
+          },
+        );
+      case "underline":
+        // Starts once its headline has mostly landed.
+        return animate(
+          item,
+          { "--draw": [0, 1] },
+          {
+            duration: motionTokens.duration.reveal,
+            ease: revealSpec.drawEase,
+            delay: at + UNDERLINE_LAG,
           },
         );
       case "pop":

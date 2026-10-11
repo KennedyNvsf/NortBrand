@@ -91,6 +91,7 @@ export function RevealGroup({
         item.style.opacity = "";
         item.style.transform = "";
         item.style.strokeDashoffset = "";
+        item.style.removeProperty("--draw");
       }
     };
   }, [disabled]);

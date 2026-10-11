@@ -122,6 +122,26 @@
   --animate-accent-in: accent-in var(--duration-slow) var(--ease-emphasized)
     both;
 
+  /* Services hero photo settles from a slight zoom while the text enters. */
+  --animate-hero-settle: hero-settle 1.6s var(--ease-emphasized) both;
+  /* Home hero scroll cue: a red bead running down a hairline. */
+  --animate-scroll-cue: scroll-cue 1.8s ease-in-out infinite;
+
+  @keyframes hero-settle {
+    from {
+      scale: 1.08;
+    }
+  }
+
+  @keyframes scroll-cue {
+    from {
+      translate: 0 -100%;
+    }
+    to {
+      translate: 0 200%;
+    }
+  }
+
   @keyframes accent-in {
     from {
       transform: scaleY(0);
@@ -475,6 +495,76 @@
 @keyframes enter-fade {
   from {
     opacity: 0;
+  }
+}
+
+/*
+ * Keyword underline (highlight.tsx): a background stripe whose width is --draw (0–1),
+ * so it can draw left to right. It sits where the 0.15em text-decoration offset put
+ * it and follows the words across line breaks. --draw is registered so CSS keyframes
+ * interpolate it; Motion animates the same property in reveal groups.
+ */
+@property --draw {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+@utility underline-draw {
+  background-image: linear-gradient(
+    var(--color-action-secondary),
+    var(--color-action-secondary)
+  );
+  background-repeat: no-repeat;
+  background-position: 0 calc(100% - 0.05em);
+  background-size: calc(var(--draw) * 100%) var(--underline-thickness, 2px);
+}
+
+/* In a hero, the underline draws once its headline has entered. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-enter] [data-reveal-item="underline"] {
+    animation: underline-draw var(--duration-reveal)
+      cubic-bezier(0.65, 0, 0.35, 1) both;
+    animation-delay: calc(500ms + var(--enter-index, 0) * 110ms);
+  }
+}
+
+@keyframes underline-draw {
+  from {
+    --draw: 0;
+  }
+}
+
+/*
+ * Stagger the direct children of a container that mounts on open (the Services
+ * details dialog and drawer): each rises 16 px, 60 ms after the previous one, once the
+ * dialog itself has scaled in.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .stagger-in > * {
+    animation: enter-up var(--duration-slow) var(--ease-emphasized) both;
+  }
+  .stagger-in > :nth-child(1) {
+    animation-delay: 120ms;
+  }
+  .stagger-in > :nth-child(2) {
+    animation-delay: 180ms;
+  }
+  .stagger-in > :nth-child(3) {
+    animation-delay: 240ms;
+  }
+  .stagger-in > :nth-child(4) {
+    animation-delay: 300ms;
+  }
+  .stagger-in > :nth-child(n + 5) {
+    animation-delay: 360ms;
+  }
+}
+
+@keyframes enter-up {
+  from {
+    opacity: 0;
+    translate: 0 16px;
   }
 }
 

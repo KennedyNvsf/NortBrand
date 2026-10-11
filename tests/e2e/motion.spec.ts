@@ -117,6 +117,29 @@ test("booking buttons turn their arrow into a calendar on hover", async ({
   await expect(arrow).toHaveCSS("opacity", "0");
 });
 
+test("a red underline follows the hovered nav link", async ({ page }) => {
+  test.skip(isMobile(page), "desktop nav");
+  await page.goto("/en");
+  const bar = page.locator("header nav ul > span[aria-hidden]");
+  await expect(bar).toHaveCSS("opacity", "0");
+  const contact = page.locator("header nav a", { hasText: "Contact" });
+  await untilHydrated(async () => {
+    await page.mouse.move(0, 400);
+    await contact.hover();
+    await expect(bar).toHaveCSS("opacity", "1", { timeout: 1000 });
+  });
+  const linkLeft = await contact.evaluate((element) =>
+    element instanceof HTMLElement ? element.offsetLeft : 0,
+  );
+  await expect
+    .poll(() =>
+      bar.evaluate(
+        (element) => new DOMMatrix(getComputedStyle(element).transform).e,
+      ),
+    )
+    .toBeCloseTo(linkLeft, 0);
+});
+
 test("the approach accent travels to the selected point", async ({ page }) => {
   test.skip(isMobile(page), "the accordion replaces the tabs on mobile");
   await page.goto("/en/services");

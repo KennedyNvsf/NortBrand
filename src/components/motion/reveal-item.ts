@@ -7,11 +7,19 @@
  *   right  slide in from the right (an image panel on the right, tab content)
  *   pop    scale 0.88 → 1 on a spring with a small overshoot (images, cards)
  *   draw   an SVG stroke draws itself; the path needs pathLength={1}
+ *   underline  a keyword underline (utility underline-draw) draws left to right
  */
 
 import type { CSSProperties } from "react";
 
-export const REVEAL_KINDS = ["up", "left", "right", "pop", "draw"] as const;
+export const REVEAL_KINDS = [
+  "up",
+  "left",
+  "right",
+  "pop",
+  "draw",
+  "underline",
+] as const;
 export type RevealKind = (typeof REVEAL_KINDS)[number];
 
 export const REVEAL_ITEM = "data-reveal-item";

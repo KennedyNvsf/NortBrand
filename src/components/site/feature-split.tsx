@@ -56,7 +56,7 @@ export function FeatureSplit({
             panelClassName,
           )}
         >
-          <MarkPanel draw className="h-56 w-full md:h-auto" />
+          <MarkPanel draw parallax className="h-56 w-full md:h-auto" />
         </div>
         <div
           className={cn(

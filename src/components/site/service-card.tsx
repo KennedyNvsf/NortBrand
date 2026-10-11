@@ -11,7 +11,8 @@ import { cn } from "@/lib/utils";
  * - The whole card is one interactive element: a link when `href` is given, otherwise a
  *   button (the Services page wraps it in a Dialog/Drawer trigger, which passes its
  *   props through). "Learn More" is a visual label, not a nested link.
- * - Hover deepens the shadow, pressed sinks to bg/primary with a flat shadow, and focus
+ * - Hover lifts the card 4 px (Motion Spec › card hover lift) and tilts its icon
+ *   tile; the shadow deepens. Pressed sinks to bg/primary with a flat shadow, and focus
  *   uses the global 2 px ring with 2 px offset, which follows the card radius.
  * - Because buttons may only contain phrasing content, the title is a styled span, not
  *   a heading; the card's accessible name is its full text.
@@ -36,8 +37,9 @@ const cardClassName = cn(
   LINK_ROOT,
   "flex w-full cursor-pointer flex-col items-start justify-between gap-md text-left",
   "rounded-lg border border-border-default bg-bg-surface p-lg shadow-card lg:p-xl",
-  "transition-[box-shadow,background-color] duration-(--duration-base) ease-standard",
+  "transition-[box-shadow,background-color,translate] duration-(--duration-base) ease-standard",
   "hover:shadow-card-hover active:bg-bg-primary active:shadow-card-pressed",
+  "motion-safe:hover:-translate-y-1 motion-safe:active:translate-y-0",
 );
 
 function ServiceCardContent({
@@ -51,7 +53,7 @@ function ServiceCardContent({
     <>
       <span className="flex w-full flex-col gap-md">
         <span className="flex w-full items-center gap-md">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-md bg-action-primary-subtle">
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-md bg-action-primary-subtle transition-transform duration-(--duration-base) ease-emphasized motion-safe:group-hover/link:scale-110 motion-safe:group-hover/link:-rotate-6">
             <Icon
               className="size-6 text-action-primary"
               strokeWidth={ICON_STROKE}
