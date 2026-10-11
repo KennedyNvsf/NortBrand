@@ -124,21 +124,10 @@
 
   /* Services hero photo settles from a slight zoom while the text enters. */
   --animate-hero-settle: hero-settle 1.6s var(--ease-emphasized) both;
-  /* Home hero scroll cue: a red bead running down a hairline. */
-  --animate-scroll-cue: scroll-cue 1.8s ease-in-out infinite;
 
   @keyframes hero-settle {
     from {
       scale: 1.08;
-    }
-  }
-
-  @keyframes scroll-cue {
-    from {
-      translate: 0 -100%;
-    }
-    to {
-      translate: 0 200%;
     }
   }
 

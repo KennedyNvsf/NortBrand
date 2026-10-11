@@ -81,8 +81,12 @@ export function ApproachTabs({
     place(!changed || list.dataset.accent === undefined);
     list.dataset.accent = "";
 
+    // A ResizeObserver reports once as soon as it observes; that first report would
+    // place the accent instantly and cut the spring short, so only real resizes count.
+    let observed = false;
     const observer = new ResizeObserver(() => {
-      place(true);
+      if (observed) place(true);
+      observed = true;
     });
     observer.observe(list);
     return () => {

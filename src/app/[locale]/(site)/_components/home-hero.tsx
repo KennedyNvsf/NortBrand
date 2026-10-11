@@ -17,7 +17,6 @@ import { ICON_STROKE } from "@/lib/icons";
  * - Entrance (CSS, first paint): eyebrow, headline, lead, then the buttons, 110 ms
  *   apart. "View Services" morphs its arrow into a grid of services on hover; "Book a
  *   Consultation" into a calendar (BookingButton).
- * - A scroll cue at the bottom (tablet and up) appears last.
  * data-sticky-cta-trigger: the mobile StickyCta appears once this has scrolled away.
  */
 export async function HomeHero() {
@@ -28,7 +27,7 @@ export async function HomeHero() {
     <section
       aria-labelledby="home-hero-title"
       data-sticky-cta-trigger
-      className="relative flex min-h-[calc(100svh-var(--header-height))] items-center bg-bg-surface py-14 md:py-18 lg:py-2xl"
+      className="flex min-h-[calc(100svh-var(--header-height))] items-center bg-bg-surface py-14 md:py-18 lg:py-2xl"
     >
       <div className="container-page flex flex-col items-center gap-5 text-center lg:gap-xl">
         <p {...enterItem(0)} className="text-overline text-action-secondary">
@@ -60,20 +59,6 @@ export async function HomeHero() {
           >
             <Link href="/services">{t("secondary")}</Link>
           </Button>
-        </div>
-      </div>
-
-      {/* Scroll cue (tablet and up): the hero now fills the screen, so hint that the
-          page continues. Decorative; static with reduced motion. */}
-      <div
-        aria-hidden
-        className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 md:block"
-      >
-        <div
-          {...enterItem(5)}
-          className="relative h-12 w-px overflow-hidden bg-border-default"
-        >
-          <span className="absolute inset-x-0 top-0 h-1/2 bg-action-primary motion-safe:animate-scroll-cue" />
         </div>
       </div>
     </section>

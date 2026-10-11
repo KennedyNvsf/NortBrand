@@ -153,10 +153,34 @@ test("the approach accent travels to the selected point", async ({ page }) => {
     await expect(list).toHaveAttribute("data-accent", "", { timeout: 1000 });
   });
   const before = await y();
+  // Record the accent's offset every frame, to tell travelling from jumping.
+  const samples = accent.evaluate(
+    (element) =>
+      new Promise<number[]>((resolve) => {
+        const offsets: number[] = [];
+        const start = performance.now();
+        const sample = () => {
+          offsets.push(new DOMMatrix(getComputedStyle(element).transform).f);
+          if (performance.now() - start < 800) requestAnimationFrame(sample);
+          else resolve(offsets);
+        };
+        requestAnimationFrame(sample);
+      }),
+  );
   const tab = page.getByRole("tab").nth(2);
   await tab.click();
   await expect(tab).toHaveAttribute("aria-selected", "true");
   await expect.poll(y).toBeGreaterThan(before + 100);
+
+  const offsets = await samples;
+  const [first = 0, last = 0] = [offsets[0], offsets.at(-1)];
+  const between = offsets.filter(
+    (offset) => offset > first + 10 && offset < last - 10,
+  );
+  expect(
+    between.length,
+    "the accent passes through the points between",
+  ).toBeGreaterThan(0);
 
   await settled(page.getByRole("tabpanel").locator("h3"));
 });

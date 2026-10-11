@@ -120,8 +120,8 @@ module that imports `motion/react` must not be evaluated on the server.
 ### Home
 
 - **Hero** fills the first screen below the header, with its content centred, so _Why it
-  matters_ starts below the fold. A scroll cue (a red bead running down a hairline,
-  tablet and up) appears last and hints that the page continues.
+  matters_ starts below the fold. (A looping scroll cue was tried and removed after
+  review: it read as a loading bar.)
   - The class is `min-h-[calc(100svh-var(--header-height))]`.
   - `--header-height` (73/77/93 px) lives in `globals.css`. Keep it in step with
     `site-nav.tsx`.
