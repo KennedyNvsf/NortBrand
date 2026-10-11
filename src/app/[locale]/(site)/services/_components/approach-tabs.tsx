@@ -6,6 +6,7 @@ import { animate } from "motion/react";
 import { play, prefersReducedMotion } from "@/components/motion/reveal-engine";
 import { REVEAL_ITEM, revealItem } from "@/components/motion/reveal-item";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { motionTokens, revealSpec } from "@/lib/motion";
 
 /*
  * The interactive half of Services › Talking Points (tablet and desktop), revised after
@@ -22,10 +23,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
  */
 
 type Point = { key: string; title: string };
-
-/** Springy but settled: arrives in ~350 ms with a hint of overshoot. */
-const ACCENT_SPRING = { type: "spring", stiffness: 420, damping: 30 } as const;
-const PANEL_STAGGER = 0.06;
 
 export function ApproachTabs({
   labelledBy,
@@ -69,7 +66,7 @@ export function ApproachTabs({
         animate(accent, { y }, { duration: 0 });
         return;
       }
-      animate(accent, { y }, ACCENT_SPRING);
+      animate(accent, { y }, motionTokens.spring.accent);
       animate(
         accent,
         { scaleY: [1, 2.2, 1] },
@@ -102,7 +99,7 @@ export function ApproachTabs({
     if (!panel) return;
     const controls = play(
       Array.from(panel.querySelectorAll<HTMLElement>(`[${REVEAL_ITEM}]`)),
-      { reduced: prefersReducedMotion(), stagger: PANEL_STAGGER },
+      { reduced: prefersReducedMotion(), stagger: revealSpec.swapStagger },
     );
     return () => {
       for (const control of controls) control.stop();

@@ -26,7 +26,8 @@ import { cn } from "@/lib/utils";
 
 /*
  * The Services "scroll-through stage" (Motion Spec › Services › Service blocks and Dot
- * navigation), desktop only and only when motion is allowed:
+ * navigation), on desktop screens tall enough for a block (`stage:` in globals.css),
+ * and only when motion is allowed:
  * - The section is one stage-height per block tall; a sticky stage under the header
  *   shows one block at a time. Wheel, touch and arrow keys all work because it is
  *   ordinary page scroll; the stage unpins after block 5.
@@ -37,7 +38,7 @@ import { cn } from "@/lib/utils";
  * - Dot navigation: the active dot grows 7 → 12 px and fills red (spring, snappy);
  *   clicking jumps to that block. A hairline behind the dots fills red with the
  *   reader's progress through the stage.
- * - Below desktop, or with reduced motion, the same markup is a plain vertical stack,
+ * - Below desktop, on short screens, or with reduced motion, the same markup is a plain vertical stack,
  *   and each block plays the same pop-and-stagger as it scrolls in (RevealGroup).
  *
  * Accessibility: all five articles stay in the DOM in reading order. Focusing anything
@@ -48,8 +49,9 @@ import { cn } from "@/lib/utils";
 /** Sticky offset below the fixed header (top-24), in px. */
 const HEADER_OFFSET = 96;
 
+/** Same condition as the `stage:` variant in globals.css (desktop, motion, tall enough). */
 const PINNED_QUERY =
-  "(min-width: 64rem) and (prefers-reduced-motion: no-preference)";
+  "(min-width: 64rem) and (min-height: 42rem) and (prefers-reduced-motion: no-preference)";
 
 type Step = { slug: string; name: string };
 
@@ -185,9 +187,9 @@ export function ServiceStage({
       ref={sectionRef}
       aria-label={label}
       style={sectionStyle}
-      className="relative bg-bg-surface [--stage-h:calc(100dvh-6rem)] lg:motion-safe:h-[calc(var(--steps)*var(--stage-h))]"
+      className="relative bg-bg-surface [--stage-h:calc(100dvh-6rem)] stage:h-[calc(var(--steps)*var(--stage-h))]"
     >
-      <div className="lg:motion-safe:sticky lg:motion-safe:top-24 lg:motion-safe:h-(--stage-h) lg:motion-safe:overflow-hidden">
+      <div className="stage:sticky stage:top-24 stage:h-(--stage-h) stage:overflow-hidden">
         {blocks.map((block, index) => (
           <RevealGroup
             key={steps[index]?.slug ?? index}
@@ -201,17 +203,17 @@ export function ServiceStage({
             }}
             className={cn(
               "border-border-default not-first:border-t",
-              "lg:motion-safe:absolute lg:motion-safe:inset-0 lg:motion-safe:flex lg:motion-safe:items-center lg:motion-safe:not-first:border-t-0",
-              "lg:motion-safe:transition-opacity lg:motion-safe:duration-(--duration-fast) lg:motion-safe:ease-exit lg:motion-safe:data-[active=true]:duration-0",
-              "lg:motion-safe:data-[active=false]:pointer-events-none lg:motion-safe:data-[active=false]:opacity-0",
-              "lg:motion-safe:[&>*]:w-full",
+              "stage:absolute stage:inset-0 stage:flex stage:items-center stage:not-first:border-t-0",
+              "stage:transition-opacity stage:duration-(--duration-fast) stage:ease-exit stage:data-[active=true]:duration-0",
+              "stage:data-[active=false]:pointer-events-none stage:data-[active=false]:opacity-0",
+              "stage:[&>*]:w-full",
             )}
           >
             {block}
           </RevealGroup>
         ))}
 
-        <div className="pointer-events-none absolute inset-0 container-page hidden items-center justify-end lg:motion-safe:flex">
+        <div className="pointer-events-none absolute inset-0 container-page hidden items-center justify-end stage:flex">
           <nav
             aria-label={dotsLabel}
             className={cn(

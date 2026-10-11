@@ -13,6 +13,14 @@
  *   design-system values are available as utilities.
  */
 
+/*
+ * `stage:` — the pinned Services stage (service-stage.tsx, PINNED_QUERY mirrors it).
+ * Desktop with motion allowed, and tall enough for a block: blocks are 546 px and
+ * the stage is the viewport minus 96 px under the header, so pinning needs 642 px;
+ * 42rem (672 px) leaves a margin. Shorter screens get the plain stack.
+ */
+@custom-variant stage (@media (width >= 64rem) and (height >= 42rem) and (prefers-reduced-motion: no-preference));
+
 @theme {
   /* Reset Tailwind defaults so nothing outside the design system is available. */
   --color-*: initial;
@@ -90,6 +98,7 @@
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
   --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-draw: cubic-bezier(0.65, 0, 0.35, 1); /* strokes, lines, underlines */
   --animate-spin: spin 800ms linear infinite;
   /* Logomark stroke drawing (Motion Spec › System: 404 and loading splash). */
   --animate-mark-draw: mark-draw 900ms var(--ease-emphasized) both;
@@ -179,6 +188,7 @@
   --duration-base: 250ms; /* modals, accordions, route changes, card lift */
   --duration-slow: 400ms; /* crossfades, keyword underlines */
   --duration-reveal: 700ms; /* scroll reveals, hero entrances */
+  --enter-step: 110ms; /* between hero entrance elements */
 
   /* Layout rhythm by breakpoint: gutters 20/32/48, section padding 72/88/120. */
   --gutter: 20px;
@@ -469,7 +479,7 @@
 @media (prefers-reduced-motion: no-preference) {
   [data-enter] {
     animation: enter var(--duration-reveal) var(--ease-emphasized) both;
-    animation-delay: calc(80ms + var(--enter-index, 0) * 110ms);
+    animation-delay: calc(80ms + var(--enter-index, 0) * var(--enter-step));
   }
 }
 
@@ -512,9 +522,8 @@
 /* In a hero, the underline draws once its headline has entered. */
 @media (prefers-reduced-motion: no-preference) {
   [data-enter] [data-reveal-item="underline"] {
-    animation: underline-draw var(--duration-reveal)
-      cubic-bezier(0.65, 0, 0.35, 1) both;
-    animation-delay: calc(500ms + var(--enter-index, 0) * 110ms);
+    animation: underline-draw var(--duration-reveal) var(--ease-draw) both;
+    animation-delay: calc(500ms + var(--enter-index, 0) * var(--enter-step));
   }
 }
 

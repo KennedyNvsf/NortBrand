@@ -291,6 +291,22 @@ test.describe("services page", () => {
         );
       });
     });
+
+    test("a screen too short for a block gets the plain stack", async ({
+      page,
+    }) => {
+      // 600 px tall: the stage would be 504 px, shorter than a block.
+      await page.setViewportSize({ width: 1280, height: 600 });
+      await page.goto("/en/services");
+      await expect(
+        page.getByRole("navigation", { name: "Jump to a service" }),
+      ).toBeHidden();
+      const stage = page.getByRole("region", { name: "Our services" });
+      const height = await stage.evaluate(
+        (element) => element.getBoundingClientRect().height,
+      );
+      expect(height).toBeLessThan(5 * 545 + 100);
+    });
   });
 
   test("below desktop the blocks stack without dots", async ({ page }) => {

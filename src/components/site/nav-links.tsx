@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { prefersReducedMotion } from "@/components/motion/reveal-engine";
 import { isActiveRoute, navItems } from "@/content/navigation";
 import { Link, usePathname } from "@/i18n/navigation";
+import { motionTokens } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 /*
@@ -20,8 +21,8 @@ import { cn } from "@/lib/utils";
  * or focus leaves. It appears in place without sliding the first time, and always
  * with reduced motion. The bar is 1 px wide and scaled to the link width.
  */
-const SLIDE = { type: "spring", stiffness: 420, damping: 34 } as const;
-const FADE = { duration: 0.15 } as const;
+const SLIDE = motionTokens.spring.accent;
+const FADE = { duration: motionTokens.duration.fast } as const;
 
 export function NavLinks() {
   const t = useTranslations("Nav");

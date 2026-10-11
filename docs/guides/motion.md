@@ -14,8 +14,19 @@ rules stayed:
 | **CSS** (`--duration-*`, `--ease-*`, tw-animate) | hover, focus, press, first-paint entrances, simple enter/exit | button icon morphs, hero entrances, page fade, menu stagger, stage swap-out |
 | **Motion** (`motion/react`)                      | anything triggered by scroll position, springs, orchestration | reveals, journey line, Services stage, approach accent                      |
 
-Every duration and easing comes from `src/lib/motion.ts` (Motion) or the matching CSS
-variables in `globals.css`. Where the review changed a spec value, `motion.ts` says so.
+Every duration, easing and spring comes from `src/lib/motion.ts` (Motion) or the matching
+CSS variables in `globals.css`; components define none of their own. Where the review
+changed a spec value, `motion.ts` says so. `motion.test.ts` fails if a CSS duration or
+easing drifts from `motion.ts`.
+
+| Token                                                      | Used by                                        |
+| ---------------------------------------------------------- | ---------------------------------------------- |
+| `spring.accent` (420/32)                                   | nav underline, approach marker                 |
+| `spring.pop` (260/20)                                      | `pop` reveals                                  |
+| `spring.snappy` (300/30)                                   | stage dots                                     |
+| `ease.draw` / `--ease-draw`                                | mark stroke, journey line, keyword underlines  |
+| `revealSpec.lineDuration`, `.underlineLag`, `.swapStagger` | journey line, underline delay, approach panels |
+| `--enter-step` (110 ms)                                    | hero entrances                                 |
 
 ## 2. Setup
 
@@ -141,6 +152,10 @@ module that imports `motion/react` must not be evaluated on the server.
 ### Services
 
 - **Hero photo** settles from 108% to 100% scale over 1.6 s while the text enters.
+- **Pinning** needs a desktop screen at least 672 px tall (`stage:` variant in
+  `globals.css`, mirrored by `PINNED_QUERY`). A block is 546 px and the stage is the
+  screen minus 96 px, so shorter laptop windows would clip it; they get the plain stack
+  instead, like tablets.
 - **Arrival:** nothing in the stage shows before it pins. While you approach, the first
   block (and the dots) wait hidden; the block plays as the stage locks under the header,
   and scrolling back above the stage re-arms it. The hide runs in a passive effect
@@ -158,7 +173,7 @@ module that imports `motion/react` must not be evaluated on the server.
 
 - **Our approach** (`approach-tabs.tsx`):
   - **Left:** one red accent travels between the points. It springs to the selected one
-    (stiffness 420, damping 30) and stretches up to 2.2× while it moves, like a drop. The
+    (`spring.accent`) and stretches up to 2.2× while it moves, like a drop. The
     selected title slides 27 px right. This is a translate, so nothing reflows.
   - **Right:** on every change, the media, title, copy and button slide in from the
     right, 60 ms apart.
@@ -183,8 +198,12 @@ Links rise 12 px, 40 ms apart, unchanged from the first pass.
   one commit _after_ the value changes, so the slide-in effect found nothing to animate.
   The fix is `forceMount` on the panels; CSS already hides the inactive ones.
 - **The pinned stage drew a stray hairline.** `not-first:border-t` beat
-  `lg:motion-safe:border-t-0` on specificity. The override must use the same variant:
-  `lg:motion-safe:not-first:border-t-0`.
+  `stage:border-t-0` on specificity. The override must use the same variant:
+  `stage:not-first:border-t-0`.
+- **The approach marker jumped instead of travelling.** Its ResizeObserver was recreated
+  on every selection, and an observer always reports once when it starts observing; that
+  report placed the marker instantly and cancelled the spring. Only real resizes re-place
+  it now, and the e2e test checks the marker passes through the points in between.
 - **Slow Services page.** It was slow (7.8 s to load, 7 fps afterwards in the test
   browser), and this also explains why its e2e tests kept timing out since #10. A trace
   showed seconds of rasterisation. Bisecting by section and then by layer pointed to

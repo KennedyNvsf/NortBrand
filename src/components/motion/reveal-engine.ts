@@ -1,11 +1,6 @@
 import { animate, type AnimationPlaybackControls } from "motion/react";
 
-import {
-  motionTokens,
-  popSpring,
-  reducedMotionDuration,
-  revealSpec,
-} from "@/lib/motion";
+import { motionTokens, reducedMotionDuration, revealSpec } from "@/lib/motion";
 
 import {
   REVEAL_GROUP,
@@ -56,9 +51,6 @@ const hiddenTransform: Record<
   right: `translateX(${revealSpec.slide}px)`,
   pop: `scale(${revealSpec.popScale})`,
 };
-
-/** Seconds an underline waits after its turn, so its headline is in place first. */
-const UNDERLINE_LAG = 0.25;
 
 export function hide(items: HTMLElement[], reduced: boolean) {
   for (const item of items) {
@@ -123,7 +115,7 @@ export function play(
           {
             ...reveal,
             duration: revealSpec.drawDuration,
-            ease: revealSpec.drawEase,
+            ease: motionTokens.ease.draw,
           },
         );
       case "underline":
@@ -133,8 +125,8 @@ export function play(
           { "--draw": [0, 1] },
           {
             duration: motionTokens.duration.reveal,
-            ease: revealSpec.drawEase,
-            delay: at + UNDERLINE_LAG,
+            ease: motionTokens.ease.draw,
+            delay: at + revealSpec.underlineLag,
           },
         );
       case "pop":
@@ -143,7 +135,7 @@ export function play(
           { opacity: [0, 1], scale: [revealSpec.popScale, 1] },
           {
             opacity: { ...reveal, duration: motionTokens.duration.slow },
-            scale: { ...popSpring, delay: at },
+            scale: { ...motionTokens.spring.pop, delay: at },
           },
         );
       case "left":

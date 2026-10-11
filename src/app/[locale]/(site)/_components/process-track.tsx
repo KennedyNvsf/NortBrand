@@ -12,7 +12,7 @@ import {
   stopAll,
 } from "@/components/motion/reveal-engine";
 import { REVEAL_ITEM } from "@/components/motion/reveal-item";
-import { revealSpec } from "@/lib/motion";
+import { motionTokens, revealSpec } from "@/lib/motion";
 import { MEDIA_LG, useMediaQuery } from "@/lib/use-media-query";
 
 /*
@@ -32,7 +32,6 @@ import { MEDIA_LG, useMediaQuery } from "@/lib/use-media-query";
 const JOURNEY_PATH =
   "M48 88C130 50 180 140 250 110C290 95 320 130 344 124C420 160 460 20 520 45C580 65 610 30 640 60C710 90 750 20 800 50C860 75 900 55 936 88";
 
-const LINE_DURATION = 1.6;
 /** When each card appears, in seconds: roughly where the line passes it. */
 const CARD_DELAYS = [0.1, 0.45, 0.8, 1.15];
 
@@ -78,7 +77,10 @@ export function ProcessTrack({ children }: { children: ReactNode }) {
 
         controls.push(...play(cards, { reduced, delays: CARD_DELAYS }));
         if (reduced) return;
-        const line = { duration: LINE_DURATION, ease: revealSpec.drawEase };
+        const line = {
+          duration: revealSpec.lineDuration,
+          ease: motionTokens.ease.draw,
+        };
         controls.push(
           isLg
             ? animate(path, { strokeDashoffset: [1, 0] }, line)
