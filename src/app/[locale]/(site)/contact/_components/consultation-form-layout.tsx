@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 
+import { enterItem } from "@/components/motion/reveal-item";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,6 +35,7 @@ export async function ConsultationFormLayout() {
 
   return (
     <div
+      {...enterItem(3)}
       id="consultation"
       data-form-slot="consultation"
       className="flex flex-col gap-4.5 rounded-lg border border-border-default bg-bg-surface p-6 shadow-card md:p-8 lg:w-140 lg:shrink-0 lg:gap-lg lg:p-9"

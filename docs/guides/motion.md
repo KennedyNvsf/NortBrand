@@ -1,20 +1,21 @@
 # Motion
 
-**Covers:** #27. **Source:** Figma 10 — Motion Spec (`331:2`): tokens, inventory, reduced
-motion, implementation.
+**Covers:** #27, including the revision after the first review. **Source:** Figma 10 —
+Motion Spec (`331:2`): tokens, inventory, reduced motion, implementation.
 
 ## 1. The rules
 
-The spec's principles are **purposeful, quiet, respectful**. In code that means:
+The spec's principles are **purposeful, quiet, respectful**. After the first review the team
+asked for more presence ("way too subtle"), so reveal travel and stagger grew (§3), but the
+rules stayed:
 
-| Use                                              | For                                    | Examples here                                                       |
-| ------------------------------------------------ | -------------------------------------- | ------------------------------------------------------------------- |
-| **CSS** (`--duration-*`, `--ease-*`, tw-animate) | hover, focus, press, simple enter/exit | buttons, links, dialogs, the Services stage swap, menu link stagger |
-| **Motion** (`motion/react`)                      | scroll-linked, springs, orchestration  | journey line, mobile connector, scroll reveals, dot navigation      |
+| Use                                              | For                                                           | Examples here                                                               |
+| ------------------------------------------------ | ------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| **CSS** (`--duration-*`, `--ease-*`, tw-animate) | hover, focus, press, first-paint entrances, simple enter/exit | button icon morphs, hero entrances, page fade, menu stagger, stage swap-out |
+| **Motion** (`motion/react`)                      | anything triggered by scroll position, springs, orchestration | reveals, journey line, Services stage, approach accent                      |
 
-Every value comes from the spec. `src/lib/motion.ts` holds the spec's own "Start from these
-tokens" block (durations, easings, springs) for Motion, and `globals.css` holds the same
-values as CSS variables.
+Every duration and easing comes from `src/lib/motion.ts` (Motion) or the matching CSS
+variables in `globals.css`. Where the review changed a spec value, `motion.ts` says so.
 
 ## 2. Setup
 
@@ -22,92 +23,180 @@ values as CSS variables.
   a new major, 14.1.0 one day old), so I took the newest release with more than two weeks
   in the wild.
 - **`MotionProvider`** (root of `[locale]/layout.tsx`):
-  - `LazyMotion` loads the `domAnimation` features on demand, so the engine stays out of
-    the first bundle. `strict` means a stray `motion.div` import throws; always use `m.*`.
-  - `MotionConfig reducedMotion="user"`: Motion drops transforms when the OS asks for
-    reduced motion.
+  - `LazyMotion` loads the `domAnimation` features on demand. `strict` means a stray
+    `motion.div` throws; always use `m.*`.
+  - `MotionConfig reducedMotion="user"`.
+- **Imperative animations** (`animate()` from `motion/react`) check
+  `prefersReducedMotion()` at the moment they start.
 
-## 3. What moves
+## 3. The reveal system
 
-### Scroll reveal: `<Reveal>` (Global)
+One vocabulary for every section, in three files under `src/components/motion/`:
 
-Fade up on first view: opacity 0→1, y 24→0, 700 ms emphasized, siblings 60 ms apart
-(`index`), once, at 25% visible. Used on `FeatureSplit`, the Home service and process
-cards, About story and principle, Services "Our approach", Contact steps and FAQ intro, and
-the CTA band card.
+| File               | Role                                                                          | Runs on                              |
+| ------------------ | ----------------------------------------------------------------------------- | ------------------------------------ |
+| `reveal-item.ts`   | **markers**: `revealItem(kind)` and `enterItem(index)` return data attributes | server and client (no Motion import) |
+| `reveal-engine.ts` | **how** items animate: `hide()`, `play()`                                     | client                               |
+| `reveal-group.tsx` | **when**: as each item scrolls in                                             | client                               |
 
-**The important design choice: it never hides content the reader can already see.** The
-server renders everything visible. After mount, only elements still _below the fold_ are
-"armed" (set to opacity 0 / y 24), and they reveal as they scroll in. So content is never
-invisible before hydration on a slow phone, never invisible without JavaScript, and never
-pops in above the fold. Reduced motion: opacity only, 150 ms. It is always a `<div>`; in a
-list, put it inside the `<li>`.
+Markup stays server-rendered. A section opts in like this:
 
-### Home: journey line and connector (`process-track.tsx`)
-
-Scroll-linked and linear. `useScroll` on the steps container gives a 0→1 progress:
-
-- **Desktop:** the red path's `pathLength`. It still works with
-  `vector-effect: non-scaling-stroke`, which keeps the stroke at 2.5 px when the SVG
-  stretches (checked visually mid-scroll and at the end).
-- **Mobile:** the connector's `scaleY`, from the top.
-
-With reduced motion both are simply drawn. The step cards settle in with the reveal.
-
-### Services: the scroll-through stage (`service-stage.tsx`)
-
-Desktop only, and only when motion is allowed (`lg:motion-safe:` classes and the matching
-media query in JS):
-
-```
-section  height = 5 × stage height          (scroll track)
-  sticky stage  top 96 px, height 100dvh − 96 px
-    article 1..5  stacked (absolute); data-active swaps them:
-                  fade + y 24, 500 ms emphasized   (CSS transition)
-    dot nav       active 7 → 12 px, red, spring "snappy"   (Motion)
+```tsx
+<RevealGroup className="container-page …">
+  <div {...revealItem("left")}><MarkPanel draw /></div>   {/* first */}
+  <SectionHeader … />                                      {/* eyebrow, title: marked inside */}
+  <p {...revealItem()}>{body}</p>
+  <CheckList items={points} reveal />                      {/* each point */}
+</RevealGroup>
 ```
 
-- **Active step = scroll position.** Progress through the track is split into five
-  equal steps. Wheel, touch and arrow keys all work because it is ordinary page scroll,
-  and the stage unpins after block 5.
-- **Nothing becomes unreachable:**
-  - All five articles stay in the DOM in reading order (screen readers read them all).
-  - Focusing anything in a hidden block (Tab to its "More Details") scrolls to its step.
-  - `/services#content-writing` (footer, Home cards) lands on that step.
-  - Dots are real buttons named after the service, with `aria-current="step"`, 24 px
-    targets (WCAG 2.2 target size).
-- **Below desktop, or with reduced motion,** the same markup is the plain stack from #10,
-  and below desktop each block reveals on scroll (`<Reveal below="lg">`).
-- **Bug found while building:** `not-first:border-t` has higher specificity than
-  `lg:motion-safe:border-t-0`, so pinned blocks drew a stray hairline under the header.
-  The override must use the same variant (`lg:motion-safe:not-first:border-t-0`).
+Why the markers live in their own file: Server Components spread `revealItem()`, and a
+module that imports `motion/react` must not be evaluated on the server.
 
-### Mobile menu: link stagger (Mobile & tablet › Menu overlay)
+**Kinds** (`motion.ts › revealSpec`), all 700 ms emphasized unless noted:
 
-Links rise 12 px in sequence, 40 ms apart, 250 ms standard, as a tw-animate CSS animation
-with a per-link `animationDelay`. It is `motion-safe` only, so with reduced motion the
-links simply appear with the sheet.
+| Kind             | Movement                                                         | Used for                       |
+| ---------------- | ---------------------------------------------------------------- | ------------------------------ |
+| `up`             | rise 32 px + fade (spec: 24)                                     | text, cards                    |
+| `left` / `right` | slide 64 px from that side + fade                                | image panels, approach content |
+| `pop`            | scale 0.88 → 1 on a spring with slight overshoot                 | collages, the CTA card         |
+| `draw`           | SVG stroke draws (1.2 s in-out; the path needs `pathLength={1}`) | the mark in image panels       |
 
-## 4. Not done in this ticket (logged in tech debt)
+**How a group behaves:**
+
+- **Each item is watched on its own** (IntersectionObserver). Items that arrive together
+  play in document order, **100 ms apart** (spec: 60).
+  - On desktop that reads as "panel, then eyebrow, title, copy, list".
+  - On a phone, a tall list reveals card by card as you scroll.
+- **It never hides what the reader can already see.** The server renders everything
+  visible. After mount, only items still _below the fold_ are hidden. Above the fold,
+  before hydration and without JavaScript, the page is simply there.
+- **No flash.** `hide()` runs synchronously before `play()`, so nothing shows at its
+  final state for one frame.
+- **Reduced motion:** opacity only, 150 ms, no stagger; strokes are simply drawn.
+
+## 4. What moves, page by page
+
+### Every page
+
+- **Page transition.** `(site)/template.tsx` is remounted on every navigation and renders
+  `PageTransition`.
+  - On client-side navigations it marks the page `data-page-transition`: a 250 ms fade,
+    the spec's route-change token. Opacity only, so `fixed`/`sticky` children keep
+    working.
+  - The first load is skipped. The server HTML must match the first client render, and
+    the splash and hero entrance already cover it.
+  - The nav and footer sit in the layout, so they never fade.
+- **Hero entrances** (`[data-enter]`, CSS), on the Home, Services, About and Contact
+  heroes. Each element rises 28 px out of a 6 px blur, 110 ms after the previous one.
+  This is CSS, not Motion: the hero is on screen at first paint and must not wait for
+  hydration.
+- **Button icon morph** (`Button hoverIcon`, CSS):
+  - **Which buttons:** every _Book a Consultation_ (`BookingButton`) turns its arrow into a
+    **calendar**, and Home's _View Services_ turns it into a **grid of services**. Other
+    buttons with an arrow nudge it 2 px.
+  - **How it moves:** following Emil Kowalski's approach, only transform, opacity and blur
+    animate. Going in takes 250 ms on an ease-out curve; coming back takes 150 ms on the
+    exit curve. It answers the pointer at once and lets go quickly.
+  - **Triggers:** hover and keyboard focus. Hover only applies on devices that can hover,
+    so it never sticks on touch.
+  - **Reduced motion:** a crossfade.
+- **CTA band:** the headline and line rise, then the action card pops.
+
+### Home
+
+- **Hero** fills the first screen below the header, with its content centred, so _Why it
+  matters_ starts below the fold.
+  - The class is `min-h-[calc(100svh-var(--header-height))]`.
+  - `--header-height` (73/77/93 px) lives in `globals.css`. Keep it in step with
+    `site-nav.tsx`.
+- **Why it matters / Our philosophy** (`FeatureSplit`): the panel slides in from its own
+  side and its mark draws. Then the eyebrow, title, body and each point follow. The
+  section clips horizontally, so the slide never adds a scrollbar.
+- **What we do:** the heading, then the cards, row by row.
+- **How it works** (`process-track.tsx`) is no longer scroll-linked:
+  - **Desktop:** once 60% of the steps are on screen, the line draws over 1.6 s (in-out).
+    Each card rises in as the line reaches it (`CARD_DELAYS`).
+  - **Below desktop:** the cards reveal one by one. On mobile, the connector draws when
+    the list arrives.
+
+### Services
+
+- **Service blocks** (`service-stage.tsx`): each time a block becomes active, and the
+  first time the stage comes into view:
+  1. the pink panel pops;
+  2. the dark square pops a beat later;
+  3. the eyebrow, title, summary and _More Details_ rise in.
+
+  The outgoing block fades out in 150 ms. This runs in a layout effect, so items are
+  hidden before the swap is painted. Below desktop, or with reduced motion, each block
+  plays the same sequence as it scrolls in.
+
+- **Our approach** (`approach-tabs.tsx`):
+  - **Left:** one red accent travels between the points. It springs to the selected one
+    (stiffness 420, damping 30) and stretches up to 2.2× while it moves, like a drop. The
+    selected title slides 27 px right. This is a translate, so nothing reflows.
+  - **Right:** on every change, the media, title, copy and button slide in from the
+    right, 60 ms apart.
+  - **Before hydration:** each active point shows its own static accent until the
+    travelling one has been measured.
+  - **Mobile accordion:** the accent grows in from its centre.
+
+### About and Contact
+
+The heroes use the entrance. The story, principle, steps and FAQ sections are reveal
+groups: the header first, then each paragraph, list item, card or question. The Contact
+logomark draws once.
+
+### Mobile menu
+
+Links rise 12 px, 40 ms apart, unchanged from the first pass.
+
+### Bugs found while building
+
+- **Radix mounts a new panel late.** Radix Tabs render a newly selected panel's children
+  one commit _after_ the value changes, so the slide-in effect found nothing to animate.
+  The fix is `forceMount` on the panels; CSS already hides the inactive ones.
+- **The pinned stage drew a stray hairline.** `not-first:border-t` beat
+  `lg:motion-safe:border-t-0` on specificity. The override must use the same variant:
+  `lg:motion-safe:not-first:border-t-0`.
+- **Slow Services page.** It was slow (7.8 s to load, 7 fps afterwards in the test
+  browser), and this also explains why its e2e tests kept timing out since #10. A trace
+  showed seconds of rasterisation. Bisecting by section and then by layer pointed to
+  next/image's `placeholder="blur"` on the full-bleed hero photo: an SVG Gaussian blur
+  painted over 1440 × 780. It is removed on the two full-bleed photos (Services hero, CTA
+  band), whose dark fill now shows until the photo arrives. Raster time went from
+  6.5–59 s to 0.4 s. Small images keep their blur placeholder.
+- **Rejected: pausing the hero entrance while the splash is pending.** That would also
+  have held fast loads back until every image had loaded.
+
+## 5. Not done (logged in tech debt)
 
 - **Quote card auto-advance** (every 6 s, crossfade, pause on hover/focus) needs more than
   one quote, and there is only one. It stays a static card until the client provides
   more.
-- Other spec items outside this ticket's scope (`CLAUDE.md` listed five): keyword
-  underline draw, Home hero entrance, logomark panel parallax, card hover lift and image
-  zoom, route-change transitions. They are candidates for a follow-up ticket.
-- With reduced motion the spec turns the dot navigation into an anchor list. Here it is
-  simply hidden (the stack is short, and the footer and Home already link to each block).
+- **Not built yet:** keyword underline draw, logomark panel parallax and card image zoom.
+  See the review list in the PR.
+- **Reduced-motion dot list:** with reduced motion the spec turns the dot navigation into
+  an anchor list. Here the dots are simply hidden: the stack is short, and the footer and
+  Home already link to each block.
 
-## 5. Tests
+## 6. Tests
 
 - **`services.spec.ts`** (desktop):
   - scrolling swaps blocks and the dots follow
   - a dot jumps to its block
   - an anchor lands on its step
   - keyboard focus brings a hidden block into view
-- **Reduced motion:** no dots and no scroll track, all blocks visible.
-- **Mobile:** stack without dots.
-- **Test helper lesson:** `openDetails` blurs before focusing. Re-focusing an
+  - reduced motion: no dots, no scroll track, all blocks visible
+  - mobile: a stack without dots
+- **`motion.spec.ts`:**
+  - the hero fills the first screen, and its content ends visible
+  - below-the-fold content starts hidden and settles (opacity 1, identity transform),
+    with and without reduced motion
+  - client-side navigation adds the page fade, and the first load does not
+  - the booking button's calendar appears on hover
+  - the approach accent travels to the clicked point, and the panel content settles
+- **Test-helper lesson:** `openDetails` blurs before focusing. Re-focusing an
   already-focused element fires no focus event, so a retry would never move the stage.
 - Every page stays static; the harness (axe, overflow, H1) runs unchanged.

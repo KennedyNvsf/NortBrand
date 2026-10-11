@@ -1,12 +1,11 @@
 import { getTranslations } from "next-intl/server";
 
+import { BookingButton } from "@/components/site/booking-button";
 import { LocaleSwitcher } from "@/components/site/locale-switcher";
 import { Logo } from "@/components/site/logo";
 import { MobileMenu } from "@/components/site/mobile-menu";
 import { NavLinks } from "@/components/site/nav-links";
 import { SiteHeader } from "@/components/site/site-header";
-import { Button } from "@/components/ui/button";
-import { BOOKING_HREF } from "@/content/navigation";
 import { Link } from "@/i18n/navigation";
 
 /*
@@ -36,9 +35,9 @@ export async function SiteNav() {
 
         <div className="flex items-center gap-3 justify-self-end lg:gap-lg">
           <LocaleSwitcher className="hidden lg:flex" />
-          <Button asChild showIcon className="hidden md:inline-flex">
-            <Link href={BOOKING_HREF}>{common("bookConsultation")}</Link>
-          </Button>
+          <BookingButton className="hidden md:inline-flex">
+            {common("bookConsultation")}
+          </BookingButton>
           <div className="lg:hidden">
             <MobileMenu />
           </div>

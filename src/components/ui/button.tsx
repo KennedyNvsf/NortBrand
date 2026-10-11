@@ -13,6 +13,8 @@ import { cn } from "@/lib/utils";
  * - Focus: global 2px outline with 2px offset (globals.css).
  * - Accessibility overrides: primary fill #DC2626; small red labels use red/600.
  * - Loading: spinner replaces the icon, aria-busy, not clickable, colors unchanged.
+ * - Trailing icon on hover/keyboard focus: the arrow nudges 2 px forward, or, with
+ *   `hoverIcon`, morphs into that icon (see IconMorph).
  */
 const buttonVariants = cva(
   [
@@ -58,9 +60,43 @@ type ButtonProps = React.ComponentProps<"button"> &
     showIcon?: boolean;
     /** Replace the default trailing icon (Figma "Icon" instance swap). */
     icon?: React.ReactNode;
+    /** On hover and keyboard focus, the trailing icon morphs into this one. */
+    hoverIcon?: React.ReactNode;
     /** Spinner replaces the icon; the button is busy and cannot be activated. */
     loading?: boolean;
   };
+
+/*
+ * The trailing icon's hover morph. Both icons share one 24 px cell: the resting icon
+ * slides on (x 6 px), shrinks and blurs out quickly; the hover icon scales up from 0.5
+ * out of a 2 px blur. Entering uses the 250 ms emphasized ease-out, leaving the 150 ms
+ * exit curve, so the button answers the pointer at once and settles without lag.
+ * Transform and blur are motion-safe; with reduced motion the icons only crossfade.
+ * Hover only fires on devices that can hover (Tailwind v4), so touch never sticks.
+ */
+const morphOut =
+  "transition-[opacity,translate,scale,filter] duration-(--duration-fast) ease-exit group-hover/button:duration-(--duration-base) group-hover/button:ease-emphasized group-hover/button:opacity-0 group-focus-visible/button:opacity-0 motion-safe:group-hover/button:translate-x-1.5 motion-safe:group-hover/button:scale-75 motion-safe:group-hover/button:blur-[2px] motion-safe:group-focus-visible/button:translate-x-1.5 motion-safe:group-focus-visible/button:scale-75";
+const morphIn =
+  "opacity-0 transition-[opacity,scale,filter] duration-(--duration-fast) ease-exit group-hover/button:duration-(--duration-base) group-hover/button:ease-emphasized group-hover/button:opacity-100 group-focus-visible/button:opacity-100 motion-safe:scale-50 motion-safe:blur-[2px] motion-safe:group-hover/button:scale-100 motion-safe:group-hover/button:blur-none motion-safe:group-focus-visible/button:scale-100 motion-safe:group-focus-visible/button:blur-none";
+
+function IconMorph({
+  icon,
+  hoverIcon,
+}: {
+  icon: React.ReactNode;
+  hoverIcon: React.ReactNode;
+}) {
+  return (
+    <span aria-hidden className="grid size-6 place-items-center">
+      <span className={cn("col-start-1 row-start-1 flex", morphOut)}>
+        {icon}
+      </span>
+      <span className={cn("col-start-1 row-start-1 flex", morphIn)}>
+        {hoverIcon}
+      </span>
+    </span>
+  );
+}
 
 function Button({
   className,
@@ -69,6 +105,7 @@ function Button({
   asChild = false,
   showIcon = false,
   icon,
+  hoverIcon,
   loading = false,
   disabled,
   children,
@@ -76,13 +113,23 @@ function Button({
 }: ButtonProps) {
   const Comp = asChild ? Slot.Root : "button";
   const inactive = Boolean(disabled) || loading;
+  const arrow = <ArrowRight strokeWidth={1.75} aria-hidden />;
 
   const trailing = loading ? (
     <span className="flex size-6 items-center justify-center" aria-hidden>
       <LoaderCircle className="size-5 animate-spin" strokeWidth={1.75} />
     </span>
   ) : showIcon ? (
-    (icon ?? <ArrowRight strokeWidth={1.75} aria-hidden />)
+    hoverIcon ? (
+      <IconMorph icon={icon ?? arrow} hoverIcon={hoverIcon} />
+    ) : (
+      <span
+        aria-hidden
+        className="flex transition-[translate] duration-(--duration-fast) ease-standard motion-safe:group-hover/button:translate-x-0.5"
+      >
+        {icon ?? arrow}
+      </span>
+    )
   ) : null;
 
   return (

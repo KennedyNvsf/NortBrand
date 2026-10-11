@@ -118,6 +118,16 @@
     }
   }
 
+  /* The approach list's red accent grows from its centre (Services › Our approach). */
+  --animate-accent-in: accent-in var(--duration-slow) var(--ease-emphasized)
+    both;
+
+  @keyframes accent-in {
+    from {
+      transform: scaleY(0);
+    }
+  }
+
   @keyframes splash-progress {
     from {
       transform: scaleX(0);
@@ -164,12 +174,16 @@
   /* Layout rhythm by breakpoint: gutters 20/32/48, section padding 72/88/120. */
   --gutter: 20px;
   --section-y: 72px;
+  /* SiteNav height (padding + its tallest control + 1 px border), for first-screen
+     heroes. Keep in step with site-nav.tsx. */
+  --header-height: 73px;
 }
 
 @media (width >= 48rem) {
   :root {
     --gutter: 32px;
     --section-y: 88px;
+    --header-height: 77px;
   }
 }
 
@@ -177,6 +191,7 @@
   :root {
     --gutter: 48px;
     --section-y: 120px;
+    --header-height: 93px;
   }
 }
 
@@ -429,6 +444,48 @@
   to {
     opacity: 1;
   }
+}
+
+/*
+ * Hero entrance (Motion Spec › Home › Hero entrance; all page heroes). CSS, not Motion:
+ * the hero is above the fold, so it must animate from the first paint, before
+ * hydration and without JavaScript. Each element sets --enter-index (0, 1, 2…) and
+ * rises out of a soft blur, 110 ms after the previous one.
+ * Reduced motion: a 150 ms fade, all together.
+ */
+[data-enter] {
+  animation: enter-fade var(--duration-fast) linear both;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-enter] {
+    animation: enter var(--duration-reveal) var(--ease-emphasized) both;
+    animation-delay: calc(80ms + var(--enter-index, 0) * 110ms);
+  }
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    translate: 0 28px;
+    filter: blur(6px);
+  }
+}
+
+@keyframes enter-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/*
+ * Page transition (Motion Spec › Global › Route change: 250 ms). PageTransition marks
+ * the page with data-page-transition on client-side navigations only; the first load
+ * already has the splash and the hero entrance. Opacity only, so fixed and sticky
+ * descendants are unaffected.
+ */
+[data-page-transition] {
+  animation: enter-fade var(--duration-base) var(--ease-standard) both;
 }
 
 /* The sticky CTA steps aside while a dialog, sheet or menu is open (Handoff › Sticky

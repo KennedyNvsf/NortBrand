@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
-import { Reveal } from "@/components/motion/reveal";
+import { RevealGroup } from "@/components/motion/reveal-group";
+import { revealItem } from "@/components/motion/reveal-item";
 import { emphasisTags, highlightTags } from "@/components/site/highlight";
 
 /*
@@ -24,22 +25,25 @@ export async function AboutStory() {
       className="bg-bg-surface pt-2 pb-(--section-y) lg:pt-5"
     >
       <div className="container-page">
-        <div className="flex flex-col gap-7 border-t border-border-default pt-xl md:gap-9 md:pt-10 lg:flex-row lg:items-start lg:gap-24">
-          <Reveal className="flex flex-col gap-lg lg:w-90 lg:shrink-0">
-            <p className="text-overline text-text-accent">{t("eyebrow")}</p>
+        <RevealGroup className="flex flex-col gap-7 border-t border-border-default pt-xl md:gap-9 md:pt-10 lg:flex-row lg:items-start lg:gap-24">
+          <div className="flex flex-col gap-lg lg:w-90 lg:shrink-0">
+            <p {...revealItem()} className="text-overline text-text-accent">
+              {t("eyebrow")}
+            </p>
             <h2
+              {...revealItem()}
               id="about-story-title"
               className="text-h1 text-text-primary lg:text-display-section"
             >
               {t.rich("title", highlightTags)}
             </h2>
-          </Reveal>
+          </div>
 
-          <Reveal
-            index={1}
-            className="flex min-w-0 flex-1 flex-col gap-lg lg:gap-xl"
-          >
-            <div className="flex gap-lg py-md md:py-5 lg:py-7">
+          <div className="flex min-w-0 flex-1 flex-col gap-lg lg:gap-xl">
+            <div
+              {...revealItem()}
+              className="flex gap-lg py-md md:py-5 lg:py-7"
+            >
               <span
                 aria-hidden
                 className="w-1 shrink-0 self-stretch rounded-[2px] bg-action-primary"
@@ -49,7 +53,10 @@ export async function AboutStory() {
               </p>
             </div>
 
-            <p className="text-body text-text-muted lg:text-lead">
+            <p
+              {...revealItem()}
+              className="text-body text-text-muted lg:text-lead"
+            >
               {t("intro")}
             </p>
 
@@ -57,6 +64,7 @@ export async function AboutStory() {
               {understandingKeys.map((key, index) => (
                 <li
                   key={key}
+                  {...revealItem()}
                   className="flex flex-col gap-md border-t border-border-default pt-4.5"
                 >
                   <span aria-hidden className="text-overline text-text-accent">
@@ -69,11 +77,14 @@ export async function AboutStory() {
               ))}
             </ol>
 
-            <p className="text-body text-text-muted lg:text-lead">
+            <p
+              {...revealItem()}
+              className="text-body text-text-muted lg:text-lead"
+            >
               {t.rich("outro", emphasisTags)}
             </p>
-          </Reveal>
-        </div>
+          </div>
+        </RevealGroup>
       </div>
     </section>
   );

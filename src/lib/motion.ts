@@ -17,14 +17,31 @@ export const motionTokens = {
   },
 } as const;
 
-/** Motion Spec › Global › Scroll reveal. */
+/**
+ * Scroll reveals (Motion Spec › Global, revised with the team after #27 review: "the
+ * animations are way too subtle"). Same easing and duration as the spec; more travel
+ * and a wider stagger so each element reads as its own beat.
+ */
 export const revealSpec = {
-  /** Vertical travel in px. */
-  distance: 24,
-  /** Delay between siblings, seconds. */
-  stagger: 0.06,
-  /** Share of the element that must be visible to trigger. */
-  amount: 0.25,
+  /** Vertical travel of a rising element ("up"), px. Spec: 24. */
+  distance: 32,
+  /** Horizontal travel of a sliding panel ("left" / "right"), px. */
+  slide: 64,
+  /** Start scale of a popping image ("pop"). */
+  popScale: 0.88,
+  /** Delay between items revealed together, seconds. Spec: 0.06. */
+  stagger: 0.1,
+  /** Stroke drawing ("draw"), seconds. */
+  drawDuration: 1.2,
+  /** In-out, so a stroke is seen travelling rather than appearing at once. */
+  drawEase: [0.65, 0, 0.35, 1],
+} as const;
+
+/** "pop": a spring with a small overshoot, so images land rather than fade. */
+export const popSpring = {
+  type: "spring",
+  stiffness: 260,
+  damping: 20,
 } as const;
 
 /** Motion Spec › Reduced motion: "opacity fades only, at 150ms or less". */

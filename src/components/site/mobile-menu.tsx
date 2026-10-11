@@ -4,9 +4,9 @@ import { useState } from "react";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { BookingButton } from "@/components/site/booking-button";
 import { LocaleSwitcher } from "@/components/site/locale-switcher";
 import { Logo } from "@/components/site/logo";
-import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetClose,
@@ -14,7 +14,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { BOOKING_HREF, isActiveRoute, navItems } from "@/content/navigation";
+import { isActiveRoute, navItems } from "@/content/navigation";
 import { site } from "@/content/site";
 import { Link, usePathname } from "@/i18n/navigation";
 import { ICON_STROKE } from "@/lib/icons";
@@ -108,9 +108,9 @@ export function MobileMenu() {
               }}
             />
             <SheetClose asChild>
-              <Button asChild showIcon className="w-full">
-                <Link href={BOOKING_HREF}>{common("bookConsultation")}</Link>
-              </Button>
+              <BookingButton className="w-full">
+                {common("bookConsultation")}
+              </BookingButton>
             </SheetClose>
             <a
               href={`mailto:${email}`}

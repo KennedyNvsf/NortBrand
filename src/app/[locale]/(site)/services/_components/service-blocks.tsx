@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
+import { revealItem } from "@/components/motion/reveal-item";
 import { highlightTags, plainTags } from "@/components/site/highlight";
 import { includedKeys, services } from "@/content/services";
 import { cn } from "@/lib/utils";
@@ -17,8 +18,9 @@ import { ServiceStage } from "./service-stage";
  *   plain vertical stack, collage first (CLAUDE.md, Motion).
  * - Tablet and mobile separate blocks with a hairline (359:197).
  * - Desktop keeps a 76 px column on the right for the dot navigation (Figma 173:2).
- * - ServiceStage (client) pins the blocks on desktop and reveals them below it; the
- *   blocks themselves stay server-rendered.
+ * - ServiceStage (client) pins the blocks on desktop and plays each block's entrance
+ *   (collage pop, then the copy) via the reveal markers; the blocks stay
+ *   server-rendered.
  */
 export async function ServiceBlocks() {
   const t = await getTranslations("Services");
@@ -54,19 +56,26 @@ export async function ServiceBlocks() {
               />
 
               <div className="flex flex-col items-start gap-3 md:flex-1 lg:w-110 lg:flex-none lg:gap-lg">
-                <p className="text-overline text-action-secondary">
+                <p
+                  {...revealItem()}
+                  className="text-overline text-action-secondary"
+                >
                   {t("blocks.eyebrow", { number, name })}
                 </p>
                 <h2
+                  {...revealItem()}
                   id={titleId}
                   className="text-h2 font-bold tracking-[-0.005em] text-text-primary"
                 >
                   {t.rich(`items.${key}.title`, plainTags)}
                 </h2>
-                <p className="text-body text-text-muted lg:text-lead">
+                <p
+                  {...revealItem()}
+                  className="text-body text-text-muted lg:text-lead"
+                >
                   {summaries(key)}
                 </p>
-                <div className="w-full pt-1 lg:pt-2">
+                <div {...revealItem()} className="w-full pt-1 lg:pt-2">
                   <ServiceDetails
                     icon={icon}
                     name={name}

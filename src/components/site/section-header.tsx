@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { revealItem } from "@/components/motion/reveal-item";
 import { cn } from "@/lib/utils";
 
 /*
@@ -7,6 +8,8 @@ import { cn } from "@/lib/utils";
  * WORKS" / "WHY IT MATTERS"). The eyebrow is a styled paragraph, never a heading
  * (Handoff: "Eyebrows are not headings"); its uppercase comes from text-overline, so the
  * message stays in sentence case for translators.
+ * Eyebrow and heading are reveal items: inside a RevealGroup they rise in one after the
+ * other; anywhere else the markers do nothing.
  */
 type SectionHeaderProps = {
   id: string;
@@ -36,8 +39,11 @@ export function SectionHeader({
         className,
       )}
     >
-      <p className="text-overline text-action-secondary">{eyebrow}</p>
+      <p {...revealItem()} className="text-overline text-action-secondary">
+        {eyebrow}
+      </p>
       <h2
+        {...revealItem()}
         id={id}
         className={cn(
           "text-h2 text-text-primary",
