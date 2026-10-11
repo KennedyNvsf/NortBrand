@@ -55,12 +55,13 @@ module that imports `motion/react` must not be evaluated on the server.
 
 **Kinds** (`motion.ts › revealSpec`), all 700 ms emphasized unless noted:
 
-| Kind             | Movement                                                         | Used for                       |
-| ---------------- | ---------------------------------------------------------------- | ------------------------------ |
-| `up`             | rise 32 px + fade (spec: 24)                                     | text, cards                    |
-| `left` / `right` | slide 64 px from that side + fade                                | image panels, approach content |
-| `pop`            | scale 0.88 → 1 on a spring with slight overshoot                 | collages, the CTA card         |
-| `draw`           | SVG stroke draws (1.2 s in-out; the path needs `pathLength={1}`) | the mark in image panels       |
+| Kind             | Movement                                                         | Used for                            |
+| ---------------- | ---------------------------------------------------------------- | ----------------------------------- |
+| `up`             | rise 32 px + fade (spec: 24)                                     | text, cards                         |
+| `left` / `right` | slide 64 px from that side + fade                                | image panels, approach content      |
+| `pop`            | scale 0.88 → 1 on a spring with slight overshoot                 | collages, the CTA card              |
+| `draw`           | SVG stroke draws (1.2 s in-out; the path needs `pathLength={1}`) | the mark in image panels            |
+| `underline`      | a keyword underline draws left to right, 250 ms after its turn   | highlighted words (`highlight.tsx`) |
 
 **How a group behaves:**
 
@@ -102,17 +103,34 @@ module that imports `motion/react` must not be evaluated on the server.
     so it never sticks on touch.
   - **Reduced motion:** a crossfade.
 - **CTA band:** the headline and line rise, then the action card pops.
+- **Keyword underlines** (`underline-draw` utility). Underlines are a background stripe
+  whose width is a registered custom property, `--draw` (0–1), instead of
+  `text-decoration`, so they can draw left to right and follow the words across line
+  breaks.
+  - In a hero they draw with CSS after the headline enters.
+  - Inside a reveal group the engine draws them after the heading.
+  - Anywhere else (the details dialog) they are simply drawn.
+- **Nav links** (desktop): one red underline travels between links on hover and keyboard
+  focus. It springs from link to link (a 1 px bar scaled to the link width) and fades
+  when the pointer leaves.
+- **Service cards:** lift 4 px on hover, and the icon tile scales and tilts.
+- **Details dialog / drawer:** after it opens, its rows rise in 60 ms apart
+  (`stagger-in`, CSS: the content mounts on every open).
 
 ### Home
 
 - **Hero** fills the first screen below the header, with its content centred, so _Why it
-  matters_ starts below the fold.
+  matters_ starts below the fold. A scroll cue (a red bead running down a hairline,
+  tablet and up) appears last and hints that the page continues.
   - The class is `min-h-[calc(100svh-var(--header-height))]`.
   - `--header-height` (73/77/93 px) lives in `globals.css`. Keep it in step with
     `site-nav.tsx`.
 - **Why it matters / Our philosophy** (`FeatureSplit`): the panel slides in from its own
   side and its mark draws. Then the eyebrow, title, body and each point follow. The
-  section clips horizontally, so the slide never adds a scrollbar.
+  section clips horizontally, so the slide never adds a scrollbar. On desktop the mark
+  drifts ±24 px slower than the page (`Parallax`). The wrapper is always an `m.div`:
+  switching element type after hydration would remount the mark, and the reveal group
+  would lose the path it hid.
 - **What we do:** the heading, then the cards, row by row.
 - **How it works** (`process-track.tsx`) is no longer scroll-linked:
   - **Desktop:** once 60% of the steps are on screen, the line draws over 1.6 s (in-out).
@@ -122,8 +140,14 @@ module that imports `motion/react` must not be evaluated on the server.
 
 ### Services
 
-- **Service blocks** (`service-stage.tsx`): each time a block becomes active, and the
-  first time the stage comes into view:
+- **Hero photo** settles from 108% to 100% scale over 1.6 s while the text enters.
+- **Arrival:** nothing in the stage shows before it pins. While you approach, the first
+  block (and the dots) wait hidden; the block plays as the stage locks under the header,
+  and scrolling back above the stage re-arms it. The hide runs in a passive effect
+  because it must come _after_ the blocks' own RevealGroups clean up. Those groups are
+  enabled for the first commit, until the media query resolves, and restore their items
+  when disabled.
+- **Service blocks** (`service-stage.tsx`): each time a block becomes active:
   1. the pink panel pops;
   2. the dark square pops a beat later;
   3. the eyebrow, title, summary and _More Details_ rise in.
@@ -141,6 +165,7 @@ module that imports `motion/react` must not be evaluated on the server.
   - **Before hydration:** each active point shows its own static accent until the
     travelling one has been measured.
   - **Mobile accordion:** the accent grows in from its centre.
+- **Dots:** a hairline behind them fills red with your progress through the five blocks.
 
 ### About and Contact
 
@@ -175,8 +200,8 @@ Links rise 12 px, 40 ms apart, unchanged from the first pass.
 - **Quote card auto-advance** (every 6 s, crossfade, pause on hover/focus) needs more than
   one quote, and there is only one. It stays a static card until the client provides
   more.
-- **Not built yet:** keyword underline draw, logomark panel parallax and card image zoom.
-  See the review list in the PR.
+- **Card image zoom** belongs to `ArticleCard` (the blog), which already has it; service
+  cards have no images.
 - **Reduced-motion dot list:** with reduced motion the spec turns the dot navigation into
   an anchor list. Here the dots are simply hidden: the stack is short, and the footer and
   Home already link to each block.
@@ -197,6 +222,8 @@ Links rise 12 px, 40 ms apart, unchanged from the first pass.
   - client-side navigation adds the page fade, and the first load does not
   - the booking button's calendar appears on hover
   - the approach accent travels to the clicked point, and the panel content settles
+  - a red underline follows the hovered nav link
+- **`services.spec.ts`:** a block stays hidden until the stage pins, then plays in.
 - **Test-helper lesson:** `openDetails` blurs before focusing. Re-focusing an
   already-focused element fires no focus event, so a retry would never move the stage.
 - Every page stays static; the harness (axe, overflow, H1) runs unchanged.
