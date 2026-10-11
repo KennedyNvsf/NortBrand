@@ -33,6 +33,7 @@ jobs:
       RESEND_AUDIENCE_ID: placeholder
       NOTIFY_TO_EMAIL: team@example.com
       IP_HASH_SALT: placeholder-placeholder-placeholder-00
+      NEWSLETTER_TOKEN_SECRET: placeholder-placeholder-placeholder-00
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

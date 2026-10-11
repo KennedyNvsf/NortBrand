@@ -1,4 +1,6 @@
 allowBuilds:
+  # Downloads sentry-cli, which uploads source maps during `next build`.
+  "@sentry/cli": true
   sharp: false
   unrs-resolver: false
   "@parcel/watcher": false

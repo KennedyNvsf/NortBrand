@@ -7,6 +7,12 @@ import { z } from "zod";
 
 const nonEmpty = z.string().trim().min(1);
 
+/** Optional: an unset or empty value is undefined, so local builds run without it. */
+const optionalHttpsUrl = z
+  .union([z.literal(""), z.url({ protocol: /^https$/ })])
+  .optional()
+  .transform((value) => value || undefined);
+
 export const publicSchema = z.object({
   NEXT_PUBLIC_SITE_URL: z.url({ protocol: /^https?$/ }),
   NEXT_PUBLIC_SUPABASE_URL: z.url({ protocol: /^https?$/ }),
@@ -20,6 +26,8 @@ export const publicSchema = z.object({
   NEXT_PUBLIC_GA_MEASUREMENT_ID: z
     .string()
     .regex(/^G-[A-Z0-9]+$/, "GA4 measurement IDs look like G-XXXXXXXXXX"),
+  /** Sentry is off when unset (local development, forks). Public by design. */
+  NEXT_PUBLIC_SENTRY_DSN: optionalHttpsUrl,
 });
 
 export const serverSchema = z.object({
@@ -29,6 +37,8 @@ export const serverSchema = z.object({
   RESEND_AUDIENCE_ID: nonEmpty,
   NOTIFY_TO_EMAIL: z.email(),
   IP_HASH_SALT: z.string().min(32, "Use at least 32 characters"),
+  /** Signs newsletter confirm and unsubscribe links (HMAC-SHA256). */
+  NEWSLETTER_TOKEN_SECRET: z.string().min(32, "Use at least 32 characters"),
 });
 
 export type PublicEnv = z.infer<typeof publicSchema>;

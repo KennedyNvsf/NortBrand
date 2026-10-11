@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import { PHASE_PRODUCTION_BUILD } from "next/constants";
 import createNextIntlPlugin from "next-intl/plugin";
+import { withSentryConfig } from "@sentry/nextjs/config";
 
 import { validateEnv } from "./src/env.schema";
 import { isReleaseBuild, runReleaseGuard } from "./src/i18n/release-guard";
@@ -40,5 +41,18 @@ export default function config(phase: string): NextConfig {
     process.env.RELEASE_GUARD_CHECKED = "1";
   }
 
-  return withNextIntl(nextConfig);
+  // Source maps upload to Sentry only when SENTRY_AUTH_TOKEN is set (Vercel builds);
+  // they are deleted afterwards so the browser never receives them.
+  return withSentryConfig(withNextIntl(nextConfig), {
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+    silent: !process.env.CI,
+    telemetry: false,
+    widenClientFileUpload: true,
+    sourcemaps: {
+      disable: !process.env.SENTRY_AUTH_TOKEN,
+      deleteSourcemapsAfterUpload: true,
+    },
+  });
 }
