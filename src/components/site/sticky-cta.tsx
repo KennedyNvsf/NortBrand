@@ -3,9 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 
-import { Button } from "@/components/ui/button";
-import { BOOKING_HREF } from "@/content/navigation";
-import { Link } from "@/i18n/navigation";
+import { BookingButton } from "@/components/site/booking-button";
 import { cn } from "@/lib/utils";
 
 /*
@@ -81,9 +79,7 @@ export function StickyCta() {
         </p>
         <p className="truncate text-caption text-text-muted">{t("meta")}</p>
       </div>
-      <Button asChild showIcon className="shrink-0">
-        <Link href={BOOKING_HREF}>{t("action")}</Link>
-      </Button>
+      <BookingButton className="shrink-0">{t("action")}</BookingButton>
     </aside>
   );
 }

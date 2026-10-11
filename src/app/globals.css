@@ -13,6 +13,14 @@
  *   design-system values are available as utilities.
  */
 
+/*
+ * `stage:` — the pinned Services stage (service-stage.tsx, PINNED_QUERY mirrors it).
+ * Desktop with motion allowed, and tall enough for a block: blocks are 546 px and
+ * the stage is the viewport minus 96 px under the header, so pinning needs 642 px;
+ * 42rem (672 px) leaves a margin. Shorter screens get the plain stack.
+ */
+@custom-variant stage (@media (width >= 64rem) and (height >= 42rem) and (prefers-reduced-motion: no-preference));
+
 @theme {
   /* Reset Tailwind defaults so nothing outside the design system is available. */
   --color-*: initial;
@@ -90,6 +98,7 @@
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
   --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-draw: cubic-bezier(0.65, 0, 0.35, 1); /* strokes, lines, underlines */
   --animate-spin: spin 800ms linear infinite;
   /* Logomark stroke drawing (Motion Spec › System: 404 and loading splash). */
   --animate-mark-draw: mark-draw 900ms var(--ease-emphasized) both;
@@ -115,6 +124,25 @@
     }
     to {
       stroke-dashoffset: -1;
+    }
+  }
+
+  /* The approach list's red accent grows from its centre (Services › Our approach). */
+  --animate-accent-in: accent-in var(--duration-slow) var(--ease-emphasized)
+    both;
+
+  /* Services hero photo settles from a slight zoom while the text enters. */
+  --animate-hero-settle: hero-settle 1.6s var(--ease-emphasized) both;
+
+  @keyframes hero-settle {
+    from {
+      scale: 1.08;
+    }
+  }
+
+  @keyframes accent-in {
+    from {
+      transform: scaleY(0);
     }
   }
 
@@ -160,16 +188,21 @@
   --duration-base: 250ms; /* modals, accordions, route changes, card lift */
   --duration-slow: 400ms; /* crossfades, keyword underlines */
   --duration-reveal: 700ms; /* scroll reveals, hero entrances */
+  --enter-step: 110ms; /* between hero entrance elements */
 
   /* Layout rhythm by breakpoint: gutters 20/32/48, section padding 72/88/120. */
   --gutter: 20px;
   --section-y: 72px;
+  /* SiteNav height (padding + its tallest control + 1 px border), for first-screen
+     heroes. Keep in step with site-nav.tsx. */
+  --header-height: 73px;
 }
 
 @media (width >= 48rem) {
   :root {
     --gutter: 32px;
     --section-y: 88px;
+    --header-height: 77px;
   }
 }
 
@@ -177,6 +210,7 @@
   :root {
     --gutter: 48px;
     --section-y: 120px;
+    --header-height: 93px;
   }
 }
 
@@ -429,6 +463,117 @@
   to {
     opacity: 1;
   }
+}
+
+/*
+ * Hero entrance (Motion Spec › Home › Hero entrance; all page heroes). CSS, not Motion:
+ * the hero is above the fold, so it must animate from the first paint, before
+ * hydration and without JavaScript. Each element sets --enter-index (0, 1, 2…) and
+ * rises out of a soft blur, 110 ms after the previous one.
+ * Reduced motion: a 150 ms fade, all together.
+ */
+[data-enter] {
+  animation: enter-fade var(--duration-fast) linear both;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-enter] {
+    animation: enter var(--duration-reveal) var(--ease-emphasized) both;
+    animation-delay: calc(80ms + var(--enter-index, 0) * var(--enter-step));
+  }
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    translate: 0 28px;
+    filter: blur(6px);
+  }
+}
+
+@keyframes enter-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/*
+ * Keyword underline (highlight.tsx): a background stripe whose width is --draw (0–1),
+ * so it can draw left to right. It sits where the 0.15em text-decoration offset put
+ * it and follows the words across line breaks. --draw is registered so CSS keyframes
+ * interpolate it; Motion animates the same property in reveal groups.
+ */
+@property --draw {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+@utility underline-draw {
+  background-image: linear-gradient(
+    var(--color-action-secondary),
+    var(--color-action-secondary)
+  );
+  background-repeat: no-repeat;
+  background-position: 0 calc(100% - 0.05em);
+  background-size: calc(var(--draw) * 100%) var(--underline-thickness, 2px);
+}
+
+/* In a hero, the underline draws once its headline has entered. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-enter] [data-reveal-item="underline"] {
+    animation: underline-draw var(--duration-reveal) var(--ease-draw) both;
+    animation-delay: calc(500ms + var(--enter-index, 0) * var(--enter-step));
+  }
+}
+
+@keyframes underline-draw {
+  from {
+    --draw: 0;
+  }
+}
+
+/*
+ * Stagger the direct children of a container that mounts on open (the Services
+ * details dialog and drawer): each rises 16 px, 60 ms after the previous one, once the
+ * dialog itself has scaled in.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .stagger-in > * {
+    animation: enter-up var(--duration-slow) var(--ease-emphasized) both;
+  }
+  .stagger-in > :nth-child(1) {
+    animation-delay: 120ms;
+  }
+  .stagger-in > :nth-child(2) {
+    animation-delay: 180ms;
+  }
+  .stagger-in > :nth-child(3) {
+    animation-delay: 240ms;
+  }
+  .stagger-in > :nth-child(4) {
+    animation-delay: 300ms;
+  }
+  .stagger-in > :nth-child(n + 5) {
+    animation-delay: 360ms;
+  }
+}
+
+@keyframes enter-up {
+  from {
+    opacity: 0;
+    translate: 0 16px;
+  }
+}
+
+/*
+ * Page transition (Motion Spec › Global › Route change: 250 ms). PageTransition marks
+ * the page with data-page-transition on client-side navigations only; the first load
+ * already has the splash and the hero entrance. Opacity only, so fixed and sticky
+ * descendants are unaffected.
+ */
+[data-page-transition] {
+  animation: enter-fade var(--duration-base) var(--ease-standard) both;
 }
 
 /* The sticky CTA steps aside while a dialog, sheet or menu is open (Handoff › Sticky

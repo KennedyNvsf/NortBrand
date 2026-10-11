@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
+import { enterItem } from "@/components/motion/reveal-item";
 import { highlightTags } from "@/components/site/highlight";
 
 /*
@@ -8,6 +9,7 @@ import { highlightTags } from "@/components/site/highlight";
  * max width, not a hard break, so translations wrap naturally.
  * - Eyebrow: small red text uses red/600 (CLAUDE.md, accessibility decisions).
  * - data-sticky-cta-trigger: the mobile StickyCta appears once this has scrolled away.
+ * - Entrance (CSS, first paint): eyebrow, headline, then the lead.
  * Holds the page's only H1.
  */
 export async function AboutHero() {
@@ -20,14 +22,22 @@ export async function AboutHero() {
       className="bg-bg-surface pt-14 pb-18 md:pt-18 md:pb-22 lg:pt-20 lg:pb-25"
     >
       <div className="container-page flex flex-col items-center gap-5 text-center md:gap-7 lg:gap-xl">
-        <p className="text-overline text-text-accent">{t("eyebrow")}</p>
+        <p {...enterItem(0)} className="text-overline text-text-accent">
+          {t("eyebrow")}
+        </p>
         <h1
+          {...enterItem(1)}
           id="about-hero-title"
           className="text-display-xl text-text-primary md:max-w-150 lg:max-w-215"
         >
           {t.rich("title", highlightTags)}
         </h1>
-        <p className="text-intro text-text-muted lg:max-w-147">{t("lead")}</p>
+        <p
+          {...enterItem(2)}
+          className="text-intro text-text-muted lg:max-w-147"
+        >
+          {t("lead")}
+        </p>
       </div>
     </section>
   );

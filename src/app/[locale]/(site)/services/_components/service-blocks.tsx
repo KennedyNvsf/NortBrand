@@ -1,11 +1,13 @@
 import { getTranslations } from "next-intl/server";
 
+import { revealItem } from "@/components/motion/reveal-item";
 import { highlightTags, plainTags } from "@/components/site/highlight";
 import { includedKeys, services } from "@/content/services";
 import { cn } from "@/lib/utils";
 
 import { ServiceCollage } from "./service-collage";
 import { ServiceDetails } from "./service-details";
+import { ServiceStage } from "./service-stage";
 
 /*
  * Figma Services › Service Blocks (desktop 163:32, tablet 359:174, mobile 359:462).
@@ -15,9 +17,10 @@ import { ServiceDetails } from "./service-details";
  * - Desktop and tablet: collage and text side by side, alternating sides. Mobile: a
  *   plain vertical stack, collage first (CLAUDE.md, Motion).
  * - Tablet and mobile separate blocks with a hairline (359:197).
- * - Desktop keeps a 76 px column on the right empty: the Motion ticket puts the dot
- *   navigation there (Figma 173:2) when it pins the blocks. Until then the text and
- *   collage sit exactly where Figma places them.
+ * - Desktop keeps a 76 px column on the right for the dot navigation (Figma 173:2).
+ * - ServiceStage (client) pins the blocks on desktop and plays each block's entrance
+ *   (collage pop, then the copy) via the reveal markers; the blocks stay
+ *   server-rendered.
  */
 export async function ServiceBlocks() {
   const t = await getTranslations("Services");
@@ -27,7 +30,11 @@ export async function ServiceBlocks() {
   const total = services.length;
 
   return (
-    <section aria-label={t("blocks.label")} className="bg-bg-surface">
+    <ServiceStage
+      label={t("blocks.label")}
+      dotsLabel={t("blocks.jump")}
+      steps={services.map(({ slug, key }) => ({ slug, name: names(key) }))}
+    >
       {services.map(({ slug, key, icon }, index) => {
         const name = names(key);
         const number = String(index + 1).padStart(2, "0");
@@ -38,7 +45,7 @@ export async function ServiceBlocks() {
             key={slug}
             id={slug}
             aria-labelledby={titleId}
-            className="scroll-mt-24 border-border-default not-first:border-t lg:not-first:border-t-0"
+            className="scroll-mt-24"
           >
             <div className="container-page flex flex-col gap-7 py-2xl md:flex-row md:items-center md:gap-10 md:py-16 lg:justify-center lg:gap-16 lg:py-2xl lg:pr-[calc(var(--gutter)+--spacing(19))]">
               <ServiceCollage
@@ -49,19 +56,26 @@ export async function ServiceBlocks() {
               />
 
               <div className="flex flex-col items-start gap-3 md:flex-1 lg:w-110 lg:flex-none lg:gap-lg">
-                <p className="text-overline text-action-secondary">
+                <p
+                  {...revealItem()}
+                  className="text-overline text-action-secondary"
+                >
                   {t("blocks.eyebrow", { number, name })}
                 </p>
                 <h2
+                  {...revealItem()}
                   id={titleId}
                   className="text-h2 font-bold tracking-[-0.005em] text-text-primary"
                 >
                   {t.rich(`items.${key}.title`, plainTags)}
                 </h2>
-                <p className="text-body text-text-muted lg:text-lead">
+                <p
+                  {...revealItem()}
+                  className="text-body text-text-muted lg:text-lead"
+                >
                   {summaries(key)}
                 </p>
-                <div className="w-full pt-1 lg:pt-2">
+                <div {...revealItem()} className="w-full pt-1 lg:pt-2">
                   <ServiceDetails
                     icon={icon}
                     name={name}
@@ -88,6 +102,6 @@ export async function ServiceBlocks() {
           </article>
         );
       })}
-    </section>
+    </ServiceStage>
   );
 }

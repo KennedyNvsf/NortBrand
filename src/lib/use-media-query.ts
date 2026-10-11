@@ -24,3 +24,6 @@ export function useMediaQuery(query: string, serverValue = false): boolean {
 
 /** Tablet and up (globals.css --breakpoint-md). */
 export const MEDIA_MD = "(min-width: 48rem)";
+
+/** Desktop and up (globals.css --breakpoint-lg). */
+export const MEDIA_LG = "(min-width: 64rem)";

@@ -1,5 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
+import { RevealGroup } from "@/components/motion/reveal-group";
+import { revealItem } from "@/components/motion/reveal-item";
 import { highlightTags } from "@/components/site/highlight";
 import { LINK_ROOT, TextLinkContent } from "@/components/site/text-link";
 import {
@@ -29,17 +31,23 @@ export async function ContactFaq() {
       aria-labelledby="contact-faq-title"
       className="bg-bg-surface pb-18 md:pb-22 lg:pt-5 lg:pb-15"
     >
-      <div className="container-page flex flex-col gap-7 md:gap-9 lg:flex-row lg:items-start lg:gap-24">
+      <RevealGroup className="container-page flex flex-col gap-7 md:gap-9 lg:flex-row lg:items-start lg:gap-24">
         <div className="flex flex-col items-start gap-lg lg:w-100 lg:shrink-0">
-          <p className="text-overline text-action-secondary">{t("eyebrow")}</p>
+          <p {...revealItem()} className="text-overline text-action-secondary">
+            {t("eyebrow")}
+          </p>
           <h2
+            {...revealItem()}
             id="contact-faq-title"
             className="text-h2 font-bold tracking-[-0.01em] text-text-primary"
           >
             {t.rich("title", highlightTags)}
           </h2>
-          <p className="text-body text-text-muted">{t("body")}</p>
+          <p {...revealItem()} className="text-body text-text-muted">
+            {t("body")}
+          </p>
           <a
+            {...revealItem()}
             href={`mailto:${email}`}
             className={cn(
               LINK_ROOT,
@@ -58,6 +66,7 @@ export async function ContactFaq() {
         >
           {faqKeys.map((key) => (
             <AccordionItem
+              {...revealItem()}
               key={key}
               value={key}
               className="border-t-0 border-b first:border-t-0"
@@ -71,7 +80,7 @@ export async function ContactFaq() {
             </AccordionItem>
           ))}
         </Accordion>
-      </div>
+      </RevealGroup>
     </section>
   );
 }

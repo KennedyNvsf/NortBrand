@@ -31,10 +31,36 @@ async function openDetails(page: Page, service: string, title: string) {
   });
   const details = page.getByRole("dialog", { name: title });
   await untilHydrated(async () => {
-    if (!(await details.isVisible())) await trigger.click();
+    if (!(await details.isVisible())) {
+      // On desktop the button may sit in a hidden stage step; focusing it (the
+      // keyboard path) brings its step into view first. Blur first: re-focusing an
+      // already focused element fires no focus event, so a retry would not move it.
+      await trigger.evaluate((element) => {
+        element.blur();
+      });
+      await trigger.focus();
+      await trigger.click({ timeout: 1000 });
+    }
     await expect(details).toBeVisible({ timeout: 1000 });
   });
   return { trigger, details };
+}
+
+function activeStep(page: Page) {
+  return page
+    .getByRole("navigation", { name: "Jump to a service" })
+    .locator('[aria-current="step"]');
+}
+
+async function enterStage(page: Page) {
+  const stage = page.getByRole("region", { name: "Our services" });
+  const top = await stage.evaluate(
+    (element) => element.getBoundingClientRect().top + window.scrollY,
+  );
+  await page.evaluate((y) => {
+    window.scrollTo(0, y - 96 + 10);
+  }, top);
+  return stage;
 }
 
 test.describe("services page", () => {
@@ -160,5 +186,135 @@ test.describe("services page", () => {
         section.getByRole("tab", { name: "Growth & Marketing" }),
       ).toBeFocused();
     }
+  });
+
+  test.describe("pinned blocks (desktop)", () => {
+    test.beforeEach(({ page }) => {
+      test.skip(isMobile(page), "the stage pins on desktop only");
+    });
+
+    test("scrolling swaps blocks and the dots follow", async ({ page }) => {
+      await page.goto("/en/services");
+      await untilHydrated(async () => {
+        await enterStage(page);
+        await expect(activeStep(page)).toHaveAttribute(
+          "aria-label",
+          "Web Design",
+          {
+            timeout: 1000,
+          },
+        );
+      });
+
+      await page.mouse.wheel(0, 1600);
+      await expect(activeStep(page)).not.toHaveAttribute(
+        "aria-label",
+        "Web Design",
+      );
+    });
+
+    test("a block stays hidden until the stage pins, then plays in", async ({
+      page,
+    }) => {
+      await page.goto("/en/services");
+      const title = page.locator("#web-design h2");
+      const stage = page.getByRole("region", { name: "Our services" });
+      // Approaching: the stage is on screen but not pinned yet.
+      await untilHydrated(async () => {
+        await stage.evaluate((element) => {
+          const top = element.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo(0, top - window.innerHeight / 2);
+        });
+        await expect(title).toHaveCSS("opacity", "0", { timeout: 1000 });
+      });
+      await enterStage(page);
+      await expect(title).toHaveCSS("opacity", "1");
+    });
+
+    test("a dot jumps to its block", async ({ page }) => {
+      await page.goto("/en/services");
+      const dot = page.getByRole("button", {
+        name: "Website Maintenance",
+        exact: true,
+      });
+      await untilHydrated(async () => {
+        await dot.click();
+        await expect(dot).toHaveAttribute("aria-current", "step", {
+          timeout: 1000,
+        });
+      });
+      await expect(page.locator("#website-maintenance h2")).toBeInViewport();
+    });
+
+    test("an anchor lands on its step", async ({ page }) => {
+      await page.goto("/en/services#content-writing");
+      await expect(activeStep(page)).toHaveAttribute(
+        "aria-label",
+        "Content Writing",
+      );
+      await expect(page.locator("#content-writing h2")).toBeInViewport();
+    });
+
+    test("keyboard focus brings a hidden block into view", async ({ page }) => {
+      await page.goto("/en/services");
+      const trigger = page.getByRole("button", {
+        name: "More Details: Social Media Management",
+      });
+      await untilHydrated(async () => {
+        await trigger.focus();
+        await expect(activeStep(page)).toHaveAttribute(
+          "aria-label",
+          "Social Media Management",
+          { timeout: 1000 },
+        );
+      });
+      await expect(trigger).toBeInViewport();
+    });
+
+    test.describe("with reduced motion", () => {
+      test.use({ reducedMotion: "reduce" });
+
+      test("the blocks are a plain stack without dots", async ({ page }) => {
+        await page.goto("/en/services");
+        await expect(
+          page.getByRole("navigation", { name: "Jump to a service" }),
+        ).toBeHidden();
+        const stage = page.getByRole("region", { name: "Our services" });
+        const height = await stage.evaluate(
+          (element) => element.getBoundingClientRect().height,
+        );
+        // Five stacked blocks, not five stage heights of scroll track.
+        expect(height).toBeLessThan(5 * 545 + 100);
+        await expect(page.locator("#website-maintenance")).toHaveCSS(
+          "opacity",
+          "1",
+        );
+      });
+    });
+
+    test("a screen too short for a block gets the plain stack", async ({
+      page,
+    }) => {
+      // 600 px tall: the stage would be 504 px, shorter than a block.
+      await page.setViewportSize({ width: 1280, height: 600 });
+      await page.goto("/en/services");
+      await expect(
+        page.getByRole("navigation", { name: "Jump to a service" }),
+      ).toBeHidden();
+      const stage = page.getByRole("region", { name: "Our services" });
+      const height = await stage.evaluate(
+        (element) => element.getBoundingClientRect().height,
+      );
+      expect(height).toBeLessThan(5 * 545 + 100);
+    });
+  });
+
+  test("below desktop the blocks stack without dots", async ({ page }) => {
+    test.skip(!isMobile(page), "mobile only");
+    await page.goto("/en/services");
+    await expect(
+      page.getByRole("navigation", { name: "Jump to a service" }),
+    ).toBeHidden();
+    await expect(page.locator("main article")).toHaveCount(5);
   });
 });

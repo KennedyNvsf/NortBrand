@@ -1,5 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
+import { RevealGroup } from "@/components/motion/reveal-group";
+import { revealItem } from "@/components/motion/reveal-item";
 import {
   emphasisTags,
   highlightTags,
@@ -27,20 +29,26 @@ export async function AboutPrinciple() {
       className="bg-bg-surface pb-(--section-y)"
     >
       <div className="container-page">
-        <div className="flex flex-col gap-lg border-t border-border-default pt-xl md:pt-10 lg:gap-xl">
+        <RevealGroup className="flex flex-col gap-lg border-t border-border-default pt-xl md:pt-10 lg:gap-xl">
           <div className="flex flex-col gap-lg">
-            <p className="text-overline text-text-accent">{t("eyebrow")}</p>
+            <p {...revealItem()} className="text-overline text-text-accent">
+              {t("eyebrow")}
+            </p>
             <h2
+              {...revealItem()}
               id="about-principle-title"
               className="text-display-xl text-text-primary"
             >
               {t.rich("title", { ...highlightTags, ...titleIndent })}
             </h2>
           </div>
-          <p className="text-body text-text-muted lg:ml-114 lg:max-w-170 lg:text-lead">
+          <p
+            {...revealItem()}
+            className="text-body text-text-muted lg:ml-114 lg:max-w-170 lg:text-lead"
+          >
             {t.rich("body", emphasisTags)}
           </p>
-        </div>
+        </RevealGroup>
       </div>
     </section>
   );

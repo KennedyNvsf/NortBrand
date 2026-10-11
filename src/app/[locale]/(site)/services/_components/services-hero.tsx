@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 
+import { enterItem } from "@/components/motion/reveal-item";
 import { highlightTags } from "@/components/site/highlight";
 import servicesHero from "@/assets/images/services-hero.jpg";
 
@@ -13,7 +14,12 @@ import servicesHero from "@/assets/images/services-hero.jpg";
  * - The eyebrow is white at 85%, not green: green fails contrast on the photo
  *   (CLAUDE.md, accessibility decisions).
  * - The photo is decorative (alt=""); hero-scrim keeps the white text readable.
+ * - No blur placeholder: on a full-bleed photo, next/image's SVG blur costs seconds of
+ *   rasterisation on slower devices (measured in #27). The section's dark fill shows
+ *   until the (priority) photo arrives.
  * - data-sticky-cta-trigger: the mobile StickyCta appears once this has scrolled away.
+ * - Entrance (CSS, first paint): eyebrow, headline, lead, then the quote card, while
+ *   the photo settles from a slight zoom (1.08 → 1, 1.6 s).
  * Holds the page's only H1.
  */
 export async function ServicesHero() {
@@ -31,27 +37,35 @@ export async function ServicesHero() {
         alt=""
         fill
         priority
-        placeholder="blur"
         sizes="100vw"
-        className="-z-10 object-cover"
+        className="-z-10 object-cover motion-safe:animate-hero-settle"
       />
       <div aria-hidden className="absolute inset-0 -z-10 hero-scrim" />
 
       <div className="mx-auto flex max-w-(--container-canvas) flex-col gap-7 px-(--gutter) pt-55 pb-7 md:gap-0 md:pt-76 md:pb-9 lg:min-h-195 lg:flex-row lg:items-end lg:justify-between lg:gap-xl lg:pt-0 lg:pb-10">
         <div className="flex flex-col gap-3.5 md:pb-7 lg:gap-3 lg:pb-12">
-          <p className="text-overline text-text-on-accent/85">{t("eyebrow")}</p>
+          <p {...enterItem(0)} className="text-overline text-text-on-accent/85">
+            {t("eyebrow")}
+          </p>
           <h1
+            {...enterItem(1)}
             id="services-hero-title"
             className="text-h1 text-text-on-accent lg:max-w-170"
           >
             {t.rich("title", highlightTags)}
           </h1>
-          <p className="text-body text-text-on-accent/90 md:text-lead lg:max-w-130">
+          <p
+            {...enterItem(2)}
+            className="text-body text-text-on-accent/90 md:text-lead lg:max-w-130"
+          >
             {t("lead")}
           </p>
         </div>
 
-        <figure className="flex flex-col gap-3.5 rounded-lg border border-text-on-accent/12 bg-text-primary/55 px-7 pt-6 pb-6.5 lg:mr-8 lg:w-85 lg:shrink-0">
+        <figure
+          {...enterItem(3)}
+          className="flex flex-col gap-3.5 rounded-lg border border-text-on-accent/12 bg-text-primary/55 px-7 pt-6 pb-6.5 lg:mr-8 lg:w-85 lg:shrink-0"
+        >
           <span
             aria-hidden
             className="text-[40px] leading-[0.6] font-bold text-action-primary"

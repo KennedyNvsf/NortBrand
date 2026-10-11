@@ -3,6 +3,7 @@
 import { useState, type ComponentType, type ReactNode } from "react";
 import { X } from "lucide-react";
 
+import { BookingButton } from "@/components/site/booking-button";
 import { CheckList } from "@/components/site/check-list";
 import { MARK_PATH, MARK_VIEW_BOX } from "@/components/site/mark-panel";
 import { Button } from "@/components/ui/button";
@@ -22,8 +23,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { BOOKING_HREF } from "@/content/navigation";
-import { Link } from "@/i18n/navigation";
 import { ICON_STROKE, icons, type IconName } from "@/lib/icons";
 import { MEDIA_MD, useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
@@ -173,7 +172,7 @@ function DetailsBody({
 }) {
   const Icon = icons[icon];
   return (
-    <div className={cn("flex min-w-0 flex-col", className)}>
+    <div className={cn("stagger-in flex min-w-0 flex-col", className)}>
       <div className="flex items-center justify-between gap-md">
         <div className="flex items-center gap-3">
           <span className="flex size-11 shrink-0 items-center justify-center rounded-md bg-text-primary lg:hidden">
@@ -211,9 +210,9 @@ function DetailsBody({
       </div>
 
       <div className="flex flex-col gap-3 pt-2 md:flex-row md:items-center lg:gap-md lg:border-t lg:border-border-default lg:pt-lg">
-        <Button asChild showIcon className="w-full md:w-auto">
-          <Link href={BOOKING_HREF}>{labels.book}</Link>
-        </Button>
+        <BookingButton className="w-full md:w-auto">
+          {labels.book}
+        </BookingButton>
         <Close asChild>
           <Button variant="ghost" className="w-full md:w-auto">
             {labels.close}

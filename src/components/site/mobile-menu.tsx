@@ -4,9 +4,9 @@ import { useState } from "react";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { BookingButton } from "@/components/site/booking-button";
 import { LocaleSwitcher } from "@/components/site/locale-switcher";
 import { Logo } from "@/components/site/logo";
-import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetClose,
@@ -14,7 +14,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { BOOKING_HREF, isActiveRoute, navItems } from "@/content/navigation";
+import { isActiveRoute, navItems } from "@/content/navigation";
 import { site } from "@/content/site";
 import { Link, usePathname } from "@/i18n/navigation";
 import { ICON_STROKE } from "@/lib/icons";
@@ -26,9 +26,13 @@ import { cn } from "@/lib/utils";
  * and focus return to the menu button.
  * - Every link closes the sheet (SheetClose asChild), so the next page never opens
  *   under a stale menu.
- * - Opening and closing use the existing tw-animate fade + slide; the link stagger is
- *   part of the Motion ticket (CLAUDE.md, Motion).
+ * - Opening and closing use the tw-animate fade + slide. The links then rise 12 px in
+ *   sequence, 40 ms apart, 250 ms standard (Motion Spec › Mobile › Menu overlay), as a
+ *   CSS animation with a per-link delay. Reduced motion: motion-safe only, so the
+ *   links simply appear with the sheet.
  */
+
+const LINK_STAGGER_MS = 40;
 
 const roundButton =
   "flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-border-default bg-bg-surface text-icon-default transition-colors duration-(--duration-fast) ease-standard hover:border-border-strong";
@@ -66,10 +70,14 @@ export function MobileMenu() {
 
           <nav aria-label={t("label")} className="pt-7">
             <ul className="border-t border-border-default">
-              {navItems.map(({ key, href }) => {
+              {navItems.map(({ key, href }, index) => {
                 const active = isActiveRoute(pathname, href);
                 return (
-                  <li key={key} className="border-b border-border-default">
+                  <li
+                    key={key}
+                    style={{ animationDelay: `${index * LINK_STAGGER_MS}ms` }}
+                    className="border-b border-border-default motion-safe:animate-in motion-safe:duration-(--duration-base) motion-safe:ease-standard motion-safe:fade-in-0 motion-safe:fill-mode-both motion-safe:slide-in-from-bottom-3"
+                  >
                     <SheetClose asChild>
                       <Link
                         href={href}
@@ -100,9 +108,9 @@ export function MobileMenu() {
               }}
             />
             <SheetClose asChild>
-              <Button asChild showIcon className="w-full">
-                <Link href={BOOKING_HREF}>{common("bookConsultation")}</Link>
-              </Button>
+              <BookingButton className="w-full">
+                {common("bookConsultation")}
+              </BookingButton>
             </SheetClose>
             <a
               href={`mailto:${email}`}

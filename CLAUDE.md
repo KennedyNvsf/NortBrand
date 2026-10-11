@@ -136,11 +136,19 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md
 
 ## Motion
 
-- Page tickets use CSS transitions and the existing tw-animate styles only.
-- The Motion library work comes in a dedicated ticket that follows the Motion Spec. It covers
-  the pinned service blocks, scroll reveals, the journey line, the quote card and the link
-  stagger.
-- Below desktop, the service blocks are a plain vertical stack.
+- Values come from the Motion Spec (Figma page 10): `src/lib/motion.ts` (Motion library) and
+  the `--duration-*` / `--ease-*` tokens in `globals.css` (CSS). Never invent timings.
+- Use CSS for hover, focus, press and simple enter/exit (tw-animate). Use Motion
+  (`motion/react`, pinned 13.4.4) only for scroll-linked, spring or orchestrated motion.
+- Motion components are `m.*` under the root `MotionProvider` (`LazyMotion strict`), never
+  `motion.*`, so the engine stays lazy-loaded.
+- Scroll reveals: mark elements with `revealItem(kind)` and wrap the section in
+  `<RevealGroup>` (src/components/motion). It never hides content that is already
+  visible or before hydration. Hero entrances use `enterItem(index)` (CSS). Reveal
+  values were raised after the #27 review; see src/lib/motion.ts.
+- Booking links use `<BookingButton>` (arrow → calendar on hover).
+- Every animation has a reduced-motion path: opacity only, 150 ms or less, no path drawing.
+- Below desktop, and with reduced motion, the service blocks are a plain vertical stack.
 
 ## Data model (Supabase, EU region)
 

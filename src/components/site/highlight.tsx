@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { revealItem } from "@/components/motion/reveal-item";
+
 /*
  * Headline emphasis from Figma: a red keyword (action/primary), a green keyword
  * (action/secondary) and a green 2 px underline. Used with next-intl rich text so the
@@ -9,6 +11,10 @@ import type { ReactNode } from "react";
  *   t.rich("title", highlightTags)
  *
  * Only for large display text: red/500 and green/700 meet contrast at heading sizes.
+ * Underlines are drawn with the underline-draw utility (globals.css) rather than
+ * text-decoration, so they can draw left to right: in a hero after the headline
+ * enters (CSS), inside a RevealGroup after the heading reveals (Motion), static
+ * anywhere else.
  */
 export const highlightTags = {
   red: (chunks: ReactNode) => (
@@ -18,13 +24,19 @@ export const highlightTags = {
     <span className="text-action-secondary">{chunks}</span>
   ),
   underline: (chunks: ReactNode) => (
-    <span className="underline decoration-action-secondary decoration-2 underline-offset-[0.15em]">
+    <span
+      {...revealItem("underline")}
+      className="underline-draw [--underline-thickness:2px]"
+    >
       {chunks}
     </span>
   ),
   /* Services details dialog (317:73): green keyword with a 3 px green underline. */
   greenUnderline: (chunks: ReactNode) => (
-    <span className="text-action-secondary underline decoration-action-secondary decoration-3 underline-offset-[0.15em]">
+    <span
+      {...revealItem("underline")}
+      className="underline-draw text-action-secondary [--underline-thickness:3px]"
+    >
       {chunks}
     </span>
   ),
