@@ -1,10 +1,29 @@
 # Environments and accounts
 
-**Covers:** #35. **Decisions:** ADR-002 (Supabase), ADR-005 (Vercel Pro), ADR-007 (GA4).
+**Covers:** #35, #45. **Decisions:** ADR-002 (Supabase), ADR-005 (Vercel Pro), ADR-007 (GA4).
 
-The site runs on four outside services. The human lead owns every account (they are paid
-and hold personal data); the code only reads their values from environment variables. This
-guide is the runbook for creating them, and the reference for which value goes where.
+The site runs on five outside services. The human lead owns every account (some are paid
+and all hold personal data); the code only reads their values from environment variables.
+This guide is the runbook for creating them, and the reference for which value goes where.
+
+## Now and later
+
+Paid services wait until November (launch is 30 November 2026). Development runs on free
+tiers and a local database until then; #45 tracks the paid steps.
+
+| Step                        | When                | Cost                |
+| --------------------------- | ------------------- | ------------------- |
+| Local Supabase (Docker)     | Now                 | Free                |
+| Supabase `nortbrand-dev`    | Now                 | Free tier           |
+| Resend account and audience | Now                 | Free tier           |
+| Sentry                      | Now                 | Free Developer plan |
+| GA4 property                | Now                 | Free                |
+| Domain and Resend DNS       | By 9 November (#45) | Paid                |
+| Vercel Pro                  | By 9 November (#45) | Paid                |
+| Supabase `nortbrand-prod`   | Launch prep (#45)   | Free or Pro: decide |
+
+Until Vercel exists there are no hosted previews: work locally, and CI runs the checks
+against a production build of each pull request (#44).
 
 | Service  | What it does here                                       | Environments                       |
 | -------- | ------------------------------------------------------- | ---------------------------------- |
@@ -24,11 +43,11 @@ listed in step 7.
 
 - A password manager entry for each service (database passwords especially: Supabase shows
   them once).
-- Access to the DNS for `nortbrand.com` (Resend needs four records).
+- Later (#45): access to the DNS for `nortbrand.com` (Resend needs four records).
 - Docker Desktop on your machine for the local database (`pnpm db:start`). It is free for
   small businesses.
 
-## 1. Vercel (ADR-005)
+## 1. Vercel (ADR-005) · later, #45
 
 1. Create a **Pro** team called NortBrand. Hobby is non-commercial only.
 2. **Add New → Project**, import `KennedyNvsf/NortBrand` from GitHub. Framework: Next.js.
@@ -51,7 +70,10 @@ Previews are unaffected, and the failure disappears once the real translations l
 ## 2. Supabase (ADR-002)
 
 Create **two** projects in the same EU region (Frankfurt `eu-central-1` or Ireland
-`eu-west-1`), named `nortbrand-dev` and `nortbrand-prod`. For each:
+`eu-west-1`), named `nortbrand-dev` and `nortbrand-prod`. Create `nortbrand-dev` now on the
+free tier; it pauses after a week without requests, and **Restore** in the dashboard wakes
+it. Create `nortbrand-prod` at launch prep (#45), and decide its plan then: a paused
+production database would take the form offline. For each:
 
 1. Save the database password in the password manager.
 2. **Authentication → Sign In / Providers:** turn **off** "Allow new users to sign up". The
@@ -74,6 +96,14 @@ Migrations reach a project only through `pnpm exec supabase db push`, run delibe
 dev first, production after the pull request is merged. Nothing in CI pushes to a database.
 
 ## 3. Resend
+
+**Now (free tier).** Create the account, then do steps 4–6 below with a single
+`nortbrand-preview` key. Without a verified domain Resend sends only from
+`onboarding@resend.dev`, and only to the account's own email address. So set
+`NOTIFY_TO_EMAIL` to that address, and test visitor confirmations with it too. Any other
+recipient is refused. The free tier allows 100 emails a day.
+
+**Later (#45).** Steps 1–3 and the `nortbrand-production` key, once the domain is bought.
 
 1. **Domains → Add Domain:** `send.nortbrand.com` (a sending subdomain keeps the main
    domain's reputation separate). Region: **EU (Ireland)**.
@@ -127,6 +157,8 @@ openssl rand -base64 48
 
 Set these in **Vercel → Settings → Environment Variables**, choosing the environment
 column for each value. Development is what `vercel env pull` writes into `.env.local`.
+Until Vercel exists (#45), copy `.env.example` to `.env.local` and fill in the Development
+column by hand.
 
 | Variable                        | Production                 | Preview                  | Development (`.env.local`) |
 | ------------------------------- | -------------------------- | ------------------------ | -------------------------- |
@@ -155,14 +187,21 @@ column for each value. Development is what `vercel env pull` writes into `.env.l
 Preview builds send real email. Keep `NOTIFY_TO_EMAIL` pointed at your own inbox outside
 Production so test requests never reach the team.
 
-## 8. Checks once everything is set
+## 8. Checks
 
-- [ ] A preview deployment of any branch builds (env validation passes).
+**Now (#35).**
+
 - [ ] `pnpm db:start` runs locally; `pnpm db:types` writes the types file.
-- [ ] Sentry: open a preview, wait a few seconds (the SDK loads once the page is idle),
+- [ ] Sentry: with the DSN in `.env.local`, run `pnpm build && pnpm start` and open
+      `http://localhost:3000`. Wait a few seconds (the SDK loads once the page is idle),
       then run `setTimeout(() => { throw new Error("sentry check") })` in the browser
       console. A plain `throw` typed into the console is not reported. The issue appears
-      under environment `preview`, with no IP address, cookies or query string.
+      with no IP address, cookies or query string.
+
+**Later (#45).**
+
+- [ ] A preview deployment of any branch builds (env validation passes).
+- [ ] The same Sentry check on a preview, labelled with the Vercel preview environment.
 - [ ] Resend shows the domain as Verified.
 
 ## How the code uses this
