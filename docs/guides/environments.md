@@ -196,12 +196,12 @@ Production so test requests never reach the team.
       `http://localhost:3000`. Wait a few seconds (the SDK loads once the page is idle),
       then run `setTimeout(() => { throw new Error("sentry check") })` in the browser
       console. A plain `throw` typed into the console is not reported. The issue appears
-      with no IP address, cookies or query string.
+      under environment `development`, with no IP address, cookies or query string.
 
 **Later (#45).**
 
 - [ ] A preview deployment of any branch builds (env validation passes).
-- [ ] The same Sentry check on a preview, labelled with the Vercel preview environment.
+- [ ] The same Sentry check on a preview appears under environment `preview`.
 - [ ] Resend shows the domain as Verified.
 
 ## How the code uses this
