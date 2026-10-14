@@ -84,8 +84,8 @@ production database would take the form offline. For each:
    secret or `service_role` key anywhere: the app does not use it.
 5. Note the **project ref** (the subdomain of the project URL). It is not secret.
 
-Link the CLI once, from the repository root. The `!` prefix runs it in the Claude Code
-session, or run it in any terminal:
+Link the CLI once, from the repository root, in a normal terminal. Both commands are
+interactive, so they fail inside Claude Code's `!` prefix (no TTY):
 
 ```sh
 pnpm exec supabase login                       # opens the browser
