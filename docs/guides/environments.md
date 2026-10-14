@@ -223,5 +223,10 @@ Production so test requests never reach the team.
   them from the build output so browsers never receive them.
 - `@sentry/cli` is allowed to run its install script (`pnpm-workspace.yaml`) because it
   downloads the binary that uploads source maps.
-- `supabase/config.toml` runs only Postgres and the API locally: Realtime, Storage and
-  sign-ups are off (ADR-002).
+- `supabase/config.toml` runs only Postgres and the API locally (plus Studio on
+  `http://127.0.0.1:54323`): Realtime, Storage, Edge Functions, analytics and sign-ups are
+  off (ADR-002). Analytics also fails its health check on Docker Desktop for Windows, which
+  stops `db:start`.
+- `pnpm db:types` writes `src/lib/supabase/database.types.ts` and formats it. The file is
+  committed, so CI type-checks without Docker, and ESLint skips it because it is generated.
+  Re-run it after every migration.
