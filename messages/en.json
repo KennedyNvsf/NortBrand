@@ -270,7 +270,6 @@
       "message": "Tell us about your project",
       "messagePlaceholder": "What does your business do, and what are you hoping to achieve?",
       "submit": "Send Request",
-      "unavailable": "Online requests open soon. Until then, email us at <email></email>.",
       "errors": {
         "nameRequired": "Please enter your name",
         "nameTooLong": "Please keep your name under 120 characters",
@@ -284,7 +283,10 @@
       "sending": "Sending your request — please keep this page open.",
       "sent": {
         "title": "Request sent.",
-        "body": "Thanks for reaching out. We’ll reply within one business day — usually sooner."
+        "body": "Thanks for reaching out. We’ll reply within one business day — usually sooner.",
+        "replyTo": "We’ll reply to",
+        "home": "Back to home",
+        "blog": "Read the blog"
       },
       "failed": {
         "title": "We couldn’t send your message",
@@ -293,7 +295,11 @@
       "rateLimited": {
         "title": "Too many requests",
         "body": "You’ve sent several requests in the last hour. Please try again later, or write to <email></email>."
-      }
+      },
+      "submitting": "Sending…",
+      "tryAgain": "Try again",
+      "note": "We reply within one business day.",
+      "privacy": "By sending, you agree we use your details to reply. <link>Privacy Policy</link>"
     },
     "steps": {
       "eyebrow": "What happens next",

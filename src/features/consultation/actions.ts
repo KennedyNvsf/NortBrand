@@ -14,6 +14,7 @@ import {
   renderConsultationAlert,
   renderConsultationConfirmation,
 } from "./emails/render";
+import { fakeInsert, isFakeBackendEnabled } from "./e2e-backend";
 import { createFormToken } from "./form-token";
 import { sendConsultationEmails } from "./notify";
 import { submitConsultation, type ConsultationResult } from "./submit";
@@ -34,6 +35,17 @@ export async function submitConsultationRequest(
 ): Promise<ConsultationResult> {
   const env = getServerEnv();
   const requestHeaders = await headers();
+
+  if (isFakeBackendEnabled()) {
+    return submitConsultation(input, {
+      now: Date.now,
+      tokenSecret: env.NEWSLETTER_TOKEN_SECRET,
+      ipHash: () => hashIp(clientIp(requestHeaders), env.IP_HASH_SALT),
+      insert: fakeInsert,
+      reportFailure: () => undefined,
+      onCreated: () => undefined,
+    });
+  }
 
   return submitConsultation(input, {
     now: Date.now,

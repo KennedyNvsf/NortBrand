@@ -9,8 +9,8 @@ import { ContactSteps } from "./_components/contact-steps";
 /*
  * Contact (Figma 06 — Contact, 278:69): Hero (intro + consultation form card) · What
  * happens next · FAQ. No CTA band and no sticky CTA: this is the booking page.
- * The form is layout only until the consultation form ticket (see
- * consultation-form-layout.tsx). Static for both locales.
+ * The consultation form (src/features/consultation) is the page's only client
+ * boundary; the page itself stays static for both locales.
  */
 
 export function generateMetadata(): Promise<Metadata> {

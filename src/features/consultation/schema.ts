@@ -81,6 +81,19 @@ function isField(value: PropertyKey | undefined): value is ConsultationField {
   return typeof value === "string" && Object.hasOwn(fallbackKeys, value);
 }
 
+/**
+ * The translation key for a field's error message: the message itself when it is one of
+ * ours, otherwise the field's fallback. The form uses it for client-side errors too.
+ */
+export function toErrorKey(
+  field: ConsultationField,
+  message: string | undefined,
+): ConsultationErrorKey {
+  return message !== undefined && isErrorKey(message)
+    ? message
+    : fallbackKeys[field];
+}
+
 /** The first error key per field, as the form shows one message per field. */
 export function toFieldErrors(
   error: z.ZodError<ConsultationInput>,
@@ -89,9 +102,7 @@ export function toFieldErrors(
   for (const issue of error.issues) {
     const field = issue.path[0];
     if (!isField(field)) continue;
-    fieldErrors[field] ??= isErrorKey(issue.message)
-      ? issue.message
-      : fallbackKeys[field];
+    fieldErrors[field] ??= toErrorKey(field, issue.message);
   }
   return fieldErrors;
 }
