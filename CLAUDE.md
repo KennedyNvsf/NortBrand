@@ -175,10 +175,14 @@ Resend team alert (EN) + visitor confirmation (visitor locale) → success state
 ## Environment variables
 
 Public: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
-`NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `NEXT_PUBLIC_GA_MEASUREMENT_ID`.
+`NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `NEXT_PUBLIC_GA_MEASUREMENT_ID`,
+`NEXT_PUBLIC_SENTRY_DSN` (optional; Sentry is off when empty).
 
 Server-only: `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`, `RESEND_API_KEY`,
-`RESEND_AUDIENCE_ID`, `NOTIFY_TO_EMAIL`, `IP_HASH_SALT`.
+`RESEND_AUDIENCE_ID`, `NOTIFY_TO_EMAIL`, `IP_HASH_SALT`, `NEWSLETTER_TOKEN_SECRET`.
+
+Build only (Vercel, optional): `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`.
+Account setup and the per-environment matrix: `docs/guides/environments.md`.
 
 Build flags: `RELEASE_BUILD=1` makes the release guard strict outside Vercel production.
 
@@ -223,7 +227,7 @@ pnpm test:e2e       # playwright
 pnpm build
 pnpm i18n:pseudo    # regenerate placeholder pt.json from en.json (keeps real translations; --reset for all)
 pnpm check:release  # strict guard: pseudo translations + draft legal text; must pass before launch
-supabase start / supabase db reset / supabase test db
+pnpm db:start / db:stop / db:reset / db:types / db:test   # local Supabase (Docker)
 ```
 
 ## Workflow rules (nb-se 100.1)

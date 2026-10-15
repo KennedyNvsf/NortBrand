@@ -50,6 +50,10 @@ installs and can lock files during builds.
 | `pnpm test:e2e`                     | Playwright against a production build. Run `pnpm exec playwright install chromium webkit` once first. Needs the env vars. Set `E2E_PORT=3100` while `pnpm dev` holds port 3000. |
 | `pnpm i18n:pseudo`                  | Regenerate `messages/pt.json` from `en.json`, keeping real translations. `--reset` replaces every key.                                                                          |
 | `pnpm check:release`                | Strict release guard: fails while any pseudo translation remains. Must pass before launch.                                                                                      |
+| `pnpm db:start` / `pnpm db:stop`    | Local Supabase (Postgres + API) in Docker. Needs Docker Desktop running.                                                                                                        |
+| `pnpm db:reset`                     | Rebuild the local database from `supabase/migrations` and `seed.sql`.                                                                                                           |
+| `pnpm db:types`                     | Regenerate `src/lib/supabase/database.types.ts` from the local database.                                                                                                        |
+| `pnpm db:test`                      | pgTAP tests in `supabase/tests` against the local database.                                                                                                                     |
 
 The pre-commit hook (simple-git-hooks + lint-staged) runs `eslint --fix` and Prettier on
 staged files. If you skip it in an emergency, CI still runs the same checks.
@@ -112,12 +116,19 @@ Never commit `.env*` files; keep `.env.example` in sync with the schema.
 | `RESEND_AUDIENCE_ID`            | Server | non-empty              | Newsletter audience                             |
 | `NOTIFY_TO_EMAIL`               | Server | email                  | Team inbox for new requests                     |
 | `IP_HASH_SALT`                  | Server | 32+ characters         | Salted SHA-256 of visitor IPs for rate limiting |
+| `NEWSLETTER_TOKEN_SECRET`       | Server | 32+ characters         | Signs newsletter confirm and unsubscribe links  |
+| `NEXT_PUBLIC_SENTRY_DSN`        | Public | https URL, optional    | Error reporting; Sentry is off when empty       |
+| `SENTRY_AUTH_TOKEN`             | Build  | optional               | Uploads source maps to Sentry (Vercel only)     |
+| `SENTRY_ORG` / `SENTRY_PROJECT` | Build  | optional               | Where source maps are uploaded                  |
 
 Public variables are inlined into the browser bundle at build time, so changing them needs a
 rebuild. Never put a secret in a `NEXT_PUBLIC_` variable. The Supabase service-role key is
 never used by the app.
 
 `SKIP_ENV_VALIDATION=1` turns validation off for tooling only. Never set it in Vercel.
+
+Which value goes in which environment, and how each account is set up:
+[docs/guides/environments.md](docs/guides/environments.md).
 
 ## Project layout
 

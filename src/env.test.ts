@@ -23,6 +23,7 @@ const validServer = {
   RESEND_AUDIENCE_ID: "audience",
   NOTIFY_TO_EMAIL: "team@example.com",
   IP_HASH_SALT: "s".repeat(32),
+  NEWSLETTER_TOKEN_SECRET: "n".repeat(32),
 };
 
 describe("parsePublicEnv", () => {
@@ -41,6 +42,25 @@ describe("parsePublicEnv", () => {
     ).toThrow(EnvValidationError);
   });
 
+  it("treats an unset or empty Sentry DSN as off", () => {
+    expect(parsePublicEnv(validPublic).NEXT_PUBLIC_SENTRY_DSN).toBeUndefined();
+    expect(
+      parsePublicEnv({ ...validPublic, NEXT_PUBLIC_SENTRY_DSN: "" })
+        .NEXT_PUBLIC_SENTRY_DSN,
+    ).toBeUndefined();
+  });
+
+  it("accepts an https Sentry DSN and rejects anything else", () => {
+    const dsn = "https://key@o1.ingest.de.sentry.io/2";
+    expect(
+      parsePublicEnv({ ...validPublic, NEXT_PUBLIC_SENTRY_DSN: dsn })
+        .NEXT_PUBLIC_SENTRY_DSN,
+    ).toBe(dsn);
+    expect(() =>
+      parsePublicEnv({ ...validPublic, NEXT_PUBLIC_SENTRY_DSN: "not-a-url" }),
+    ).toThrow(/NEXT_PUBLIC_SENTRY_DSN/);
+  });
+
   it("does not expose server-only keys", () => {
     const parsed = parsePublicEnv({ ...validPublic, ...validServer });
     expect(Object.keys(parsed)).not.toContain("RESEND_API_KEY");
@@ -56,6 +76,12 @@ describe("parseServerEnv", () => {
     expect(() =>
       parseServerEnv({ ...validServer, SANITY_REVALIDATE_SECRET: "short" }),
     ).toThrow(/SANITY_REVALIDATE_SECRET/);
+  });
+
+  it("rejects a short newsletter token secret", () => {
+    expect(() =>
+      parseServerEnv({ ...validServer, NEWSLETTER_TOKEN_SECRET: "short" }),
+    ).toThrow(/NEWSLETTER_TOKEN_SECRET/);
   });
 
   it("rejects a Resend key without the re_ prefix", () => {
