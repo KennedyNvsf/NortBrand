@@ -270,7 +270,30 @@
       "message": "Tell us about your project",
       "messagePlaceholder": "What does your business do, and what are you hoping to achieve?",
       "submit": "Send Request",
-      "unavailable": "Online requests open soon. Until then, email us at <email></email>."
+      "unavailable": "Online requests open soon. Until then, email us at <email></email>.",
+      "errors": {
+        "nameRequired": "Please enter your name",
+        "nameTooLong": "Please keep your name under 120 characters",
+        "emailInvalid": "Enter a valid email address",
+        "phoneInvalid": "Enter a valid phone number, or leave it empty",
+        "serviceRequired": "Please choose a service",
+        "messageRequired": "Tell us a little about your project",
+        "messageTooShort": "Please write at least 10 characters",
+        "messageTooLong": "Please keep your message under 5,000 characters"
+      },
+      "sending": "Sending your request — please keep this page open.",
+      "sent": {
+        "title": "Request sent.",
+        "body": "Thanks for reaching out. We’ll reply within one business day — usually sooner."
+      },
+      "failed": {
+        "title": "We couldn’t send your message",
+        "body": "Nothing was lost — your answers are still here. Please try again, or write to <email></email>."
+      },
+      "rateLimited": {
+        "title": "Too many requests",
+        "body": "You’ve sent several requests in the last hour. Please try again later, or write to <email></email>."
+      }
     },
     "steps": {
       "eyebrow": "What happens next",
