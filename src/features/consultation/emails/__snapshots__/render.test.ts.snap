@@ -1,0 +1,117 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`renderConsultationAlert > matches the snapshot 1`] = `
+{
+  "subject": "New consultation request: Ana Silva · Web Design",
+  "text": "NortBrand
+
+
+NEW CONSULTATION REQUEST
+
+Name
+
+Ana Silva
+
+Email
+
+ana@example.com
+
+Phone
+
++351 912 345 678 tel:+351912345678
+
+Service
+
+Web Design
+
+Language
+
+English
+
+Received
+
+Thursday, 15 October 2026 at 21:46 (Lisbon time)
+
+Reference
+
+00000000-0000-0000-0000-000000000001
+
+Message
+
+We need a new studio website. Two languages, a booking form.
+
+----------------------------------------
+
+Reply to this email to answer Ana Silva directly. We promise a reply within one business day.",
+}
+`;
+
+exports[`renderConsultationConfirmation > matches the snapshot (en) 1`] = `
+{
+  "subject": "We’ve received your request",
+  "text": "NortBrand
+
+
+HI ANA SILVA,
+
+Thanks for reaching out about Web Design. We’ve received your request and will reply within one business day with a few times for your free 30-minute call.
+
+----------------------------------------
+
+What you sent us
+
+Service
+
+Web Design
+
+Phone
+
++351 912 345 678
+
+Message
+
+We need a new studio website. Two languages, a booking form.
+
+Talk soon,
+The NortBrand team
+
+----------------------------------------
+
+You’re receiving this because you sent a consultation request on NortBrand. Questions? Reply to this email or write to hello@nortbrand.com.",
+}
+`;
+
+exports[`renderConsultationConfirmation > matches the snapshot (pt) 1`] = `
+{
+  "subject": "[[We’ve received your request ~~~~ ~~~~]]",
+  "text": "NortBrand
+
+
+[[HI ANA SILVA, ~~~]]
+
+[[Thanks for reaching out about [[Web Design ~~~]]. We’ve received your request and will reply within one business day with a few times for your free 30-minute call. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]
+
+----------------------------------------
+
+[[What you sent us ~~~~ ~]]
+
+[[Service ~~]]
+
+[[Web Design ~~~]]
+
+[[Phone ~~]]
+
++351 912 345 678
+
+[[Message ~~]]
+
+We need a new studio website. Two languages, a booking form.
+
+[[Talk soon, ~~~]]
+[[The NortBrand team ~~~~ ~]]
+
+----------------------------------------
+
+[[You’re receiving this because you sent a consultation request on NortBrand. Questions? Reply to this email or write to hello@nortbrand.com. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
+}
+`;

@@ -29,6 +29,7 @@ function makeDeps(
       Promise.resolve(insertResult),
     ),
     reportFailure: vi.fn<SubmitDependencies["reportFailure"]>(),
+    onCreated: vi.fn<SubmitDependencies["onCreated"]>(),
   };
 }
 
@@ -66,6 +67,10 @@ describe("submitConsultation", () => {
         locale: "pt",
       },
       ipHash,
+    );
+    expect(deps.onCreated).toHaveBeenCalledExactlyOnceWith(
+      "00000000-0000-0000-0000-000000000001",
+      expect.objectContaining({ email: "ana@example.com", locale: "pt" }),
     );
   });
 
@@ -110,6 +115,7 @@ describe("submitConsultation", () => {
     expect(result).toEqual({ status: "success" });
     expect(deps.insert).not.toHaveBeenCalled();
     expect(deps.ipHash).not.toHaveBeenCalled();
+    expect(deps.onCreated).not.toHaveBeenCalled();
   });
 
   it("checks for bots before validating, so bots never see field errors", async () => {
@@ -130,9 +136,10 @@ describe("submitConsultation", () => {
 
     expect(result).toEqual({ status: "rate-limited" });
     expect(deps.reportFailure).not.toHaveBeenCalled();
+    expect(deps.onCreated).not.toHaveBeenCalled();
   });
 
-  it("returns failed and reports only the error code when the insert fails", async () => {
+  it("sends no email and reports only the error code when the insert fails", async () => {
     const deps = makeDeps({ error: { code: "23514" } });
     const result = await submitConsultation(
       { ...request, formToken: humanToken },
@@ -141,6 +148,7 @@ describe("submitConsultation", () => {
 
     expect(result).toEqual({ status: "failed" });
     expect(deps.reportFailure).toHaveBeenCalledExactlyOnceWith("23514");
+    expect(deps.onCreated).not.toHaveBeenCalled();
   });
 
   it.each([null, "a string", 42, ["array"]])(

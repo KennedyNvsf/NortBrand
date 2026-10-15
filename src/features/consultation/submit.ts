@@ -35,6 +35,8 @@ export type SubmitDependencies = {
   ) => Promise<{ id: string } | { error: InsertError }>;
   /** Reports a failure with no personal data (Sentry in production). */
   reportFailure: (code: string) => void;
+  /** Runs once the request is stored (schedules the emails). Never on a failed insert. */
+  onCreated: (requestId: string, request: ConsultationRequest) => void;
 };
 
 /** SQLSTATE raised by `private.enforce_write_limit` (HTTP 429 through PostgREST). */
@@ -42,8 +44,8 @@ const RATE_LIMITED = "PT429";
 
 /**
  * The consultation request flow after the browser: honeypot and fill-time check, zod,
- * then the `submit_consultation_request` RPC (CLAUDE.md › Consultation request flow).
- * Emails are added by #38.
+ * then the `submit_consultation_request` RPC, then the emails via `onCreated`
+ * (CLAUDE.md › Consultation request flow).
  */
 export async function submitConsultation(
   input: unknown,
@@ -70,5 +72,6 @@ export async function submitConsultation(
     return { status: "failed" };
   }
 
+  deps.onCreated(result.id, parsed.data);
   return { status: "success" };
 }

@@ -2,12 +2,20 @@
 
 import * as Sentry from "@sentry/nextjs";
 import { headers } from "next/headers";
+import { after } from "next/server";
 
+import { site } from "@/content/site";
 import { getServerEnv } from "@/env";
 import { clientIp, hashIp } from "@/lib/ip-hash";
+import { sendEmail } from "@/lib/resend";
 import { getSupabase } from "@/lib/supabase/server";
 
+import {
+  renderConsultationAlert,
+  renderConsultationConfirmation,
+} from "./emails/render";
 import { createFormToken } from "./form-token";
+import { sendConsultationEmails } from "./notify";
 import { submitConsultation, type ConsultationResult } from "./submit";
 
 /** A signed start time for the minimum-fill-time check. Called when the form mounts. */
@@ -55,6 +63,33 @@ export async function submitConsultationRequest(
         level: "error",
         tags: { feature: "consultation", code },
       });
+    },
+    // The emails run after the response is sent, so the visitor never waits on Resend
+    // and an email failure can never turn a stored request into an error.
+    onCreated: (requestId, request) => {
+      const receivedAt = new Date();
+      after(() =>
+        sendConsultationEmails(request, requestId, receivedAt, {
+          notifyTo: env.NOTIFY_TO_EMAIL,
+          studioEmail: site.contact.email.value,
+          renderAlert: renderConsultationAlert,
+          renderConfirmation: renderConsultationConfirmation,
+          send: sendEmail,
+          markNotified: async (id) => {
+            const { data, error } = await getSupabase().rpc(
+              "mark_consultation_notified",
+              { p_id: id },
+            );
+            return !error && data;
+          },
+          reportFailure: (step, code) => {
+            Sentry.captureMessage("Consultation email step failed", {
+              level: "error",
+              tags: { feature: "consultation", step, code },
+            });
+          },
+        }),
+      );
     },
   });
 }
