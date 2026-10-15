@@ -6,6 +6,8 @@ allowBuilds:
   "@parcel/watcher": false
   "@swc/core": false
   simple-git-hooks: false
+  # Only react-email's preview CLI uses esbuild; rendering emails does not.
+  esbuild: false
 minimumReleaseAgeExclude:
   - "@next/env@16.4.0"
   - "@next/eslint-plugin-next@16.4.0"

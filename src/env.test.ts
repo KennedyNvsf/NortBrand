@@ -21,6 +21,7 @@ const validServer = {
   SANITY_REVALIDATE_SECRET: "x".repeat(32),
   RESEND_API_KEY: "re_123",
   RESEND_AUDIENCE_ID: "audience",
+  EMAIL_FROM: "NortBrand <onboarding@resend.dev>",
   NOTIFY_TO_EMAIL: "team@example.com",
   IP_HASH_SALT: "s".repeat(32),
   NEWSLETTER_TOKEN_SECRET: "n".repeat(32),

@@ -107,7 +107,7 @@ messages/                en.json, pt.json
 public/images/           launch assets; public/images/placeholder/ for temporary imagery
 sanity/                  schemas + Studio config
 supabase/                migrations/, seed.sql, tests/ (pgTAP)
-emails/                  React Email templates
+src/features/*/emails/   React Email templates (per feature)
 tests/e2e/               Playwright
 docs/                    README, adr/, guides/, runbook, tech-debt.md
 ```
@@ -180,7 +180,8 @@ Resend team alert (EN) + visitor confirmation (visitor locale) → success state
   form token younger than 3 s) get a fake success. Only `error.code` is ever logged.
 - Insert fails: show the designed _Send failed_ state and send no email.
 - Insert succeeds but email fails: keep the request, log the error (no personal data), and
-  still show success.
+  still show success. Emails run after the response (`after()`); only a sent team alert
+  sets `notified_at`.
 
 ## Environment variables
 
@@ -189,7 +190,7 @@ Public: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABAS
 `NEXT_PUBLIC_SENTRY_DSN` (optional; Sentry is off when empty).
 
 Server-only: `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`, `RESEND_API_KEY`,
-`RESEND_AUDIENCE_ID`, `NOTIFY_TO_EMAIL`, `IP_HASH_SALT`, `NEWSLETTER_TOKEN_SECRET`.
+`RESEND_AUDIENCE_ID`, `EMAIL_FROM`, `NOTIFY_TO_EMAIL`, `IP_HASH_SALT`, `NEWSLETTER_TOKEN_SECRET`.
 
 Build only (Vercel, optional): `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`.
 Account setup and the per-environment matrix: `docs/guides/environments.md`.

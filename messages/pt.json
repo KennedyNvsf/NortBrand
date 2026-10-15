@@ -17,21 +17,21 @@
   },
   "Common": {
     "skipToContent": "[[Skip to content ~~~~ ~]]",
-    "bookConsultation": "[[Book a Consultation ~~~~ ~~]]",
-    "sending": "[[Sending… ~~]]",
-    "close": "[[Close ~~]]",
-    "loading": "[[Loading ~~]]"
+    "bookConsultation": "Agendar Avaliação",
+    "sending": "A enviar",
+    "close": "Fechar",
+    "loading": "A Carregar"
   },
   "Nav": {
     "label": "[[Main ~]]",
     "home": "[[NortBrand home ~~~~]]",
-    "services": "[[Services ~~]]",
-    "about": "[[About ~~]]",
-    "blog": "[[Blog ~]]",
-    "contact": "[[Contact ~~]]",
-    "openMenu": "[[Open menu ~~~]]",
-    "closeMenu": "[[Close menu ~~~]]",
-    "menuTitle": "[[Menu ~]]"
+    "services": "Serviços",
+    "about": "Sobre",
+    "blog": "Blog",
+    "contact": "Contactos",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu",
+    "menuTitle": "Menu"
   },
   "Footer": {
     "tagline": "[[NortBrand is a digital product and web design studio for local and service-based businesses. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
@@ -101,7 +101,7 @@
       }
     },
     "process": {
-      "eyebrow": "[[How it works ~~~~]]",
+      "eyebrow": "Como Funciona",
       "title": "[[A clear process, from first call to launch. ~~~~ ~~~~ ~~~~ ~]]",
       "steps": {
         "discover": {
@@ -442,5 +442,36 @@
   },
   "LocaleSwitcher": {
     "label": "[[Language ~~]]"
+  },
+  "Emails": {
+    "consultationConfirmation": {
+      "subject": "[[We’ve received your request ~~~~ ~~~~]]",
+      "preview": "[[We’ll reply within one business day with times for your call. ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+      "greeting": "[[Hi {name}, ~~~]]",
+      "intro": "[[Thanks for reaching out about {service}. We’ve received your request and will reply within one business day with a few times for your free 30-minute call. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+      "summaryTitle": "[[What you sent us ~~~~ ~]]",
+      "serviceLabel": "[[Service ~~]]",
+      "phoneLabel": "[[Phone ~~]]",
+      "messageLabel": "[[Message ~~]]",
+      "signoff": "[[Talk soon, ~~~]]",
+      "team": "[[The {studio} team ~~~~ ~]]",
+      "footer": "[[You’re receiving this because you sent a consultation request on {site}. Questions? Reply to this email or write to {email}. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+    },
+    "consultationAlert": {
+      "subject": "[[New consultation request: {name} · {service} ~~~~ ~~~~ ~~~~ ~]]",
+      "preview": "[[{service} · received {receivedAt} ~~~~ ~~~~ ~~]]",
+      "heading": "[[New consultation request ~~~~ ~~~]]",
+      "nameLabel": "[[Name ~]]",
+      "emailLabel": "[[Email ~~]]",
+      "phoneLabel": "[[Phone ~~]]",
+      "serviceLabel": "[[Service ~~]]",
+      "localeLabel": "[[Language ~~]]",
+      "receivedLabel": "[[Received ~~]]",
+      "messageLabel": "[[Message ~~]]",
+      "referenceLabel": "[[Reference ~~~]]",
+      "noPhone": "[[Not given ~~~]]",
+      "receivedAt": "[[{date} (Lisbon time) ~~~~ ~~]]",
+      "footer": "[[Reply to this email to answer {name} directly. We promise a reply within one business day. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+    }
   }
 }

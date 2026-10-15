@@ -1,6 +1,6 @@
 # Consultation requests
 
-**Covers:** #37 (server action). Emails (#38) and the form wiring (#39) extend this guide.
+**Covers:** #37 (server action), #38 (emails). The form wiring (#39) extends this guide.
 **Source:** ADR-001, ADR-002, CLAUDE.md › Consultation request flow, Figma 06 Contact
 (Validation, Sending, Send failed and Request sent states).
 
@@ -29,7 +29,12 @@ user submits ─► submitConsultationRequest({ …fields, locale, website, form
    5. RPC         submit_consultation_request(…, ip_hash)
                     PT429                              → rate-limited
                     any other error                    → failed (+ Sentry, code only)
-                    id                                 → success
+                    id                                 → success, then after the response:
+   6. emails      after(() => sendConsultationEmails(…))
+                    team alert (EN) ──► NOTIFY_TO_EMAIL, reply-to: visitor
+                    confirmation (visitor locale) ──► visitor, reply-to: studio
+                    alert sent ──► mark_consultation_notified(id)
+                    any failure ──► Sentry (step + code only); the visitor already saw success
 ```
 
 The result type is a discriminated union, so the form (#39) switches on `status`:
@@ -122,3 +127,49 @@ switch (result.status) {
 
 The honeypot is an input named `website`, hidden from people (`aria-hidden`, off-screen,
 `tabIndex={-1}`, `autoComplete="off"`), not `display: none`, which some bots skip.
+
+## 6. Emails (#38)
+
+| Piece                     | File                                                                              |
+| ------------------------- | --------------------------------------------------------------------------------- |
+| Team alert template       | `src/features/consultation/emails/consultation-alert.tsx`                         |
+| Visitor confirmation      | `src/features/consultation/emails/consultation-confirmation.tsx`                  |
+| Brand tokens, inline      | `src/features/consultation/emails/styles.ts`                                      |
+| Copy + render (HTML/text) | `src/features/consultation/emails/render.tsx`                                     |
+| Send, mark, report        | `src/features/consultation/notify.ts`                                             |
+| Resend wrapper            | `src/lib/resend.ts`                                                               |
+| Copy                      | `messages/*.json` › `Emails.consultationAlert`, `Emails.consultationConfirmation` |
+
+**Why `after()`.** The action stores the request, returns `success`, and only then
+sends the emails (`after` from `next/server`). The visitor never waits on Resend, and no
+email problem can turn a stored request into an error on screen. The flip side: an email
+failure is invisible to the visitor, so `sendConsultationEmails` reports every failed step
+to Sentry, and the team can spot unnotified requests (`notified_at is null`) in the
+dashboard.
+
+**What `notified_at` means.** "The team was told." Only a sent alert sets it. If the
+visitor's confirmation fails, the alert is still recorded and the failure is reported. If
+the alert fails, `notified_at` stays null: the request is safe in the table, just not
+announced.
+
+**Templates.** React Email components (`react-email`), with every colour and radius
+copied from the tokens in `globals.css` into `styles.ts`, because mail clients ignore CSS
+variables. No images and no web font, so opening an email loads nothing remote. React
+escapes everything the visitor typed; `white-space: pre-wrap` keeps their line breaks.
+Subjects collapse whitespace, so a name with a line break cannot add a header line.
+
+**Copy.** Both emails read their copy from `messages/*.json` with next-intl's
+`createTranslator`, imported directly rather than through the request config, because
+`after()` runs outside the request context. The alert is always English; the
+confirmation follows `request.locale`. Times are formatted in Europe/Lisbon with `Intl`
+(no date library), e.g. "Thursday, 15 October 2026 at 21:46 (Lisbon time)".
+
+**Sender.** `EMAIL_FROM` (required). Until the domain is verified (#45) it is
+`NortBrand <onboarding@resend.dev>`, and Resend delivers only to the account's own
+address, so test with `NOTIFY_TO_EMAIL` and the form's email set to that address.
+
+**Tests.** `notify.test.ts` covers every outcome (both sent; alert fails; confirmation
+fails; a template throws; marking fails or updates nothing) and checks that no report
+contains personal data. `emails/render.test.ts` checks every alert field and the Lisbon
+time (across the daylight-saving change), escaping, the one-line subject, no images, the
+locale of the confirmation, and snapshots of the EN alert and the EN and PT confirmations.
