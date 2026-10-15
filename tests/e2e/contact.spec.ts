@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
-/* Contact page (ticket #12). Accessibility and overflow are covered by the page harness. */
+/* Contact page (ticket #12). Accessibility and overflow are covered by the page harness;
+   the consultation form has its own spec (consultation-form.spec.ts). */
 
 const isMobile = (page: Page) => (page.viewportSize()?.width ?? 0) < 768;
 
@@ -20,30 +21,6 @@ test.describe("contact page", () => {
       details.getByRole("link", { name: /\+351 000 000 000/ }),
     ).toHaveAttribute("href", "tel:+351000000000");
     await expect(details).toContainText("Mon – Fri · 9:00 – 18:00");
-  });
-
-  test("the consultation form cannot be submitted yet", async ({ page }) => {
-    await page.goto("/en/contact");
-    const card = page.locator('[data-form-slot="consultation"]');
-
-    await expect(page.locator("form")).toHaveCount(0);
-    for (const name of [
-      "Name",
-      "Email",
-      "Phone (optional)",
-      "Tell us about your project",
-    ]) {
-      await expect(card.getByLabel(name, { exact: true })).toBeDisabled();
-    }
-    await expect(
-      card.getByRole("combobox", { name: "I’m interested in" }),
-    ).toBeDisabled();
-    await expect(
-      card.getByRole("button", { name: "Send Request" }),
-    ).toBeDisabled();
-    await expect(
-      card.getByRole("link", { name: "hello@nortbrand.com" }),
-    ).toHaveAttribute("href", "mailto:hello@nortbrand.com");
   });
 
   test("has no sticky CTA", async ({ page }) => {
