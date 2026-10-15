@@ -5,7 +5,7 @@ create extension if not exists pgtap with schema extensions;
 -- Start from empty tables (seed data included); the rollback at the end restores them.
 truncate public.consultation_requests, public.newsletter_subscribers, private.write_events;
 
-select plan(22);
+select plan(24);
 
 -- Valid input, called through a helper so each case changes one field.
 create function pg_temp.submit(
@@ -34,6 +34,7 @@ set local role anon;
 
 select isnt(pg_temp.submit(p_ip_hash => pg_temp.ip(1)), null, 'valid input returns the new id');
 select isnt(pg_temp.submit(p_phone => null, p_ip_hash => pg_temp.ip(2)), null, 'phone is optional');
+select isnt(pg_temp.submit(p_phone => '  ', p_ip_hash => pg_temp.ip(3)), null, 'a blank phone is accepted');
 
 -- Every CHECK violation is rejected with 23514.
 select throws_ok(format('select pg_temp.submit(p_name => %L, p_ip_hash => pg_temp.ip(10))', '   '), '23514', null, 'blank name');
@@ -54,6 +55,11 @@ select throws_ok('select pg_temp.submit(p_name => null, p_ip_hash => pg_temp.ip(
 reset role;
 
 -- Defaults set by the database, not the caller.
+select is(
+  (select phone from public.consultation_requests where ip_hash = lpad(to_hex(3), 64, '0')),
+  null,
+  'a blank phone is stored as null'
+);
 select results_eq(
   $$select status, consent_at = now(), notified_at is null from public.consultation_requests where ip_hash = lpad(to_hex(1), 64, '0')$$,
   $$values ('new'::text, true, true)$$,
