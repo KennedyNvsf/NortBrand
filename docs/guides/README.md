@@ -21,6 +21,7 @@ the guides always match the code.
 | [Motion](./motion.md)                   | Motion Spec: tokens, `MotionProvider`, `<Reveal>`, journey line, Services stage, menu stagger         |
 | [Services page](./services-page.md)     | Photo hero, service blocks, Dialog/Drawer details, Tabs/Accordion, useMediaQuery, `cn` fix            |
 | [Environments](./environments.md)       | Account runbook (Vercel, Supabase, Resend, Sentry, GA4), env matrix, Sentry scrubbing, local Supabase |
+| [Database](./database.md)               | Tables, RLS without policies, the write functions, rate limits, newsletter tokens, pgTAP, migrations  |
 
 Each guide follows the same shape: what we built, how it works at runtime, the files one
 by one (and why), how the tests protect it, and day-to-day rules.

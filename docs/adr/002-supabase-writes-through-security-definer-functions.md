@@ -23,6 +23,18 @@ dashboard to read requests without an admin UI. Auth, Storage and Realtime are n
 - Server actions call these functions with the anon key. The service-role key is never used
   by the website. It stays in the Supabase dashboard and the developer's CLI session.
 
+### Amendment, 2026-10-15 (#36)
+
+- The anon key is public, so anyone can call the functions directly, without the server
+  action. Each function is therefore safe on its own:
+  - `confirm_newsletter` and `unsubscribe_newsletter` verify the signed token in SQL
+    (HMAC-SHA256 with a secret in Supabase Vault, equal to `NEWSLETTER_TOKEN_SECRET`).
+  - A global ceiling of 100 public writes per hour backs up the per-`ip_hash` limit,
+    because a direct caller can invent `ip_hash` values.
+- The public functions are `submit_consultation_request`, `mark_consultation_notified`,
+  `subscribe_newsletter`, `confirm_newsletter` and `unsubscribe_newsletter`. Helpers and the
+  rate-limit log live in a `private` schema that the API does not expose.
+
 ## Alternatives considered
 
 - **Service-role inserts from server actions.** Rejected: it puts a key that bypasses RLS

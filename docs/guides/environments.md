@@ -147,11 +147,23 @@ Each needs at least 32 characters. Generate one per environment:
 openssl rand -base64 48
 ```
 
-| Variable                   | Purpose                                                                    |
-| -------------------------- | -------------------------------------------------------------------------- |
-| `IP_HASH_SALT`             | Salts visitor IP hashes. Changing it resets rate limits.                   |
-| `NEWSLETTER_TOKEN_SECRET`  | Signs confirm and unsubscribe links. Changing it voids links already sent. |
-| `SANITY_REVALIDATE_SECRET` | Verifies the Sanity webhook (M4).                                          |
+| Variable                   | Purpose                                                                                                           |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `IP_HASH_SALT`             | Salts visitor IP hashes. Changing it resets rate limits.                                                          |
+| `NEWSLETTER_TOKEN_SECRET`  | Signs confirm and unsubscribe links. Changing it voids links already sent. Also stored in Supabase Vault (below). |
+| `SANITY_REVALIDATE_SECRET` | Verifies the Sanity webhook (M4).                                                                                 |
+
+The database verifies newsletter tokens itself (#36), so each Supabase project needs the
+same `NEWSLETTER_TOKEN_SECRET` in Vault. In the dashboard, open **SQL Editor** and run, with
+that environment's value:
+
+```sql
+select vault.create_secret('<NEWSLETTER_TOKEN_SECRET>', 'newsletter_token_secret');
+```
+
+To rotate it later, use `vault.update_secret` with the secret's id, and change the env
+variable at the same time. For the local stack, run the same statement in Studio
+(`http://127.0.0.1:54323`) after every `pnpm db:reset`. Details: [Database](./database.md).
 
 ## 7. Which value goes where
 

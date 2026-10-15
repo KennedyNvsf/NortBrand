@@ -9,13 +9,114 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never;
+      consultation_requests: {
+        Row: {
+          consent_at: string;
+          created_at: string;
+          email: string;
+          id: string;
+          ip_hash: string;
+          locale: string;
+          message: string;
+          name: string;
+          notified_at: string | null;
+          phone: string | null;
+          service: string;
+          status: string;
+        };
+        Insert: {
+          consent_at: string;
+          created_at?: string;
+          email: string;
+          id?: string;
+          ip_hash: string;
+          locale: string;
+          message: string;
+          name: string;
+          notified_at?: string | null;
+          phone?: string | null;
+          service: string;
+          status?: string;
+        };
+        Update: {
+          consent_at?: string;
+          created_at?: string;
+          email?: string;
+          id?: string;
+          ip_hash?: string;
+          locale?: string;
+          message?: string;
+          name?: string;
+          notified_at?: string | null;
+          phone?: string | null;
+          service?: string;
+          status?: string;
+        };
+        Relationships: [];
+      };
+      newsletter_subscribers: {
+        Row: {
+          confirmed_at: string | null;
+          consent_at: string;
+          created_at: string;
+          email: string;
+          id: string;
+          locale: string;
+          status: string;
+          unsubscribed_at: string | null;
+        };
+        Insert: {
+          confirmed_at?: string | null;
+          consent_at: string;
+          created_at?: string;
+          email: string;
+          id?: string;
+          locale: string;
+          status?: string;
+          unsubscribed_at?: string | null;
+        };
+        Update: {
+          confirmed_at?: string | null;
+          consent_at?: string;
+          created_at?: string;
+          email?: string;
+          id?: string;
+          locale?: string;
+          status?: string;
+          unsubscribed_at?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      confirm_newsletter: {
+        Args: { p_email: string; p_issued_at: number; p_token: string };
+        Returns: boolean;
+      };
+      mark_consultation_notified: { Args: { p_id: string }; Returns: boolean };
+      submit_consultation_request: {
+        Args: {
+          p_email: string;
+          p_ip_hash: string;
+          p_locale: string;
+          p_message: string;
+          p_name: string;
+          p_phone: string;
+          p_service: string;
+        };
+        Returns: string;
+      };
+      subscribe_newsletter: {
+        Args: { p_email: string; p_ip_hash: string; p_locale: string };
+        Returns: number;
+      };
+      unsubscribe_newsletter: {
+        Args: { p_email: string; p_token: string };
+        Returns: boolean;
+      };
     };
     Enums: {
       [_ in never]: never;

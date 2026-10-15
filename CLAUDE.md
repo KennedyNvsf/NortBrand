@@ -69,10 +69,12 @@ React Email · Sanity (blog only) · Sentry · Vitest · Playwright · pnpm · N
   in `src/content/`.
 - **ADR-004, single app, no monorepo.** There is no mobile app and no shared package yet.
   Keep the code extractable to `apps/web` later.
-- **ADR-002, no service-role key in the app.** Public writes go only through two
-  `SECURITY DEFINER` Postgres functions (`submit_consultation_request`,
-  `subscribe_newsletter`). These functions are granted to `anon`, rate-limited, and
-  transactional. RLS is enabled with no public read policies.
+- **ADR-002, no service-role key in the app.** Public writes go only through
+  `SECURITY DEFINER` Postgres functions granted to `anon`: `submit_consultation_request`,
+  `mark_consultation_notified`, `subscribe_newsletter`, `confirm_newsletter`,
+  `unsubscribe_newsletter`. They are rate-limited and transactional, and each is safe to call
+  directly with the public anon key (tokens are verified in SQL). RLS is enabled with no
+  policies.
 - **ADR-006, i18n.** Routes live under `/[locale]` (`en`, `pt`). Middleware handles only the
   bare `/`, in this order: preference cookie, then `Accept-Language`, then `pt`. Prefixed URLs
   are never redirected. Emit `hreflang` for `en`, `pt` and `x-default`.
@@ -159,8 +161,13 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md
 - `newsletter_subscribers`: id, email (unique, lowercase), locale, status
   (`pending`|`subscribed`|`unsubscribed`), consent_at, confirmed_at, unsubscribed_at,
   created_at. Uses **double opt-in**.
-- Rate limit: 5 writes per `ip_hash` per hour. Length and enum rules are mirrored as
-  `CHECK` constraints.
+- Rate limit: 5 writes per `ip_hash` per hour, and 100 public writes per hour in total
+  (`private.write_events`, pruned after an hour). Rejections raise SQLSTATE `PT429` (HTTP
+  429). Length and enum rules are mirrored as `CHECK` constraints; zod must match them.
+- Newsletter tokens: base64url HMAC-SHA256 of `confirm|<email>|<issued_at>` (7 days) or
+  `unsubscribe|<email>`, keyed by `NEWSLETTER_TOKEN_SECRET`, which is also stored in Vault
+  as `newsletter_token_secret` in every Supabase project.
+- Never log or forward Postgres `error.details`: it echoes the submitted row.
 - All schema changes go in `supabase/migrations`. Seed data is for development only.
 
 ## Consultation request flow
