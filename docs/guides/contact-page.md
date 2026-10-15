@@ -1,8 +1,8 @@
 # Contact page
 
-**Covers:** #12 (layout only). **Design source:** Figma 06 — Contact (`278:69`): desktop
+**Covers:** #12 (layout), #39 (the working form). **Design source:** Figma 06 — Contact (`278:69`): desktop
 `278:70`, tablet `378:107`, mobile `378:326`. The Validation, Sending, Request sent and
-Send failed frames belong to the consultation form ticket.
+Send failed frames are built by the form (see [Consultation requests](./consultation-requests.md) § 7).
 
 ## 1. What we built
 
@@ -22,7 +22,7 @@ There is no CTA band and no sticky CTA: this page is where both of them lead.
 src/app/[locale]/(site)/contact/page.tsx
 src/app/[locale]/(site)/contact/_components/
    contact-hero.tsx               intro, contact details, places the form card
-   consultation-form-layout.tsx   the form card: layout only, cannot submit
+   consultation-form-card.tsx     the card shell (server); the form inside is a client component
    contact-steps.tsx              ordered list of 3 step cards
    contact-faq.tsx                FAQ accordion
 src/content/site.ts               + contact.hours (placeholder)
@@ -31,32 +31,13 @@ src/components/site/logo.tsx      + LogoMark (the squiggle on its own)
 src/components/site/highlight.tsx + indentTag() (shared with About)
 ```
 
-## 3. The form card without a backend
+## 3. The form card
 
-The ticket's acceptance criterion: **no control on the page appears submittable while
-the backend is absent.** Three layers make sure of it:
-
-1. **No `<form>` element.** Without one, there is nothing for the browser to submit,
-   even if someone re-enables a field in DevTools and presses Enter.
-2. **`<fieldset disabled>`** around every control. HTML disables every descendant
-   field and button, so they can't be focused, typed into or clicked, and assistive tech
-   announces them as dimmed. Our primitives already style `:disabled` (the designed
-   Disabled state), so the card looks clearly inactive. Radix Select also gets
-   `disabled` on its root, because its trigger and state live in React.
-3. **An honest note.** The line under the button says requests open soon and gives the
-   email address as a working alternative. The fieldset points at it with
-   `aria-describedby`, so a screen reader hears why the fields are disabled.
-
-Everything the real form needs is already in place: field `name`s, `type`s,
-`autoComplete`, label/`id` pairs, and service options whose values are the
-consultation slugs (`serviceSlugs`). The form ticket should:
-
-- replace the `<div>` with `<form action={…}>`
-- remove `disabled`
-- add validation and the four states
-- delete the `unavailable` note
-
-`data-form-slot="consultation"` marks the card for that work.
+Until #39 the card was layout only (a disabled `<fieldset>` with no `<form>`). It is now
+a server-rendered shell (`consultation-form-card.tsx`) around the client
+`ConsultationForm` from `src/features/consultation/`, the page's only client boundary.
+The page stays static. Everything about the form's behaviour, states and tests is in
+[Consultation requests](./consultation-requests.md) § 7.
 
 ## 4. Other decisions
 
