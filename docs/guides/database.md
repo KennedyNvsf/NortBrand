@@ -19,7 +19,9 @@ read:
 | `unsubscribe_newsletter`                                             | `public`  | Unsubscribes with a signed link                                |
 | `enforce_write_limit`, `newsletter_token`, `newsletter_token_secret` | `private` | Helpers; not reachable through the API                         |
 
-Everything is in one migration: `supabase/migrations/20261015120000_requests_and_subscribers.sql`.
+The schema is in `supabase/migrations/20261015120000_requests_and_subscribers.sql`.
+`20261015204624_consultation_empty_phone.sql` (#37) makes `submit_consultation_request`
+store an empty or blank phone as `null`, because generated types cannot pass `null`.
 
 ## 2. The threat model, in one paragraph
 
