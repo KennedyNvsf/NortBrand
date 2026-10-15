@@ -175,6 +175,9 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md
 Client validation → server action → honeypot and minimum-fill-time check → zod → RPC insert →
 Resend team alert (EN) + visitor confirmation (visitor locale) → success state.
 
+- Code: `src/features/consultation/` (guide: docs/guides/consultation-requests.md). The
+  schema's messages are keys under `Contact.form.errors`. Bots (honeypot `website`, or a
+  form token younger than 3 s) get a fake success. Only `error.code` is ever logged.
 - Insert fails: show the designed _Send failed_ state and send no email.
 - Insert succeeds but email fails: keep the request, log the error (no personal data), and
   still show success.
