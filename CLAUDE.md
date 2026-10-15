@@ -196,6 +196,8 @@ Build only (Vercel, optional): `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJEC
 Account setup and the per-environment matrix: `docs/guides/environments.md`.
 
 Build flags: `RELEASE_BUILD=1` makes the release guard strict outside Vercel production.
+`E2E_FAKE_BACKEND=1` (Playwright's server only; refused on Vercel production) swaps the
+consultation insert and emails for a fake, so e2e never writes to Supabase or sends email.
 
 Rules:
 

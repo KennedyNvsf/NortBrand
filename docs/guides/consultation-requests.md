@@ -1,6 +1,6 @@
 # Consultation requests
 
-**Covers:** #37 (server action), #38 (emails). The form wiring (#39) extends this guide.
+**Covers:** #37 (server action), #38 (emails), #39 (the form).
 **Source:** ADR-001, ADR-002, CLAUDE.md › Consultation request flow, Figma 06 Contact
 (Validation, Sending, Send failed and Request sent states).
 
@@ -54,7 +54,7 @@ for instant feedback; the action runs it again because the browser can be bypass
 rule mirrors a CHECK in Postgres, so a value that passes zod passes the database. The
 schema also normalises: trims every field, lowercases the email, and turns an empty phone
 into `undefined`. Error messages are **keys** (`nameRequired`), not text, so the same schema
-serves both locales: the form renders `t(\`errors.${key}\`)`. `toFieldErrors` keeps the
+serves both locales: the form renders ``t(`errors.${key}`)``. `toFieldErrors` keeps the
 first key per field, because the design shows one message per field, and maps zod's own
 type errors (a field that is not a string at all) to the field's "required" key.
 
@@ -103,30 +103,11 @@ to `private.newsletter_token` in Postgres; the test vectors are shared with
 | `src/lib/ip-hash.test.ts`  | Header precedence; the hash is 64 hex characters and never contains the IP                                                |
 | `02_consultation.test.sql` | A blank phone is accepted and stored as null                                                                              |
 
-## 5. Using it from the form (#39)
+## 5. Calling the action
 
-```ts
-const token = await getConsultationFormToken(); // on mount; keep it in a ref
-const result = await submitConsultationRequest({
-  ...values,
-  locale,
-  website,
-  formToken: token,
-});
-switch (result.status) {
-  case "validation":
-    /* setError(field, t(`errors.${key}`)) for each field */ break;
-  case "rate-limited":
-    /* Contact.form.rateLimited */ break;
-  case "failed":
-    /* Send failed banner; keep the values */ break;
-  case "success":
-    /* Request sent state */ break;
-}
-```
-
-The honeypot is an input named `website`, hidden from people (`aria-hidden`, off-screen,
-`tabIndex={-1}`, `autoComplete="off"`), not `display: none`, which some bots skip.
+`ConsultationForm` (§ 7) is the only caller. Any other caller needs the same envelope:
+the fields plus `locale`, the honeypot `website` (empty) and a `formToken` from
+`getConsultationFormToken()` issued at least 3 seconds earlier.
 
 ## 6. Emails (#38)
 
@@ -173,3 +154,62 @@ fails; a template throws; marking fails or updates nothing) and checks that no r
 contains personal data. `emails/render.test.ts` checks every alert field and the Lisbon
 time (across the daylight-saving change), escaping, the one-line subject, no images, the
 locale of the confirmation, and snapshots of the EN alert and the EN and PT confirmations.
+
+## 7. The form (#39)
+
+| Piece                   | File                                                                     |
+| ----------------------- | ------------------------------------------------------------------------ |
+| The form and its states | `src/features/consultation/components/consultation-form.tsx`             |
+| Request sent            | `src/features/consultation/components/consultation-sent.tsx`             |
+| Card shell (server)     | `src/app/[locale]/(site)/contact/_components/consultation-form-card.tsx` |
+| Fake backend for e2e    | `src/features/consultation/e2e-backend.ts`                               |
+| e2e                     | `tests/e2e/consultation-form.spec.ts`                                    |
+
+**States** (Figma 06 Contact): Default `278:114`, Validation `400:331`, Sending
+`400:522`, Send failed `400:694`, Request sent `321:73` (tablet `379:310`, mobile
+`379:386`). Rate limited reuses the Send failed banner with its own copy.
+
+```text
+idle ──submit──► client zod ──errors──► Validation (focus first invalid field)
+                    │ ok
+                    ▼
+                 Sending: <fieldset disabled>, button loading + aria-busy, note changes
+                    │
+   success ─► Request sent (focus heading, recap of the email we'll reply to)
+   validation ─► server field errors, focus first one
+   rate-limited / failed / network error ─► banner (focused), answers kept, Try again
+```
+
+**How it works.**
+
+- **react-hook-form + `zodResolver(consultationSchema)`.** The same schema as the server.
+  Messages are error keys; `toErrorKey` turns any message (ours or zod's own) into a key,
+  rendered as ``t(`errors.${key}`)`` with `FieldError` (icon + text), linked through
+  `aria-describedby`, with `aria-invalid` on the field.
+- **No double submission.** While sending, the `<fieldset>` is disabled (every field
+  shows the designed Disabled look), the button is `loading` (disabled, `aria-busy`,
+  spinner), and `onSubmit` returns early if a send is already running.
+- **Announcements.** A polite `role="status"` region speaks "Sending…", "Request sent."
+  or the banner title. Focus moves to the banner or the success heading; for field
+  errors it moves to the first invalid field, whose message is read with it.
+- **Bots.** The form fetches the signed start time on mount and again on the first
+  focus if that failed. The honeypot `website` is off-screen, unlabelled for people,
+  out of the tab order and `autoComplete="off"`.
+- **`?service=<slug>`.** Read after mount (the page is static), validated against
+  `serviceSlugs`, unknown values ignored. Radix mirrors the value into a hidden native
+  `<select>` that reports `""` when the value arrives before its options exist, so the
+  form ignores empty changes (no option is empty).
+- **Layout.** Sending keeps the form's exact height. Validation messages and the banner
+  add height, and Request sent is shorter, as designed; these happen only in response
+  to the visitor's own submit, which browsers exclude from layout-shift scoring.
+- **Privacy line.** Figma has no consent checkbox, so `consent_at` is the submission
+  time; a caption under the button links the Privacy Policy (draft copy, decided
+  2026-10-15).
+
+**e2e without a backend.** Playwright starts the server with `E2E_FAKE_BACKEND=1`. The
+action then swaps only the insert and the emails for `fakeInsert`, which picks the
+outcome from the name: `e2e:failed`, `e2e:rate-limited`, `e2e:slow` (1.5 s, to see
+Sending), anything else succeeds. The flag is refused when `VERCEL_ENV=production`, and
+a unit test pins that. Bot checks stay real, so each test waits 3 seconds before
+submitting. If you reuse a running server for e2e, start it with
+`E2E_FAKE_BACKEND=1 pnpm start`, or submissions will write to Supabase and send email.

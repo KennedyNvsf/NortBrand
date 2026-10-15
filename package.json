@@ -28,6 +28,7 @@
     "prepare": "simple-git-hooks"
   },
   "dependencies": {
+    "@hookform/resolvers": "5.9.1",
     "@sentry/nextjs": "10.75.3",
     "@supabase/supabase-js": "2.117.3",
     "class-variance-authority": "0.7.1",
@@ -40,6 +41,7 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-email": "6.11.0",
+    "react-hook-form": "7.89.0",
     "resend": "6.31.0",
     "sonner": "2.0.8",
     "tailwind-merge": "3.7.0",

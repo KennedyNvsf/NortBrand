@@ -6,7 +6,7 @@ import { LogoMark } from "@/components/site/logo";
 import { site } from "@/content/site";
 import { ICON_STROKE, icons, type IconName } from "@/lib/icons";
 
-import { ConsultationFormLayout } from "./consultation-form-layout";
+import { ConsultationFormCard } from "./consultation-form-card";
 
 /*
  * Figma Contact › Hero (desktop 278:85, tablet 378:109, mobile 378:328): intro and
@@ -85,7 +85,7 @@ export async function ContactHero() {
           </ul>
         </div>
 
-        <ConsultationFormLayout />
+        <ConsultationFormCard />
       </div>
     </section>
   );

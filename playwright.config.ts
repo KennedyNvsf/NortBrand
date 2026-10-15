@@ -22,5 +22,9 @@ export default defineConfig({
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
+    // The consultation form talks to a fake backend (src/features/consultation/
+    // e2e-backend.ts), so e2e never writes to Supabase or sends email. A reused server
+    // must be started the same way: E2E_FAKE_BACKEND=1 pnpm start.
+    env: { E2E_FAKE_BACKEND: "1" },
   },
 });
