@@ -31,6 +31,7 @@ jobs:
       SANITY_REVALIDATE_SECRET: placeholder-placeholder-placeholder-00
       RESEND_API_KEY: re_placeholder
       RESEND_AUDIENCE_ID: placeholder
+      EMAIL_FROM: NortBrand <onboarding@resend.dev>
       NOTIFY_TO_EMAIL: team@example.com
       IP_HASH_SALT: placeholder-placeholder-placeholder-00
       NEWSLETTER_TOKEN_SECRET: placeholder-placeholder-placeholder-00

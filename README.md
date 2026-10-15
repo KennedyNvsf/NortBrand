@@ -114,6 +114,7 @@ Never commit `.env*` files; keep `.env.example` in sync with the schema.
 | `SANITY_REVALIDATE_SECRET`      | Server | 32+ characters         | Verifies the Sanity webhook                     |
 | `RESEND_API_KEY`                | Server | starts with `re_`      | Transactional email                             |
 | `RESEND_AUDIENCE_ID`            | Server | non-empty              | Newsletter audience                             |
+| `EMAIL_FROM`                    | Server | `Name <address>`       | Sender of every email                           |
 | `NOTIFY_TO_EMAIL`               | Server | email                  | Team inbox for new requests                     |
 | `IP_HASH_SALT`                  | Server | 32+ characters         | Salted SHA-256 of visitor IPs for rate limiting |
 | `NEWSLETTER_TOKEN_SECRET`       | Server | 32+ characters         | Signs newsletter confirm and unsubscribe links  |

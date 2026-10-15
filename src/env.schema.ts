@@ -35,6 +35,13 @@ export const serverSchema = z.object({
   SANITY_REVALIDATE_SECRET: z.string().min(32, "Use at least 32 characters"),
   RESEND_API_KEY: z.string().startsWith("re_", "Resend keys start with re_"),
   RESEND_AUDIENCE_ID: nonEmpty,
+  /** Sender, `Name <address>` or `address`. `onboarding@resend.dev` until the domain is verified. */
+  EMAIL_FROM: z
+    .string()
+    .regex(
+      /^(?:[^<>@]+ <[^\s<>@]+@[^\s<>@]+>|[^\s<>@]+@[^\s<>@]+)$/,
+      'Use "Name <address>" or a plain address',
+    ),
   NOTIFY_TO_EMAIL: z.email(),
   IP_HASH_SALT: z.string().min(32, "Use at least 32 characters"),
   /** Signs newsletter confirm and unsubscribe links (HMAC-SHA256). */

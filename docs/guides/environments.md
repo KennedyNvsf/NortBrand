@@ -100,7 +100,8 @@ dev first, production after the pull request is merged. Nothing in CI pushes to 
 **Now (free tier).** Create the account, then do steps 4–6 below with a single
 `nortbrand-preview` key. Without a verified domain Resend sends only from
 `onboarding@resend.dev`, and only to the account's own email address. So set
-`NOTIFY_TO_EMAIL` to that address, and test visitor confirmations with it too. Any other
+`NOTIFY_TO_EMAIL` to that address, set `EMAIL_FROM` to `NortBrand <onboarding@resend.dev>`, and
+test visitor confirmations with that address too. Any other
 recipient is refused. The free tier allows 100 emails a day.
 
 **Later (#45).** Steps 1–3 and the `nortbrand-production` key, once the domain is bought.
@@ -172,24 +173,25 @@ column for each value. Development is what `vercel env pull` writes into `.env.l
 Until Vercel exists (#45), copy `.env.example` to `.env.local` and fill in the Development
 column by hand.
 
-| Variable                        | Production                 | Preview                  | Development (`.env.local`) |
-| ------------------------------- | -------------------------- | ------------------------ | -------------------------- |
-| `NEXT_PUBLIC_SITE_URL`          | `https://nortbrand.com`    | `https://nortbrand.com`¹ | `http://localhost:3000`    |
-| `NEXT_PUBLIC_SUPABASE_URL`      | prod project URL           | dev project URL          | dev URL, or local²         |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | prod publishable key       | dev publishable key      | dev key, or local²         |
-| `RESEND_API_KEY`                | `nortbrand-production` key | `nortbrand-preview` key  | `nortbrand-preview` key    |
-| `RESEND_AUDIENCE_ID`            | Newsletter audience        | same                     | same                       |
-| `NOTIFY_TO_EMAIL`               | team inbox                 | your own inbox           | your own inbox             |
-| `IP_HASH_SALT`                  | generated                  | generated (different)    | any 32+ characters         |
-| `NEWSLETTER_TOKEN_SECRET`       | generated                  | generated (different)    | any 32+ characters         |
-| `NEXT_PUBLIC_SENTRY_DSN`        | DSN                        | DSN                      | empty (off)                |
-| `SENTRY_AUTH_TOKEN`             | token                      | token                    | not set                    |
-| `SENTRY_ORG`, `SENTRY_PROJECT`  | slugs                      | slugs                    | not set                    |
-| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | `G-…`                      | `G-…`                    | `G-…`                      |
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | `placeholder` until M4     | same                     | same                       |
-| `NEXT_PUBLIC_SANITY_DATASET`    | `production`               | same                     | same                       |
-| `SANITY_API_READ_TOKEN`         | `placeholder` until M4     | same                     | same                       |
-| `SANITY_REVALIDATE_SECRET`      | generated                  | generated                | any 32+ characters         |
+| Variable                        | Production                             | Preview                             | Development (`.env.local`)          |
+| ------------------------------- | -------------------------------------- | ----------------------------------- | ----------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`          | `https://nortbrand.com`                | `https://nortbrand.com`¹            | `http://localhost:3000`             |
+| `NEXT_PUBLIC_SUPABASE_URL`      | prod project URL                       | dev project URL                     | dev URL, or local²                  |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | prod publishable key                   | dev publishable key                 | dev key, or local²                  |
+| `RESEND_API_KEY`                | `nortbrand-production` key             | `nortbrand-preview` key             | `nortbrand-preview` key             |
+| `RESEND_AUDIENCE_ID`            | Newsletter audience                    | same                                | same                                |
+| `EMAIL_FROM`                    | `NortBrand <hello@send.nortbrand.com>` | `NortBrand <onboarding@resend.dev>` | `NortBrand <onboarding@resend.dev>` |
+| `NOTIFY_TO_EMAIL`               | team inbox                             | your own inbox                      | your own inbox                      |
+| `IP_HASH_SALT`                  | generated                              | generated (different)               | any 32+ characters                  |
+| `NEWSLETTER_TOKEN_SECRET`       | generated                              | generated (different)               | any 32+ characters                  |
+| `NEXT_PUBLIC_SENTRY_DSN`        | DSN                                    | DSN                                 | empty (off)                         |
+| `SENTRY_AUTH_TOKEN`             | token                                  | token                               | not set                             |
+| `SENTRY_ORG`, `SENTRY_PROJECT`  | slugs                                  | slugs                               | not set                             |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | `G-…`                                  | `G-…`                               | `G-…`                               |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | `placeholder` until M4                 | same                                | same                                |
+| `NEXT_PUBLIC_SANITY_DATASET`    | `production`                           | same                                | same                                |
+| `SANITY_API_READ_TOKEN`         | `placeholder` until M4                 | same                                | same                                |
+| `SANITY_REVALIDATE_SECRET`      | generated                              | generated                           | any 32+ characters                  |
 
 1. Previews keep the production site URL on purpose: canonical links and `hreflang` must
    never point at a preview, and previews are `noindex` already (`docs/guides/seo.md`).
