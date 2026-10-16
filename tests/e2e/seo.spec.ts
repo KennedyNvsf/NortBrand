@@ -47,6 +47,21 @@ test.describe("crawl files", () => {
     expect(text).toContain("Disallow: /studio");
     expect(text).toMatch(/Sitemap: \S+\/sitemap\.xml/);
   });
+
+  test("the embedded Studio is noindex and never sent through the locale proxy", async ({
+    request,
+  }) => {
+    // #58: /studio has its own root layout, outside [locale]. Its HTML is a shell; the
+    // Studio itself runs in the browser (and needs a real Sanity project to sign in).
+    const response = await request.get("/studio", { maxRedirects: 0 });
+    expect(response.status()).toBe(200);
+    const html = await response.text();
+    expect(html).toMatch(/<meta name="robots" content="noindex/);
+    expect(html).not.toContain("data-consent-banner");
+    expect(await (await request.get("/sitemap.xml")).text()).not.toContain(
+      "/studio",
+    );
+  });
 });
 
 test.describe("page metadata", () => {

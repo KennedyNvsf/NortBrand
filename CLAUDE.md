@@ -276,6 +276,7 @@ pnpm build
 pnpm i18n:pseudo    # regenerate placeholder pt.json from en.json (keeps real translations; --reset for all)
 pnpm check:release  # strict guard: pseudo translations + draft legal text; must pass before launch
 pnpm db:start / db:stop / db:reset / db:types / db:test   # local Supabase (Docker)
+pnpm sanity:types   # extract the Sanity schema and regenerate src/lib/sanity/sanity.types.ts
 ```
 
 ## Workflow rules (nb-se 100.1)
