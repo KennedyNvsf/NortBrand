@@ -11,16 +11,16 @@ This guide is the runbook for creating them, and the reference for which value g
 Paid services wait until November (launch is 30 November 2026). Development runs on free
 tiers and a local database until then; #45 tracks the paid steps.
 
-| Step                        | When                | Cost                |
-| --------------------------- | ------------------- | ------------------- |
-| Local Supabase (Docker)     | Now                 | Free                |
-| Supabase `nortbrand-dev`    | Now                 | Free tier           |
-| Resend account and audience | Now                 | Free tier           |
-| Sentry                      | Now                 | Free Developer plan |
-| GA4 property                | Now                 | Free                |
-| Domain and Resend DNS       | By 9 November (#45) | Paid                |
-| Vercel Pro                  | By 9 November (#45) | Paid                |
-| Supabase `nortbrand-prod`   | Launch prep (#45)   | Free or Pro: decide |
+| Step                       | When                | Cost                |
+| -------------------------- | ------------------- | ------------------- |
+| Local Supabase (Docker)    | Now                 | Free                |
+| Supabase `nortbrand-dev`   | Now                 | Free tier           |
+| Resend account and segment | Now                 | Free tier           |
+| Sentry                     | Now                 | Free Developer plan |
+| GA4 property               | Now                 | Free                |
+| Domain and Resend DNS      | By 9 November (#45) | Paid                |
+| Vercel Pro                 | By 9 November (#45) | Paid                |
+| Supabase `nortbrand-prod`  | Launch prep (#45)   | Free or Pro: decide |
 
 Until Vercel exists there are no hosted previews: work locally, and CI runs the checks
 against a production build of each pull request (#44).
@@ -29,7 +29,7 @@ against a production build of each pull request (#44).
 | -------- | ------------------------------------------------------- | ---------------------------------- |
 | Vercel   | Hosting, a preview deployment per branch                | Production, Preview, Development   |
 | Supabase | Postgres for consultation requests and subscribers      | `nortbrand-prod`, `nortbrand-dev`  |
-| Resend   | Transactional email and the newsletter audience         | One domain; one key per stage      |
+| Resend   | Transactional email and the newsletter segment          | One domain; one key per stage      |
 | Sentry   | Error reports from browser and server, no personal data | One project, tagged by environment |
 | GA4      | Analytics, loaded only after consent                    | Production only                    |
 
@@ -113,9 +113,27 @@ recipient is refused. The free tier allows 100 emails a day.
 3. Add a DMARC record on the root domain if none exists:
    `_dmarc.nortbrand.com TXT "v=DMARC1; p=none; rua=mailto:<your inbox>"`. Tighten to
    `p=quarantine` after a few weeks of clean reports.
-4. **Audiences → Create:** "Newsletter". Copy its ID (`RESEND_AUDIENCE_ID`).
+4. **Segments → Create:** "Newsletter". Copy its ID (`RESEND_SEGMENT_ID`). Then
+   create two string **contact properties**, `locale` (fallback `en`) and `unsubscribe_url`.
+   The newsletter sets both on every confirmed contact (docs/guides/newsletter.md).
+   Properties are field definitions, not contacts: the **Add contact** form asks for an
+   email and is the wrong screen. Use the Properties screen beside Contacts and Segments,
+   or the API with that environment's key:
+
+   ```ts
+   await resend.contactProperties.create({
+     key: "locale",
+     type: "string",
+     fallbackValue: "en",
+   });
+   await resend.contactProperties.create({
+     key: "unsubscribe_url",
+     type: "string",
+   });
+   ```
+
 5. **API Keys:** create two **Full access** keys, `nortbrand-production` and
-   `nortbrand-preview`. Full access is needed because the newsletter adds and removes audience
+   `nortbrand-preview`. Full access is needed because the newsletter adds and removes
    contacts; sending-only keys cannot. Each key is stored only in Vercel.
 6. Decide the team inbox for new requests (`NOTIFY_TO_EMAIL`).
 
@@ -162,6 +180,11 @@ that environment's value:
 select vault.create_secret('<NEWSLETTER_TOKEN_SECRET>', 'newsletter_token_secret');
 ```
 
+The value comes first and the name second. Then open `/api/health/newsletter` on that
+environment (locally `http://localhost:3000/api/health/newsletter`): `{"status":"ok"}`
+means Postgres verified a token the app signed. `secret_mismatch` means the two values
+differ; `error` with code `P0001` means the Vault entry is missing or misnamed.
+
 To rotate it later, use `vault.update_secret` with the secret's id, and change the env
 variable at the same time. For the local stack, run the same statement in Studio
 (`http://127.0.0.1:54323`) after every `pnpm db:reset`. Details: [Database](./database.md).
@@ -179,7 +202,7 @@ column by hand.
 | `NEXT_PUBLIC_SUPABASE_URL`      | prod project URL                       | dev project URL                     | dev URL, or local²                  |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | prod publishable key                   | dev publishable key                 | dev key, or local²                  |
 | `RESEND_API_KEY`                | `nortbrand-production` key             | `nortbrand-preview` key             | `nortbrand-preview` key             |
-| `RESEND_AUDIENCE_ID`            | Newsletter audience                    | same                                | same                                |
+| `RESEND_SEGMENT_ID`             | Newsletter segment                     | same                                | same                                |
 | `EMAIL_FROM`                    | `NortBrand <hello@send.nortbrand.com>` | `NortBrand <onboarding@resend.dev>` | `NortBrand <onboarding@resend.dev>` |
 | `NOTIFY_TO_EMAIL`               | team inbox                             | your own inbox                      | your own inbox                      |
 | `IP_HASH_SALT`                  | generated                              | generated (different)               | any 32+ characters                  |

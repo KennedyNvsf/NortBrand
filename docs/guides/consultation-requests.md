@@ -115,7 +115,7 @@ the fields plus `locale`, the honeypot `website` (empty) and a `formToken` from
 | ------------------------- | --------------------------------------------------------------------------------- |
 | Team alert template       | `src/features/consultation/emails/consultation-alert.tsx`                         |
 | Visitor confirmation      | `src/features/consultation/emails/consultation-confirmation.tsx`                  |
-| Brand tokens, inline      | `src/features/consultation/emails/styles.ts`                                      |
+| Brand tokens, inline      | `src/lib/email/styles.ts` (shared with the newsletter email)                      |
 | Copy + render (HTML/text) | `src/features/consultation/emails/render.tsx`                                     |
 | Send, mark, report        | `src/features/consultation/notify.ts`                                             |
 | Resend wrapper            | `src/lib/resend.ts`                                                               |

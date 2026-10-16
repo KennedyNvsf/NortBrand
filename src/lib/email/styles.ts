@@ -12,6 +12,8 @@ export const emailTokens = {
   textMuted: "#4a4241", // --color-text-muted (neutral/700)
   textAccent: "#c21f1f", // --color-text-accent (red/600, small red text)
   borderDefault: "#e7e3e2", // --color-border-default (neutral/200)
+  actionPrimaryFill: "#dc2626", // --color-action-primary-fill (primary buttons)
+  radiusMd: "10px", // --radius-md (buttons)
   radiusLg: "16px", // --radius-lg (forms, cards)
   // No web font: loading Instrument Sans would make every mail client fetch it remotely.
   fontFamily:
@@ -74,6 +76,18 @@ export const styles = {
     whiteSpace: "pre-wrap",
   },
   link: { color: emailTokens.textAccent, textDecoration: "underline" },
+  // White on the primary fill is 4.8:1 (CLAUDE.md › Accessibility decisions).
+  button: {
+    backgroundColor: emailTokens.actionPrimaryFill,
+    borderRadius: emailTokens.radiusMd,
+    color: emailTokens.bgSurface,
+    display: "inline-block",
+    fontSize: "16px",
+    fontWeight: 600,
+    lineHeight: "24px",
+    padding: "12px 24px",
+    textDecoration: "none",
+  },
   hr: { borderColor: emailTokens.borderDefault, margin: "24px 0" },
   footer: {
     color: emailTokens.textMuted,

@@ -34,7 +34,7 @@ export const serverSchema = z.object({
   SANITY_API_READ_TOKEN: nonEmpty,
   SANITY_REVALIDATE_SECRET: z.string().min(32, "Use at least 32 characters"),
   RESEND_API_KEY: z.string().startsWith("re_", "Resend keys start with re_"),
-  RESEND_AUDIENCE_ID: nonEmpty,
+  RESEND_SEGMENT_ID: nonEmpty,
   /** Sender, `Name <address>` or `address`. `onboarding@resend.dev` until the domain is verified. */
   EMAIL_FROM: z
     .string()
