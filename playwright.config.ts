@@ -11,7 +11,13 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  reporter: process.env.CI ? "github" : "list",
+  // GitHub's 2-vCPU runners render WebKit in software and run one worker: animations
+  // and hydration take several times longer than on a laptop. Locally the defaults
+  // (30 s, 5 s) stay, so real slowness still shows there.
+  ...(process.env.CI && { timeout: 60_000, expect: { timeout: 10_000 } }),
+  // CI: annotations on the PR, plus an HTML report (with traces from retries) that the
+  // workflow uploads when a test fails.
+  reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
   use: {
     baseURL,
     trace: "on-first-retry",
@@ -36,6 +42,17 @@ export default defineConfig({
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
     { name: "mobile", use: { ...devices["iPhone 14"] } },
+    // CI only (#44): the iPhone 14 viewport, touch and user agent in Chromium. It is the
+    // required mobile check, because WebKit on GitHub's Linux runners hangs and crashes
+    // intermittently; WebKit ("mobile") still runs there as an informational check.
+    ...(process.env.CI
+      ? [
+          {
+            name: "mobile-chromium",
+            use: { ...devices["iPhone 14"], browserName: "chromium" as const },
+          },
+        ]
+      : []),
   ],
   webServer: {
     command: `pnpm build && pnpm start --port ${PORT}`,

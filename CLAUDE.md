@@ -298,6 +298,10 @@ Ticket → Branch → Implement → Validate → Push → Pull Request → Walkt
   - Use Conventional Commits with a scope, and reference the ticket. Example:
     `feat(ui): add Card component variants (#23)`.
   - Every commit builds.
+- **CI (every PR):** required: typecheck/lint/format/unit/build, e2e (desktop), e2e
+  (mobile, Chromium at iPhone 14 size), Database (pgTAP). Informational: e2e in WebKit (two
+  shards), not a merge gate because it is unstable on the runners. Guide:
+  docs/guides/ci.md.
 - **Validation before pushing**
   - Run typecheck, lint, format:check, unit tests and build. Run e2e when pages or flows
     changed.

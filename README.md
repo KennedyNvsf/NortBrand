@@ -58,6 +58,11 @@ installs and can lock files during builds.
 The pre-commit hook (simple-git-hooks + lint-staged) runs `eslint --fix` and Prettier on
 staged files. If you skip it in an emergency, CI still runs the same checks.
 
+CI runs on every pull request: typecheck, lint, format, unit tests and build; Playwright
+in Chromium on desktop and at iPhone size against the PR's own production build; and pgTAP
+against a fresh database. These are required to merge. Playwright in WebKit also runs, as
+an informational check. See [docs/guides/ci.md](./docs/guides/ci.md).
+
 ### Page harness
 
 `tests/e2e/pages.spec.ts` runs the per-page checks from the definition of done for every

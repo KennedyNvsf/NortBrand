@@ -11,30 +11,32 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+  # Placeholder values so env validation and the build can run in CI. They are not
+  # secrets and point nowhere, and no job needs a real one: e2e runs on the fake
+  # backend, pgTAP sets its own Vault secret. Real values arrive with the Vercel
+  # preview checks (#45, docs/tech-debt.md).
+  NEXT_PUBLIC_SITE_URL: http://localhost:3000
+  NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
+  NEXT_PUBLIC_SANITY_PROJECT_ID: placeholder
+  NEXT_PUBLIC_SANITY_DATASET: production
+  NEXT_PUBLIC_GA_MEASUREMENT_ID: G-PLACEHOLDER
+  SANITY_API_READ_TOKEN: placeholder
+  SANITY_REVALIDATE_SECRET: placeholder-placeholder-placeholder-00
+  RESEND_API_KEY: re_placeholder
+  RESEND_SEGMENT_ID: placeholder
+  EMAIL_FROM: NortBrand <onboarding@resend.dev>
+  NOTIFY_TO_EMAIL: team@example.com
+  IP_HASH_SALT: placeholder-placeholder-placeholder-00
+  NEWSLETTER_TOKEN_SECRET: placeholder-placeholder-placeholder-00
+
 jobs:
   verify:
     name: Typecheck, lint, test, build
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    env:
-      NEXT_TELEMETRY_DISABLED: "1"
-      # Placeholder values so env validation and the build can run in CI. They are not
-      # secrets and point nowhere. Replace with repository secrets once the services
-      # exist, and add a real deployment check in a later phase.
-      NEXT_PUBLIC_SITE_URL: http://localhost:3000
-      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
-      NEXT_PUBLIC_SANITY_PROJECT_ID: placeholder
-      NEXT_PUBLIC_SANITY_DATASET: production
-      NEXT_PUBLIC_GA_MEASUREMENT_ID: G-PLACEHOLDER
-      SANITY_API_READ_TOKEN: placeholder
-      SANITY_REVALIDATE_SECRET: placeholder-placeholder-placeholder-00
-      RESEND_API_KEY: re_placeholder
-      RESEND_SEGMENT_ID: placeholder
-      EMAIL_FROM: NortBrand <onboarding@resend.dev>
-      NOTIFY_TO_EMAIL: team@example.com
-      IP_HASH_SALT: placeholder-placeholder-placeholder-00
-      NEWSLETTER_TOKEN_SECRET: placeholder-placeholder-placeholder-00
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -66,3 +68,96 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+  # Playwright against this PR's own production build (playwright.config.ts starts
+  # `pnpm build && pnpm start` with E2E_FAKE_BACKEND=1, so nothing reaches Supabase,
+  # Resend or Google). One job per project, so each browser is its own check. Runs
+  # against Vercel previews once they exist (#45, docs/tech-debt.md).
+  e2e:
+    name: ${{ matrix.check }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # Required: desktop and mobile (iPhone 14 viewport and touch) in Chromium.
+        # Informational: real WebKit, which hangs and crashes intermittently on these
+        # runners (decided 2026-10-16; docs/tech-debt.md). It runs in two shards and is
+        # not a required check, so its failures are visible but never block a merge.
+        include:
+          - check: e2e (desktop)
+            project: desktop
+            browser: chromium
+            shard: 1/1
+          - check: e2e (mobile)
+            project: mobile-chromium
+            browser: chromium
+            shard: 1/1
+          - check: e2e (webkit 1/2, informational)
+            project: mobile
+            browser: webkit
+            shard: 1/2
+          - check: e2e (webkit 2/2, informational)
+            project: mobile
+            browser: webkit
+            shard: 2/2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up pnpm (version from packageManager)
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - name: Set up Node (version from .nvmrc)
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Install the browser
+        run: pnpm exec playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Run Playwright (${{ matrix.project }}, shard ${{ matrix.shard }})
+        run: pnpm test:e2e --project=${{ matrix.project }} --shard=${{ matrix.shard }}
+
+      - name: Upload the report and traces
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: playwright-${{ matrix.project }}-${{ strategy.job-index }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+
+  # pgTAP against a fresh local database with every migration applied (#36), so a
+  # migration cannot weaken RLS or the write functions unnoticed. Docker is available
+  # on GitHub's Ubuntu runners; only Postgres is started.
+  database:
+    name: Database (pgTAP)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up pnpm (version from packageManager)
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - name: Set up Node (version from .nvmrc)
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Start Postgres with all migrations
+        run: pnpm exec supabase db start
+
+      - name: Run the pgTAP suite
+        run: pnpm db:test

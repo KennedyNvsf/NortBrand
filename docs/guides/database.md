@@ -132,7 +132,8 @@ The token vectors in `03_newsletter.test.sql` were generated with Node's `crypto
 TypeScript signer (BACKEND ticket) must test against the same vectors, so both sides stay in
 step.
 
-Not in CI yet (see `docs/tech-debt.md`): run `pnpm db:test` before pushing any migration.
+CI runs the suite on every pull request against a fresh database ([CI](./ci.md)). Still
+run `pnpm db:test` before pushing a migration: it is faster than waiting for the check.
 
 ## 6. Day-to-day rules
 
