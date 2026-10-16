@@ -478,6 +478,22 @@
       "noPhone": "Not given",
       "receivedAt": "{date} (Lisbon time)",
       "footer": "Reply to this email to answer {name} directly. We promise a reply within one business day."
+    },
+    "newsletterConfirmation": {
+      "subject": "Confirm your subscription to the {studio} newsletter",
+      "preview": "One click and you’re on the list.",
+      "heading": "Confirm your subscription",
+      "intro": "Someone, hopefully you, asked to receive the {studio} newsletter at {email}. Press the button to confirm.",
+      "button": "Confirm subscription",
+      "expiry": "This link works for 7 days.",
+      "fallback": "If the button doesn’t work, copy this link into your browser:",
+      "ignore": "Didn’t ask for this? Ignore this email and you won’t hear from us.",
+      "footer": "You’re receiving this because this address was entered in the newsletter form on {site}."
+    }
+  },
+  "Newsletter": {
+    "errors": {
+      "emailInvalid": "Enter a valid email address"
     }
   }
 }

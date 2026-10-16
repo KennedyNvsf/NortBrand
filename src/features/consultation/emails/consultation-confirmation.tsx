@@ -12,7 +12,7 @@ import {
 
 import type { Locale } from "@/i18n/routing";
 
-import { styles } from "./styles";
+import { styles } from "@/lib/email/styles";
 
 export type ConsultationConfirmationCopy = {
   preview: string;

@@ -11,7 +11,7 @@ import {
   Text,
 } from "react-email";
 
-import { styles } from "./styles";
+import { styles } from "@/lib/email/styles";
 
 export type ConsultationAlertCopy = {
   preview: string;

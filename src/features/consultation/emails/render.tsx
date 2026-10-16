@@ -1,26 +1,19 @@
-import { createTranslator, type Messages } from "next-intl";
-import { render } from "react-email";
+import { createTranslator } from "next-intl";
 
 import { services } from "@/content/services";
 import { site } from "@/content/site";
 import { localeNames, type Locale } from "@/i18n/routing";
+import {
+  emailMessages as messages,
+  toEmail,
+  type RenderedEmail,
+} from "@/lib/email/render";
 
-import en from "../../../../messages/en.json";
-import pt from "../../../../messages/pt.json";
 import type { ConsultationRequest } from "../schema";
 import { ConsultationAlertEmail } from "./consultation-alert";
 import { ConsultationConfirmationEmail } from "./consultation-confirmation";
 
-export type RenderedEmail = { subject: string; html: string; text: string };
-
-// Imported, not loaded per request: emails render after the response (`after()`), where
-// there is no next-intl request context.
-const messages: Record<Locale, Messages> = { en, pt };
-
-/** A subject is one line: collapse any line breaks a visitor typed into their name. */
-function oneLine(value: string): string {
-  return value.replace(/\s+/g, " ").trim();
-}
+export type { RenderedEmail };
 
 function serviceName(locale: Locale, slug: ConsultationRequest["service"]) {
   const t = createTranslator({
@@ -39,17 +32,6 @@ export function formatLisbonTime(date: Date): string {
     timeStyle: "short",
     timeZone: site.timeZone,
   }).format(date);
-}
-
-async function toEmail(
-  subject: string,
-  element: React.ReactElement,
-): Promise<RenderedEmail> {
-  const [html, text] = await Promise.all([
-    render(element),
-    render(element, { plainText: true }),
-  ]);
-  return { subject: oneLine(subject), html, text };
 }
 
 /** The team alert: English, every field, the Lisbon receive time and the row id. */

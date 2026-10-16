@@ -48,7 +48,7 @@ The newsletter follows the same path, then double opt-in:
 ```text
 subscribe_newsletter(email, locale, ip_hash) ← issued_at (Unix seconds)
 server action signs token = HMAC(secret, "confirm|email|issued_at"), emails the link
-visitor clicks → server action → confirm_newsletter(email, issued_at, token) → true/false
+visitor presses Confirm → server action → confirm_newsletter(email, issued_at, token) → true/false
 ```
 
 ## 4. Decisions, file by file
@@ -142,7 +142,8 @@ Not in CI yet (see `docs/tech-debt.md`): run `pnpm db:test` before pushing any m
   `pnpm exec supabase db push` (dev first; production after merge). Nothing in CI pushes.
 - **Vault secret:** each project needs `newsletter_token_secret` (runbook § 6). Local stack:
   run `select vault.create_secret('<value>', 'newsletter_token_secret');` in Studio after a
-  reset, with the same value as your local `NEWSLETTER_TOKEN_SECRET`.
+  reset, with the same value as your local `NEWSLETTER_TOKEN_SECRET`. Check it with
+  `/api/health/newsletter` ([Newsletter](./newsletter.md)).
 - **Calling the functions** (BACKEND): handle `PT429` (rate limited → designed message),
   `23514`/`23502` (should not happen after zod → _Send failed_), anything else → _Send
   failed_. **Never log or forward `error.details`**: Postgres puts the submitted row in it,

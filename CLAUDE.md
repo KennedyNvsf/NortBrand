@@ -96,6 +96,7 @@ src/app/[locale]/        pages: home, services, about, blog, contact, legal
   (site)/                route group: pages with SiteNav + SiteFooter (404 sits outside)
 src/app/studio/[[...tool]]/  embedded Sanity Studio (noindex, excluded from i18n middleware)
 src/app/api/revalidate/  signed Sanity webhook
+src/app/api/newsletter/  one-click unsubscribe (RFC 8058); api/health/newsletter checks the Vault secret
 src/components/ui/       shadcn primitives restyled to tokens
 src/components/site/     SiteNav, SiteFooter, CtaBand, StickyCta, Logo, shared primitives
 src/features/            consultation/, newsletter/, blog/, consent/
@@ -183,6 +184,20 @@ Resend team alert (EN) + visitor confirmation (visitor locale) → success state
   still show success. Emails run after the response (`after()`); only a sent team alert
   sets `notified_at`.
 
+## Newsletter flow
+
+Signup form → server action → honeypot → zod → `subscribe_newsletter` (rate-limited) → double
+opt-in email (visitor locale) → confirm page button → `confirm_newsletter` → contact added to
+the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_url`).
+
+- Code: `src/features/newsletter/` (guide: docs/guides/newsletter.md). Every response is the
+  same whether or not the address is already subscribed.
+- Links are checked in the app (constant time) and again in SQL. Confirming and
+  unsubscribing happen on a button press or a one-click POST, never on a GET, so mail
+  scanners cannot act on anyone's behalf.
+- Unsubscribe deletes the Resend contact. `/api/newsletter/unsubscribe` is the RFC 8058
+  one-click endpoint; `/api/health/newsletter` checks that the app and Vault secrets match.
+
 ## Environment variables
 
 Public: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
@@ -190,7 +205,7 @@ Public: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABAS
 `NEXT_PUBLIC_SENTRY_DSN` (optional; Sentry is off when empty).
 
 Server-only: `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`, `RESEND_API_KEY`,
-`RESEND_AUDIENCE_ID`, `EMAIL_FROM`, `NOTIFY_TO_EMAIL`, `IP_HASH_SALT`, `NEWSLETTER_TOKEN_SECRET`.
+`RESEND_SEGMENT_ID`, `EMAIL_FROM`, `NOTIFY_TO_EMAIL`, `IP_HASH_SALT`, `NEWSLETTER_TOKEN_SECRET`.
 
 Build only (Vercel, optional): `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`.
 Account setup and the per-environment matrix: `docs/guides/environments.md`.
