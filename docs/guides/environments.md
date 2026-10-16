@@ -114,8 +114,24 @@ recipient is refused. The free tier allows 100 emails a day.
    `_dmarc.nortbrand.com TXT "v=DMARC1; p=none; rua=mailto:<your inbox>"`. Tighten to
    `p=quarantine` after a few weeks of clean reports.
 4. **Segments → Create:** "Newsletter". Copy its ID (`RESEND_SEGMENT_ID`). Then
-   **Properties → Create** two text properties, `locale` and `unsubscribe_url`
-   (the newsletter sets both on every confirmed contact; docs/guides/newsletter.md).
+   create two string **contact properties**, `locale` (fallback `en`) and `unsubscribe_url`.
+   The newsletter sets both on every confirmed contact (docs/guides/newsletter.md).
+   Properties are field definitions, not contacts: the **Add contact** form asks for an
+   email and is the wrong screen. Use the Properties screen beside Contacts and Segments,
+   or the API with that environment's key:
+
+   ```ts
+   await resend.contactProperties.create({
+     key: "locale",
+     type: "string",
+     fallbackValue: "en",
+   });
+   await resend.contactProperties.create({
+     key: "unsubscribe_url",
+     type: "string",
+   });
+   ```
+
 5. **API Keys:** create two **Full access** keys, `nortbrand-production` and
    `nortbrand-preview`. Full access is needed because the newsletter adds and removes
    contacts; sending-only keys cannot. Each key is stored only in Vercel.
