@@ -10,6 +10,12 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  // Blog images come from the Sanity CDN (src/lib/sanity/image.ts).
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "cdn.sanity.io", pathname: "/images/**" },
+    ],
+  },
   partialPrefetching: true,
   turbopack: {
     rules: {

@@ -298,5 +298,14 @@ the repository.
 7. **Region:** the Free plan does not let us choose where the content is hosted. Check
    the project's region under **Settings** and record it in docs/tech-debt.md (the brief
    prefers the EU).
-8. **Webhook** (`/api/revalidate`, signed with `SANITY_REVALIDATE_SECRET`): set up with
-   the content layer (#59).
+8. **Webhook** (#59), one per deployed environment, set up with #45 (Sanity cannot reach
+   `localhost`): **API → Webhooks → Create**:
+   - URL `https://<site>/api/revalidate`, dataset `production` (or `development` for
+     previews), HTTP method **POST**, API version `v2026-10-01`;
+   - trigger on **create, update and delete**;
+   - filter `_type in ["post", "author", "category", "translation.metadata"]`;
+   - projection `{ _type }`;
+   - **secret** = that environment's `SANITY_REVALIDATE_SECRET`.
+     Without it, published changes appear only after the next deploy.
+9. **Development seed:** `pnpm exec sanity login` once, then `pnpm sanity:seed` writes test
+   authors, categories and posts into `development` only (sanity/seed/seed.mts).

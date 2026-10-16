@@ -55,6 +55,7 @@ installs and can lock files during builds.
 | `pnpm db:types`                     | Regenerate `src/lib/supabase/database.types.ts` from the local database.                                                                                                        |
 | `pnpm db:test`                      | pgTAP tests in `supabase/tests` against the local database.                                                                                                                     |
 | `pnpm sanity:types`                 | Extract the Sanity schema to `sanity/schema.json` and regenerate `src/lib/sanity/sanity.types.ts`. Run after any schema or GROQ change.                                         |
+| `pnpm sanity:seed`                  | Write test authors, categories and posts into the `development` dataset (needs `pnpm exec sanity login` once).                                                                  |
 
 The pre-commit hook (simple-git-hooks + lint-staged) runs `eslint --fix` and Prettier on
 staged files. If you skip it in an emergency, CI still runs the same checks.

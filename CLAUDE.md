@@ -222,6 +222,9 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
 - Code: `sanity/` (schemas, env), `sanity.config.ts`, Studio at `src/app/studio/`
   (guide: docs/guides/cms.md). Project `p4bc960d`; local work uses the `development`
   dataset. Run `pnpm sanity:types` after any schema or GROQ change.
+- Blog data: only through `src/features/blog/data.ts` (cached, tagged `blog-list` /
+  `blog-posts`); queries in `queries.ts`; the webhook `/api/revalidate` checks the
+  signature first. Test content: `pnpm sanity:seed` (development only).
 - Sanity MCP (optional): `.claude/settings.json` denies infrastructure, publish and
   image-generation tools. Claude writes only drafts, only to `development`; anything on
   `production` needs approval, like a remote migration.
@@ -286,6 +289,7 @@ pnpm i18n:pseudo    # regenerate placeholder pt.json from en.json (keeps real tr
 pnpm check:release  # strict guard: pseudo translations + draft legal text; must pass before launch
 pnpm db:start / db:stop / db:reset / db:types / db:test   # local Supabase (Docker)
 pnpm sanity:types   # extract the Sanity schema and regenerate src/lib/sanity/sanity.types.ts
+pnpm sanity:seed    # test authors, categories and posts into the development dataset
 ```
 
 ## Workflow rules (nb-se 100.1)
