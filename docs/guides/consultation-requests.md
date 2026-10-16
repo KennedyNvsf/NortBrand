@@ -157,13 +157,13 @@ locale of the confirmation, and snapshots of the EN alert and the EN and PT conf
 
 ## 7. The form (#39)
 
-| Piece                   | File                                                                     |
-| ----------------------- | ------------------------------------------------------------------------ |
-| The form and its states | `src/features/consultation/components/consultation-form.tsx`             |
-| Request sent            | `src/features/consultation/components/consultation-sent.tsx`             |
-| Card shell (server)     | `src/app/[locale]/(site)/contact/_components/consultation-form-card.tsx` |
-| Fake backend for e2e    | `src/features/consultation/e2e-backend.ts`                               |
-| e2e                     | `tests/e2e/consultation-form.spec.ts`                                    |
+| Piece                   | File                                                                          |
+| ----------------------- | ----------------------------------------------------------------------------- |
+| The form and its states | `src/features/consultation/components/consultation-form.tsx`                  |
+| Request sent            | `src/features/consultation/components/consultation-sent.tsx`                  |
+| Card shell (server)     | `src/app/[locale]/(site)/contact/_components/consultation-form-card.tsx`      |
+| Fake backend for e2e    | `src/features/consultation/e2e-backend.ts` (switch: `src/lib/e2e-backend.ts`) |
+| e2e                     | `tests/e2e/consultation-form.spec.ts`                                         |
 
 **States** (Figma 06 Contact): Default `278:114`, Validation `400:331`, Sending
 `400:522`, Send failed `400:694`, Request sent `321:73` (tablet `379:310`, mobile

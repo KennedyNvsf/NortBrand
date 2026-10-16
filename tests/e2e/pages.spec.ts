@@ -22,6 +22,7 @@ for (const route of routes) {
   for (const locale of locales) {
     const url = localizedPath(locale, route.path);
     const isNotFound = "notFound" in route;
+    const isNoindex = isNotFound || "noindex" in route;
 
     test.describe(`${route.name} (${locale})`, () => {
       test("has no axe violations", async ({ page }) => {
@@ -49,7 +50,7 @@ for (const route of routes) {
       });
 
       test("emits canonical and hreflang alternates", async ({ page }) => {
-        test.skip(isNotFound, "a 404 is noindex and has no canonical URL");
+        test.skip(isNoindex, "a noindex page has no canonical URL");
         await page.goto(url);
 
         const canonical = page.locator('link[rel="canonical"]');
@@ -67,7 +68,7 @@ for (const route of routes) {
         const response = await page.goto(url);
         expect(response?.status()).toBe(isNotFound ? 404 : 200);
         const robots = page.locator('meta[name="robots"]');
-        if (isNotFound) {
+        if (isNoindex) {
           await expect(robots).toHaveAttribute("content", /noindex/);
         } else {
           await expect(robots).toHaveCount(0);

@@ -3,9 +3,8 @@ import type { ConsultationRequest } from "./schema";
 
 /**
  * A fake database for Playwright (#39), so e2e can force every outcome without
- * Supabase or Resend. Only Playwright's web server sets E2E_FAKE_BACKEND=1, and it is
- * refused on Vercel production whatever the variable says. The bot checks and zod still
- * run for real; only the insert and the emails are replaced.
+ * Supabase or Resend. It is used only when `isFakeBackendEnabled()` (src/lib/e2e-backend.ts).
+ * The bot checks and zod still run for real; only the insert and the emails are replaced.
  *
  * The outcome comes from a marker in the submitted name:
  *   "e2e:failed"        → a database error (Send failed)
@@ -13,12 +12,6 @@ import type { ConsultationRequest } from "./schema";
  *   "e2e:slow"          → success after 1.5 s (to see the Sending state)
  *   anything else       → success
  */
-export function isFakeBackendEnabled(
-  env: Record<string, string | undefined> = process.env,
-): boolean {
-  return env.E2E_FAKE_BACKEND === "1" && env.VERCEL_ENV !== "production";
-}
-
 export async function fakeInsert(
   request: ConsultationRequest,
 ): Promise<{ id: string } | { error: InsertError }> {

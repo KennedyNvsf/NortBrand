@@ -5,11 +5,13 @@ import { headers } from "next/headers";
 import { after } from "next/server";
 
 import { getServerEnv, publicEnv } from "@/env";
+import { isFakeBackendEnabled } from "@/lib/e2e-backend";
 import { clientIp, hashIp } from "@/lib/ip-hash";
 import { removeContact, sendEmail, upsertSegmentContact } from "@/lib/resend";
 import { getSupabase } from "@/lib/supabase/server";
 
 import { confirmSubscription, type ConfirmResult } from "./confirm";
+import { fakeConfirm, fakeSubscribe, fakeUnsubscribe } from "./e2e-backend";
 import { renderNewsletterConfirmation } from "./emails/render";
 import { confirmUrl, unsubscribeUrl } from "./links";
 import {
@@ -51,9 +53,19 @@ export async function subscribeNewsletter(
 ): Promise<SubscribeResult> {
   const env = getServerEnv();
   const requestHeaders = await headers();
+  const ipHash = () => hashIp(clientIp(requestHeaders), env.IP_HASH_SALT);
+
+  if (isFakeBackendEnabled()) {
+    return subscribeToNewsletter(input, {
+      ipHash,
+      subscribe: fakeSubscribe,
+      reportFailure: () => undefined,
+      onSubscribed: () => undefined,
+    });
+  }
 
   return subscribeToNewsletter(input, {
-    ipHash: () => hashIp(clientIp(requestHeaders), env.IP_HASH_SALT),
+    ipHash,
     subscribe: async ({ email, locale }, ipHash) => {
       const { data, error } = await getSupabase().rpc("subscribe_newsletter", {
         p_email: email,
@@ -91,9 +103,22 @@ export async function subscribeNewsletter(
 export async function confirmNewsletter(
   input: unknown,
 ): Promise<ConfirmResult> {
+  const now = () => Math.floor(Date.now() / 1000);
+  const tokenSecret = getServerEnv().NEWSLETTER_TOKEN_SECRET;
+
+  if (isFakeBackendEnabled()) {
+    return confirmSubscription(input, {
+      now,
+      tokenSecret,
+      confirm: fakeConfirm,
+      reportFailure: () => undefined,
+      onConfirmed: () => undefined,
+    });
+  }
+
   return confirmSubscription(input, {
-    now: () => Math.floor(Date.now() / 1000),
-    tokenSecret: getServerEnv().NEWSLETTER_TOKEN_SECRET,
+    now,
+    tokenSecret,
     confirm: async ({ email, issued, token }) => {
       const { data, error } = await getSupabase().rpc("confirm_newsletter", {
         p_email: email,
@@ -119,8 +144,19 @@ export async function confirmNewsletter(
 export async function unsubscribeNewsletter(
   input: unknown,
 ): Promise<UnsubscribeResult> {
+  const tokenSecret = getServerEnv().NEWSLETTER_TOKEN_SECRET;
+
+  if (isFakeBackendEnabled()) {
+    return unsubscribe(input, {
+      tokenSecret,
+      unsubscribe: fakeUnsubscribe,
+      reportFailure: () => undefined,
+      onUnsubscribed: () => undefined,
+    });
+  }
+
   return unsubscribe(input, {
-    tokenSecret: getServerEnv().NEWSLETTER_TOKEN_SECRET,
+    tokenSecret,
     unsubscribe: async ({ email, token }) => {
       const { data, error } = await getSupabase().rpc(
         "unsubscribe_newsletter",

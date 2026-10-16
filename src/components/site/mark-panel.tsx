@@ -16,19 +16,18 @@ export const MARK_PATH =
 
 export function MarkPanel({
   className,
+  markClassName = "size-34 md:size-44 lg:size-55",
   draw = false,
   parallax = false,
 }: {
   className?: string;
+  /** The mark's size; panels in other designs (Newsletter 337:159) size it their way. */
+  markClassName?: string;
   draw?: boolean;
   parallax?: boolean;
 }) {
   const mark = (
-    <svg
-      viewBox={MARK_VIEW_BOX}
-      fill="none"
-      className="size-34 md:size-44 lg:size-55"
-    >
+    <svg viewBox={MARK_VIEW_BOX} fill="none" className={markClassName}>
       <path
         {...(draw && revealItem("draw"))}
         pathLength={1}

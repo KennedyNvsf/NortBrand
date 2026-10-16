@@ -1,8 +1,8 @@
 # Newsletter
 
-The newsletter backend: signup, double opt-in, the Resend segment, and unsubscribe
-(#40). The signup form and the confirm and unsubscribe pages are #41. Newsletters
-themselves are written and sent from Resend Broadcasts.
+The newsletter: signup, double opt-in, the Resend segment and unsubscribe (backend, #40),
+and the Newsletter card with the confirm and unsubscribe pages (interface, #41).
+Newsletters themselves are written and sent from Resend Broadcasts.
 
 ## 1. What we built
 
@@ -120,6 +120,53 @@ function returns true for any valid token. No row can match that address, so the
 writes nothing. `await connection()` keeps the check from being prerendered at build time
 (`cacheComponents` forbids `export const dynamic`).
 
+### The interface (#41)
+
+**`components/newsletter-card.tsx`** is Figma's Newsletter component (02 Components
+337:161, 346:130, 346:148). It is a server shell with a dark card, the headline (its red
+keyword comes through `highlightTags`), the intro, and a mark panel shown on desktop
+only. The breakpoint variants are design states, so it is one component with responsive
+classes. `data-surface="dark"` switches the focus ring to white and error text to red/300.
+Placement follows Figma: the Blog listing and every post (M4). Until then, the
+link-expired page shows it.
+
+**`components/newsletter-form.tsx`** is the only client part. It covers the states from
+Newsletter States (408:182):
+
+| State        | What the visitor sees                                                         |
+| ------------ | ----------------------------------------------------------------------------- |
+| Default      | Field (screen-reader label, placeholder only as in Figma), Subscribe, consent |
+| Error        | Red border, icon and text in red/300; focus returns to the field              |
+| Sending      | Field disabled, button "Subscribing…" with a spinner and `aria-busy`          |
+| Success      | Form replaced by the green check, "You're in." (focused) and the address      |
+| Rate limited | Not in Figma: the error style under the row, the answer kept                  |
+| Failed       | Not in Figma: the same, so the visitor can press Subscribe again              |
+
+A polite live region announces each change. The field and button stack on mobile and
+share a row from tablet up. The consent line links the Privacy Policy.
+
+**`components/confirm-subscription.tsx`, `unsubscribe-newsletter.tsx`** are the link
+pages, `/[locale]/newsletter/confirm` and `/unsubscribe`. Figma has no frames for them, so
+they use the 404's layout, now shared as `SystemState` (`src/components/site/`): the mark,
+one H1, a lead and the actions. Opening a page does nothing until the visitor presses
+the button. Each result replaces the H1 and moves focus to it.
+
+- A link that is malformed (missing or bad parameters) shows **invalid** straight away.
+- Expired and invalid confirm links show the Newsletter card. The page renders it on the
+  server and passes it in as `newsletterCard`.
+
+**`use-link-params.ts`** reads the query string in the browser (`useSyncExternalStore`,
+`null` during hydration). That keeps both pages static: they never read `searchParams`
+on the server.
+
+**`page-metadata.ts`** gives both pages a title, `noindex, nofollow`, no canonical or
+hreflang, and `referrer: no-referrer`, so the address in the link never reaches another
+site. They are not in `sitePages`, so they are not in the sitemap.
+
+**`e2e-backend.ts`** fakes the three database calls for Playwright. The address picks the
+outcome: `e2e-failed@`, `e2e-rate-limited@`, `e2e-slow@` or `e2e-used@`. The switch,
+`isFakeBackendEnabled`, moved to `src/lib/e2e-backend.ts` so both features share it.
+
 ## 4. Decisions and trade-offs
 
 - **Confirm needs a button press (decided 2026-10-16).** Mail security scanners (Outlook
@@ -136,22 +183,28 @@ writes nothing. `await connection()` keeps the check from being prerendered at b
 - **No minimum-fill-time token.** The signup form sits in the footer of every page. A form
   token would cost a server action call on every page view. The honeypot and the Postgres
   rate limits (5 per IP per hour, 100 in total) are enough for one email field.
+- **Link pages follow the 404 layout (decided 2026-10-16).** Figma has no frames for them.
+  The draft is logged in tech debt for design to review.
+- **The card waits for the blog (decided 2026-10-16).** Figma shows it only on the Blog
+  listing and posts. Adding it to other pages would mean inventing a placement.
 - **Every signup gets an email.** This includes addresses that are already subscribed,
   because the app cannot tell them apart. The rate limits cap how often someone can make
   the site email a third party.
 
 ## 5. Tests
 
-| File                                    | Covers                                                                             |
-| --------------------------------------- | ---------------------------------------------------------------------------------- |
-| `newsletter/links.test.ts`              | SQL token vectors, purpose separation, the 7-day boundary, tampering, URL encoding |
-| `newsletter/subscribe.test.ts`          | Normalising, no enumeration, honeypot, validation, PT429, errors by code           |
-| `newsletter/confirm.test.ts`            | Confirmed, expired, tampered, malformed, refused by the database, errors           |
-| `newsletter/unsubscribe.test.ts`        | Valid, tampered, mismatched secrets, errors                                        |
-| `newsletter/notify.test.ts`             | Email in the visitor's locale, segment properties, failures reported by code       |
-| `newsletter/emails/render.test.ts`      | The link as a button and as text, locale, no images or scripts                     |
-| `lib/resend.test.ts`                    | Create, update-and-add fallback, delete, `not_found`, error names only             |
-| `supabase/tests/03_newsletter.test.sql` | The same rules in SQL (#36)                                                        |
+| File                                    | Covers                                                                                |
+| --------------------------------------- | ------------------------------------------------------------------------------------- |
+| `newsletter/links.test.ts`              | SQL token vectors, purpose separation, the 7-day boundary, tampering, URL encoding    |
+| `newsletter/subscribe.test.ts`          | Normalising, no enumeration, honeypot, validation, PT429, errors by code              |
+| `newsletter/confirm.test.ts`            | Confirmed, expired, tampered, malformed, refused by the database, errors              |
+| `newsletter/unsubscribe.test.ts`        | Valid, tampered, mismatched secrets, errors                                           |
+| `newsletter/notify.test.ts`             | Email in the visitor's locale, segment properties, failures reported by code          |
+| `newsletter/emails/render.test.ts`      | The link as a button and as text, locale, no images or scripts                        |
+| `lib/resend.test.ts`                    | Create, update-and-add fallback, delete, `not_found`, error names only                |
+| `tests/e2e/newsletter.spec.ts`          | Card states, axe on the dark card, mobile stacking, PT; confirm and unsubscribe flows |
+| `tests/e2e/pages.spec.ts` (routes.ts)   | Both link pages in both locales: one H1, axe, 200 + noindex, no canonical             |
+| `supabase/tests/03_newsletter.test.sql` | The same rules in SQL (#36)                                                           |
 
 ## 6. Setup and day-to-day
 
