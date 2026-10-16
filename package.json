@@ -25,12 +25,14 @@
     "db:reset": "supabase db reset",
     "db:types": "supabase gen types typescript --local --schema public > src/lib/supabase/database.types.ts && prettier --write src/lib/supabase/database.types.ts",
     "db:test": "supabase test db",
-    "sanity:types": "node --env-file-if-exists=.env.local node_modules/sanity/bin/sanity schema extract --path sanity/schema.json && node --env-file-if-exists=.env.local node_modules/sanity/bin/sanity typegen generate && prettier --write src/lib/sanity/sanity.types.ts sanity/schema.json",
+    "sanity:types": "node --env-file-if-exists=.env.local node_modules/sanity/bin/sanity schema extract --force --enforce-required-fields --path sanity/schema.json && node --env-file-if-exists=.env.local node_modules/sanity/bin/sanity typegen generate && prettier --write src/lib/sanity/sanity.types.ts sanity/schema.json",
+    "sanity:seed": "node --env-file-if-exists=.env.local sanity/seed/seed.mts",
     "prepare": "simple-git-hooks"
   },
   "dependencies": {
     "@hookform/resolvers": "5.9.1",
     "@portabletext/react": "8.0.1",
+    "@sanity/client": "8.9.0",
     "@sanity/document-internationalization": "6.2.39",
     "@sanity/image-url": "2.1.1",
     "@sentry/nextjs": "10.75.3",

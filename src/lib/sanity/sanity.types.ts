@@ -18,7 +18,7 @@ export declare const internalGroqTypeReferenceTo: unique symbol;
 export type InternationalizedArrayStringValue = {
   _type: "internationalizedArrayStringValue";
   value?: string;
-  language?: string;
+  language: string;
 };
 
 export type InternationalizedArrayString = Array<
@@ -53,7 +53,7 @@ export type PostReference = {
 export type InternationalizedArrayReferenceValue = {
   _type: "internationalizedArrayReferenceValue";
   value?: PostReference;
-  language?: string;
+  language: string;
 };
 
 export type SanityImageAssetReference = {
@@ -84,21 +84,21 @@ export type Post = {
   _updatedAt: string;
   _rev: string;
   language?: string;
-  title?: string;
-  slug?: Slug;
-  excerpt?: string;
-  cover?: {
+  title: string;
+  slug: Slug;
+  excerpt: string;
+  cover: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
   };
-  category?: CategoryReference;
-  author?: AuthorReference;
-  publishedAt?: string;
-  body?: Array<
+  category: CategoryReference;
+  author: AuthorReference;
+  publishedAt: string;
+  body: Array<
     | {
         children?: Array<{
           marks?: Array<string>;
@@ -109,7 +109,7 @@ export type Post = {
         style?: "normal" | "h2" | "h3" | "blockquote";
         listItem?: "bullet" | "number";
         markDefs?: Array<{
-          href?: string;
+          href: string;
           _type: "link";
           _key: string;
         }>;
@@ -122,7 +122,7 @@ export type Post = {
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        alt?: string;
+        alt: string;
         caption?: string;
         _type: "image";
         _key: string;
@@ -136,18 +136,18 @@ export type Post = {
 
 export type SanityImageCrop = {
   _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
 };
 
 export type SanityImageHotspot = {
   _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
+  x: number;
+  y: number;
+  height: number;
+  width: number;
 };
 
 export type Author = {
@@ -156,14 +156,14 @@ export type Author = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
+  name: string;
   role?: InternationalizedArrayString;
   image?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
   };
   bio?: InternationalizedArrayString;
@@ -176,12 +176,12 @@ export type Category = {
   _updatedAt: string;
   _rev: string;
   name?: InternationalizedArrayString;
-  slug?: Slug;
+  slug: Slug;
 };
 
 export type Slug = {
   _type: "slug";
-  current?: string;
+  current: string;
   source?: string;
 };
 
@@ -206,9 +206,9 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: "sanity.imageDimensions";
-  height?: number;
-  width?: number;
-  aspectRatio?: number;
+  height: number;
+  width: number;
+  aspectRatio: number;
 };
 
 export type SanityImageMetadata = {
@@ -234,14 +234,14 @@ export type SanityFileAsset = {
   title?: string;
   description?: string;
   altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
+  sha1hash: string;
+  extension: string;
+  mimeType: string;
+  size: number;
+  assetId: string;
   uploadId?: string;
-  path?: string;
-  url?: string;
+  path: string;
+  url: string;
   source?: SanityAssetSourceData;
 };
 
@@ -263,14 +263,14 @@ export type SanityImageAsset = {
   title?: string;
   description?: string;
   altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
+  sha1hash: string;
+  extension: string;
+  mimeType: string;
+  size: number;
+  assetId: string;
   uploadId?: string;
-  path?: string;
-  url?: string;
+  path: string;
+  url: string;
   metadata?: SanityImageMetadata;
   source?: SanityAssetSourceData;
 };
@@ -306,3 +306,184 @@ export type AllSanitySchemaTypes =
   | SanityAssetSourceData
   | SanityImageAsset
   | Geopoint;
+
+// Source: src/features/blog/queries.ts
+// Variable: BLOG_LATEST_QUERY
+// Query: {  "total": count(*[_type == "post" && language == $language && defined(slug.current)  && ($category == "" || category->slug.current == $category)  && ($q == "" || [title, excerpt] match $q)]),  "posts": *[_type == "post" && language == $language && defined(slug.current)  && ($category == "" || category->slug.current == $category)  && ($q == "" || [title, excerpt] match $q)] | order(publishedAt desc) [$start...$end] {  _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  cover { asset, crop, hotspot, alt },  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },  "author": author->{ name }}}
+export type BLOG_LATEST_QUERY_RESULT = {
+  total: number;
+  posts: Array<{
+    _id: string;
+    title: string;
+    slug: string;
+    excerpt: string;
+    publishedAt: string;
+    cover: {
+      asset: SanityImageAssetReference | null;
+      crop: SanityImageCrop | null;
+      hotspot: SanityImageHotspot | null;
+      alt: string;
+    };
+    category: {
+      slug: string;
+      name: string | null;
+    };
+    author: {
+      name: string;
+    };
+  }>;
+};
+
+// Source: src/features/blog/queries.ts
+// Variable: BLOG_OLDEST_QUERY
+// Query: {  "total": count(*[_type == "post" && language == $language && defined(slug.current)  && ($category == "" || category->slug.current == $category)  && ($q == "" || [title, excerpt] match $q)]),  "posts": *[_type == "post" && language == $language && defined(slug.current)  && ($category == "" || category->slug.current == $category)  && ($q == "" || [title, excerpt] match $q)] | order(publishedAt asc) [$start...$end] {  _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  cover { asset, crop, hotspot, alt },  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },  "author": author->{ name }}}
+export type BLOG_OLDEST_QUERY_RESULT = {
+  total: number;
+  posts: Array<{
+    _id: string;
+    title: string;
+    slug: string;
+    excerpt: string;
+    publishedAt: string;
+    cover: {
+      asset: SanityImageAssetReference | null;
+      crop: SanityImageCrop | null;
+      hotspot: SanityImageHotspot | null;
+      alt: string;
+    };
+    category: {
+      slug: string;
+      name: string | null;
+    };
+    author: {
+      name: string;
+    };
+  }>;
+};
+
+// Source: src/features/blog/queries.ts
+// Variable: BLOG_CATEGORIES_QUERY
+// Query: *[_type == "category" && defined(slug.current)]  | order(slug.current asc) {    "slug": slug.current,    "name": coalesce(name[language == $language][0].value, name[0].value)  }
+export type BLOG_CATEGORIES_QUERY_RESULT = Array<{
+  slug: string;
+  name: string | null;
+}>;
+
+// Source: src/features/blog/queries.ts
+// Variable: BLOG_POST_QUERY
+// Query: *[_type == "post" && language == $language && slug.current == $slug][0]{  _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  cover { asset, crop, hotspot, alt },  body[] {    ...,    _type == "image" => { asset, crop, hotspot, alt, caption }  },  seo,  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },  "author": author->{    name,    image { asset, crop, hotspot, alt },    "role": coalesce(role[language == $language][0].value, role[0].value),    "bio": coalesce(bio[language == $language][0].value, bio[0].value)  },  "translations": *[_type == "translation.metadata" && references(^._id)][0].translations[].value->{    language,    "slug": slug.current  }}
+export type BLOG_POST_QUERY_RESULT = {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  publishedAt: string;
+  cover: {
+    asset: SanityImageAssetReference | null;
+    crop: SanityImageCrop | null;
+    hotspot: SanityImageHotspot | null;
+    alt: string;
+  };
+  body: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h2" | "h3" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset: SanityImageAssetReference | null;
+        media?: unknown;
+        hotspot: SanityImageHotspot | null;
+        crop: SanityImageCrop | null;
+        alt: string;
+        caption: string | null;
+        _type: "image";
+        _key: string;
+      }
+  >;
+  seo: {
+    title?: string;
+    description?: string;
+  } | null;
+  category: {
+    slug: string;
+    name: string | null;
+  };
+  author: {
+    name: string;
+    image: {
+      asset: SanityImageAssetReference | null;
+      crop: SanityImageCrop | null;
+      hotspot: SanityImageHotspot | null;
+      alt: string;
+    } | null;
+    role: string | null;
+    bio: string | null;
+  };
+  translations: Array<{
+    language: string | null;
+    slug: string;
+  } | null> | null;
+} | null;
+
+// Source: src/features/blog/queries.ts
+// Variable: BLOG_RELATED_QUERY
+// Query: *[_type == "post" && language == $language && defined(slug.current)  && category._ref == $categoryId && _id != $postId] | order(publishedAt desc) [0...3] {  _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  cover { asset, crop, hotspot, alt },  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },  "author": author->{ name }}
+export type BLOG_RELATED_QUERY_RESULT = Array<{
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  publishedAt: string;
+  cover: {
+    asset: SanityImageAssetReference | null;
+    crop: SanityImageCrop | null;
+    hotspot: SanityImageHotspot | null;
+    alt: string;
+  };
+  category: {
+    slug: string;
+    name: string | null;
+  };
+  author: {
+    name: string;
+  };
+}>;
+
+// Source: src/features/blog/queries.ts
+// Variable: BLOG_SLUGS_QUERY
+// Query: *[_type == "post" && defined(slug.current) && defined(language)]{  language,  "slug": slug.current,  _updatedAt}
+export type BLOG_SLUGS_QUERY_RESULT = Array<{
+  language: string;
+  slug: string;
+  _updatedAt: string;
+}>;
+
+// Query TypeMap
+declare global {
+  interface SanityQueries {
+    '{\n  "total": count(*[_type == "post" && language == $language && defined(slug.current)\n  && ($category == "" || category->slug.current == $category)\n  && ($q == "" || [title, excerpt] match $q)]),\n  "posts": *[_type == "post" && language == $language && defined(slug.current)\n  && ($category == "" || category->slug.current == $category)\n  && ($q == "" || [title, excerpt] match $q)] | order(publishedAt desc) [$start...$end] {\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  cover { asset, crop, hotspot, alt },\n  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },\n  "author": author->{ name }\n}\n}': BLOG_LATEST_QUERY_RESULT;
+    '{\n  "total": count(*[_type == "post" && language == $language && defined(slug.current)\n  && ($category == "" || category->slug.current == $category)\n  && ($q == "" || [title, excerpt] match $q)]),\n  "posts": *[_type == "post" && language == $language && defined(slug.current)\n  && ($category == "" || category->slug.current == $category)\n  && ($q == "" || [title, excerpt] match $q)] | order(publishedAt asc) [$start...$end] {\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  cover { asset, crop, hotspot, alt },\n  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },\n  "author": author->{ name }\n}\n}': BLOG_OLDEST_QUERY_RESULT;
+    '*[_type == "category" && defined(slug.current)]\n  | order(slug.current asc) {\n    "slug": slug.current,\n    "name": coalesce(name[language == $language][0].value, name[0].value)\n  }': BLOG_CATEGORIES_QUERY_RESULT;
+    '*[_type == "post" && language == $language && slug.current == $slug][0]{\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  cover { asset, crop, hotspot, alt },\n  body[] {\n    ...,\n    _type == "image" => { asset, crop, hotspot, alt, caption }\n  },\n  seo,\n  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },\n  "author": author->{\n    name,\n    image { asset, crop, hotspot, alt },\n    "role": coalesce(role[language == $language][0].value, role[0].value),\n    "bio": coalesce(bio[language == $language][0].value, bio[0].value)\n  },\n  "translations": *[_type == "translation.metadata" && references(^._id)][0].translations[].value->{\n    language,\n    "slug": slug.current\n  }\n}': BLOG_POST_QUERY_RESULT;
+    '*[_type == "post" && language == $language && defined(slug.current)\n  && category._ref == $categoryId && _id != $postId] | order(publishedAt desc) [0...3] {\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  cover { asset, crop, hotspot, alt },\n  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },\n  "author": author->{ name }\n}': BLOG_RELATED_QUERY_RESULT;
+    '*[_type == "post" && defined(slug.current) && defined(language)]{\n  language,\n  "slug": slug.current,\n  _updatedAt\n}': BLOG_SLUGS_QUERY_RESULT;
+  }
+}
+// Lets @sanity/client releases that predate the global registry read it too
+declare module "@sanity/client" {
+  interface SanityQueries extends globalThis.SanityQueries {}
+}

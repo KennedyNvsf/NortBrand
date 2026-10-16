@@ -84,7 +84,50 @@ new image field without alt text fails CI.
 - **Dev server.** The first `/studio` request compiles the whole Studio and can take
   several minutes on a busy machine. Production builds are unaffected.
 
-## 6. The Sanity MCP server (optional, for Claude Code)
+## 6. The content layer (#59)
+
+```text
+Server Component → src/features/blog/data.ts ("use cache", cacheTag, cacheLife "max")
+                 → getSanityClient() (server-only, read token, published, no CDN)
+                 → GROQ from queries.ts (typed by pnpm sanity:types)
+Editor publishes → Sanity webhook → POST /api/revalidate (signature first)
+                 → revalidateTag("blog-list" | "blog-posts", { expire: 0 })
+```
+
+- **`queries.ts`**: every GROQ query, as `defineQuery`, so TypeGen types each result.
+  - Listing: count plus one page; latest or oldest.
+  - A post: its translations come from the plugin's `translation.metadata`.
+  - Related posts, categories, and all slugs (static params and the sitemap).
+  - Card fields are one projection, shared by every card.
+- **`listing-params.ts`**: the URL state (`q`, `category`, `sort`, `page`) is untrusted, so
+  zod bounds it. Anything malformed falls back to its default. Search words become
+  prefix patterns (`bra*`), and a typed `*` is removed. Values only ever reach GROQ as
+  parameters.
+- **`data.ts`**: cached functions. Their arguments are the cache key, so each listing
+  state caches on its own. `cacheLife("max")` means only the webhook expires them.
+- **`cache-tags.ts`**: `blog-list` and `blog-posts`. Any blog document refreshes both.
+  A slug change must clear the old page, and authors and categories show on every card.
+  With a few dozen posts, that is cheaper than tracking pages one by one.
+- **`src/app/api/revalidate`**: `parseBody` checks the signature, then waits for the
+  Content Lake to be consistent.
+  - Bad or missing signature: 401, nothing changes.
+  - No document type: 400.
+  - Signed blog change: both tags expire at once (`expire: 0`), so the next visitor sees
+    the new version.
+  - Set it up per environment: runbook § 8.
+- **`src/lib/sanity/image.ts`**: `next/image` props for an aspect ratio, honouring the
+  editor's hotspot. webp/avif come from the CDN, and `next.config.ts` allows
+  `cdn.sanity.io`.
+- **`components/post-body.tsx`**: Portable Text through an explicit component map.
+  - Headings get the ids the table of contents uses (`table-of-contents.ts`).
+  - External links get `rel="noopener noreferrer"`.
+  - Images get their alt text and caption.
+  - Unknown types render nothing; there is never raw HTML.
+- **Seed**: `pnpm sanity:seed` (`sanity/seed/seed.mts`) writes test content to
+  `development` only, with fixed ids, so a re-run replaces it: 10 EN posts, 6 PT
+  translations and 1 PT-only post, enough for page 2 and both translation cases.
+
+## 7. The Sanity MCP server (optional, for Claude Code)
 
 Sanity's hosted MCP server (`https://mcp.sanity.io`) lets Claude Code query content, read
 the schema and write drafts. Each developer installs it for themselves:
