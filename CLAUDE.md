@@ -217,6 +217,15 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   The StickyCta waits for a choice. "Cookie settings" in the footer reopens the panel.
 - Playwright specs start with a choice made (`storageState`); `consent.spec.ts` does not.
 
+## Sanity (blog CMS)
+
+- Code: `sanity/` (schemas, env), `sanity.config.ts`, Studio at `src/app/studio/`
+  (guide: docs/guides/cms.md). Project `p4bc960d`; local work uses the `development`
+  dataset. Run `pnpm sanity:types` after any schema or GROQ change.
+- Sanity MCP (optional): `.claude/settings.json` denies infrastructure, publish and
+  image-generation tools. Claude writes only drafts, only to `development`; anything on
+  `production` needs approval, like a remote migration.
+
 ## Environment variables
 
 Public: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
@@ -276,6 +285,7 @@ pnpm build
 pnpm i18n:pseudo    # regenerate placeholder pt.json from en.json (keeps real translations; --reset for all)
 pnpm check:release  # strict guard: pseudo translations + draft legal text; must pass before launch
 pnpm db:start / db:stop / db:reset / db:types / db:test   # local Supabase (Docker)
+pnpm sanity:types   # extract the Sanity schema and regenerate src/lib/sanity/sanity.types.ts
 ```
 
 ## Workflow rules (nb-se 100.1)

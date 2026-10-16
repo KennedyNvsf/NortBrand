@@ -33,8 +33,8 @@ against a production build of each pull request (#44).
 | Sentry   | Error reports from browser and server, no personal data | One project, tagged by environment |
 | GA4      | Analytics, loaded only after consent                    | Production only                    |
 
-Sanity arrives with the blog (M4). Until then its variables keep the placeholder values
-listed in step 7.
+Sanity holds the blog (ADR-003). The project `nortbrand-website` (id `p4bc960d`) was
+created on 16 October 2026 (#58); its steps are in § 8.
 
 > **Secrets never go into chat, issues, pull requests or commits.** Paste them only into
 > Vercel and your own `.env.local`. Project IDs, regions and URLs are fine to share.
@@ -276,3 +276,27 @@ Production so test requests never reach the team.
 - `pnpm db:types` writes `src/lib/supabase/database.types.ts` and formats it. The file is
   committed, so CI type-checks without Docker, and ESLint skips it because it is generated.
   Re-run it after every migration.
+
+## 8. Sanity (ADR-003, #58)
+
+Free plan. The blog's posts, authors and categories live here; everything else stays in
+the repository.
+
+1. **[sanity.io/manage](https://www.sanity.io/manage) → Create new project:**
+   `nortbrand-website`, Free plan. Project id: `p4bc960d` (public; it ships in the
+   client bundle).
+2. **Datasets:** `production` (launch content) and `development` (local work, previews and
+   test posts). Never point local work at `production`.
+3. **API → CORS origins:** `http://localhost:3000` with credentials allowed (the embedded
+   Studio needs it); add the production and preview origins in #45.
+4. **API → Tokens:** a **Viewer** token, `nortbrand-website-read`, for
+   `SANITY_API_READ_TOKEN` (server-only). One per environment; never in chat or the repo.
+5. **`.env.local`:** `NEXT_PUBLIC_SANITY_PROJECT_ID=p4bc960d`,
+   `NEXT_PUBLIC_SANITY_DATASET=development`, `SANITY_API_READ_TOKEN=<viewer token>`.
+6. **Studio:** open `http://localhost:3000/studio` and sign in with your Sanity account.
+   Editors are invited under **Members** (Free plan: up to 20 users).
+7. **Region:** the Free plan does not let us choose where the content is hosted. Check
+   the project's region under **Settings** and record it in docs/tech-debt.md (the brief
+   prefers the EU).
+8. **Webhook** (`/api/revalidate`, signed with `SANITY_REVALIDATE_SECRET`): set up with
+   the content layer (#59).

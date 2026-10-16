@@ -26,6 +26,7 @@ the guides always match the code.
 | [Newsletter](./newsletter.md)                       | Double opt-in, signed links, Resend segment, health check, the Newsletter card and the link pages                                 |
 | [Cookie consent](./consent.md)                      | The consent cookie and store, banner, preferences, Switch, footer settings, sticky CTA gate, GA4 after consent                    |
 | [CI](./ci.md)                                       | The four pull-request checks, e2e on a production build, pgTAP in Docker, reading failures                                        |
+| [CMS (Sanity)](./cms.md)                            | Content model (post/author/category), translation plugins, embedded Studio, type generation                                       |
 
 Each guide follows the same shape: what we built, how it works at runtime, the files one
 by one (and why), how the tests protect it, and day-to-day rules.
