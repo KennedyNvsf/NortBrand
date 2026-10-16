@@ -74,17 +74,24 @@ jobs:
   # Resend or Google). One job per project, so each browser is its own check. Runs
   # against Vercel previews once they exist (#45, docs/tech-debt.md).
   e2e:
-    name: e2e (${{ matrix.project }})
+    name: e2e (${{ matrix.project }} ${{ matrix.shard }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
+        # WebKit is several times slower on the runner, so mobile runs as two parallel
+        # shards; desktop Chromium finishes the whole suite in about 5 minutes.
         include:
           - project: desktop
             browser: chromium
+            shard: 1/1
           - project: mobile
             browser: webkit
+            shard: 1/2
+          - project: mobile
+            browser: webkit
+            shard: 2/2
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -104,14 +111,14 @@ jobs:
       - name: Install the browser
         run: pnpm exec playwright install --with-deps ${{ matrix.browser }}
 
-      - name: Run Playwright (${{ matrix.project }})
-        run: pnpm test:e2e --project=${{ matrix.project }}
+      - name: Run Playwright (${{ matrix.project }} ${{ matrix.shard }})
+        run: pnpm test:e2e --project=${{ matrix.project }} --shard=${{ matrix.shard }}
 
       - name: Upload the report and traces
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: playwright-${{ matrix.project }}
+          name: playwright-${{ matrix.project }}-${{ strategy.job-index }}
           path: |
             playwright-report/
             test-results/

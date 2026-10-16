@@ -11,6 +11,10 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
+  // GitHub's 2-vCPU runners render WebKit in software and run one worker: animations
+  // and hydration take several times longer than on a laptop. Locally the defaults
+  // (30 s, 5 s) stay, so real slowness still shows there.
+  ...(process.env.CI && { timeout: 60_000, expect: { timeout: 10_000 } }),
   // CI: annotations on the PR, plus an HTML report (with traces from retries) that the
   // workflow uploads when a test fails.
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
