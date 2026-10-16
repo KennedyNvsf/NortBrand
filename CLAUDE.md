@@ -12,7 +12,10 @@ If anything here conflicts with a later instruction from the developer, ask befo
 - **Booking** means a _consultation request form_. Visitors submit a request, and the team
   replies within one business day with call times. There is no self-service scheduling
   in this release (ADR-001).
-- **Launch:** 10 November 2026. Week 1 starts 5 October 2026.
+- **Launch:** Monday 30 November 2026 (moved from 10 November on 13 October 2026). Week 1
+  started 5 October 2026. Paid services (Vercel Pro, the domain, DNS) are bought by
+  9 November (#45); until then development runs on free tiers. Milestones: M3 due
+  31 October, M5 due 27 November.
 - **Platforms:** web only, responsive. Breakpoints: desktop ≥ 1024, tablet 768–1023,
   mobile < 768.
 
