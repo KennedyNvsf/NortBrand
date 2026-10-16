@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { fakeInsert, isFakeBackendEnabled } from "./e2e-backend";
+import { isFakeBackendEnabled } from "@/lib/e2e-backend";
+
+import { fakeInsert } from "./e2e-backend";
 import type { ConsultationRequest } from "./schema";
 
 const request: ConsultationRequest = {

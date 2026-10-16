@@ -8,7 +8,10 @@ import { locales, localizedPath, routes } from "./routes";
  * URLs are absolute against NEXT_PUBLIC_SITE_URL, so assertions match path suffixes.
  */
 
-const pages = routes.filter((route) => !("notFound" in route));
+// Indexable pages only: the 404 and the noindex newsletter link pages stay out.
+const pages = routes.filter(
+  (route) => !("notFound" in route) && !("noindex" in route),
+);
 
 async function jsonLd(page: Page): Promise<unknown[]> {
   const blocks = await page
@@ -34,6 +37,7 @@ test.describe("crawl files", () => {
     }
     expect(xml).toContain('hreflang="x-default"');
     expect(xml).not.toContain("/blog");
+    expect(xml).not.toContain("/newsletter");
   });
 
   test("robots.txt keeps the Studio out and points to the sitemap", async ({

@@ -13,7 +13,11 @@
     "privacyDescription": "[[What personal information NortBrand collects through this website, why, and the choices you have. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
     "termsTitle": "[[Terms of Use ~~~~]]",
     "termsDescription": "[[The terms that apply when you use the NortBrand website. ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-    "notFoundTitle": "[[Page not found ~~~~]]"
+    "notFoundTitle": "[[Page not found ~~~~]]",
+    "newsletterConfirmTitle": "[[Confirm your subscription ~~~~ ~~~~]]",
+    "newsletterConfirmDescription": "[[Confirm your subscription to the NortBrand newsletter. ~~~~ ~~~~ ~~~~ ~~~~]]",
+    "newsletterUnsubscribeTitle": "[[Unsubscribe ~~~]]",
+    "newsletterUnsubscribeDescription": "[[Stop receiving the NortBrand newsletter. ~~~~ ~~~~ ~~~~]]"
   },
   "Common": {
     "skipToContent": "[[Skip to content ~~~~ ~]]",
@@ -492,8 +496,52 @@
     }
   },
   "Newsletter": {
+    "card": {
+      "title": "[[Get ideas <red>worth reading</red>, straight to your inbox. ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+      "body": "[[One thoughtful email a month on design, branding, and building things that work. No spam, ever. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
+      "emailLabel": "[[Email address ~~~~]]",
+      "emailPlaceholder": "[[Enter your email ~~~~ ~]]",
+      "submit": "[[Subscribe ~~~]]",
+      "submitting": "[[Subscribing… ~~~~]]",
+      "consent": "[[By subscribing you agree to receive occasional emails from NortBrand. Read our <link>Privacy Policy</link>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
+      "successTitle": "[[You’re in. ~~~]]",
+      "successBody": "[[We’ve sent a confirmation link to {email}. Click it to finish subscribing. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+      "successNote": "[[You can unsubscribe at any time. ~~~~ ~~~~ ~~]]",
+      "rateLimited": "[[Too many attempts. Please wait an hour and try again. ~~~~ ~~~~ ~~~~ ~~~~]]",
+      "failed": "[[We couldn’t subscribe you just now. Please try again. ~~~~ ~~~~ ~~~~ ~~~~]]"
+    },
     "errors": {
       "emailInvalid": "[[Enter a valid email address ~~~~ ~~~~]]"
+    },
+    "confirm": {
+      "readyTitle": "[[Confirm your <red>subscription</red>. ~~~~ ~~~~ ~~~]]",
+      "readyLead": "[[Press the button to start receiving the NortBrand newsletter at {email}. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+      "confirm": "[[Confirm subscription ~~~~ ~~]]",
+      "confirming": "[[Confirming… ~~~]]",
+      "confirmedTitle": "[[You’re <green>subscribed</green>. ~~~~ ~~~~ ~~]]",
+      "confirmedLead": "[[Thanks for confirming. Your first email arrives with the next issue. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
+      "expiredTitle": "[[This link has <red>expired</red>. ~~~~ ~~~~ ~~]]",
+      "expiredLead": "[[Confirmation links work for 7 days. Subscribe again below and we’ll send you a new one. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+      "invalidTitle": "[[This link <red>doesn’t work</red>. ~~~~ ~~~~ ~~]]",
+      "invalidLead": "[[It may be incomplete, or a newer link has replaced it. Subscribe again below and we’ll send you a fresh one. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
+      "failedTitle": "[[Something <red>went wrong</red>. ~~~~ ~~~~ ~~]]",
+      "failedLead": "[[We couldn’t confirm your subscription just now. Please try again in a moment. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
+      "tryAgain": "[[Try again ~~~]]",
+      "home": "[[Back to home ~~~~]]"
+    },
+    "unsubscribe": {
+      "readyTitle": "[[Unsubscribe from the <red>newsletter</red>? ~~~~ ~~~~ ~~~~ ~]]",
+      "readyLead": "[[{email} will stop receiving the NortBrand newsletter. ~~~~ ~~~~ ~~~~ ~~~~]]",
+      "unsubscribe": "[[Unsubscribe ~~~]]",
+      "unsubscribing": "[[Unsubscribing… ~~~~]]",
+      "doneTitle": "[[You’re <green>unsubscribed</green>. ~~~~ ~~~~ ~~~]]",
+      "doneLead": "[[You won’t receive the newsletter any more. Changed your mind? You can subscribe again any time. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
+      "invalidTitle": "[[This link <red>doesn’t work</red>. ~~~~ ~~~~ ~~]]",
+      "invalidLead": "[[It may be incomplete. Use the unsubscribe link in any newsletter, or write to <email>{address}</email> and we’ll remove you. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
+      "failedTitle": "[[Something <red>went wrong</red>. ~~~~ ~~~~ ~~]]",
+      "failedLead": "[[We couldn’t unsubscribe you just now. Please try again in a moment. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
+      "tryAgain": "[[Try again ~~~]]",
+      "home": "[[Back to home ~~~~]]"
     }
   }
 }

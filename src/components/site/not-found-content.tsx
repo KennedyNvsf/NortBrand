@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { LogoMark } from "@/components/site/logo";
+import { SystemState } from "@/components/site/system-state";
 
 /*
  * The designed 404 (Figma 08 — System / States: desktop 320:3, tablet 380:77, mobile
@@ -20,23 +21,20 @@ export function NotFoundContent({
   actions: ReactNode;
 }) {
   return (
-    <main
-      id="main"
-      className="flex flex-1 flex-col items-center justify-center gap-lg bg-bg-surface px-(--gutter) pt-12 pb-20 text-center md:gap-xl md:pt-16 lg:pt-17"
-    >
-      <div
-        aria-hidden
-        className="flex items-center gap-1 text-numeral text-text-primary md:gap-sm"
-      >
-        <span>4</span>
-        <LogoMark draw="once" className="size-21 md:size-35 lg:size-50" />
-        <span>4</span>
-      </div>
-      <h1 className="text-h1 text-text-primary lg:max-w-200">{title}</h1>
-      <p className="max-w-140 text-body text-text-muted md:text-lead">{lead}</p>
-      <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:gap-md">
-        {actions}
-      </div>
-    </main>
+    <SystemState
+      visual={
+        <div
+          aria-hidden
+          className="flex items-center gap-1 text-numeral text-text-primary md:gap-sm"
+        >
+          <span>4</span>
+          <LogoMark draw="once" className="size-21 md:size-35 lg:size-50" />
+          <span>4</span>
+        </div>
+      }
+      title={title}
+      lead={lead}
+      actions={actions}
+    />
   );
 }

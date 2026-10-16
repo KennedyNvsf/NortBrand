@@ -38,6 +38,11 @@ draws once (900 ms, emphasized), and stays static with reduced motion.
   prerendered for both locales. Any other path renders on its first request and is then
   cached.
 
+- **`SystemState` (#41).** The 404's layout (visual, one H1, lead, actions) is now
+  `src/components/site/system-state.tsx`. `NotFoundContent` passes the "4 · mark · 4"
+  visual to it, and the newsletter link pages reuse it ([Newsletter](./newsletter.md)).
+  An optional `titleRef` makes the H1 focusable for pages whose state changes.
+
 ### What I tried first, and why it changed
 
 1. **A root `app/layout.tsx` + `app/not-found.tsx`** (next-intl's classic recipe).

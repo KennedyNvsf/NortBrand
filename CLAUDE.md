@@ -195,6 +195,9 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
 - Links are checked in the app (constant time) and again in SQL. Confirming and
   unsubscribing happen on a button press or a one-click POST, never on a GET, so mail
   scanners cannot act on anyone's behalf.
+- UI: `NewsletterCard` (server shell, client form), placed on the Blog listing and posts in
+  M4 and on the link-expired page. The link pages `/[locale]/newsletter/confirm` and
+  `/unsubscribe` are static, noindex, out of the sitemap, and send no Referer.
 - Unsubscribe deletes the Resend contact. `/api/newsletter/unsubscribe` is the RFC 8058
   one-click endpoint; `/api/health/newsletter` checks that the app and Vault secrets match.
 
@@ -212,7 +215,8 @@ Account setup and the per-environment matrix: `docs/guides/environments.md`.
 
 Build flags: `RELEASE_BUILD=1` makes the release guard strict outside Vercel production.
 `E2E_FAKE_BACKEND=1` (Playwright's server only; refused on Vercel production) swaps the
-consultation insert and emails for a fake, so e2e never writes to Supabase or sends email.
+consultation and newsletter database calls and emails for fakes, so e2e never writes to
+Supabase or sends email.
 
 Rules:
 

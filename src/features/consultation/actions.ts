@@ -6,6 +6,7 @@ import { after } from "next/server";
 
 import { site } from "@/content/site";
 import { getServerEnv } from "@/env";
+import { isFakeBackendEnabled } from "@/lib/e2e-backend";
 import { clientIp, hashIp } from "@/lib/ip-hash";
 import { sendEmail } from "@/lib/resend";
 import { getSupabase } from "@/lib/supabase/server";
@@ -14,7 +15,7 @@ import {
   renderConsultationAlert,
   renderConsultationConfirmation,
 } from "./emails/render";
-import { fakeInsert, isFakeBackendEnabled } from "./e2e-backend";
+import { fakeInsert } from "./e2e-backend";
 import { createFormToken } from "./form-token";
 import { sendConsultationEmails } from "./notify";
 import { submitConsultation, type ConsultationResult } from "./submit";

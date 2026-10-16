@@ -39,6 +39,9 @@
   --color-text-disabled: #8c8482; /* neutral/500 */
   --color-text-on-accent: #ffffff; /* white */
   --color-text-error-on-dark: #ff8a8a; /* red/300 */
+  /* Text on the dark Newsletter card (Figma 337:153, 337:157: raw values, not variables). */
+  --color-text-on-dark-muted: #d9d4d4; /* body, 13.1:1 on text/primary */
+  --color-text-on-dark-subtle: #9e9999; /* captions, 6.8:1 on text/primary */
   --color-border-default: #e7e3e2; /* neutral/200 */
   --color-action-primary: #e82828; /* red/500 — decorative fills, large type, borders */
   --color-action-primary-hover: #c21f1f; /* red/600 */
