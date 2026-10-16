@@ -152,7 +152,8 @@ what is "on screen" and checks the result, with no real scrolling and no flakine
    `<CtaHighlight>`, or omit it for the default copy.
 2. **Mounting StickyCta?** Mark the hero with `data-sticky-cta-trigger`. Only on the blog
    listing (CLAUDE.md).
-3. **Something else should hide the bar** (for example the cookie banner)? Give it
-   `data-sticky-cta-hide`.
+3. **Something else should hide the bar?** Give it `data-sticky-cta-hide`. The bar also
+   stays hidden until a cookie choice is made (`useConsent()`, #42), so it never sits
+   under the cookie banner ([Cookie consent](./consent.md)).
 4. **New photo?** Export it at most 2400 px wide with metadata stripped, put it in
    `src/assets/images/`, and import it statically.

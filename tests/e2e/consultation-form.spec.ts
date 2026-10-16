@@ -55,7 +55,7 @@ test.describe("consultation form", () => {
     await expect(
       card.getByRole("link", { name: "Back to home" }),
     ).toHaveAttribute("href", "/en");
-    await expect(page.getByRole("status")).toHaveText("Request sent.");
+    await expect(card.getByRole("status")).toHaveText("Request sent.");
     await expectNoAxeViolations(page);
   });
 

@@ -7,6 +7,7 @@ import { MotionProvider } from "@/components/motion/motion-provider";
 import { JsonLd } from "@/components/site/json-ld";
 import { LoadingSplash, splashScript } from "@/components/site/loading-splash";
 import { Toaster } from "@/components/ui/sonner";
+import { ConsentManager } from "@/features/consent/components/consent-manager";
 import { publicEnv } from "@/env";
 import { site } from "@/content/site";
 import { routing } from "@/i18n/routing";
@@ -64,7 +65,11 @@ export default async function LocaleLayout({
           {t("skipToContent")}
         </a>
         <NextIntlClientProvider>
-          <MotionProvider>{children}</MotionProvider>
+          <MotionProvider>
+            {children}
+            {/* Cookie banner and preferences on every page (ADR-007, #42). */}
+            <ConsentManager />
+          </MotionProvider>
         </NextIntlClientProvider>
         {/* Organization on every page (brief, "SEO"). */}
         <JsonLd

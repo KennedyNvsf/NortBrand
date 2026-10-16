@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { BookingButton } from "@/components/site/booking-button";
+import { useConsent } from "@/features/consent/consent-store";
 import { cn } from "@/lib/utils";
 
 /*
@@ -15,7 +16,8 @@ import { cn } from "@/lib/utils";
  *   data-sticky-cta-hide (the CtaBand does this itself).
  * - Hidden while a Radix dialog, sheet or menu is open (globals.css, data-scroll-locked).
  * - While hidden it is `inert`, so it can't take focus or be read out.
- * - Cookie banner and consent: the consent ticket adds its own hide signal.
+ * - Waits for a cookie choice (Handoff, ADR-007): hidden while the consent state is
+ *   unknown or the banner is up, so the two never stack at the bottom of the screen.
  * - A page must mark its hero with data-sticky-cta-trigger, or the bar never shows.
  */
 
@@ -56,7 +58,8 @@ function useStickyCtaVisible(): boolean {
 
 export function StickyCta() {
   const t = useTranslations("StickyCta");
-  const visible = useStickyCtaVisible();
+  const decided = useConsent().status === "decided";
+  const visible = useStickyCtaVisible() && decided;
 
   return (
     <aside

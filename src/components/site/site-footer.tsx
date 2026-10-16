@@ -5,6 +5,7 @@ import { Logo } from "@/components/site/logo";
 import { legalLinks, navItems } from "@/content/navigation";
 import { services } from "@/content/services";
 import { site } from "@/content/site";
+import { CookieSettingsButton } from "@/features/consent/components/cookie-settings-button";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +24,9 @@ const linkClassName = cn(
   "inline-flex min-h-11 items-center rounded-sm text-body text-text-primary lg:min-h-0 lg:text-nav lg:font-normal",
   "transition-colors duration-(--duration-fast) ease-standard hover:text-text-accent",
 );
+
+const legalLinkClassName =
+  "inline-flex min-h-11 cursor-pointer items-center rounded-sm transition-colors duration-(--duration-fast) ease-standard hover:text-text-accent lg:min-h-0";
 
 // Cached so the build-time year does not make the page dynamic (Cache Components).
 // Next.js requires "use cache" functions to be async even when nothing is awaited.
@@ -111,20 +115,27 @@ export async function SiteFooter() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-1 border-t border-border-default pt-4 pb-5 text-caption text-text-muted md:flex-row md:items-center md:justify-between md:pt-4 md:pb-5 lg:py-lg">
+        {/* The StickyCta steps aside here, so it never covers the legal links (#42). */}
+        <div
+          data-sticky-cta-hide=""
+          className="flex flex-col gap-1 border-t border-border-default pt-4 pb-5 text-caption text-text-muted md:flex-row md:items-center md:justify-between md:pt-4 md:pb-5 lg:py-lg"
+        >
           <p className="py-2 lg:py-0">{t("rights", { year })}</p>
           <nav aria-label={t("legal")}>
-            <ul className="flex gap-7 md:gap-lg">
+            <ul className="flex flex-wrap gap-x-7 md:gap-x-lg">
               {legalLinks.map(({ key, href }) => (
                 <li key={key}>
-                  <Link
-                    href={href}
-                    className="inline-flex min-h-11 items-center rounded-sm transition-colors duration-(--duration-fast) ease-standard hover:text-text-accent lg:min-h-0"
-                  >
+                  <Link href={href} className={legalLinkClassName}>
                     {t(key)}
                   </Link>
                 </li>
               ))}
+              {/* Reopens the cookie preferences (ADR-007; not in the Figma footer). */}
+              <li>
+                <CookieSettingsButton className={legalLinkClassName}>
+                  {t("cookies")}
+                </CookieSettingsButton>
+              </li>
             </ul>
           </nav>
         </div>

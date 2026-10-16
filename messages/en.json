@@ -45,7 +45,8 @@
     "rights": "© {year} NortBrand. All rights reserved.",
     "legal": "Legal",
     "privacy": "Privacy Policy",
-    "terms": "Terms of Use"
+    "terms": "Terms of Use",
+    "cookies": "Cookie settings"
   },
   "ServiceNames": {
     "webDesign": "Web Design",
@@ -381,7 +382,7 @@
         },
         "cookies": {
           "title": "Cookies and analytics",
-          "body": "This website may use cookies and similar technologies to remember your preferences and understand how the site is used. Where required, we ask for your consent before using non-essential cookies. [Cookie details to be confirmed.]"
+          "body": "We use one essential cookie, nb_consent, to remember your cookie choice for 6 months. Only with your consent, Google Analytics sets the _ga cookie and a _ga_ cookie named after our analytics property, to measure how the site is used; this data may be transferred to the United States. You can change your choice at any time from Cookie settings in the footer. [Cookie details to be confirmed.]"
         },
         "sharing": {
           "title": "Sharing your information",
@@ -543,5 +544,28 @@
       "tryAgain": "Try again",
       "home": "Back to home"
     }
+  },
+  "Consent": {
+    "banner": {
+      "label": "Cookie consent",
+      "title": "Cookies, kept simple.",
+      "body": "We use essential cookies to make this site work. With your consent, we’d also use analytics cookies to understand how it’s used and make it better.",
+      "manage": "Manage preferences",
+      "privacy": "Privacy Policy",
+      "reject": "Reject non-essential",
+      "accept": "Accept all"
+    },
+    "preferences": {
+      "title": "Cookie preferences",
+      "body": "Choose which cookies you’re happy for us to use. You can change this at any time.",
+      "essentialTitle": "Essential cookies",
+      "essentialBody": "Needed for the site to work, including remembering this choice. Always on.",
+      "analyticsTitle": "Analytics cookies",
+      "analyticsBody": "Help us understand how the site is used so we can improve it. Off unless you say yes.",
+      "rejectAll": "Reject all",
+      "save": "Save preferences",
+      "close": "Close"
+    },
+    "saved": "Your cookie choice is saved."
   }
 }
