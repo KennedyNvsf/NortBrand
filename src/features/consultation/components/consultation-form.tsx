@@ -22,6 +22,7 @@ import { serviceSlugs, services, type ServiceSlug } from "@/content/services";
 import { site } from "@/content/site";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { trackEvent } from "@/lib/analytics";
 import { ICON_STROKE } from "@/lib/icons";
 
 import {
@@ -138,6 +139,8 @@ export function ConsultationForm() {
 
       switch (result.status) {
         case "success":
+          // The service slug only: never the name, email, phone or message.
+          trackEvent("consultation_submitted", { service: values.service });
           setSentTo(values.email.trim().toLowerCase());
           setStatus("sent");
           setAnnouncement(t("sent.title"));

@@ -206,7 +206,10 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
 - Code: `src/features/consent/` (guide: docs/guides/consent.md). One first-party cookie,
   `nb_consent` (`v1.1` / `v1.0`, 182 days); bump `CONSENT_VERSION` to ask again.
 - Read the choice only through `useConsent()` (`unknown` until hydration, then
-  `undecided` or `decided`). GA4 (#43) loads only when `analytics` is true.
+  `undecided` or `decided`).
+- GA4 (`src/lib/analytics.ts`, #43) loads only when `analytics` is true. Page views carry
+  the path only (never the query string); events are the typed `AnalyticsEvents` map
+  with no personal data. Withdrawal sets `ga-disable-<ID>` and deletes `_ga*` cookies.
 - The banner is not modal and never takes focus; Accept and Reject have equal weight.
   The StickyCta waits for a choice. "Cookie settings" in the footer reopens the panel.
 - Playwright specs start with a choice made (`storageState`); `consent.spec.ts` does not.
