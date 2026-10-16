@@ -1,7 +1,7 @@
 # NortBrand website
 
 The bilingual (EN/PT) NortBrand studio website. "Booking" means a consultation request form;
-the team replies within one business day. Launch is 10 November 2026.
+the team replies within one business day. Launch is Monday 30 November 2026.
 
 - Architecture brief: <https://claude.ai/code/artifact/32b7a60b-6b4d-4e38-9e16-6f6c70a283d7>
 - Project rules for Claude Code and humans: [`CLAUDE.md`](./CLAUDE.md)

@@ -11,6 +11,10 @@ consultation. Launch is 10 November 2026, five weeks after the build starts. The
 Figma design shows a request form with idle, validation, sending, success and send-failed
 states. It does not show a calendar or availability picker.
 
+> **Amendment (16 October 2026).** Launch moved to Monday 30 November 2026, decided on
+> 13 October: the paid services (Vercel Pro, the domain) can only be bought in November.
+> The decision below is unchanged; the line above stays as written on 2026-10-05.
+
 ## Decision
 
 Booking is a consultation request form. The visitor submits name, email, optional phone,
