@@ -83,3 +83,27 @@ new image field without alt text fails CI.
   checks).
 - **Dev server.** The first `/studio` request compiles the whole Studio and can take
   several minutes on a busy machine. Production builds are unaffected.
+
+## 6. The Sanity MCP server (optional, for Claude Code)
+
+Sanity's hosted MCP server (`https://mcp.sanity.io`) lets Claude Code query content, read
+the schema and write drafts. Each developer installs it for themselves:
+
+```sh
+claude mcp add Sanity -t http https://mcp.sanity.io --scope user
+```
+
+It signs in as you, with your full project rights, and the Free plan cannot scope a token
+to one dataset. So `.claude/settings.json` (in the repo, for everyone) limits what Claude
+Code may call:
+
+| Tools                                                                                    | Setting | Why                                                          |
+| ---------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------ |
+| create project or dataset, update dataset, CORS changes, deploy Studio, `run_sanity_cli` | deny    | Account and infrastructure changes need approval (CLAUDE.md) |
+| publish, unpublish                                                                       | deny    | Publishing is the editor's call in Studio                    |
+| generate or transform image                                                              | deny    | Spends AI credits                                            |
+| `deploy_schema`                                                                          | ask     | Helps the MCP understand the schema, but changes the project |
+| queries, reads, drafts                                                                   | allowed | Test content in `development`; launch-post drafts (#63)      |
+
+**Working rule:** Claude writes only to `development`, and only drafts. Anything touching
+`production` needs approval in the conversation, like a database migration.

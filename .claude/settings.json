@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "deny": [
+      "mcp__Sanity__create_project",
+      "mcp__Sanity__create_dataset",
+      "mcp__Sanity__update_dataset",
+      "mcp__Sanity__add_cors_origin",
+      "mcp__Sanity__cors_origins_delete",
+      "mcp__Sanity__deploy_studio",
+      "mcp__Sanity__run_sanity_cli",
+      "mcp__Sanity__publish_documents",
+      "mcp__Sanity__unpublish_documents",
+      "mcp__Sanity__generate_image",
+      "mcp__Sanity__transform_image"
+    ],
+    "ask": ["mcp__Sanity__deploy_schema"]
+  }
+}
