@@ -4,16 +4,29 @@ What runs on every pull request to `main`, and how to read a failure (#44).
 
 ## 1. The checks
 
-`.github/workflows/ci.yml` runs five jobs in parallel on GitHub's Ubuntu runners:
+`.github/workflows/ci.yml` runs six jobs in parallel on GitHub's Ubuntu runners.
 
-| Check                                  | What it proves                                                                              |
-| -------------------------------------- | ------------------------------------------------------------------------------------------- |
-| **Typecheck, lint, test, build**       | Types, ESLint, Prettier, Vitest and a production build                                      |
-| **e2e (desktop 1/1)**                  | Every Playwright spec in Chromium at 1280 × 720, against this PR's own production build     |
-| **e2e (mobile 1/2)**, **(mobile 2/2)** | The same specs in WebKit on an iPhone 14 (390 px), split in two shards                      |
-| **Database (pgTAP)**                   | Every migration applies to a fresh Postgres, and the pgTAP suite in `supabase/tests` passes |
+| Check                               | Required | What it proves                                                                 |
+| ----------------------------------- | -------- | ------------------------------------------------------------------------------ |
+| **Typecheck, lint, test, build**    | yes      | Types, ESLint, Prettier, Vitest and a production build                         |
+| **e2e (desktop)**                   | yes      | Every Playwright spec in Chromium at 1280 × 720, on this PR's production build |
+| **e2e (mobile)**                    | yes      | The same specs at iPhone 14 size (390 px, touch, mobile UA) in Chromium        |
+| **Database (pgTAP)**                | yes      | Every migration applies to a fresh Postgres, and `supabase/tests` passes       |
+| **e2e (webkit 1/2, informational)** | no       | The mobile specs in real WebKit, in two shards                                 |
+| **e2e (webkit 2/2, informational)** | no       | The other half                                                                 |
 
-All five are required to merge (branch protection on `main`).
+**Why WebKit is informational (decided 2026-10-16).** On the 2-vCPU Linux runners,
+WebKit renders in software with one worker. Two runs of identical code gave opposite
+results:
+
+- one passed, with 10 tests needing retries;
+- the next failed with hung or crashed pages.
+
+A check like that would block merges for reasons unrelated to the change. Chromium at the
+iPhone viewport covers what the mobile harness checks (layout, overflow at 390 px, axe,
+touch targets). WebKit still runs on every PR: a red WebKit check is a prompt to look,
+and if it is real, to fix it. Locally, `pnpm test:e2e` runs desktop Chromium and WebKit
+mobile, as the brief asks. The `mobile-chromium` project exists only in CI.
 
 ## 2. How the e2e jobs work
 
@@ -32,11 +45,8 @@ checkout → pnpm install → playwright install <browser> --with-deps
   - The placeholder env values at the top of the workflow are enough: no job needs a
     real secret.
 - **Retries.** Each test retries up to twice in CI. A trace is recorded on the first retry.
-- **Jobs per browser.** Each browser gets its own checks, so a WebKit-only failure is
-  visible at a glance. WebKit renders in software on the 2-vCPU runner and runs one
-  worker, several times slower than Chromium. The first run took 18 minutes and timed out
-  on animations and hydration. So mobile runs as two parallel shards (`--shard=1/2`,
-  `2/2`).
+- **WebKit shards.** WebKit is several times slower than Chromium on the runner (the first
+  run took 18 minutes), so it runs as two parallel shards (`--shard=1/2`, `2/2`).
 - **CI timeouts.** In CI, each test gets 60 s and each assertion 10 s
   (`playwright.config.ts`). Locally the defaults of 30 s and 5 s stay, so real slowness
   still fails on a laptop.
