@@ -8,6 +8,7 @@ import { JsonLd } from "@/components/site/json-ld";
 import { LoadingSplash, splashScript } from "@/components/site/loading-splash";
 import { Toaster } from "@/components/ui/sonner";
 import { ConsentManager } from "@/features/consent/components/consent-manager";
+import { GoogleAnalytics } from "@/features/consent/components/google-analytics";
 import { publicEnv } from "@/env";
 import { site } from "@/content/site";
 import { routing } from "@/i18n/routing";
@@ -69,6 +70,8 @@ export default async function LocaleLayout({
             {children}
             {/* Cookie banner and preferences on every page (ADR-007, #42). */}
             <ConsentManager />
+            {/* GA4, only after analytics consent (#43). */}
+            <GoogleAnalytics />
           </MotionProvider>
         </NextIntlClientProvider>
         {/* Organization on every page (brief, "SEO"). */}

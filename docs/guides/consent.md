@@ -1,7 +1,7 @@
 # Cookie consent
 
-The cookie banner, the preferences panel and the stored choice (#42, ADR-007). GA4
-loads from this choice in #43.
+The cookie banner, the preferences panel and the stored choice (#42, ADR-007), and GA4,
+which loads only from that choice (#43).
 
 ## 1. What we built
 
@@ -109,6 +109,43 @@ a blocker too (`data-sticky-cta-hide`). Without it, the bar sat over Privacy, Te
 Cookie settings at the end of a page on mobile, and taps landed on the bar. e2e found
 this.
 
+### Analytics (#43)
+
+**`src/lib/analytics.ts`.** The only place that talks to Google.
+
+- **`enableAnalytics(id)`.**
+  - Defines `window.gtag`, then queues `config` with `send_page_view: false`,
+    `allow_google_signals: false`, `allow_ad_personalization_signals: false` and a clean
+    `page_location`.
+  - Injects `gtag/js?id=…` once.
+  - After a withdrawal, calling it again only lifts the off switch.
+- **`disableAnalytics(id)`.** Sets Google's own `ga-disable-<ID>` switch, which stops
+  every hit. It also deletes `_ga` and `_ga_*` on the host and each parent domain.
+- **`trackPageView(path)`.** Sends a page view with the path only, after setting the same
+  clean `page_location` for any later hit. The newsletter link pages carry the
+  visitor's email in their query string, which must never reach Google.
+- **`trackEvent(name, params)`.** Typed against `AnalyticsEvents`, which is the whole
+  vocabulary:
+  - `consultation_submitted { service }`: the slug only.
+  - `newsletter_subscribed {}`: no parameters.
+
+  A new event means a new entry in that map, reviewed for personal data.
+
+**`components/google-analytics.tsx`.** Mounted next to the ConsentManager. It follows
+`useConsent()`:
+
+- **Analytics accepted.** It enables GA and sends one page view, then one per `usePathname()`
+  change.
+- **Rejected.** It calls `disableAnalytics`. If GA never loaded, that only clears any
+  stale `_ga` cookies and makes no request.
+- **Undecided.** Nothing happens.
+
+The consultation and newsletter forms call `trackEvent` on success; it is a no-op without
+consent.
+
+**Runbook.** Turn off GA's "page changes based on browser history events" (Environments
+§ 5), or page views count twice.
+
 ## 4. Decisions and trade-offs
 
 - **No Consent Mode, no third-party CMP.** ADR-007 rules out any request to Google before
@@ -127,6 +164,8 @@ this.
 | `features/consent/consent.test.ts`        | Value round trip, versioning, junk, cookie lookup, Max-Age and attributes                                                                                                                                          |
 | `features/consent/consent-store.test.tsx` | Undecided → decided, earlier choice, opening and closing the panel                                                                                                                                                 |
 | `components/site/sticky-cta.test.tsx`     | Waits for a choice; the earlier hero and blocker rules                                                                                                                                                             |
+| `lib/analytics.test.ts`                   | Nothing before enable; one script; config flags; no query string; allowed event fields; withdrawal switch, cookie deletion, re-accept                                                                              |
+| `tests/e2e/analytics.spec.ts`             | Zero Google requests before a choice and after Reject; gtag after Accept; page views on client navigation; no newsletter query; events without personal data; withdrawal                                           |
 | `tests/e2e/consent.spec.ts`               | Banner on first visit and the 404, not blocking, axe, equal buttons, Reject (182 days, not asked again), keyboard Accept, preferences (axe, locked essential, save, Esc), footer reopen, sticky CTA after a choice |
 
 Every other Playwright spec starts with a choice already made (`storageState` in

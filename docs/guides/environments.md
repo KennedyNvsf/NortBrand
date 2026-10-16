@@ -157,6 +157,15 @@ Create the property now so the measurement ID exists; the tag loads only after c
 2. **Data collection:** Google Signals **off**; granular location and device data **off**.
 3. **Data retention:** 2 months.
 4. **Ads personalization:** off for all regions.
+5. **Data streams → Web → Enhanced measurement:** under _Page views_, turn **off** "Page
+   changes based on browser history events". The site sends its own page view on every
+   navigation, with the path only (#43); leaving this on would double-count, and GA's own
+   page views would include the query string.
+
+The code also switches off Google Signals and ad personalization in the tag config, and
+never sends personal data (docs/guides/consent.md › Analytics). Use one property for
+production. For preview and development, either leave `NEXT_PUBLIC_GA_MEASUREMENT_ID` on a
+separate test property or accept that testers who click Accept appear in it.
 
 ## 6. Secrets you generate
 

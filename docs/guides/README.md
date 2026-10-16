@@ -24,7 +24,7 @@ the guides always match the code.
 | [Consultation requests](./consultation-requests.md) | Shared zod schema, honeypot and fill-time token, IP hashing, the server action, emails, the form and its states, e2e fake backend |
 | [Database](./database.md)                           | Tables, RLS without policies, the write functions, rate limits, newsletter tokens, pgTAP, migrations                              |
 | [Newsletter](./newsletter.md)                       | Double opt-in, signed links, Resend segment, health check, the Newsletter card and the link pages                                 |
-| [Cookie consent](./consent.md)                      | The consent cookie and store, banner, preferences (Dialog/Drawer), Switch, footer settings, sticky CTA gate                       |
+| [Cookie consent](./consent.md)                      | The consent cookie and store, banner, preferences, Switch, footer settings, sticky CTA gate, GA4 after consent                    |
 
 Each guide follows the same shape: what we built, how it works at runtime, the files one
 by one (and why), how the tests protect it, and day-to-day rules.

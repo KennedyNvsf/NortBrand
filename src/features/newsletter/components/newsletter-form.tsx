@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { trackEvent } from "@/lib/analytics";
 import { ICON_STROKE, icons } from "@/lib/icons";
 
 import { subscribeNewsletter } from "../actions";
@@ -73,6 +74,8 @@ export function NewsletterForm() {
       });
       switch (result.status) {
         case "success":
+          // No parameters: the address never reaches analytics.
+          trackEvent("newsletter_subscribed", {});
           setSentTo(values.email.trim().toLowerCase());
           setStatus("sent");
           setAnnouncement(t("card.successTitle"));
