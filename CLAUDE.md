@@ -201,6 +201,16 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
 - Unsubscribe deletes the Resend contact. `/api/newsletter/unsubscribe` is the RFC 8058
   one-click endpoint; `/api/health/newsletter` checks that the app and Vault secrets match.
 
+## Cookie consent
+
+- Code: `src/features/consent/` (guide: docs/guides/consent.md). One first-party cookie,
+  `nb_consent` (`v1.1` / `v1.0`, 182 days); bump `CONSENT_VERSION` to ask again.
+- Read the choice only through `useConsent()` (`unknown` until hydration, then
+  `undecided` or `decided`). GA4 (#43) loads only when `analytics` is true.
+- The banner is not modal and never takes focus; Accept and Reject have equal weight.
+  The StickyCta waits for a choice. "Cookie settings" in the footer reopens the panel.
+- Playwright specs start with a choice made (`storageState`); `consent.spec.ts` does not.
+
 ## Environment variables
 
 Public: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,

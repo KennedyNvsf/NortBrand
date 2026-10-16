@@ -51,5 +51,18 @@ export const revealSpec = {
   underlineLag: 0.25,
 } as const;
 
+/**
+ * Motion Spec › System › Cookie banner: "Slides up 24px and fades in after an 800ms
+ * delay. Exits down 16px. In 350ms · out 200ms." Arrival on the emphasized curve, exit
+ * on the exit curve (Tokens › Easing). Seconds and px.
+ */
+export const consentBannerSpec = {
+  delay: 0.8,
+  enter: 0.35,
+  exit: 0.2,
+  rise: 24,
+  drop: 16,
+} as const;
+
 /** Motion Spec › Reduced motion: "opacity fades only, at 150ms or less". */
 export const reducedMotionDuration = motionTokens.duration.fast;

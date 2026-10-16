@@ -5,6 +5,11 @@ import { createRoot, type Root } from "react-dom/client";
 import { NextIntlClientProvider } from "next-intl";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import {
+  resetConsentStoreForTests,
+  saveConsent,
+} from "@/features/consent/consent-store";
+
 import { StickyCta } from "./sticky-cta";
 
 vi.mock("@/i18n/navigation", () => ({
@@ -67,6 +72,9 @@ beforeEach(() => {
     globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
   ).IS_REACT_ACT_ENVIRONMENT = true;
   observers.length = 0;
+  // A cookie choice already made, so only the hero and blockers decide (see below).
+  document.cookie = "nb_consent=v1.0; Path=/";
+  resetConsentStoreForTests();
 
   hero = document.createElement("section");
   hero.setAttribute("data-sticky-cta-trigger", "");
@@ -112,6 +120,25 @@ describe("StickyCta", () => {
     expect(bar().hasAttribute("data-visible")).toBe(false);
 
     setOnScreen(band, false);
+    expect(bar().getAttribute("data-visible")).toBe("true");
+  });
+
+  it("waits until a cookie choice is made", () => {
+    document.cookie = "nb_consent=; Max-Age=0; Path=/";
+    resetConsentStoreForTests();
+    act(() => {
+      root.render(
+        <NextIntlClientProvider locale="en" messages={messages}>
+          <StickyCta />
+        </NextIntlClientProvider>,
+      );
+    });
+    setOnScreen(hero, false);
+    expect(bar().hasAttribute("data-visible")).toBe(false);
+
+    act(() => {
+      saveConsent({ analytics: false });
+    });
     expect(bar().getAttribute("data-visible")).toBe("true");
   });
 
