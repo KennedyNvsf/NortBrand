@@ -2,13 +2,14 @@ import { expect, test } from "@playwright/test";
 
 /*
  * System states (ticket #14): the designed 404 and the first-load splash. The page
- * harness also covers /blog in both locales (status, noindex, axe, one H1, overflow).
+ * harness also covers an unknown page in both locales (status, noindex, axe, one H1,
+ * overflow).
  */
 
 test.describe("404", () => {
   for (const [path, lang, home] of [
-    ["/en/blog", "en", "/en"],
-    ["/pt/blog", "pt", "/pt"],
+    ["/en/no-such-page", "en", "/en"],
+    ["/pt/no-such-page", "pt", "/pt"],
     ["/en/no/such/page", "en", "/en"],
     ["/blog", "pt", "/pt"],
   ] as const) {

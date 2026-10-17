@@ -89,6 +89,8 @@ React Email · Sanity (blog only) · Sentry · Vitest · Playwright · pnpm · N
 
 - Every page under `[locale]` exports `generateStaticParams` for `en` and `pt`.
 - Every page enables next-intl static rendering, so pages stay static.
+- Exception: the blog listing reads `searchParams`, so it is a static shell with the
+  results streamed per request (◐ in the build, cached data). See docs/guides/blog.md.
 - Check the build output to confirm marketing pages are static. A page that becomes dynamic
   unexpectedly is a bug.
 
@@ -137,8 +139,7 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md
     `public/images/placeholder/`, use `alt=""`, and are logged in `docs/tech-debt.md`.
 - **Logo:** `LOGONORT` (`54:16`), exported as an optimized SVG. The wordmark is converted
   to paths, and the SVG uses `currentColor`.
-- **Navigation:** Blog stays in the nav even while its page doesn't exist yet. Links to
-  unbuilt pages show the designed 404 until those pages ship.
+- **Navigation:** links to unbuilt pages show the designed 404 until those pages ship.
 
 ## Motion
 
