@@ -1,24 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Pause, Play } from "lucide-react";
 
 import { prefersReducedMotion } from "@/components/motion/reveal-engine";
-import { ICON_STROKE } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
 /*
  * The Services hero's looping background video (#68), over the hero photo.
- * - Decorative and silent: muted, no captions needed, hidden from assistive tech. The
- *   photo underneath is the first paint (next/image, priority); the video fades in over
- *   it once its first frame plays, so nothing ever flashes empty.
- * - preload="none": the 6.5 MB file downloads only once playback starts.
- * - Autoplay is decided in the browser: not with reduced motion (Motion Spec: no
- *   auto-playing motion) and not with Data Saver on. A blocked play() simply leaves
- *   the photo.
- * - The pause/play button is required: moving content that starts by itself and lasts
- *   over 5 s must be pausable (WCAG 2.2.2). The button's state follows the video's own
- *   play and pause events, so it can never disagree with what is on screen.
+ * - Decorative and silent: muted, no audio track, hidden from assistive tech. The photo
+ *   underneath is the first paint (next/image, priority); the video fades in over it
+ *   once its first frame plays, so nothing ever flashes empty.
+ * - preload="none": a file downloads only once playback starts. Each source's `media`
+ *   query picks the smaller encode on phones.
+ * - It loops with no pause control, by the lead's decision (#68 review). That is an
+ *   exception to WCAG 2.2.2, recorded in docs/tech-debt.md. The project's reduced-motion
+ *   rule still applies: with reduced motion (or Data Saver) it never starts, and the
+ *   photo stays.
  */
 
 /* navigator.connection is Chromium-only and not in TypeScript's DOM types. */
@@ -32,75 +29,44 @@ function saveDataOn() {
   );
 }
 
-function shouldAutoplay() {
-  return !prefersReducedMotion() && !saveDataOn();
-}
-
 export function HeroVideo({
-  src,
-  labels,
+  sources,
 }: {
-  src: string;
-  labels: { pause: string; play: string };
+  /** In order of preference; the browser plays the first whose media and type fit. */
+  sources: { src: string; type: string; media?: string }[];
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [playing, setPlaying] = useState(false);
-  // Hidden until its first frame plays; after that a pause keeps the frozen frame.
+  // Hidden until its first frame plays, so the photo shows until then.
   const [started, setStarted] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !shouldAutoplay()) return;
+    if (!video || prefersReducedMotion() || saveDataOn()) return;
+    // A refused play() (a power-saving mode, say) simply leaves the photo.
     video.play().catch(() => undefined);
   }, []);
 
-  const toggle = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (video.paused) video.play().catch(() => undefined);
-    else video.pause();
-  };
-
   return (
-    <>
-      <video
-        ref={videoRef}
-        aria-hidden
-        muted
-        loop
-        playsInline
-        preload="none"
-        onPlaying={() => {
-          setPlaying(true);
-          setStarted(true);
-        }}
-        onPause={() => {
-          setPlaying(false);
-        }}
-        className={cn(
-          "absolute inset-0 -z-10 size-full object-cover",
-          "transition-opacity duration-(--duration-slow) ease-standard motion-reduce:duration-(--duration-fast)",
-          started ? "opacity-100" : "opacity-0",
-        )}
-      >
-        <source src={src} type="video/mp4" />
-      </video>
-      <button
-        type="button"
-        onClick={toggle}
-        aria-label={playing ? labels.pause : labels.play}
-        className={cn(
-          "absolute top-[calc(var(--header-height)+1rem)] right-(--gutter) z-10",
-          "inline-flex size-11 items-center justify-center rounded-full border border-text-on-accent/25 bg-text-primary/55 text-text-on-accent",
-          "transition-colors duration-(--duration-fast) ease-standard hover:bg-text-primary/75",
-        )}
-      >
-        {playing ? (
-          <Pause className="size-5" strokeWidth={ICON_STROKE} aria-hidden />
-        ) : (
-          <Play className="size-5" strokeWidth={ICON_STROKE} aria-hidden />
-        )}
-      </button>
-    </>
+    <video
+      ref={videoRef}
+      aria-hidden
+      muted
+      loop
+      playsInline
+      disablePictureInPicture
+      preload="none"
+      onPlaying={() => {
+        setStarted(true);
+      }}
+      className={cn(
+        "pointer-events-none absolute inset-0 -z-10 size-full object-cover",
+        "transition-opacity duration-(--duration-slow) ease-standard",
+        started ? "opacity-100" : "opacity-0",
+      )}
+    >
+      {sources.map(({ src, type, media }) => (
+        <source key={src} src={src} type={type} media={media} />
+      ))}
+    </video>
   );
 }

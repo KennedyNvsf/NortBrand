@@ -77,7 +77,7 @@ test.describe("services page", () => {
   });
 
   // #68. Playback itself is not asserted: Playwright's Chromium has no H.264 decoder.
-  test("hero fills the first screen with a silent, pausable video", async ({
+  test("hero fills the first screen with a silent looping video", async ({
     page,
   }) => {
     await page.goto("/en/services");
@@ -91,9 +91,8 @@ test.describe("services page", () => {
     await expect(video).toHaveAttribute("loop", "");
     await expect(video).toHaveAttribute("playsinline", "");
     expect(await video.evaluate((v: HTMLVideoElement) => v.muted)).toBe(true);
-    await expect(
-      hero.getByRole("button", { name: /(Pause|Play) background video/ }),
-    ).toBeVisible();
+    // No controls of any kind: the loop is decorative (#68 review).
+    await expect(hero.getByRole("button")).toHaveCount(0);
   });
 
   test("has one block per service, anchored by slug", async ({ page }) => {
@@ -342,14 +341,18 @@ test.describe("services page", () => {
 test.describe("services hero with reduced motion", () => {
   test.use({ reducedMotion: "reduce" });
 
-  test("the video does not autoplay and offers Play", async ({ page }) => {
+  test("the video never starts and the photo stays", async ({ page }) => {
     await page.goto("/en/services");
     const hero = page.getByRole("region", { name: /Everything your business/ });
-    await expect(
-      hero.getByRole("button", { name: "Play background video" }),
-    ).toBeVisible();
-    expect(
-      await hero.locator("video").evaluate((v: HTMLVideoElement) => v.paused),
-    ).toBe(true);
+    await expect(hero.getByRole("heading", { level: 1 })).toBeVisible();
+    const state = await hero
+      .locator("video")
+      .evaluate((v: HTMLVideoElement) => ({
+        paused: v.paused,
+        // preload="none" and no play(): nothing was fetched.
+        networkState: v.networkState,
+      }));
+    expect(state.paused).toBe(true);
+    expect(state.networkState).not.toBe(2); // HTMLMediaElement.NETWORK_LOADING
   });
 });

@@ -14,7 +14,9 @@ import { HeroVideo } from "./hero-video";
  * - It fills the first screen at every size (#68), with the content at the bottom, so
  *   no white from the next section shows on first view. Desktop keeps Figma's 780 as
  *   the minimum.
- * - A looping video plays over the photo (HeroVideo, #68), with its own pause button.
+ * - A looping video plays over the photo (HeroVideo, #68): 720p on phones, 1080p above.
+ * - The headline is the display size and sits higher and further in than Figma's
+ *   (#68 review), so it holds its own over moving footage.
  * - Desktop: text bottom-left, quote card bottom-right.
  * - Tablet and mobile: text then a full-width quote card, height from content.
  * - The eyebrow is white at 85%, not green: green fails contrast on the photo
@@ -28,6 +30,16 @@ import { HeroVideo } from "./hero-video";
  *   the photo settles from a slight zoom (1.08 → 1, 1.6 s).
  * Holds the page's only H1.
  */
+/* Phones get the 720p encode; `media` is read once, when the video loads. */
+const HERO_VIDEO = [
+  {
+    src: "/videos/services-hero-720.mp4",
+    type: "video/mp4",
+    media: "(max-width: 767px)",
+  },
+  { src: "/videos/services-hero.mp4", type: "video/mp4" },
+];
+
 export async function ServicesHero() {
   const t = await getTranslations("Services.hero");
 
@@ -46,27 +58,24 @@ export async function ServicesHero() {
         sizes="100vw"
         className="-z-10 object-cover motion-safe:animate-hero-settle"
       />
-      <HeroVideo
-        src="/videos/services-hero.mp4"
-        labels={{ pause: t("pauseVideo"), play: t("playVideo") }}
-      />
+      <HeroVideo sources={HERO_VIDEO} />
       <div aria-hidden className="absolute inset-0 -z-10 hero-scrim" />
 
       <div className="mx-auto flex w-full max-w-(--container-canvas) flex-col gap-7 px-(--gutter) pt-55 pb-7 md:gap-0 md:pt-76 md:pb-9 lg:min-h-195 lg:flex-row lg:items-end lg:justify-between lg:gap-xl lg:pt-0 lg:pb-10">
-        <div className="flex flex-col gap-3.5 md:pb-7 lg:gap-3 lg:pb-12">
+        <div className="flex flex-col gap-3.5 md:gap-4 md:pb-16 lg:gap-5 lg:pb-28 lg:pl-12">
           <p {...enterItem(0)} className="text-overline text-text-on-accent/85">
             {t("eyebrow")}
           </p>
           <h1
             {...enterItem(1)}
             id="services-hero-title"
-            className="text-h1 text-text-on-accent lg:max-w-170"
+            className="text-display text-text-on-accent md:max-w-150 lg:max-w-215"
           >
             {t.rich("title", highlightTags)}
           </h1>
           <p
             {...enterItem(2)}
-            className="text-body text-text-on-accent/90 md:text-lead lg:max-w-130"
+            className="text-lead text-text-on-accent/90 md:max-w-130 lg:max-w-150 lg:text-intro"
           >
             {t("lead")}
           </p>
