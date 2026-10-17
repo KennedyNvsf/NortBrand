@@ -20,6 +20,36 @@ describe("localeAlternates", () => {
       },
     });
   });
+
+  it("uses each language's own path when they differ (blog posts)", () => {
+    expect(
+      localeAlternates("en", "/blog/brand-refresh", {
+        en: "/blog/brand-refresh",
+        pt: "/blog/renovar-a-marca",
+      }),
+    ).toEqual({
+      canonical: "/en/blog/brand-refresh",
+      languages: {
+        en: "/en/blog/brand-refresh",
+        pt: "/pt/blog/renovar-a-marca",
+        "x-default": "/pt/blog/renovar-a-marca",
+      },
+    });
+  });
+
+  it("lists only real translations, with x-default on the page itself", () => {
+    expect(
+      localeAlternates("en", "/blog/only-english", {
+        en: "/blog/only-english",
+      }),
+    ).toEqual({
+      canonical: "/en/blog/only-english",
+      languages: {
+        en: "/en/blog/only-english",
+        "x-default": "/en/blog/only-english",
+      },
+    });
+  });
 });
 
 describe("pageMetadata", () => {

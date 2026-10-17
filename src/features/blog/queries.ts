@@ -18,7 +18,7 @@ const CARD = `{
   publishedAt,
   cover { asset, crop, hotspot, alt },
   "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },
-  "author": author->{ name }
+  "author": author->{ name, image { asset, crop, hotspot, alt } }
 }`;
 
 const LISTED = `_type == "post" && language == $language && defined(slug.current)
@@ -62,7 +62,7 @@ export const BLOG_POST_QUERY =
     _type == "image" => { asset, crop, hotspot, alt, caption }
   },
   seo,
-  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },
+  "category": category->{ _id, "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },
   "author": author->{
     name,
     image { asset, crop, hotspot, alt },
@@ -75,10 +75,13 @@ export const BLOG_POST_QUERY =
   }
 }`);
 
-/** Up to three newer-first posts from the same category, in the same language. */
+/**
+ * "Keep reading": three other posts in the same language, the same category first, then
+ * the newest of the rest, so the section is full even when a category is small.
+ */
 export const BLOG_RELATED_QUERY =
   defineQuery(`*[_type == "post" && language == $language && defined(slug.current)
-  && category._ref == $categoryId && _id != $postId] | order(publishedAt desc) [0...3] ${CARD}`);
+  && _id != $postId] | order(select(category._ref == $categoryId => 0, 1) asc, publishedAt desc) [0...3] ${CARD}`);
 
 /** Every published post's language and slug, for static generation and the sitemap. */
 export const BLOG_SLUGS_QUERY =

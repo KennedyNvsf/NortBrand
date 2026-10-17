@@ -1,7 +1,10 @@
 import Image from "next/image";
+import { Check } from "lucide-react";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import type { ComponentProps } from "react";
 
+import { ICON_STROKE } from "@/lib/icons";
+import { cn } from "@/lib/utils";
 import { sanityImageProps, type SanityImage } from "@/lib/sanity/image";
 
 import { headingIds } from "../table-of-contents";
@@ -14,23 +17,35 @@ import { headingIds } from "../table-of-contents";
  * - Links: same-site paths stay relative; external links open in the same tab with
  *   rel="noopener noreferrer". The schema only allows https, mailto and relative URLs.
  * - Images: next/image from the Sanity CDN, alt text required by the schema, optional
- *   caption. Prose styles follow the Legal pages until the post design lands (#61).
+ *   caption.
+ * Styles follow Figma 05 Blog › Post › Article Body (285:53; mobile 372:795):
+ * - The first paragraph is the lead (Medium 22, text/primary), then 18 px body copy.
+ * - Quote: the pull quote with its red bar; bold words inside it turn red ("They
+ *   <strong>use them</strong>." in Studio gives Figma's red "use them").
+ * - Bullets: the red-check list (Figma "Checklist"); numbered lists stay numbered.
  */
 
 type BodyImage = SanityImage & { _type: "image"; caption?: string | null };
 
-function components(ids: Map<string, string>): PortableTextComponents {
+const PARAGRAPH = "text-[18px] leading-[1.7] text-text-muted";
+const LEAD =
+  "text-[20px] leading-[1.55] font-medium text-text-primary lg:text-[22px]";
+
+function components(
+  ids: Map<string, string>,
+  { lead = false } = {},
+): PortableTextComponents {
   const id = (value: { _key?: string }) =>
     value._key ? ids.get(value._key) : undefined;
   return {
     block: {
       normal: ({ children }) => (
-        <p className="text-body text-text-muted lg:text-lead">{children}</p>
+        <p className={lead ? LEAD : PARAGRAPH}>{children}</p>
       ),
       h2: ({ children, value }) => (
         <h2
           id={id(value)}
-          className="scroll-mt-28 pt-md text-h3 font-bold tracking-[-0.006em] text-text-primary"
+          className="scroll-mt-30 pt-2 text-[28px] leading-[1.18] font-bold tracking-[-0.005em] text-text-primary md:pt-5 md:text-[32px]"
         >
           {children}
         </h2>
@@ -38,30 +53,50 @@ function components(ids: Map<string, string>): PortableTextComponents {
       h3: ({ children, value }) => (
         <h3
           id={id(value)}
-          className="scroll-mt-28 text-h4 font-semibold text-text-primary"
+          className="scroll-mt-30 text-h4 font-semibold text-text-primary"
         >
           {children}
         </h3>
       ),
       blockquote: ({ children }) => (
-        <blockquote className="border-l-4 border-action-primary pl-lg text-lead text-text-primary">
-          {children}
+        <blockquote className="flex gap-lg pt-2 pb-5 md:py-5">
+          <span
+            aria-hidden
+            className="w-1 shrink-0 self-stretch rounded-full bg-action-primary"
+          />
+          <p className="text-[28px] leading-[1.2] font-semibold tracking-[-0.005em] text-text-primary italic lg:text-[38px] [&_strong]:text-action-primary">
+            {children}
+          </p>
         </blockquote>
       ),
     },
     list: {
       bullet: ({ children }) => (
-        <ul className="flex list-disc flex-col gap-3 pl-5 text-body text-text-primary marker:text-action-primary lg:text-lead">
-          {children}
-        </ul>
+        <ul className="flex flex-col gap-md">{children}</ul>
       ),
       number: ({ children }) => (
-        <ol className="flex list-decimal flex-col gap-3 pl-5 text-body text-text-primary marker:text-action-primary lg:text-lead">
+        <ol
+          className={`flex list-decimal flex-col gap-3 pl-5 marker:text-action-primary ${PARAGRAPH}`}
+        >
           {children}
         </ol>
       ),
     },
-    listItem: ({ children }) => <li className="pl-1">{children}</li>,
+    listItem: {
+      bullet: ({ children }) => (
+        <li className="flex items-start gap-3">
+          <Check
+            className="size-6 shrink-0 text-action-primary"
+            strokeWidth={ICON_STROKE}
+            aria-hidden
+          />
+          <span className="text-[18px] leading-[1.35] font-medium text-text-primary lg:text-[19px]">
+            {children}
+          </span>
+        </li>
+      ),
+      number: ({ children }) => <li className="pl-1">{children}</li>,
+    },
     marks: {
       strong: ({ children }) => (
         <strong className="font-semibold text-text-primary">{children}</strong>
@@ -111,7 +146,7 @@ function components(ids: Map<string, string>): PortableTextComponents {
     // Unknown block types and marks render nothing rather than raw data.
     unknownType: () => null,
     unknownBlockStyle: ({ children }) => (
-      <p className="text-body text-text-muted lg:text-lead">{children}</p>
+      <p className={PARAGRAPH}>{children}</p>
     ),
   };
 }
@@ -119,11 +154,39 @@ function components(ids: Map<string, string>): PortableTextComponents {
 /** Blocks and the schema's custom types (images), as the post query returns them. */
 type Body = Extract<ComponentProps<typeof PortableText>["value"], unknown[]>;
 
-export function PostBody({ body }: { body: Body | null | undefined }) {
-  if (!body?.length) return null;
+/** A plain opening paragraph (not a heading, quote or list item) is the lead. */
+function isLead(block: Body[number] | undefined) {
   return (
-    <div className="flex flex-col gap-lg">
-      <PortableText value={body} components={components(headingIds(body))} />
+    block?._type === "block" &&
+    "style" in block &&
+    block.style === "normal" &&
+    !("listItem" in block && block.listItem)
+  );
+}
+
+export function PostBody({
+  body,
+  className,
+}: {
+  body: Body | null | undefined;
+  className?: string;
+}) {
+  if (!body?.length) return null;
+  const ids = headingIds(body);
+  const [first, ...rest] = body;
+  const lead = isLead(first) ? [first] : [];
+  return (
+    <div className={cn("flex flex-col gap-5 md:gap-lg", className)}>
+      {lead.length ? (
+        <PortableText
+          value={lead}
+          components={components(ids, { lead: true })}
+        />
+      ) : null}
+      <PortableText
+        value={lead.length ? rest : body}
+        components={components(ids)}
+      />
     </div>
   );
 }

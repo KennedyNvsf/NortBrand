@@ -5,7 +5,14 @@ import { isFakeBackendEnabled } from "@/lib/e2e-backend";
 import { getSanityClient } from "@/lib/sanity/client";
 
 import { BLOG_TAGS } from "./cache-tags";
-import { fakeCategories, fakeFeatured, fakeListing } from "./e2e-backend";
+import {
+  fakeCategories,
+  fakeFeatured,
+  fakeListing,
+  fakePost,
+  fakeRelated,
+  fakeSlugs,
+} from "./e2e-backend";
 import { pageRange, searchPattern, type ListingParams } from "./listing-params";
 import {
   BLOG_CATEGORIES_QUERY,
@@ -22,7 +29,8 @@ import {
  * tagged for the webhook (cache-tags.ts), so pages stay static until an editor
  * publishes; `cacheLife("max")` means only the webhook expires them. The arguments are
  * the cache key, so each listing state (search, category, sort, page) caches on its own.
- * Under Playwright (E2E_FAKE_BACKEND=1) the listing reads fixtures instead (e2e-backend.ts).
+ * Under Playwright (E2E_FAKE_BACKEND=1), and in the CI build, every function reads
+ * fixtures instead (e2e-backend.ts).
  */
 
 /** The newest post: the featured article above the grid. */
@@ -69,6 +77,7 @@ export async function getBlogPost(language: Locale, slug: string) {
   "use cache";
   cacheTag(BLOG_TAGS.posts);
   cacheLife("max");
+  if (isFakeBackendEnabled()) return fakePost(language, slug);
   return getSanityClient().fetch(BLOG_POST_QUERY, { language, slug });
 }
 
@@ -80,6 +89,7 @@ export async function getRelatedPosts(
   "use cache";
   cacheTag(BLOG_TAGS.list);
   cacheLife("max");
+  if (isFakeBackendEnabled()) return fakeRelated(language, postId, categoryId);
   return getSanityClient().fetch(BLOG_RELATED_QUERY, {
     language,
     postId,
@@ -91,5 +101,6 @@ export async function getBlogSlugs() {
   "use cache";
   cacheTag(BLOG_TAGS.posts);
   cacheLife("max");
+  if (isFakeBackendEnabled()) return fakeSlugs();
   return getSanityClient().fetch(BLOG_SLUGS_QUERY);
 }

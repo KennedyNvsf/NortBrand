@@ -23,6 +23,9 @@ export const routes = [
   },
   { name: "Blog", path: "/blog" },
   { name: "404 (unknown page)", path: "/no-such-page", notFound: true },
+  // Posts have a slug per language, so blog-post.spec.ts checks them; the harness
+  // checks that an unknown slug is the designed 404 in both languages.
+  { name: "404 (unknown post)", path: "/blog/no-such-post", notFound: true },
 ] as const satisfies readonly {
   name: string;
   path: `/${string}`;

@@ -309,7 +309,7 @@ export type AllSanitySchemaTypes =
 
 // Source: src/features/blog/queries.ts
 // Variable: BLOG_LATEST_QUERY
-// Query: {  "total": count(*[_type == "post" && language == $language && defined(slug.current)  && _id != $excludeId  && ($category == "" || category->slug.current == $category)  && ($q == "" || [title, excerpt] match $q)]),  "posts": *[_type == "post" && language == $language && defined(slug.current)  && _id != $excludeId  && ($category == "" || category->slug.current == $category)  && ($q == "" || [title, excerpt] match $q)] | order(publishedAt desc) [$start...$end] {  _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  cover { asset, crop, hotspot, alt },  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },  "author": author->{ name }}}
+// Query: {  "total": count(*[_type == "post" && language == $language && defined(slug.current)  && _id != $excludeId  && ($category == "" || category->slug.current == $category)  && ($q == "" || [title, excerpt] match $q)]),  "posts": *[_type == "post" && language == $language && defined(slug.current)  && _id != $excludeId  && ($category == "" || category->slug.current == $category)  && ($q == "" || [title, excerpt] match $q)] | order(publishedAt desc) [$start...$end] {  _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  cover { asset, crop, hotspot, alt },  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },  "author": author->{ name, image { asset, crop, hotspot, alt } }}}
 export type BLOG_LATEST_QUERY_RESULT = {
   total: number;
   posts: Array<{
@@ -330,13 +330,19 @@ export type BLOG_LATEST_QUERY_RESULT = {
     };
     author: {
       name: string;
+      image: {
+        asset: SanityImageAssetReference | null;
+        crop: SanityImageCrop | null;
+        hotspot: SanityImageHotspot | null;
+        alt: string;
+      } | null;
     };
   }>;
 };
 
 // Source: src/features/blog/queries.ts
 // Variable: BLOG_OLDEST_QUERY
-// Query: {  "total": count(*[_type == "post" && language == $language && defined(slug.current)  && _id != $excludeId  && ($category == "" || category->slug.current == $category)  && ($q == "" || [title, excerpt] match $q)]),  "posts": *[_type == "post" && language == $language && defined(slug.current)  && _id != $excludeId  && ($category == "" || category->slug.current == $category)  && ($q == "" || [title, excerpt] match $q)] | order(publishedAt asc) [$start...$end] {  _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  cover { asset, crop, hotspot, alt },  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },  "author": author->{ name }}}
+// Query: {  "total": count(*[_type == "post" && language == $language && defined(slug.current)  && _id != $excludeId  && ($category == "" || category->slug.current == $category)  && ($q == "" || [title, excerpt] match $q)]),  "posts": *[_type == "post" && language == $language && defined(slug.current)  && _id != $excludeId  && ($category == "" || category->slug.current == $category)  && ($q == "" || [title, excerpt] match $q)] | order(publishedAt asc) [$start...$end] {  _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  cover { asset, crop, hotspot, alt },  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },  "author": author->{ name, image { asset, crop, hotspot, alt } }}}
 export type BLOG_OLDEST_QUERY_RESULT = {
   total: number;
   posts: Array<{
@@ -357,13 +363,19 @@ export type BLOG_OLDEST_QUERY_RESULT = {
     };
     author: {
       name: string;
+      image: {
+        asset: SanityImageAssetReference | null;
+        crop: SanityImageCrop | null;
+        hotspot: SanityImageHotspot | null;
+        alt: string;
+      } | null;
     };
   }>;
 };
 
 // Source: src/features/blog/queries.ts
 // Variable: BLOG_FEATURED_QUERY
-// Query: *[_type == "post" && language == $language && defined(slug.current)]  | order(publishedAt desc) [0] {  _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  cover { asset, crop, hotspot, alt },  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },  "author": author->{ name }}
+// Query: *[_type == "post" && language == $language && defined(slug.current)]  | order(publishedAt desc) [0] {  _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  cover { asset, crop, hotspot, alt },  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },  "author": author->{ name, image { asset, crop, hotspot, alt } }}
 export type BLOG_FEATURED_QUERY_RESULT = {
   _id: string;
   title: string;
@@ -382,6 +394,12 @@ export type BLOG_FEATURED_QUERY_RESULT = {
   };
   author: {
     name: string;
+    image: {
+      asset: SanityImageAssetReference | null;
+      crop: SanityImageCrop | null;
+      hotspot: SanityImageHotspot | null;
+      alt: string;
+    } | null;
   };
 } | null;
 
@@ -395,7 +413,7 @@ export type BLOG_CATEGORIES_QUERY_RESULT = Array<{
 
 // Source: src/features/blog/queries.ts
 // Variable: BLOG_POST_QUERY
-// Query: *[_type == "post" && language == $language && slug.current == $slug][0]{  _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  cover { asset, crop, hotspot, alt },  body[] {    ...,    _type == "image" => { asset, crop, hotspot, alt, caption }  },  seo,  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },  "author": author->{    name,    image { asset, crop, hotspot, alt },    "role": coalesce(role[language == $language][0].value, role[0].value),    "bio": coalesce(bio[language == $language][0].value, bio[0].value)  },  "translations": *[_type == "translation.metadata" && references(^._id)][0].translations[].value->{    language,    "slug": slug.current  }}
+// Query: *[_type == "post" && language == $language && slug.current == $slug][0]{  _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  cover { asset, crop, hotspot, alt },  body[] {    ...,    _type == "image" => { asset, crop, hotspot, alt, caption }  },  seo,  "category": category->{ _id, "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },  "author": author->{    name,    image { asset, crop, hotspot, alt },    "role": coalesce(role[language == $language][0].value, role[0].value),    "bio": coalesce(bio[language == $language][0].value, bio[0].value)  },  "translations": *[_type == "translation.metadata" && references(^._id)][0].translations[].value->{    language,    "slug": slug.current  }}
 export type BLOG_POST_QUERY_RESULT = {
   _id: string;
   title: string;
@@ -443,6 +461,7 @@ export type BLOG_POST_QUERY_RESULT = {
     description?: string;
   } | null;
   category: {
+    _id: string;
     slug: string;
     name: string | null;
   };
@@ -465,7 +484,7 @@ export type BLOG_POST_QUERY_RESULT = {
 
 // Source: src/features/blog/queries.ts
 // Variable: BLOG_RELATED_QUERY
-// Query: *[_type == "post" && language == $language && defined(slug.current)  && category._ref == $categoryId && _id != $postId] | order(publishedAt desc) [0...3] {  _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  cover { asset, crop, hotspot, alt },  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },  "author": author->{ name }}
+// Query: *[_type == "post" && language == $language && defined(slug.current)  && _id != $postId] | order(select(category._ref == $categoryId => 0, 1) asc, publishedAt desc) [0...3] {  _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  cover { asset, crop, hotspot, alt },  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },  "author": author->{ name, image { asset, crop, hotspot, alt } }}
 export type BLOG_RELATED_QUERY_RESULT = Array<{
   _id: string;
   title: string;
@@ -484,6 +503,12 @@ export type BLOG_RELATED_QUERY_RESULT = Array<{
   };
   author: {
     name: string;
+    image: {
+      asset: SanityImageAssetReference | null;
+      crop: SanityImageCrop | null;
+      hotspot: SanityImageHotspot | null;
+      alt: string;
+    } | null;
   };
 }>;
 
@@ -499,12 +524,12 @@ export type BLOG_SLUGS_QUERY_RESULT = Array<{
 // Query TypeMap
 declare global {
   interface SanityQueries {
-    '{\n  "total": count(*[_type == "post" && language == $language && defined(slug.current)\n  && _id != $excludeId\n  && ($category == "" || category->slug.current == $category)\n  && ($q == "" || [title, excerpt] match $q)]),\n  "posts": *[_type == "post" && language == $language && defined(slug.current)\n  && _id != $excludeId\n  && ($category == "" || category->slug.current == $category)\n  && ($q == "" || [title, excerpt] match $q)] | order(publishedAt desc) [$start...$end] {\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  cover { asset, crop, hotspot, alt },\n  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },\n  "author": author->{ name }\n}\n}': BLOG_LATEST_QUERY_RESULT;
-    '{\n  "total": count(*[_type == "post" && language == $language && defined(slug.current)\n  && _id != $excludeId\n  && ($category == "" || category->slug.current == $category)\n  && ($q == "" || [title, excerpt] match $q)]),\n  "posts": *[_type == "post" && language == $language && defined(slug.current)\n  && _id != $excludeId\n  && ($category == "" || category->slug.current == $category)\n  && ($q == "" || [title, excerpt] match $q)] | order(publishedAt asc) [$start...$end] {\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  cover { asset, crop, hotspot, alt },\n  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },\n  "author": author->{ name }\n}\n}': BLOG_OLDEST_QUERY_RESULT;
-    '*[_type == "post" && language == $language && defined(slug.current)]\n  | order(publishedAt desc) [0] {\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  cover { asset, crop, hotspot, alt },\n  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },\n  "author": author->{ name }\n}': BLOG_FEATURED_QUERY_RESULT;
+    '{\n  "total": count(*[_type == "post" && language == $language && defined(slug.current)\n  && _id != $excludeId\n  && ($category == "" || category->slug.current == $category)\n  && ($q == "" || [title, excerpt] match $q)]),\n  "posts": *[_type == "post" && language == $language && defined(slug.current)\n  && _id != $excludeId\n  && ($category == "" || category->slug.current == $category)\n  && ($q == "" || [title, excerpt] match $q)] | order(publishedAt desc) [$start...$end] {\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  cover { asset, crop, hotspot, alt },\n  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },\n  "author": author->{ name, image { asset, crop, hotspot, alt } }\n}\n}': BLOG_LATEST_QUERY_RESULT;
+    '{\n  "total": count(*[_type == "post" && language == $language && defined(slug.current)\n  && _id != $excludeId\n  && ($category == "" || category->slug.current == $category)\n  && ($q == "" || [title, excerpt] match $q)]),\n  "posts": *[_type == "post" && language == $language && defined(slug.current)\n  && _id != $excludeId\n  && ($category == "" || category->slug.current == $category)\n  && ($q == "" || [title, excerpt] match $q)] | order(publishedAt asc) [$start...$end] {\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  cover { asset, crop, hotspot, alt },\n  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },\n  "author": author->{ name, image { asset, crop, hotspot, alt } }\n}\n}': BLOG_OLDEST_QUERY_RESULT;
+    '*[_type == "post" && language == $language && defined(slug.current)]\n  | order(publishedAt desc) [0] {\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  cover { asset, crop, hotspot, alt },\n  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },\n  "author": author->{ name, image { asset, crop, hotspot, alt } }\n}': BLOG_FEATURED_QUERY_RESULT;
     '*[_type == "category" && defined(slug.current)]\n  | order(slug.current asc) {\n    "slug": slug.current,\n    "name": coalesce(name[language == $language][0].value, name[0].value)\n  }': BLOG_CATEGORIES_QUERY_RESULT;
-    '*[_type == "post" && language == $language && slug.current == $slug][0]{\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  cover { asset, crop, hotspot, alt },\n  body[] {\n    ...,\n    _type == "image" => { asset, crop, hotspot, alt, caption }\n  },\n  seo,\n  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },\n  "author": author->{\n    name,\n    image { asset, crop, hotspot, alt },\n    "role": coalesce(role[language == $language][0].value, role[0].value),\n    "bio": coalesce(bio[language == $language][0].value, bio[0].value)\n  },\n  "translations": *[_type == "translation.metadata" && references(^._id)][0].translations[].value->{\n    language,\n    "slug": slug.current\n  }\n}': BLOG_POST_QUERY_RESULT;
-    '*[_type == "post" && language == $language && defined(slug.current)\n  && category._ref == $categoryId && _id != $postId] | order(publishedAt desc) [0...3] {\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  cover { asset, crop, hotspot, alt },\n  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },\n  "author": author->{ name }\n}': BLOG_RELATED_QUERY_RESULT;
+    '*[_type == "post" && language == $language && slug.current == $slug][0]{\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  cover { asset, crop, hotspot, alt },\n  body[] {\n    ...,\n    _type == "image" => { asset, crop, hotspot, alt, caption }\n  },\n  seo,\n  "category": category->{ _id, "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },\n  "author": author->{\n    name,\n    image { asset, crop, hotspot, alt },\n    "role": coalesce(role[language == $language][0].value, role[0].value),\n    "bio": coalesce(bio[language == $language][0].value, bio[0].value)\n  },\n  "translations": *[_type == "translation.metadata" && references(^._id)][0].translations[].value->{\n    language,\n    "slug": slug.current\n  }\n}': BLOG_POST_QUERY_RESULT;
+    '*[_type == "post" && language == $language && defined(slug.current)\n  && _id != $postId] | order(select(category._ref == $categoryId => 0, 1) asc, publishedAt desc) [0...3] {\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  cover { asset, crop, hotspot, alt },\n  "category": category->{ "slug": slug.current, "name": coalesce(name[language == $language][0].value, name[0].value) },\n  "author": author->{ name, image { asset, crop, hotspot, alt } }\n}': BLOG_RELATED_QUERY_RESULT;
     '*[_type == "post" && defined(slug.current) && defined(language)]{\n  language,\n  "slug": slug.current,\n  _updatedAt\n}': BLOG_SLUGS_QUERY_RESULT;
   }
 }

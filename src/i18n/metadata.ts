@@ -8,6 +8,10 @@ import { routing, type Locale } from "./routing";
  *
  * x-default points at the language-negotiating root for the home page, and at the
  * default locale for every other page (only the bare `/` is negotiated, ADR-006).
+ *
+ * `paths` is for pages whose address differs per language (a blog post: one slug per
+ * language). Only the languages it lists get an hreflang, and x-default follows the
+ * default locale's version, or this page's when there is none.
  */
 export type LocaleAlternates = {
   canonical: string;
@@ -17,7 +21,18 @@ export type LocaleAlternates = {
 export function localeAlternates(
   locale: Locale,
   path: `/${string}`,
+  paths?: Partial<Record<Locale, `/${string}`>>,
 ): LocaleAlternates {
+  if (paths) {
+    const languages: Record<string, string> = {};
+    for (const l of routing.locales) {
+      const own = paths[l];
+      if (own) languages[l] = `/${l}${own}`;
+    }
+    languages["x-default"] =
+      languages[routing.defaultLocale] ?? `/${locale}${path}`;
+    return { canonical: `/${locale}${path}`, languages };
+  }
   const suffix = path === "/" ? "" : path;
   const languages: Record<string, string> = {};
   for (const l of routing.locales) languages[l] = `/${l}${suffix}`;
@@ -56,6 +71,8 @@ type PageMetadataInput = {
   siteName: string;
   /** Vercel preview build: noindex (see src/lib/seo/deployment.ts). */
   preview: boolean;
+  /** The page's path per language, when it differs (see localeAlternates). */
+  paths?: Partial<Record<Locale, `/${string}`>>;
 };
 
 /**
@@ -70,8 +87,9 @@ export function pageMetadata({
   description,
   siteName,
   preview,
+  paths,
 }: PageMetadataInput): Metadata {
-  const alternates = localeAlternates(locale, path);
+  const alternates = localeAlternates(locale, path, paths);
   const shareTitle =
     typeof title === "string" ? `${title} · ${siteName}` : title.absolute;
   const image = {

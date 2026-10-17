@@ -6,6 +6,7 @@ import { RevealGroup } from "@/components/motion/reveal-group";
 import { revealItem } from "@/components/motion/reveal-item";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { AuthorAvatar } from "@/features/blog/components/author-avatar";
 import type { BlogCard } from "@/features/blog/e2e-backend";
 import { formatPostDate } from "@/features/blog/format";
 import { Link } from "@/i18n/navigation";
@@ -83,9 +84,10 @@ export async function FeaturedArticle({
             {...revealItem()}
             className="flex items-center gap-2.5 text-small font-medium text-text-muted"
           >
-            <span
-              aria-hidden
-              className="size-8 shrink-0 rounded-full bg-action-primary-subtle"
+            <AuthorAvatar
+              image={post.author.image}
+              size={32}
+              className="size-8"
             />
             {t("byline", {
               author: post.author.name,
