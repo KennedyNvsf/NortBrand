@@ -76,6 +76,25 @@ test.describe("services page", () => {
     );
   });
 
+  // #68. Playback itself is not asserted: Playwright's Chromium has no H.264 decoder.
+  test("hero fills the first screen with a silent looping video", async ({
+    page,
+  }) => {
+    await page.goto("/en/services");
+    const hero = page.getByRole("region", { name: /Everything your business/ });
+    const box = await hero.boundingBox();
+    const viewport = page.viewportSize();
+    expect(box?.height ?? 0).toBeGreaterThanOrEqual(viewport?.height ?? 0);
+
+    const video = hero.locator("video");
+    await expect(video).toHaveAttribute("aria-hidden", "true");
+    await expect(video).toHaveAttribute("loop", "");
+    await expect(video).toHaveAttribute("playsinline", "");
+    expect(await video.evaluate((v: HTMLVideoElement) => v.muted)).toBe(true);
+    // No controls of any kind: the loop is decorative (#68 review).
+    await expect(hero.getByRole("button")).toHaveCount(0);
+  });
+
   test("has one block per service, anchored by slug", async ({ page }) => {
     await page.goto("/pt/services");
     const blocks = page.locator("main article");
@@ -316,5 +335,24 @@ test.describe("services page", () => {
       page.getByRole("navigation", { name: "Jump to a service" }),
     ).toBeHidden();
     await expect(page.locator("main article")).toHaveCount(5);
+  });
+});
+
+test.describe("services hero with reduced motion", () => {
+  test.use({ reducedMotion: "reduce" });
+
+  test("the video never starts and the photo stays", async ({ page }) => {
+    await page.goto("/en/services");
+    const hero = page.getByRole("region", { name: /Everything your business/ });
+    await expect(hero.getByRole("heading", { level: 1 })).toBeVisible();
+    const state = await hero
+      .locator("video")
+      .evaluate((v: HTMLVideoElement) => ({
+        paused: v.paused,
+        // preload="none" and no play(): nothing was fetched.
+        networkState: v.networkState,
+      }));
+    expect(state.paused).toBe(true);
+    expect(state.networkState).not.toBe(2); // HTMLMediaElement.NETWORK_LOADING
   });
 });
