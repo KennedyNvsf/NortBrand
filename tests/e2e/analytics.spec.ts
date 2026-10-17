@@ -186,7 +186,7 @@ test.describe("what reaches analytics", () => {
     expect(sent).not.toContain("secret-token");
   });
 
-  test("consultation_submitted carries the service only", async ({
+  test("consultation_request_submitted carries the service only", async ({
     page,
     context,
   }) => {
@@ -212,13 +212,76 @@ test.describe("what reaches analytics", () => {
     const calls = await dataLayer(page);
     expect(calls).toContainEqual([
       "event",
-      "consultation_submitted",
+      "consultation_request_submitted",
       { service: "web-design" },
     ]);
     const sent = JSON.stringify(calls);
     for (const personal of ["Maria", "maria@studio.pt", "clinic"]) {
       expect(sent).not.toContain(personal);
     }
+  });
+
+  test("service_details_opened carries the service, once per opening", async ({
+    page,
+    context,
+  }) => {
+    await watchGoogle(context);
+    await page.goto("/en/services");
+    const details = page.getByRole("dialog");
+    // A click before React hydrates the trigger does nothing: retry until it opens.
+    await expect(async () => {
+      await page
+        .getByRole("button", { name: /More Details/ })
+        .first()
+        .click();
+      await expect(details).toBeVisible({ timeout: 1000 });
+    }).toPass();
+
+    const opened = (await dataLayer(page)).filter(
+      (call) => call[0] === "event" && call[1] === "service_details_opened",
+    );
+    expect(opened).toEqual([
+      ["event", "service_details_opened", { service: "web-design" }],
+    ]);
+  });
+
+  test("language_switched carries the two languages", async ({
+    page,
+    context,
+    isMobile,
+  }) => {
+    test.skip(isMobile, "the switcher is in the menu below desktop");
+    await watchGoogle(context);
+    // Switching language loads a new page, which empties the gtag queue. Record every
+    // queued call in the test process instead, so the event survives the navigation.
+    const recorded: unknown[][] = [];
+    await context.exposeBinding("recordGtag", (_source, call: unknown[]) => {
+      recorded.push(call);
+    });
+    await context.addInitScript(() => {
+      const queue: unknown[] = [];
+      const record = (
+        window as unknown as { recordGtag: (call: unknown[]) => void }
+      ).recordGtag;
+      queue.push = (...items: unknown[]) => {
+        for (const item of items) {
+          record(Array.from(item as ArrayLike<unknown>));
+        }
+        return Array.prototype.push.apply(queue, items);
+      };
+      window.dataLayer = queue;
+    });
+
+    await page.goto("/en");
+    await expect(async () => {
+      await page.getByRole("link", { name: "PT – Português" }).click();
+      await expect(page).toHaveURL(/\/pt$/, { timeout: 2000 });
+    }).toPass();
+    expect(recorded).toContainEqual([
+      "event",
+      "language_switched",
+      { from: "en", to: "pt" },
+    ]);
   });
 
   test("newsletter_subscribed carries nothing", async ({ page, context }) => {

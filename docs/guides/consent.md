@@ -125,11 +125,21 @@ this.
   clean `page_location` for any later hit. The newsletter link pages carry the
   visitor's email in their query string, which must never reach Google.
 - **`trackEvent(name, params)`.** Typed against `AnalyticsEvents`, which is the whole
-  vocabulary:
-  - `consultation_submitted { service }`: the slug only.
-  - `newsletter_subscribed {}`: no parameters.
+  vocabulary: exactly the five events in Brief › GA4 configuration (#72).
 
-  A new event means a new entry in that map, reviewed for personal data.
+  | Event                            | Sent when                                    | Parameters                                |
+  | -------------------------------- | -------------------------------------------- | ----------------------------------------- |
+  | `consultation_request_submitted` | The consultation form shows "Request sent."  | `service`: the slug only                  |
+  | `newsletter_subscribed`          | The newsletter form shows its success state  | none                                      |
+  | `service_details_opened`         | "More Details" opens (Dialog or Drawer)      | `service`: the slug                       |
+  | `language_switched`              | The other language is picked in the switcher | `from`, `to`: locale codes                |
+  | `blog_search`                    | Search results render on the blog            | `term_length`, `results`: never the words |
+  - `service_details_opened` counts each opening once: swapping Dialog and Drawer on a
+    resize keeps the panel open and sends nothing.
+  - `language_switched` is sent on the click, before the navigation. The current
+    language's own link sends nothing.
+  - A new event means a new entry in that map, reviewed for personal data. The type
+    system then refuses any other name or parameter.
 
 **`components/google-analytics.tsx`.** Mounted next to the ConsentManager. It follows
 `useConsent()`:

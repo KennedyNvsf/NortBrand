@@ -1,4 +1,5 @@
 import type { ServiceSlug } from "@/content/services";
+import type { Locale } from "@/i18n/routing";
 
 /*
  * GA4, loaded only after analytics consent (ADR-007, #43). Nothing here runs until the
@@ -15,10 +16,17 @@ import type { ServiceSlug } from "@/content/services";
  *   `_ga` / `_ga_<ID>` cookies.
  */
 
-/** Every event the site sends, with its only allowed parameters. */
+/**
+ * Every event the site sends, with its only allowed parameters: exactly the list in
+ * Brief › GA4 configuration (#72). Slugs, locale codes and counts only.
+ */
 export type AnalyticsEvents = {
-  consultation_submitted: { service: ServiceSlug };
+  consultation_request_submitted: { service: ServiceSlug };
   newsletter_subscribed: Record<string, never>;
+  /** "More Details" opened on the Services page. */
+  service_details_opened: { service: ServiceSlug };
+  /** The language switcher, from the current language to the one picked. */
+  language_switched: { from: Locale; to: Locale };
   /** The search's length and result count only: never the words typed. */
   blog_search: { term_length: number; results: number };
 };

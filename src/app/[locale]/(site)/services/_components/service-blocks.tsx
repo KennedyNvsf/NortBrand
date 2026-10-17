@@ -77,6 +77,7 @@ export async function ServiceBlocks() {
                 </p>
                 <div {...revealItem()} className="w-full pt-1 lg:pt-2">
                   <ServiceDetails
+                    slug={slug}
                     icon={icon}
                     name={name}
                     position={t("details.position", {

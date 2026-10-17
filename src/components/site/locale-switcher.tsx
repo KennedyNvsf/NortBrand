@@ -7,6 +7,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 
 import { useAlternatePaths } from "./alternate-paths";
 import { localeNames, routing } from "@/i18n/routing";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 /*
@@ -18,6 +19,8 @@ import { cn } from "@/lib/utils";
  *   language ("EN – English", "PT – Português"), which keeps the visible label inside
  *   the name (WCAG 2.5.3) and is announced with the right pronunciation via `lang`.
  * - The current locale is bold and marked aria-current, so it is not colour alone.
+ * - Picking the other language sends GA4 `language_switched { from, to }` (#72) on the
+ *   click, before the navigation starts; the current language's own link sends nothing.
  * - A page whose address differs per language (a blog post) declares its versions
  *   with <AlternatePaths>; the switcher then links to those (alternate-paths.tsx).
  */
@@ -57,7 +60,12 @@ export function LocaleSwitcher({
               lang={option}
               hrefLang={option}
               aria-current={current ? "true" : undefined}
-              onClick={onNavigate}
+              onClick={() => {
+                if (!current) {
+                  trackEvent("language_switched", { from: locale, to: option });
+                }
+                onNavigate?.();
+              }}
               className={cn(
                 "inline-flex min-h-11 min-w-8 items-center justify-center rounded-sm",
                 "transition-colors duration-(--duration-fast) ease-standard",

@@ -140,7 +140,9 @@ export function ConsultationForm() {
       switch (result.status) {
         case "success":
           // The service slug only: never the name, email, phone or message.
-          trackEvent("consultation_submitted", { service: values.service });
+          trackEvent("consultation_request_submitted", {
+            service: values.service,
+          });
           setSentTo(values.email.trim().toLowerCase());
           setStatus("sent");
           setAnnouncement(t("sent.title"));
