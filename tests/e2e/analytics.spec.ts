@@ -186,7 +186,7 @@ test.describe("what reaches analytics", () => {
     expect(sent).not.toContain("secret-token");
   });
 
-  test("consultation_submitted carries the service only", async ({
+  test("consultation_request_submitted carries the service only", async ({
     page,
     context,
   }) => {
@@ -212,13 +212,57 @@ test.describe("what reaches analytics", () => {
     const calls = await dataLayer(page);
     expect(calls).toContainEqual([
       "event",
-      "consultation_submitted",
+      "consultation_request_submitted",
       { service: "web-design" },
     ]);
     const sent = JSON.stringify(calls);
     for (const personal of ["Maria", "maria@studio.pt", "clinic"]) {
       expect(sent).not.toContain(personal);
     }
+  });
+
+  test("service_details_opened carries the service, once per opening", async ({
+    page,
+    context,
+  }) => {
+    await watchGoogle(context);
+    await page.goto("/en/services");
+    const details = page.getByRole("dialog");
+    // A click before React hydrates the trigger does nothing: retry until it opens.
+    await expect(async () => {
+      await page
+        .getByRole("button", { name: /More Details/ })
+        .first()
+        .click();
+      await expect(details).toBeVisible({ timeout: 1000 });
+    }).toPass();
+
+    const opened = (await dataLayer(page)).filter(
+      (call) => call[0] === "event" && call[1] === "service_details_opened",
+    );
+    expect(opened).toEqual([
+      ["event", "service_details_opened", { service: "web-design" }],
+    ]);
+  });
+
+  test("language_switched carries the two languages", async ({
+    page,
+    context,
+    isMobile,
+  }) => {
+    test.skip(isMobile, "the switcher is in the menu below desktop");
+    await watchGoogle(context);
+    // Keep the English page (and its gtag queue) by stopping the trip to /pt.
+    await context.route(/\/pt(\?|$)/, (route) => route.abort());
+    await page.goto("/en");
+    await expect(async () => {
+      await page.getByRole("link", { name: "PT – Português" }).click();
+      expect(await dataLayer(page)).toContainEqual([
+        "event",
+        "language_switched",
+        { from: "en", to: "pt" },
+      ]);
+    }).toPass();
   });
 
   test("newsletter_subscribed carries nothing", async ({ page, context }) => {

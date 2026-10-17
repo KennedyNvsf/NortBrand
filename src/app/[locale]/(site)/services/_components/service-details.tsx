@@ -23,6 +23,8 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import type { ServiceSlug } from "@/content/services";
+import { trackEvent } from "@/lib/analytics";
 import { ICON_STROKE, icons, type IconName } from "@/lib/icons";
 import { MEDIA_MD, useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
@@ -41,6 +43,8 @@ import { cn } from "@/lib/utils";
  */
 
 export type ServiceDetailsProps = {
+  /** For the `service_details_opened` GA4 event (#72). */
+  slug: ServiceSlug;
   icon: IconName;
   /** Service name, shown as the eyebrow. */
   name: string;
@@ -68,6 +72,15 @@ export function ServiceDetails(props: ServiceDetailsProps) {
   const [open, setOpen] = useState(false);
   const isTabletUp = useMediaQuery(MEDIA_MD);
 
+  // Counted on the closed → open change only: swapping Dialog and Drawer on resize
+  // keeps it open without a new open event.
+  const onOpenChange = (next: boolean) => {
+    if (next && !open) {
+      trackEvent("service_details_opened", { service: props.slug });
+    }
+    setOpen(next);
+  };
+
   const trigger = (
     <Button
       variant="secondary"
@@ -81,7 +94,7 @@ export function ServiceDetails(props: ServiceDetailsProps) {
 
   if (isTabletUp) {
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogTrigger asChild>{trigger}</DialogTrigger>
         <DialogContent
           showCloseButton={false}
@@ -101,7 +114,7 @@ export function ServiceDetails(props: ServiceDetailsProps) {
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
       <DrawerContent className="rounded-t-xl">
         <DetailsBody

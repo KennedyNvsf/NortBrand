@@ -85,7 +85,9 @@ describe("enableAnalytics", () => {
   it("sends page views and events with only their allowed fields", () => {
     enableAnalytics(ID);
     trackPageView("/en/about");
-    trackEvent("consultation_submitted", { service: "web-design" });
+    trackEvent("consultation_request_submitted", { service: "web-design" });
+    trackEvent("service_details_opened", { service: "website-maintenance" });
+    trackEvent("language_switched", { from: "en", to: "pt" });
 
     expect(calls()).toContainEqual([
       "event",
@@ -94,8 +96,18 @@ describe("enableAnalytics", () => {
     ]);
     expect(calls()).toContainEqual([
       "event",
-      "consultation_submitted",
+      "consultation_request_submitted",
       { service: "web-design" },
+    ]);
+    expect(calls()).toContainEqual([
+      "event",
+      "service_details_opened",
+      { service: "website-maintenance" },
+    ]);
+    expect(calls()).toContainEqual([
+      "event",
+      "language_switched",
+      { from: "en", to: "pt" },
     ]);
   });
 });
