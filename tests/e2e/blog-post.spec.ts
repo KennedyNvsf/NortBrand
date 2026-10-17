@@ -80,26 +80,14 @@ test.describe("blog post", () => {
     ).toHaveAttribute("aria-current", "location");
   });
 
-  test("the progress bar follows the article", async ({ page }) => {
-    await page.goto(translated.en);
-    const progress = page.getByRole("progressbar", {
-      name: "Reading progress",
-    });
-    // On a phone the lead is already on screen, so the start is above 0 there.
-    await expect(progress).not.toHaveAttribute("aria-valuenow", "100");
-    await page.evaluate(() => {
-      document.getElementById("post-article")?.scrollIntoView({ block: "end" });
-      window.scrollBy(0, 100);
-    });
-    await expect(progress).toHaveAttribute("aria-valuenow", "100");
-  });
-
   test("switching language opens the translation", async ({ page }) => {
     await page.goto(translated.en);
     test.skip(!isDesktop(page), "the switcher is in the menu below desktop");
     await page.getByRole("link", { name: "PT – Português" }).click();
     await expect(page).toHaveURL(translated.pt);
-    await expect(page.locator("h1")).toContainText("[PT]");
+    // By role: after a client navigation Next keeps the previous page hidden in the
+    // DOM, so a bare "h1" selector would also match the English title.
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("[PT]");
   });
 
   test("switching language without a translation opens the listing", async ({

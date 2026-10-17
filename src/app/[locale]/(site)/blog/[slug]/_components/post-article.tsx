@@ -21,7 +21,6 @@ import { ShareLinks } from "./share-links";
  * - Below desktop there is no rail (Figma): Get started follows Tags and Share.
  * - Tags: posts have one category and no tags (schema), so the category is the tag,
  *   linking to the filtered listing (docs/tech-debt.md).
- * - `id="post-article"` is what ReadingProgress measures.
  */
 export async function PostArticle({
   post,
@@ -52,7 +51,7 @@ export async function PostArticle({
     <div className="bg-bg-surface px-(--gutter) pb-14 md:pb-18 lg:pb-22.5">
       <div className="mx-auto flex max-w-284 items-start justify-between gap-2xl pt-8 lg:pt-0">
         <div className="flex w-full max-w-170 min-w-0 flex-col gap-5 md:gap-lg">
-          <article id="post-article">
+          <article>
             <PostBody body={post.body} />
           </article>
 

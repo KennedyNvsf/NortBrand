@@ -154,8 +154,8 @@ Figma 05 Blog › Post `285:3` (tablet `372:511`, mobile `372:777`), top to bott
   top, holding "On this page", Back to top and Get started. Below desktop there is no
   rail, and Get started follows the tags and share row.
 - **Author card**, then **Keep reading** (three cards), then the **Newsletter card**.
-  There is no CTA band and no Sticky CTA.
-- **The reading progress bar**, under the nav.
+  There is no CTA band and no Sticky CTA, and no reading progress bar (removed at
+  review, 17 October 2026; the table of contents shows the reader's place).
 
 ### How a request is served
 
@@ -197,9 +197,8 @@ GET /pt/blog/renovar-a-marca
 | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `blog/[slug]/page.tsx`                           | Static params, metadata, the not-found and redirect branch, and the page's composition.                                                                                    |
 | `_components/post-header.tsx`                    | Breadcrumb (a `nav` named "Breadcrumb"), H1, byline with `<time>`, and the cover (`PostCover`). Hero entrance with `enterItem`.                                            |
-| `_components/post-article.tsx`                   | Reading column (`PostBody`), tags and share, and the desktop rail. `id="post-article"` is what the progress bar measures.                                                  |
+| `_components/post-article.tsx`                   | Reading column (`PostBody`), tags and share, and the desktop rail.                                                                                                         |
 | `_components/share-links.tsx`                    | Native share (shown only where the browser has a share sheet), email (a `mailto`, works without JS), and copy link with a Sonner toast.                                    |
-| `_components/reading-progress.tsx`               | A `progressbar` with a name and a value. Writes `scaleX` and `aria-valuenow` to the DOM each frame, with no React render per scroll.                                       |
 | `_components/author-card.tsx`                    | Photo, "Written by", name, the bio in the page language, and "More articles".                                                                                              |
 | `_components/related-posts.tsx`                  | "Keep reading": three cards on desktop, two on tablet (as in Figma), one per row on mobile.                                                                                |
 | `src/features/blog/components/post-body.tsx`     | Portable Text to Figma's article: the first paragraph is the lead, then 32/28 px h2s, 18 px copy, the pull quote (bold words turn red), and bullets as the red-check list. |
@@ -215,9 +214,6 @@ GET /pt/blog/renovar-a-marca
   gentle spring (Motion Spec). It is a 1 px bar scaled to the link's height, so only
   transforms animate. It is placed without travel on first paint and under reduced
   motion.
-- **Reading progress:** scroll-linked and linear. It is the share of the article that
-  has come into view, so a short post fills smoothly too. It is hidden under reduced
-  motion; the table of contents still shows the position.
 - **Author card, Keep reading and Newsletter** reveal on scroll, as on the listing, and
   "studio" draws its underline. The article body itself never animates: reading text
   should not move.
@@ -227,7 +223,8 @@ GET /pt/blog/renovar-a-marca
 - One H1. Body headings are H2/H3, and "Keep reading" is an H2.
 - The table of contents marks the current section with `aria-current="location"` and
   SemiBold text, not colour alone. Its links are plain anchors, and headings have a
-  120 px scroll margin so the sticky nav never covers them.
+  112 px scroll margin, so the sticky nav never covers them and a heading reached
+  from the list counts as read (the reading line is at 120 px).
 - Every share control has a name ("Share by email", "Copy link"). Touch targets are
   44 px below desktop, including the tag badge, through an invisible hit area.
 
@@ -237,7 +234,6 @@ GET /pt/blog/renovar-a-marca
 - **e2e:** `tests/e2e/blog-post.spec.ts` covers:
   - the article, breadcrumb and related posts, with axe;
   - the table of contents following a click;
-  - the progress bar;
   - switching language with and without a translation;
   - the pre-hydration redirect;
   - hreflang;

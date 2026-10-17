@@ -13,7 +13,8 @@ import { headingIds } from "../table-of-contents";
  * A post's body, rendered through an explicit component map (nb-se 2.1: never raw
  * HTML). Only what the schema allows has a renderer; anything else renders nothing.
  * - h2/h3 get ids shared with the table of contents (table-of-contents.ts), and a scroll
- *   margin so the sticky nav does not cover them.
+ *   margin so the sticky nav does not cover them. It stays below the TOC's reading line
+ *   (120 px), so a heading reached through the TOC counts as the section being read.
  * - Links: same-site paths stay relative; external links open in the same tab with
  *   rel="noopener noreferrer". The schema only allows https, mailto and relative URLs.
  * - Images: next/image from the Sanity CDN, alt text required by the schema, optional
@@ -45,7 +46,7 @@ function components(
       h2: ({ children, value }) => (
         <h2
           id={id(value)}
-          className="scroll-mt-30 pt-2 text-[28px] leading-[1.18] font-bold tracking-[-0.005em] text-text-primary md:pt-5 md:text-[32px]"
+          className="scroll-mt-28 pt-2 text-[28px] leading-[1.18] font-bold tracking-[-0.005em] text-text-primary md:pt-5 md:text-[32px]"
         >
           {children}
         </h2>
@@ -53,7 +54,7 @@ function components(
       h3: ({ children, value }) => (
         <h3
           id={id(value)}
-          className="scroll-mt-30 text-h4 font-semibold text-text-primary"
+          className="scroll-mt-28 text-h4 font-semibold text-text-primary"
         >
           {children}
         </h3>

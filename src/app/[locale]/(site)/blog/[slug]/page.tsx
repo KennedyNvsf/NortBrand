@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
-import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { RevealGroup } from "@/components/motion/reveal-group";
@@ -25,7 +24,6 @@ import { routing, type Locale } from "@/i18n/routing";
 import { AuthorCard } from "./_components/author-card";
 import { PostArticle } from "./_components/post-article";
 import { PostCover, PostHeader } from "./_components/post-header";
-import { ReadingProgress } from "./_components/reading-progress";
 import { RelatedPosts } from "./_components/related-posts";
 
 /*
@@ -119,16 +117,12 @@ export default async function BlogPostPage({ params }: { params: Params }) {
     notFound();
   }
 
-  const [t, related] = await Promise.all([
-    getTranslations("BlogPost"),
-    getRelatedPosts(locale, post._id, post.category._id),
-  ]);
+  const related = await getRelatedPosts(locale, post._id, post.category._id);
   const url = `${publicEnv.NEXT_PUBLIC_SITE_URL}/${locale}/blog/${slug}`;
 
   return (
     <main id="main">
       <AlternatePaths paths={postPaths(locale, slug, post.translations)} />
-      <ReadingProgress targetId="post-article" label={t("progress")} />
       <PostHeader
         post={post}
         locale={locale}
