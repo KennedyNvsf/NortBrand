@@ -3,7 +3,8 @@ import { legalDocuments } from "./legal";
 /**
  * Every indexable page, as a locale-independent path. The sitemap lists each one in
  * every locale with hreflang alternates. Add a page here when it ships; the 404, the
- * Studio and the noindex newsletter pages stay out. Blog posts join in #62.
+ * Studio and the noindex newsletter pages stay out. Blog posts are added from Sanity in
+ * app/sitemap.ts (#62).
  */
 export const sitePages = [
   "/",

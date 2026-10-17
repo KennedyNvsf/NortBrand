@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { RevealGroup } from "@/components/motion/reveal-group";
 import { revealItem } from "@/components/motion/reveal-item";
 import { AlternatePaths } from "@/components/site/alternate-paths";
+import { JsonLd } from "@/components/site/json-ld";
 import { publicEnv } from "@/env";
 import {
   getBlogPost,
@@ -12,14 +14,17 @@ import {
   getRelatedPosts,
 } from "@/features/blog/data";
 import {
+  postAlternates,
   postPaths,
   readingMinutes,
-  translatedLocales,
 } from "@/features/blog/post";
 import { NewsletterCard } from "@/features/newsletter/components/newsletter-card";
 import { redirect } from "@/i18n/navigation";
 import { localizedPageMetadata } from "@/i18n/page-metadata";
 import { routing, type Locale } from "@/i18n/routing";
+import { SHARE_IMAGE_SIZE } from "@/i18n/metadata";
+import { sanityImageProps } from "@/lib/sanity/image";
+import { blogPostingJsonLd, breadcrumbJsonLd } from "@/lib/seo/structured-data";
 
 import { AuthorCard } from "./_components/author-card";
 import { PostArticle } from "./_components/post-article";
@@ -40,6 +45,9 @@ import { RelatedPosts } from "./_components/related-posts";
  *   page hydrates (or without JavaScript) keeps the slug and lands here with the
  *   other language's slug; that slug is then redirected to its translation or to the
  *   listing, so switching language never ends on a 404.
+ * - SEO (#62): hreflang lists only the post's real translations (postAlternates, the
+ *   same set the sitemap uses); Open Graph is an `article` with the cover as its share
+ *   image; JSON-LD BlogPosting and a BreadcrumbList matching the visible breadcrumb.
  */
 
 export const ensureStatic = "navigation";
@@ -76,21 +84,40 @@ export async function generateMetadata({
   const { locale, slug } = await resolveParams(params);
   const post = await getBlogPost(locale, slug);
   if (!post) return {};
-  const paths = postPaths(locale, slug, post.translations);
-  const languages = Object.fromEntries(
-    translatedLocales(locale, post.translations).map((language) => [
-      language,
-      paths[language],
-    ]),
-  );
+  const cover = shareCover(post.cover);
   return localizedPageMetadata(
     `/blog/${slug}`,
     () => ({
       title: post.seo?.title ?? post.title,
       description: post.seo?.description ?? post.excerpt,
     }),
-    languages,
+    postAlternates(locale, slug, post.translations),
+    {
+      ...(cover && { image: cover }),
+      article: {
+        publishedTime: post.publishedAt,
+        modifiedTime: post._updatedAt,
+        authors: [post.author.name],
+        ...(post.category.name && { section: post.category.name }),
+      },
+    },
   );
+}
+
+/** The cover cropped to the share size (1200 × 630), from the Sanity CDN; null without one. */
+function shareCover(cover: Parameters<typeof sanityImageProps>[0]) {
+  const image = sanityImageProps(cover, {
+    width: SHARE_IMAGE_SIZE.width,
+    aspect: SHARE_IMAGE_SIZE.width / SHARE_IMAGE_SIZE.height,
+  });
+  return image
+    ? {
+        url: image.src,
+        width: image.width,
+        height: image.height,
+        alt: image.alt,
+      }
+    : null;
 }
 
 /**
@@ -117,11 +144,40 @@ export default async function BlogPostPage({ params }: { params: Params }) {
     notFound();
   }
 
-  const related = await getRelatedPosts(locale, post._id, post.category._id);
-  const url = `${publicEnv.NEXT_PUBLIC_SITE_URL}/${locale}/blog/${slug}`;
+  const [related, tBlog] = await Promise.all([
+    getRelatedPosts(locale, post._id, post.category._id),
+    getTranslations("Blog"),
+  ]);
+  const siteUrl = publicEnv.NEXT_PUBLIC_SITE_URL;
+  const url = `${siteUrl}/${locale}/blog/${slug}`;
+  const categoryName = post.category.name ?? post.category.slug;
 
   return (
     <main id="main">
+      <JsonLd
+        data={blogPostingJsonLd({
+          siteUrl,
+          url,
+          language: locale,
+          title: post.title,
+          description: post.seo?.description ?? post.excerpt,
+          publishedAt: post.publishedAt,
+          updatedAt: post._updatedAt,
+          section: post.category.name,
+          image: shareCover(post.cover)?.url,
+          author: post.author.name,
+        })}
+      />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: tBlog("eyebrow"), url: `${siteUrl}/${locale}/blog` },
+          {
+            name: categoryName,
+            url: `${siteUrl}/${locale}/blog?category=${encodeURIComponent(post.category.slug)}`,
+          },
+          { name: post.title, url },
+        ])}
+      />
       <AlternatePaths paths={postPaths(locale, slug, post.translations)} />
       <PostHeader
         post={post}

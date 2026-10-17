@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { postPaths, readingMinutes, translatedLocales } from "./post";
+import {
+  postAlternates,
+  postPaths,
+  readingMinutes,
+  translatedLocales,
+} from "./post";
 
 const paragraph = (words: number) => ({
   _type: "block",
@@ -53,5 +58,19 @@ describe("translatedLocales", () => {
         { language: "pt", slug: "b" },
       ]),
     ).toEqual(["en", "pt"]);
+  });
+});
+
+describe("postAlternates", () => {
+  it("keeps only real translations, never the listing fallback", () => {
+    expect(postAlternates("en", "only-english", null)).toEqual({
+      en: "/blog/only-english",
+    });
+    expect(
+      postAlternates("pt", "renovar-a-marca", [
+        { language: "en", slug: "brand-refresh" },
+        { language: "pt", slug: "renovar-a-marca" },
+      ]),
+    ).toEqual({ en: "/blog/brand-refresh", pt: "/blog/renovar-a-marca" });
   });
 });

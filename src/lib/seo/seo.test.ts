@@ -6,6 +6,8 @@ import { sitePages } from "@/content/site-pages";
 import { buildRobots, buildSitemap } from "./crawl";
 import { isPreviewDeployment } from "./deployment";
 import {
+  blogPostingJsonLd,
+  breadcrumbJsonLd,
   organizationJsonLd,
   serializeJsonLd,
   servicesJsonLd,
@@ -164,5 +166,117 @@ describe("serializeJsonLd", () => {
     expect(JSON.parse(json)).toEqual({
       name: "</script><script>alert(1)</script>",
     });
+  });
+});
+
+describe("buildSitemap with blog posts", () => {
+  const sitemap = buildSitemap(
+    SITE,
+    ["/"],
+    [
+      {
+        locale: "en",
+        path: "/blog/brand-refresh",
+        paths: { en: "/blog/brand-refresh", pt: "/blog/renovar-a-marca" },
+        lastModified: "2026-10-01T10:00:00Z",
+      },
+      {
+        locale: "en",
+        path: "/blog/only-english",
+        paths: { en: "/blog/only-english" },
+        lastModified: "2026-10-02T10:00:00Z",
+      },
+    ],
+  );
+
+  it("lists each post once, in its own language, with lastModified", () => {
+    const post = sitemap.find(
+      (entry) => entry.url === "https://nortbrand.com/en/blog/brand-refresh",
+    );
+    expect(post?.lastModified).toBe("2026-10-01T10:00:00Z");
+    expect(post?.alternates?.languages).toEqual({
+      en: "https://nortbrand.com/en/blog/brand-refresh",
+      pt: "https://nortbrand.com/pt/blog/renovar-a-marca",
+      "x-default": "https://nortbrand.com/pt/blog/renovar-a-marca",
+    });
+  });
+
+  it("gives an untranslated post no alternate in the other language", () => {
+    const post = sitemap.find(
+      (entry) => entry.url === "https://nortbrand.com/en/blog/only-english",
+    );
+    expect(post?.alternates?.languages).toEqual({
+      en: "https://nortbrand.com/en/blog/only-english",
+      "x-default": "https://nortbrand.com/en/blog/only-english",
+    });
+  });
+});
+
+describe("blogPostingJsonLd", () => {
+  const base = {
+    siteUrl: SITE,
+    url: "https://nortbrand.com/en/blog/brand-refresh",
+    language: "en",
+    title: "5 Signs Your Brand Needs a Refresh",
+    description: "Some signals are obvious.",
+    publishedAt: "2026-09-24T09:00:00Z",
+    updatedAt: "2026-10-01T10:00:00Z",
+    author: "Ana Ribeiro",
+  };
+
+  it("describes the article and points at the Organization as publisher", () => {
+    expect(
+      blogPostingJsonLd({
+        ...base,
+        section: "Branding",
+        image: "https://cdn/x.jpg",
+      }),
+    ).toEqual({
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "@id": "https://nortbrand.com/en/blog/brand-refresh#article",
+      headline: "5 Signs Your Brand Needs a Refresh",
+      description: "Some signals are obvious.",
+      url: base.url,
+      mainEntityOfPage: base.url,
+      inLanguage: "en",
+      datePublished: "2026-09-24T09:00:00Z",
+      dateModified: "2026-10-01T10:00:00Z",
+      articleSection: "Branding",
+      image: "https://cdn/x.jpg",
+      author: { "@type": "Person", name: "Ana Ribeiro" },
+      publisher: { "@id": "https://nortbrand.com/#organization" },
+    });
+  });
+
+  it("leaves out a missing image and section, and cuts long headlines at 110", () => {
+    const data = blogPostingJsonLd({ ...base, title: "x".repeat(130) });
+    expect(data).not.toHaveProperty("image");
+    expect(data).not.toHaveProperty("articleSection");
+    expect(data.headline).toHaveLength(110);
+  });
+});
+
+describe("breadcrumbJsonLd", () => {
+  it("numbers the trail from 1, in order", () => {
+    expect(
+      breadcrumbJsonLd([
+        { name: "Blog", url: "https://nortbrand.com/en/blog" },
+        { name: "Post", url: "https://nortbrand.com/en/blog/post" },
+      ]).itemListElement,
+    ).toEqual([
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Blog",
+        item: "https://nortbrand.com/en/blog",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Post",
+        item: "https://nortbrand.com/en/blog/post",
+      },
+    ]);
   });
 });

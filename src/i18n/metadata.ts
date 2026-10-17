@@ -73,7 +73,19 @@ type PageMetadataInput = {
   preview: boolean;
   /** The page's path per language, when it differs (see localeAlternates). */
   paths?: Partial<Record<Locale, `/${string}`>>;
+  /** The page's own share image (a blog cover), instead of the site's. Absolute URL. */
+  image?: { url: string; width: number; height: number; alt: string };
+  /** Open Graph `article` fields (blog posts); the type becomes "article". */
+  article?: {
+    publishedTime: string;
+    modifiedTime: string;
+    authors: readonly string[];
+    section?: string;
+  };
 };
+
+/** The optional per-page additions, for localizedPageMetadata to pass through. */
+export type PageMetadataExtras = Pick<PageMetadataInput, "image" | "article">;
 
 /**
  * Everything a page needs for search and sharing (brief, "SEO"): title, description,
@@ -88,31 +100,37 @@ export function pageMetadata({
   siteName,
   preview,
   paths,
+  image: ownImage,
+  article,
 }: PageMetadataInput): Metadata {
   const alternates = localeAlternates(locale, path, paths);
   const shareTitle =
     typeof title === "string" ? `${title} · ${siteName}` : title.absolute;
-  const image = {
+  const image = ownImage ?? {
     url: shareImagePath(locale),
     ...SHARE_IMAGE_SIZE,
     type: "image/png",
     alt: siteName,
   };
+  // Only languages the page really exists in (a post may have no translation).
+  const otherLocales = routing.locales.filter(
+    (other) => other !== locale && (!paths || paths[other]),
+  );
 
   return {
     title,
     description,
     alternates,
     openGraph: {
-      type: "website",
+      ...(article
+        ? { type: "article", ...article, authors: [...article.authors] }
+        : { type: "website" }),
       siteName,
       title: shareTitle,
       description,
       url: alternates.canonical,
       locale: openGraphLocales[locale],
-      alternateLocale: routing.locales
-        .filter((other) => other !== locale)
-        .map((other) => openGraphLocales[other]),
+      alternateLocale: otherLocales.map((other) => openGraphLocales[other]),
       images: [image],
     },
     twitter: {

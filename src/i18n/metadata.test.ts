@@ -118,3 +118,44 @@ describe("pageMetadata", () => {
     });
   });
 });
+
+describe("pageMetadata for a blog post", () => {
+  const post = {
+    locale: "en",
+    path: "/blog/only-english",
+    title: "Only English",
+    description: "An untranslated post.",
+    siteName: "NortBrand",
+    preview: false,
+    paths: { en: "/blog/only-english" },
+    image: {
+      url: "https://cdn.sanity.io/cover.jpg",
+      width: 1200,
+      height: 630,
+      alt: "A cover",
+    },
+    article: {
+      publishedTime: "2026-09-24T09:00:00Z",
+      modifiedTime: "2026-10-01T10:00:00Z",
+      authors: ["Ana Ribeiro"],
+      section: "Branding",
+    },
+  } as const;
+
+  it("is an Open Graph article with the cover as its image", () => {
+    const metadata = pageMetadata(post);
+    expect(metadata.openGraph).toMatchObject({
+      type: "article",
+      publishedTime: "2026-09-24T09:00:00Z",
+      modifiedTime: "2026-10-01T10:00:00Z",
+      authors: ["Ana Ribeiro"],
+      section: "Branding",
+      images: [post.image],
+    });
+    expect(metadata.twitter).toMatchObject({ images: [post.image] });
+  });
+
+  it("names no alternate locale for a post without a translation", () => {
+    expect(pageMetadata(post).openGraph).toMatchObject({ alternateLocale: [] });
+  });
+});

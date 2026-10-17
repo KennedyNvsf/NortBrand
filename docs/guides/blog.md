@@ -1,7 +1,7 @@
 # Blog
 
 The public blog: the listing at `/[locale]/blog` (#60, sections 1–7) and the post page at
-`/[locale]/blog/[slug]` (#61, section 8). Blog SEO (#62) extends this guide. Where content comes from (Sanity, the content layer, the
+`/[locale]/blog/[slug]` (#61, section 8), and blog SEO (#62, section 9). Where content comes from (Sanity, the content layer, the
 revalidation webhook) is in [CMS](./cms.md).
 
 ## 1. What we built
@@ -255,3 +255,29 @@ GET /pt/blog/renovar-a-marca
   tags row in `post-article.tsx` already lays out several badges (see tech debt).
 - **Another page with per-language addresses:** render `<AlternatePaths>` with its
   paths. The switcher picks them up.
+
+## 9. SEO (#62)
+
+What search engines and link previews get from the blog.
+
+| Output              | Where                                                                      | What it holds                                                                                                                                                                                                                                                    |
+| ------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Title, description  | `generateMetadata` in each page                                            | The listing: `Metadata.blogTitle` / `blogDescription`. A post: its SEO fields, falling back to the title and excerpt.                                                                                                                                            |
+| Canonical, hreflang | `localeAlternates(locale, path, paths)`                                    | The listing exists in both languages. A post lists **only the languages it is written in** (`postAlternates`). x-default is the PT version when there is one, otherwise the post itself.                                                                         |
+| Open Graph          | `pageMetadata({ image, article })`                                         | A post is `og:type=article`, with `article:published_time`, `modified_time`, `author` and `section`. Its share image is the cover, cropped to 1200 × 630 on the Sanity CDN; without a cover, the site image. `og:locale:alternate` names only real translations. |
+| JSON-LD             | `blogPostingJsonLd`, `breadcrumbJsonLd` (`src/lib/seo/structured-data.ts`) | `BlogPosting`: the headline (cut at 110 characters), dates, language, section, cover, the author as a Person, and the Organization as publisher (by `@id`). `BreadcrumbList`: Blog › category › post, the same trail the page shows.                             |
+| Sitemap             | `app/sitemap.ts` → `buildSitemap(siteUrl, pages, posts)`                   | Every page in both languages, then every published post once per language it exists in, with `lastModified` (`_updatedAt`) and its real alternates.                                                                                                              |
+
+- **One source for alternates.** The page metadata and the sitemap both call
+  `postAlternates`, so the `<link rel="alternate">` tags and the sitemap can never
+  disagree.
+- **Freshness.** The sitemap reads `getBlogSlugs()`: cached, and tagged `blog-posts`.
+  A publish expires it through the webhook, like the pages.
+- **Tests:**
+  - Unit (`seo.test.ts`, `metadata.test.ts`, `post.test.ts`): the builders, an
+    untranslated post's alternates, and article metadata.
+  - e2e (`blog-post.spec.ts`): the JSON-LD on a real page, `og:type`, and the sitemap
+    entries for a translated and an English-only post.
+- **Checking a live post:** Google's Rich Results Test
+  (https://search.google.com/test/rich-results) on the URL should show one Article
+  and one Breadcrumb, with no errors.

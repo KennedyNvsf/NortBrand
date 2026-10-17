@@ -62,3 +62,22 @@ export function translatedLocales(
       translations?.some((entry) => entry?.language === language),
   );
 }
+
+/**
+ * hreflang paths for a post: its own and its real translations only (no listing
+ * fallback, which is for the language switcher). Used by the page metadata and the
+ * sitemap, so both always agree.
+ */
+export function postAlternates(
+  locale: Locale,
+  slug: string,
+  translations: readonly Translation[] | null | undefined,
+): Partial<Record<Locale, `/${string}`>> {
+  const paths = postPaths(locale, slug, translations);
+  return Object.fromEntries(
+    translatedLocales(locale, translations).map((language) => [
+      language,
+      paths[language],
+    ]),
+  );
+}
