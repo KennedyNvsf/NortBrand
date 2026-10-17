@@ -252,17 +252,36 @@ test.describe("what reaches analytics", () => {
   }) => {
     test.skip(isMobile, "the switcher is in the menu below desktop");
     await watchGoogle(context);
-    // Keep the English page (and its gtag queue) by stopping the trip to /pt.
-    await context.route(/\/pt(\?|$)/, (route) => route.abort());
+    // Switching language loads a new page, which empties the gtag queue. Record every
+    // queued call in the test process instead, so the event survives the navigation.
+    const recorded: unknown[][] = [];
+    await context.exposeBinding("recordGtag", (_source, call: unknown[]) => {
+      recorded.push(call);
+    });
+    await context.addInitScript(() => {
+      const queue: unknown[] = [];
+      const record = (
+        window as unknown as { recordGtag: (call: unknown[]) => void }
+      ).recordGtag;
+      queue.push = (...items: unknown[]) => {
+        for (const item of items) {
+          record(Array.from(item as ArrayLike<unknown>));
+        }
+        return Array.prototype.push.apply(queue, items);
+      };
+      window.dataLayer = queue;
+    });
+
     await page.goto("/en");
     await expect(async () => {
       await page.getByRole("link", { name: "PT – Português" }).click();
-      expect(await dataLayer(page)).toContainEqual([
-        "event",
-        "language_switched",
-        { from: "en", to: "pt" },
-      ]);
+      await expect(page).toHaveURL(/\/pt$/, { timeout: 2000 });
     }).toPass();
+    expect(recorded).toContainEqual([
+      "event",
+      "language_switched",
+      { from: "en", to: "pt" },
+    ]);
   });
 
   test("newsletter_subscribed carries nothing", async ({ page, context }) => {
