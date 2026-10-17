@@ -60,12 +60,13 @@ export function Logo({
  * `draw` animates the stroke with CSS (Motion Spec › System): "once" on the 404
  * (900 ms, emphasized), "loop" on the splash (1.4 s, ease in-out). pathLength="1" makes
  * the dash maths independent of the path's real length. Reduced motion: no animation,
- * so the mark is simply drawn.
+ * so the mark is simply drawn. Set `--mark-delay` on the mark (or an ancestor) to start
+ * the drawing later, e.g. once a hero headline has entered.
  */
 const MARK_VIEW_BOX = "68.36 141.12 45.5 43.24";
 
 const drawClassName = {
-  once: "[stroke-dasharray:1] motion-safe:animate-mark-draw",
+  once: "[stroke-dasharray:1] motion-safe:animate-mark-draw [animation-delay:var(--mark-delay,0ms)]",
   loop: "[stroke-dasharray:1] motion-safe:animate-mark-draw-loop",
 } as const;
 

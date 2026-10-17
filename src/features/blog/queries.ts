@@ -5,7 +5,7 @@ import { defineQuery } from "next-sanity";
  * generates their result types (src/lib/sanity/sanity.types.ts). Published posts only
  * (the client's perspective); a post needs a slug and a language to be listed.
  *
- * Listing parameters ($q, $category, $start, $end) are parsed and bounded by
+ * Listing parameters ($q, $category, $start, $end, $excludeId) are parsed and bounded by
  * listing-params.ts before they reach a query; GROQ parameters are never string-built.
  */
 
@@ -22,6 +22,7 @@ const CARD = `{
 }`;
 
 const LISTED = `_type == "post" && language == $language && defined(slug.current)
+  && _id != $excludeId
   && ($category == "" || category->slug.current == $category)
   && ($q == "" || [title, excerpt] match $q)`;
 
@@ -34,6 +35,11 @@ export const BLOG_OLDEST_QUERY = defineQuery(`{
   "total": count(*[${LISTED}]),
   "posts": *[${LISTED}] | order(publishedAt asc) [$start...$end] ${CARD}
 }`);
+
+/** The newest post in a language: the listing's featured article (Figma 204:24). */
+export const BLOG_FEATURED_QUERY =
+  defineQuery(`*[_type == "post" && language == $language && defined(slug.current)]
+  | order(publishedAt desc) [0] ${CARD}`);
 
 export const BLOG_CATEGORIES_QUERY =
   defineQuery(`*[_type == "category" && defined(slug.current)]

@@ -1,8 +1,10 @@
 import type { ComponentProps } from "react";
 import Image, { type StaticImageData } from "next/image";
+import { ImageIcon } from "lucide-react";
 
 import { LINK_ROOT, TextLinkContent } from "@/components/site/text-link";
 import { Badge } from "@/components/ui/badge";
+import { ICON_STROKE } from "@/lib/icons";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
@@ -15,6 +17,8 @@ import { cn } from "@/lib/utils";
  * - The whole card is the link. The thumbnail is decorative (alt=""): the title already
  *   names the link, and an alt text would be read twice.
  * - Loading state: <ArticleCardSkeleton /> with the same frame, so the grid never jumps.
+ * - No image: the designed placeholder (Figma Blog 248:33), a red/50 panel with an image
+ *   icon, so a missing cover never looks broken.
  * - Content (title, excerpt, image, byline) comes from Sanity in the blog ticket; this
  *   component only takes ready-to-render values.
  */
@@ -69,7 +73,12 @@ function ArticleCard({
       )}
       {...linkProps}
     >
-      <span className="relative block h-50 w-full overflow-hidden bg-bg-primary">
+      <span
+        className={cn(
+          "relative flex h-50 w-full items-center justify-center overflow-hidden",
+          image ? "bg-bg-primary" : "bg-action-primary-subtle",
+        )}
+      >
         {image ? (
           <Image
             src={image.src}
@@ -79,7 +88,13 @@ function ArticleCard({
             priority={priority}
             className="object-cover transition-transform duration-(--duration-base) ease-standard motion-safe:group-hover/card:scale-[1.03]"
           />
-        ) : null}
+        ) : (
+          <ImageIcon
+            className="size-6.5 text-action-primary"
+            strokeWidth={ICON_STROKE}
+            aria-hidden
+          />
+        )}
       </span>
       <span className="flex flex-col items-start gap-md p-4.5">
         <Badge>{category}</Badge>

@@ -17,7 +17,9 @@
     "newsletterConfirmTitle": "Confirm your subscription",
     "newsletterConfirmDescription": "Confirm your subscription to the NortBrand newsletter.",
     "newsletterUnsubscribeTitle": "Unsubscribe",
-    "newsletterUnsubscribeDescription": "Stop receiving the NortBrand newsletter."
+    "newsletterUnsubscribeDescription": "Stop receiving the NortBrand newsletter.",
+    "blogTitle": "Blog",
+    "blogDescription": "Ideas on design, branding and building websites that work, from the NortBrand studio."
   },
   "Common": {
     "skipToContent": "Skip to content",
@@ -567,5 +569,33 @@
       "close": "Close"
     },
     "saved": "Your cookie choice is saved."
+  },
+  "Blog": {
+    "eyebrow": "Blog",
+    "title": "Ideas on design, branding, and building things that work.",
+    "lead": "Notes from the studio on what actually moves the needle for local and service-based businesses.",
+    "featuredLabel": "Featured article",
+    "readMore": "Read More",
+    "byline": "{author} · {date}",
+    "articlesEyebrow": "Articles",
+    "articlesTitle": "Check out our <indent><greenUnderline>newest</greenUnderline> articles</indent>",
+    "searchLabel": "Search articles",
+    "searchPlaceholder": "Search articles...",
+    "categoriesLabel": "Filter by category",
+    "all": "All",
+    "sortLabel": "Sort articles",
+    "sortLatest": "Latest",
+    "sortOldest": "Oldest",
+    "showing": "Showing {shown} of {total, plural, one {# article} other {# articles}}",
+    "noResultsTitle": "No articles found.",
+    "noResultsQuery": "We couldn’t find anything for “{q}”. Try a different keyword, or clear your filters.",
+    "noResultsFilters": "There are no articles here yet. Try another topic, or clear your filters.",
+    "clearFilters": "Clear filters",
+    "popularTopics": "Popular topics",
+    "paginationLabel": "Pagination",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "page": "Page {page}",
+    "loading": "Loading articles"
   }
 }

@@ -21,7 +21,8 @@ export const routes = [
     path: "/newsletter/unsubscribe",
     noindex: true,
   },
-  { name: "404 (Blog, not built yet)", path: "/blog", notFound: true },
+  { name: "Blog", path: "/blog" },
+  { name: "404 (unknown page)", path: "/no-such-page", notFound: true },
 ] as const satisfies readonly {
   name: string;
   path: `/${string}`;

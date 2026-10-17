@@ -47,9 +47,8 @@ describe("buildSitemap", () => {
     });
   });
 
-  it("leaves out the 404 and unbuilt pages", () => {
+  it("leaves out the Studio", () => {
     const urls = sitemap.map((entry) => entry.url).join(" ");
-    expect(urls).not.toContain("/blog");
     expect(urls).not.toContain("/studio");
   });
 });

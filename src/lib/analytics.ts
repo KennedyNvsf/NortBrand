@@ -19,6 +19,8 @@ import type { ServiceSlug } from "@/content/services";
 export type AnalyticsEvents = {
   consultation_submitted: { service: ServiceSlug };
   newsletter_subscribed: Record<string, never>;
+  /** The search's length and result count only: never the words typed. */
+  blog_search: { term_length: number; results: number };
 };
 
 type Gtag = (...args: unknown[]) => void;

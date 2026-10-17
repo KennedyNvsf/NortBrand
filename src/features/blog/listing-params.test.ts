@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  listingQuery,
   PAGE_SIZE,
   pageRange,
   parseListingParams,
@@ -68,5 +69,35 @@ describe("pageRange", () => {
   it("slices eight posts per page", () => {
     expect(pageRange(1)).toEqual({ start: 0, end: PAGE_SIZE });
     expect(pageRange(3)).toEqual({ start: 16, end: 24 });
+  });
+});
+
+describe("listingQuery", () => {
+  const base = parseListingParams({});
+
+  it("leaves defaults out of the URL", () => {
+    expect(listingQuery(base, {})).toEqual({});
+  });
+
+  it("keeps the other filters and resets the page on a change", () => {
+    const current = parseListingParams({
+      q: "brand",
+      category: "design",
+      page: "3",
+    });
+    expect(listingQuery(current, { sort: "oldest" })).toEqual({
+      q: "brand",
+      category: "design",
+      sort: "oldest",
+    });
+    expect(listingQuery(current, { category: "" })).toEqual({ q: "brand" });
+  });
+
+  it("changes only the page for pagination links", () => {
+    const current = parseListingParams({ category: "design" });
+    expect(listingQuery(current, { page: 2 })).toEqual({
+      category: "design",
+      page: "2",
+    });
   });
 });

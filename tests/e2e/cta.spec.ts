@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 /*
  * CtaBand (ticket #8), checked on Home, which ends with it.
- * StickyCta behaviour is unit-tested (sticky-cta.test.tsx); it is mounted on the blog
- * listing in the blog milestone, where it gets its e2e test.
+ * StickyCta behaviour is unit-tested (sticky-cta.test.tsx); its e2e test is on the blog
+ * listing, the page that mounts it (blog.spec.ts).
  */
 test.describe("CTA band", () => {
   test("has a headline with the highlighted keyword and links to contact", async ({

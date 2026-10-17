@@ -36,7 +36,6 @@ test.describe("crawl files", () => {
       }
     }
     expect(xml).toContain('hreflang="x-default"');
-    expect(xml).not.toContain("/blog");
     expect(xml).not.toContain("/newsletter");
   });
 

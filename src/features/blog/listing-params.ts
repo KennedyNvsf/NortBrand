@@ -64,3 +64,36 @@ export function pageRange(page: number): { start: number; end: number } {
   const start = (page - 1) * PAGE_SIZE;
   return { start, end: start + PAGE_SIZE };
 }
+
+/**
+ * The query string for a listing link: the current state with some values changed.
+ * Defaults are left out (`/blog`, not `/blog?sort=latest&page=1`), and any change to
+ * the search, category or sort goes back to page 1.
+ */
+export function listingQuery(
+  current: ListingParams,
+  change: Partial<ListingParams>,
+): Record<string, string> {
+  const next: ListingParams = {
+    ...current,
+    ...change,
+    page:
+      change.page ??
+      (change.q !== undefined ||
+      change.category !== undefined ||
+      change.sort !== undefined
+        ? 1
+        : current.page),
+  };
+  const query: Record<string, string> = {};
+  if (next.q) query.q = next.q;
+  if (next.category) query.category = next.category;
+  if (next.sort !== "latest") query.sort = next.sort;
+  if (next.page > 1) query.page = String(next.page);
+  return query;
+}
+
+/** Whether the visitor is looking at a filtered view (search or category). */
+export function isFiltered(params: ListingParams): boolean {
+  return params.q !== "" || params.category !== "";
+}
