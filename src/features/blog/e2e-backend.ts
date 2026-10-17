@@ -207,6 +207,7 @@ export function fakePost(
   if (!post) return null;
   return {
     ...post,
+    _updatedAt: post.publishedAt,
     body: fakeBody(language === "pt" ? "[PT] " : ""),
     seo: null,
     category: { _id: `e2e-category-${post.category.slug}`, ...post.category },
@@ -239,10 +240,11 @@ export function fakeRelated(
 
 export function fakeSlugs(): BLOG_SLUGS_QUERY_RESULT {
   return (["en", "pt"] as const).flatMap((language) =>
-    posts[language].map((post) => ({
+    posts[language].map((post, index) => ({
       language,
       slug: post.slug,
       _updatedAt: post.publishedAt,
+      translations: translationsOf(language, index),
     })),
   );
 }

@@ -135,6 +135,75 @@ test.describe("blog post", () => {
     await expect(alternate("pt")).toHaveCount(0);
   });
 
+  test("has BlogPosting and BreadcrumbList JSON-LD and article metadata", async ({
+    page,
+  }) => {
+    await page.goto(translated.en);
+    const blocks = (
+      await page.locator('script[type="application/ld+json"]').allTextContents()
+    ).map((text): unknown => JSON.parse(text));
+    const ofType = (type: string) =>
+      blocks.find(
+        (block): block is Record<string, unknown> =>
+          typeof block === "object" &&
+          block !== null &&
+          "@type" in block &&
+          block["@type"] === type,
+      );
+
+    const posting = ofType("BlogPosting");
+    expect(posting).toMatchObject({
+      headline: "Why Your Website Should Work Like a Product, Not a Brochure",
+      inLanguage: "en",
+      datePublished: "2026-09-29T09:00:00.000Z",
+      author: { "@type": "Person", name: "NortBrand Team" },
+    });
+    expect(String(posting?.url)).toMatch(new RegExp(`${translated.en}$`));
+
+    const breadcrumb = ofType("BreadcrumbList");
+    expect(breadcrumb?.itemListElement).toEqual([
+      expect.objectContaining({ position: 1, name: "Blog" }),
+      expect.objectContaining({ position: 2, name: "Web Design" }),
+      expect.objectContaining({
+        position: 3,
+        item: expect.stringMatching(new RegExp(`${translated.en}$`)),
+      }),
+    ]);
+
+    await expect(page.locator('meta[property="og:type"]')).toHaveAttribute(
+      "content",
+      "article",
+    );
+    await expect(
+      page.locator('meta[property="article:published_time"]'),
+    ).toHaveAttribute("content", "2026-09-29T09:00:00.000Z");
+  });
+
+  test("the sitemap lists posts with their real translations only", async ({
+    request,
+  }) => {
+    const xml = await (await request.get("/sitemap.xml")).text();
+    // The <url> block whose <loc> ends with `path`.
+    const entry = (path: string) => {
+      const loc = xml.indexOf(`${path}</loc>`);
+      if (loc < 0) return "";
+      return xml.slice(
+        xml.lastIndexOf("<url>", loc),
+        xml.indexOf("</url>", loc),
+      );
+    };
+
+    const both = entry(translated.en);
+    expect(both).toContain(`hreflang="pt" href="`);
+    expect(both).toMatch(
+      new RegExp(`hreflang="pt" href="[^"]*${translated.pt}"`),
+    );
+
+    const single = entry(englishOnly);
+    expect(single).not.toBe("");
+    expect(single).not.toContain('hreflang="pt"');
+  });
+
   test("an unknown slug is the designed 404", async ({ page }) => {
     const response = await page.goto("/en/blog/no-such-post");
     expect(response?.status()).toBe(404);

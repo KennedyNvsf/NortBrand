@@ -5,7 +5,7 @@ import { locale as rootLocale } from "next/root-params";
 
 import { isPreviewDeployment } from "@/lib/seo/deployment";
 
-import { pageMetadata } from "./metadata";
+import { pageMetadata, type PageMetadataExtras } from "./metadata";
 import { routing, type Locale } from "./routing";
 
 /*
@@ -25,6 +25,7 @@ export async function localizedPageMetadata(
     description: string;
   },
   paths?: Partial<Record<Locale, `/${string}`>>,
+  extras: PageMetadataExtras = {},
 ): Promise<Metadata> {
   const requested = await rootLocale();
   const locale = hasLocale(routing.locales, requested)
@@ -39,5 +40,6 @@ export async function localizedPageMetadata(
     siteName: t("siteName"),
     preview: isPreviewDeployment(),
     paths,
+    ...extras,
   });
 }

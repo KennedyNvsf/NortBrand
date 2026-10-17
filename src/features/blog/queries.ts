@@ -52,6 +52,7 @@ export const BLOG_CATEGORIES_QUERY =
 export const BLOG_POST_QUERY =
   defineQuery(`*[_type == "post" && language == $language && slug.current == $slug][0]{
   _id,
+  _updatedAt,
   title,
   "slug": slug.current,
   excerpt,
@@ -83,10 +84,17 @@ export const BLOG_RELATED_QUERY =
   defineQuery(`*[_type == "post" && language == $language && defined(slug.current)
   && _id != $postId] | order(select(category._ref == $categoryId => 0, 1) asc, publishedAt desc) [0...3] ${CARD}`);
 
-/** Every published post's language and slug, for static generation and the sitemap. */
+/**
+ * Every published post's language, slug and translations: static generation, and the
+ * sitemap with each post's real alternates (#62).
+ */
 export const BLOG_SLUGS_QUERY =
   defineQuery(`*[_type == "post" && defined(slug.current) && defined(language)]{
   language,
   "slug": slug.current,
-  _updatedAt
+  _updatedAt,
+  "translations": *[_type == "translation.metadata" && references(^._id)][0].translations[].value->{
+    language,
+    "slug": slug.current
+  }
 }`);
