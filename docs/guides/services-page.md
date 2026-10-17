@@ -24,6 +24,7 @@ Nav, footer and the mobile sticky CTA come from the `(site)` layout, as on Home.
 src/app/[locale]/(site)/services/
    page.tsx                          composes the sections, metadata
    _components/services-hero.tsx     server
+   _components/hero-video.tsx        CLIENT: the looping hero video
    _components/service-blocks.tsx    server: one <article id={slug}> per service
    _components/service-collage.tsx   server: decorative placeholder
    _components/service-details.tsx   CLIENT: the Dialog / Drawer
@@ -104,6 +105,37 @@ mobile e2e test tabs six times and asserts focus never leaves.
   built in #6). The hero starts at the top of the page and pads its own content below
   the nav: `pt-55` mobile, `pt-76` tablet, and bottom alignment inside `min-h-195`
   (780 px) on desktop.
+- **Full first screen (#68):** the section is at least `100svh` tall at every size, with
+  its content at the bottom, so no white from the next section shows on first view.
+  780 px stays the desktop minimum.
+- **Video (#68):** a looping clip plays over the photo (`hero-video.tsx`).
+  - Sources: `services-hero-720.mp4` for phones (`media="(max-width: 767px)"`) and
+    `services-hero.mp4` (1080p) above. Both are H.264 with no audio and fast start,
+    encoded with ffmpeg (commands below).
+  - The photo is still the first paint (`next/image`, priority). The video fades in
+    over it once its first frame plays.
+  - It is muted and `aria-hidden`. With `preload="none"` it downloads only when it
+    plays.
+  - **No pause control**, by the lead's decision at review. This is an exception to
+    WCAG 2.2.2, recorded in tech debt.
+  - Reduced motion and Data Saver still never start it; the photo stays.
+  - Playwright's Chromium cannot decode H.264. The e2e tests check the attributes, the
+    full-screen height and reduced motion, not playback. Check playback in Chrome,
+    Edge or Safari.
+- **Headline (#68 review):** the display size (40 / 48 / 64 px) with an 18–22 px lead.
+  It sits higher than Figma (`lg:pb-28`, `md:pb-16`) and 48 px further in on desktop,
+  so it holds its own over moving footage.
+- **Re-encoding the clip** (from the original export, `ffmpeg` on the PATH):
+
+  ```bash
+  # 1080p for tablet and desktop
+  ffmpeg -i source.mp4 -an -c:v libx264 -preset slow -crf 26 -vf "scale=1920:-2" \
+    -pix_fmt yuv420p -movflags +faststart public/videos/services-hero.mp4
+  # 720p for phones
+  ffmpeg -i source.mp4 -an -c:v libx264 -preset slow -crf 24 -vf "scale=1280:-2" \
+    -pix_fmt yuv420p -movflags +faststart public/videos/services-hero-720.mp4
+  ```
+
 - **Accessibility override:** the eyebrow is white at 85%, not green. Green fails
   contrast on the photo (Handoff, "Green eyebrow over the Services photo hero").
 - `hero-scrim` (`globals.css`) is the Figma tint plus gradient: top-down below desktop,
