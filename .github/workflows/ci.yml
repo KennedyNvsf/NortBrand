@@ -66,8 +66,13 @@ jobs:
       - name: Unit tests
         run: pnpm test
 
+      # Blog posts are prerendered from their slugs at build time (#61). The Sanity
+      # project above is a placeholder, so the build reads the blog fixtures, as e2e
+      # does. Vercel builds use the real dataset.
       - name: Build
         run: pnpm build
+        env:
+          E2E_FAKE_BACKEND: "1"
 
   # Playwright against this PR's own production build (playwright.config.ts starts
   # `pnpm build && pnpm start` with E2E_FAKE_BACKEND=1, so nothing reaches Supabase,

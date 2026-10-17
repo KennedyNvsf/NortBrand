@@ -4,6 +4,8 @@ import { Fragment } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { Link, usePathname } from "@/i18n/navigation";
+
+import { useAlternatePaths } from "./alternate-paths";
 import { localeNames, routing } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +18,8 @@ import { cn } from "@/lib/utils";
  *   language ("EN – English", "PT – Português"), which keeps the visible label inside
  *   the name (WCAG 2.5.3) and is announced with the right pronunciation via `lang`.
  * - The current locale is bold and marked aria-current, so it is not colour alone.
+ * - A page whose address differs per language (a blog post) declares its versions
+ *   with <AlternatePaths>; the switcher then links to those (alternate-paths.tsx).
  */
 export function LocaleSwitcher({
   className,
@@ -27,6 +31,7 @@ export function LocaleSwitcher({
   const t = useTranslations("LocaleSwitcher");
   const locale = useLocale();
   const pathname = usePathname();
+  const alternates = useAlternatePaths();
 
   return (
     <div
@@ -47,7 +52,7 @@ export function LocaleSwitcher({
               </span>
             ) : null}
             <Link
-              href={pathname}
+              href={alternates?.[option] ?? pathname}
               locale={option}
               lang={option}
               hrefLang={option}

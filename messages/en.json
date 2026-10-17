@@ -597,5 +597,23 @@
     "nextPage": "Next page",
     "page": "Page {page}",
     "loading": "Loading articles"
+  },
+  "BlogPost": {
+    "breadcrumbLabel": "Breadcrumb",
+    "readTime": "{minutes} min read",
+    "onThisPage": "On this page",
+    "backToTop": "Back to top",
+    "getStarted": "Get started with NortBrand",
+    "tags": "Tags",
+    "share": "Share",
+    "shareNative": "Share this article",
+    "shareEmail": "Share by email",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied",
+    "copyFailed": "Couldn’t copy the link. Copy it from the address bar instead.",
+    "writtenBy": "Written by",
+    "moreArticles": "More articles",
+    "keepReading": "Keep reading",
+    "relatedTitle": "More from <indent>the <greenUnderline>studio</greenUnderline></indent>"
   }
 }

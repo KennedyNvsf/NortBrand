@@ -91,6 +91,8 @@ React Email · Sanity (blog only) · Sentry · Vitest · Playwright · pnpm · N
 - Every page enables next-intl static rendering, so pages stay static.
 - Exception: the blog listing reads `searchParams`, so it is a static shell with the
   results streamed per request (◐ in the build, cached data). See docs/guides/blog.md.
+- Blog posts are prerendered per language from their slugs; an unlisted slug renders
+  on its first request (`ensureStatic = "navigation"`), then is cached.
 - Check the build output to confirm marketing pages are static. A page that becomes dynamic
   unexpectedly is a bug.
 
@@ -243,7 +245,8 @@ Build only (Vercel, optional): `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJEC
 Account setup and the per-environment matrix: `docs/guides/environments.md`.
 
 Build flags: `RELEASE_BUILD=1` makes the release guard strict outside Vercel production.
-`E2E_FAKE_BACKEND=1` (Playwright's server only; refused on Vercel production) swaps the
+`E2E_FAKE_BACKEND=1` (Playwright's server and the CI build job, which also gets blog
+fixtures instead of Sanity; refused on Vercel production) swaps the
 consultation and newsletter database calls and emails for fakes, so e2e never writes to
 Supabase or sends email.
 

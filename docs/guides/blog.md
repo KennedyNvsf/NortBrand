@@ -1,7 +1,7 @@
 # Blog
 
-The public blog: the listing at `/[locale]/blog` (#60). The post page (#61) and blog SEO
-(#62) extend this guide. Where content comes from (Sanity, the content layer, the
+The public blog: the listing at `/[locale]/blog` (#60, sections 1–7) and the post page at
+`/[locale]/blog/[slug]` (#61, section 8). Blog SEO (#62) extends this guide. Where content comes from (Sanity, the content layer, the
 revalidation webhook) is in [CMS](./cms.md).
 
 ## 1. What we built
@@ -142,3 +142,116 @@ The listing uses the same motion vocabulary as Home, and invents no new timings
   a schema field and a change to `BLOG_FEATURED_QUERY` (see tech debt).
 - **Copy** lives under `Blog` in `messages/en.json`; run `pnpm i18n:pseudo` after
   editing it.
+
+## 8. The post page (#61)
+
+Figma 05 Blog › Post `285:3` (tablet `372:511`, mobile `372:777`), top to bottom:
+
+- **Header:** breadcrumb (Blog › category), the one H1, then the byline: photo, name,
+  date and "N min read".
+- **Cover:** the editor's image, with its alt text, since here it carries meaning.
+- **Article:** a 680 px reading column. On desktop a 240 px rail sticks 120 px from the
+  top, holding "On this page", Back to top and Get started. Below desktop there is no
+  rail, and Get started follows the tags and share row.
+- **Author card**, then **Keep reading** (three cards), then the **Newsletter card**.
+  There is no CTA band and no Sticky CTA, and no reading progress bar (removed at
+  review, 17 October 2026; the table of contents shows the reader's place).
+
+### How a request is served
+
+```text
+GET /pt/blog/renovar-a-marca
+  │
+  ├─ prerendered at build: generateStaticParams lists every slug per language
+  │    (fixtures under E2E_FAKE_BACKEND, Sanity otherwise; a sample 404 slug if none)
+  │
+  └─ BlogPostPage
+       getBlogPost(locale, slug)             "use cache", tag blog-posts
+       ├─ found → page; getRelatedPosts(...) "use cache", tag blog-list
+       └─ not found
+            ├─ another language has this slug → redirect to its translation here,
+            │                                   or to this language's listing
+            └─ otherwise → notFound(): the designed 404
+```
+
+- **Unlisted slugs.** `ensureStatic = "navigation"`, as on the catch-all 404, renders
+  an unlisted slug fully on the server on its first request. A 404 or a redirect is
+  then real HTML, not a fallback shell resolved in the browser.
+- **The language switcher.** A post's slug differs per language, so the page declares
+  its address in each language with `<AlternatePaths>`
+  (`src/components/site/alternate-paths.tsx`): the translation, or the other
+  language's listing when there is none (`postPaths` in `src/features/blog/post.ts`).
+  The `LocaleSwitcher` uses those paths. The provider stores them with the pathname
+  that set them, so a client navigation never shows the previous page's links.
+- **Before hydration.** Until the page hydrates, the switcher still links to the same
+  slug. The redirect branch above catches that case, so switching language never ends
+  on a 404.
+- **Metadata.** The title and description come from the post's SEO fields, falling
+  back to the title and excerpt. The canonical is the post. Hreflang lists only real
+  translations (`localeAlternates(..., paths)`), and x-default follows the PT version
+  when there is one. Article structured data comes in #62.
+
+### Files
+
+| File                                             | What it does, and why                                                                                                                                                      |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `blog/[slug]/page.tsx`                           | Static params, metadata, the not-found and redirect branch, and the page's composition.                                                                                    |
+| `_components/post-header.tsx`                    | Breadcrumb (a `nav` named "Breadcrumb"), H1, byline with `<time>`, and the cover (`PostCover`). Hero entrance with `enterItem`.                                            |
+| `_components/post-article.tsx`                   | Reading column (`PostBody`), tags and share, and the desktop rail.                                                                                                         |
+| `_components/share-links.tsx`                    | Native share (shown only where the browser has a share sheet), email (a `mailto`, works without JS), and copy link with a Sonner toast.                                    |
+| `_components/author-card.tsx`                    | Photo, "Written by", name, the bio in the page language, and "More articles".                                                                                              |
+| `_components/related-posts.tsx`                  | "Keep reading": three cards on desktop, two on tablet (as in Figma), one per row on mobile.                                                                                |
+| `src/features/blog/components/post-body.tsx`     | Portable Text to Figma's article: the first paragraph is the lead, then 32/28 px h2s, 18 px copy, the pull quote (bold words turn red), and bullets as the red-check list. |
+| `src/features/blog/components/author-avatar.tsx` | The round author photo, or the red/50 circle. Also used in the listing's featured byline now.                                                                              |
+| `src/features/blog/post.ts`                      | `readingMinutes` (200 words a minute, at least 1), `postPaths` and `translatedLocales`. Unit-tested.                                                                       |
+| `src/components/site/table-of-contents.tsx`      | Now with the travelling red marker. Legal shares it, so its list gets the marker too.                                                                                      |
+| `queries.ts`                                     | The post returns `category._id`, and cards return the author's photo. Related posts: the same category first, then the newest of the rest, so the section is always full.  |
+
+### Motion
+
+- **Hero:** breadcrumb, title, byline and cover enter 110 ms apart (CSS).
+- **Table of contents:** the red marker slides to the section being read on the
+  gentle spring (Motion Spec). It is a 1 px bar scaled to the link's height, so only
+  transforms animate. It is placed without travel on first paint and under reduced
+  motion.
+- **Author card, Keep reading and Newsletter** reveal on scroll, as on the listing, and
+  "studio" draws its underline. The article body itself never animates: reading text
+  should not move.
+
+### Accessibility
+
+- One H1. Body headings are H2/H3, and "Keep reading" is an H2.
+- The table of contents marks the current section with `aria-current="location"` and
+  SemiBold text, not colour alone. Its links are plain anchors, and headings have a
+  112 px scroll margin, so the sticky nav never covers them and a heading reached
+  from the list counts as read (the reading line is at 120 px).
+- Every share control has a name ("Share by email", "Copy link"). Touch targets are
+  44 px below desktop, including the tag badge, through an invisible hit area.
+
+### Tests
+
+- **Unit:** `post.test.ts`, and the new `localeAlternates` cases in `metadata.test.ts`.
+- **e2e:** `tests/e2e/blog-post.spec.ts` covers:
+  - the article, breadcrumb and related posts, with axe;
+  - the table of contents following a click;
+  - switching language with and without a translation;
+  - the pre-hydration redirect;
+  - hreflang;
+  - an unknown slug;
+  - mobile: no rail, Get started, no Sticky CTA, no overflow in PT.
+- **Harness:** `/blog/no-such-post` is in `routes.ts`, so both locales check the
+  designed 404.
+- **CI:** the build job sets `E2E_FAKE_BACKEND=1`. Posts prerender at build time, and
+  CI's Sanity project is a placeholder.
+
+### Extending it
+
+- **A new block type in the body** (a callout, an embed):
+  1. Add it to the schema's `body` array.
+  2. Run `pnpm sanity:types`.
+  3. Add a renderer to `components()` in `post-body.tsx`. Anything without a renderer
+     renders nothing.
+- **Tags:** add a `tags` array to the schema and project it in `BLOG_POST_QUERY`. The
+  tags row in `post-article.tsx` already lays out several badges (see tech debt).
+- **Another page with per-language addresses:** render `<AlternatePaths>` with its
+  paths. The switcher picks them up.
