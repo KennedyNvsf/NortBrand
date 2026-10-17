@@ -24,6 +24,7 @@ Nav, footer and the mobile sticky CTA come from the `(site)` layout, as on Home.
 src/app/[locale]/(site)/services/
    page.tsx                          composes the sections, metadata
    _components/services-hero.tsx     server
+   _components/hero-video.tsx        CLIENT: the looping hero video and its pause button
    _components/service-blocks.tsx    server: one <article id={slug}> per service
    _components/service-collage.tsx   server: decorative placeholder
    _components/service-details.tsx   CLIENT: the Dialog / Drawer
@@ -104,6 +105,23 @@ mobile e2e test tabs six times and asserts focus never leaves.
   built in #6). The hero starts at the top of the page and pads its own content below
   the nav: `pt-55` mobile, `pt-76` tablet, and bottom alignment inside `min-h-195`
   (780 px) on desktop.
+- **Full first screen (#68):** the section is at least `100svh` tall at every size, with
+  its content at the bottom, so no white from the next section shows on first view.
+  780 px stays the desktop minimum.
+- **Video (#68):** `public/videos/services-hero.mp4` loops over the photo
+  (`hero-video.tsx`):
+  - The photo is still the first paint (`next/image`, priority). The video fades in
+    over it once its first frame plays.
+  - It is muted, has no audio track and is `aria-hidden`. With `preload="none"` it
+    downloads only when it plays.
+  - Autoplay is decided in the browser: off with reduced motion and with Data Saver.
+    The photo then stays.
+  - A pause/play button sits under the nav on the right. WCAG 2.2.2 requires it:
+    moving content that starts by itself and runs longer than 5 s must be pausable.
+    Its name follows the video's own play/pause events.
+  - Playwright's Chromium cannot decode H.264. The e2e tests check the attributes, the
+    full-screen height and reduced motion, not playback. Check playback in Chrome,
+    Edge or Safari.
 - **Accessibility override:** the eyebrow is white at 85%, not green. Green fails
   contrast on the photo (Handoff, "Green eyebrow over the Services photo hero").
 - `hero-scrim` (`globals.css`) is the Figma tint plus gradient: top-down below desktop,

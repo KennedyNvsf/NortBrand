@@ -5,11 +5,17 @@ import { enterItem } from "@/components/motion/reveal-item";
 import { highlightTags } from "@/components/site/highlight";
 import servicesHero from "@/assets/images/services-hero.jpg";
 
+import { HeroVideo } from "./hero-video";
+
 /*
  * Figma Services › Photo Hero (desktop 149:44, tablet 359:151, mobile 359:439). The
  * header is fixed and transparent over this photo (overlayNavRoutes), so the hero
  * starts at the top of the page and pads its own content below the nav.
- * - Desktop: 780 tall, text bottom-left, quote card bottom-right.
+ * - It fills the first screen at every size (#68), with the content at the bottom, so
+ *   no white from the next section shows on first view. Desktop keeps Figma's 780 as
+ *   the minimum.
+ * - A looping video plays over the photo (HeroVideo, #68), with its own pause button.
+ * - Desktop: text bottom-left, quote card bottom-right.
  * - Tablet and mobile: text then a full-width quote card, height from content.
  * - The eyebrow is white at 85%, not green: green fails contrast on the photo
  *   (CLAUDE.md, accessibility decisions).
@@ -30,7 +36,7 @@ export async function ServicesHero() {
       aria-labelledby="services-hero-title"
       data-sticky-cta-trigger
       data-surface="dark"
-      className="relative isolate overflow-hidden bg-text-primary text-text-on-accent"
+      className="relative isolate flex min-h-svh flex-col justify-end overflow-hidden bg-text-primary text-text-on-accent"
     >
       <Image
         src={servicesHero}
@@ -40,9 +46,13 @@ export async function ServicesHero() {
         sizes="100vw"
         className="-z-10 object-cover motion-safe:animate-hero-settle"
       />
+      <HeroVideo
+        src="/videos/services-hero.mp4"
+        labels={{ pause: t("pauseVideo"), play: t("playVideo") }}
+      />
       <div aria-hidden className="absolute inset-0 -z-10 hero-scrim" />
 
-      <div className="mx-auto flex max-w-(--container-canvas) flex-col gap-7 px-(--gutter) pt-55 pb-7 md:gap-0 md:pt-76 md:pb-9 lg:min-h-195 lg:flex-row lg:items-end lg:justify-between lg:gap-xl lg:pt-0 lg:pb-10">
+      <div className="mx-auto flex w-full max-w-(--container-canvas) flex-col gap-7 px-(--gutter) pt-55 pb-7 md:gap-0 md:pt-76 md:pb-9 lg:min-h-195 lg:flex-row lg:items-end lg:justify-between lg:gap-xl lg:pt-0 lg:pb-10">
         <div className="flex flex-col gap-3.5 md:pb-7 lg:gap-3 lg:pb-12">
           <p {...enterItem(0)} className="text-overline text-text-on-accent/85">
             {t("eyebrow")}

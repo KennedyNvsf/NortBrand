@@ -76,6 +76,26 @@ test.describe("services page", () => {
     );
   });
 
+  // #68. Playback itself is not asserted: Playwright's Chromium has no H.264 decoder.
+  test("hero fills the first screen with a silent, pausable video", async ({
+    page,
+  }) => {
+    await page.goto("/en/services");
+    const hero = page.getByRole("region", { name: /Everything your business/ });
+    const box = await hero.boundingBox();
+    const viewport = page.viewportSize();
+    expect(box?.height ?? 0).toBeGreaterThanOrEqual(viewport?.height ?? 0);
+
+    const video = hero.locator("video");
+    await expect(video).toHaveAttribute("aria-hidden", "true");
+    await expect(video).toHaveAttribute("loop", "");
+    await expect(video).toHaveAttribute("playsinline", "");
+    expect(await video.evaluate((v: HTMLVideoElement) => v.muted)).toBe(true);
+    await expect(
+      hero.getByRole("button", { name: /(Pause|Play) background video/ }),
+    ).toBeVisible();
+  });
+
   test("has one block per service, anchored by slug", async ({ page }) => {
     await page.goto("/pt/services");
     const blocks = page.locator("main article");
@@ -316,5 +336,20 @@ test.describe("services page", () => {
       page.getByRole("navigation", { name: "Jump to a service" }),
     ).toBeHidden();
     await expect(page.locator("main article")).toHaveCount(5);
+  });
+});
+
+test.describe("services hero with reduced motion", () => {
+  test.use({ reducedMotion: "reduce" });
+
+  test("the video does not autoplay and offers Play", async ({ page }) => {
+    await page.goto("/en/services");
+    const hero = page.getByRole("region", { name: /Everything your business/ });
+    await expect(
+      hero.getByRole("button", { name: "Play background video" }),
+    ).toBeVisible();
+    expect(
+      await hero.locator("video").evaluate((v: HTMLVideoElement) => v.paused),
+    ).toBe(true);
   });
 });
