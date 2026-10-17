@@ -27,6 +27,7 @@ the guides always match the code.
 | [Cookie consent](./consent.md)                      | The consent cookie and store, banner, preferences, Switch, footer settings, sticky CTA gate, GA4 after consent                                    |
 | [CI](./ci.md)                                       | The four pull-request checks, e2e on a production build, pgTAP in Docker, reading failures                                                        |
 | [CMS (Sanity)](./cms.md)                            | Content model (post/author/category), translation plugins, embedded Studio, type generation                                                       |
+| [Editing the blog](./editing-the-blog.md)           | For editors: writing, images and alt text, translating, publishing, what happens after Publish                                                    |
 | [Blog](./blog.md)                                   | The listing (URL state, streamed results, search, filters, paging) and the post page (TOC, language switch, related); blog SEO (JSON-LD, sitemap) |
 
 Each guide follows the same shape: what we built, how it works at runtime, the files one

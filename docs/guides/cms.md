@@ -1,12 +1,12 @@
 # CMS (Sanity)
 
 The blog's content model and the embedded Studio (#58, ADR-003). Fetching, rendering and
-revalidation come in #59; the editor how-to in #63.
+revalidation are in #59. Editors: see [Editing the blog](./editing-the-blog.md) (#63).
 
 ## 1. What we built
 
 - **A Sanity project.** `nortbrand-website` (`p4bc960d`), datasets `production` and
-  `development`. Runbook: [Environments](./environments.md) § 8.
+  `development`. Runbook: [Environments](./environments.md) § 9.
 - **Three document types** in `sanity/schema-types/`: `post`, `author` and `category`.
   Blog content only; services, FAQ and page copy stay in `src/content/`.
 - **The Studio**, embedded at `/studio`, inside this app.
@@ -114,7 +114,7 @@ Editor publishes → Sanity webhook → POST /api/revalidate (signature first)
   - No document type: 400.
   - Signed blog change: both tags expire at once (`expire: 0`), so the next visitor sees
     the new version.
-  - Set it up per environment: runbook § 8.
+  - Set it up per environment: runbook § 9.
 - **`src/lib/sanity/image.ts`**: `next/image` props for an aspect ratio, honouring the
   editor's hotspot. webp/avif come from the CDN, and `next.config.ts` allows
   `cdn.sanity.io`.

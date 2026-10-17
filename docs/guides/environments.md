@@ -34,7 +34,7 @@ against a production build of each pull request (#44).
 | GA4      | Analytics, loaded only after consent                    | Production only                    |
 
 Sanity holds the blog (ADR-003). The project `nortbrand-website` (id `p4bc960d`) was
-created on 16 October 2026 (#58); its steps are in § 8.
+created on 16 October 2026 (#58); its steps are in § 9.
 
 > **Secrets never go into chat, issues, pull requests or commits.** Paste them only into
 > Vercel and your own `.env.local`. Project IDs, regions and URLs are fine to share.
@@ -277,7 +277,7 @@ Production so test requests never reach the team.
   committed, so CI type-checks without Docker, and ESLint skips it because it is generated.
   Re-run it after every migration.
 
-## 8. Sanity (ADR-003, #58)
+## 9. Sanity (ADR-003, #58)
 
 Free plan. The blog's posts, authors and categories live here; everything else stays in
 the repository.
@@ -309,3 +309,14 @@ the repository.
      Without it, published changes appear only after the next deploy.
 9. **Development seed:** `pnpm exec sanity login` once, then `pnpm sanity:seed` writes test
    authors, categories and posts into `development` only (sanity/seed/seed.mts).
+10. **Editors** (#63): **Members → Invite** with the **Editor** role: they can write and
+    publish but not change settings, tokens or webhooks. Only developers are
+    Administrators. Send new editors the [editor guide](./editing-the-blog.md).
+11. **Check the webhook** after setting it up (and after rotating
+    `SANITY_REVALIDATE_SECRET`):
+    1. In the Studio, change one word in a published post and publish it.
+    2. **API → Webhooks → (the webhook) → Attempts log**: the newest attempt is **200**.
+       A **401** means the secret in Sanity and the environment's
+       `SANITY_REVALIDATE_SECRET` differ; a **400** means the projection is missing
+       `_type`.
+    3. Reload the post on the site: the change shows within a minute, with no deploy.

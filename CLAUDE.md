@@ -223,7 +223,7 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
 ## Sanity (blog CMS)
 
 - Code: `sanity/` (schemas, env), `sanity.config.ts`, Studio at `src/app/studio/`
-  (guide: docs/guides/cms.md). Project `p4bc960d`; local work uses the `development`
+  (guide: docs/guides/cms.md; editors: docs/guides/editing-the-blog.md). Project `p4bc960d`; local work uses the `development`
   dataset. Run `pnpm sanity:types` after any schema or GROQ change.
 - Blog data: only through `src/features/blog/data.ts` (cached, tagged `blog-list` /
   `blog-posts`); queries in `queries.ts`; the webhook `/api/revalidate` checks the
