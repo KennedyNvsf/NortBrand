@@ -54,7 +54,7 @@ exports[`renderConsultationConfirmation > matches the snapshot (en) 1`] = `
 
 HI ANA SILVA,
 
-Thanks for reaching out about Web Design. We’ve received your request and will reply within one business day with a few times for your free 30-minute call.
+Thanks for getting in touch about Web Design. We’ve received your request and will reply within one business day with a few times for your free 30-minute call.
 
 ----------------------------------------
 
@@ -83,35 +83,35 @@ You’re receiving this because you sent a consultation request on NortBrand. Qu
 
 exports[`renderConsultationConfirmation > matches the snapshot (pt) 1`] = `
 {
-  "subject": "[[We’ve received your request ~~~~ ~~~~]]",
+  "subject": "Recebemos o seu pedido",
   "text": "NortBrand
 
 
-[[HI ANA SILVA, ~~~]]
+OLÁ, ANA SILVA,
 
-[[Thanks for reaching out about [[Web Design ~~~]]. We’ve received your request and will reply within one business day with a few times for your free 30-minute call. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]
+Obrigado por nos ter contactado sobre Webdesign. Recebemos o seu pedido e vamos responder no prazo de um dia útil com alguns horários para a sua conversa gratuita de 30 minutos.
 
 ----------------------------------------
 
-[[What you sent us ~~~~ ~]]
+O que nos enviou
 
-[[Service ~~]]
+Serviço
 
-[[Web Design ~~~]]
+Webdesign
 
-[[Phone ~~]]
+Telefone
 
 +351 912 345 678
 
-[[Message ~~]]
+Mensagem
 
 We need a new studio website. Two languages, a booking form.
 
-[[Talk soon, ~~~]]
-[[The NortBrand team ~~~~ ~]]
+Até breve,
+A equipa NortBrand
 
 ----------------------------------------
 
-[[You’re receiving this because you sent a consultation request on NortBrand. Questions? Reply to this email or write to hello@nortbrand.com. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
+Recebeu este email porque enviou um pedido de contacto em NortBrand. Dúvidas? Responda a este email ou escreva para hello@nortbrand.com.",
 }
 `;

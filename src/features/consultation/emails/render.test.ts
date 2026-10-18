@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import pt from "../../../../messages/pt.json";
+
 import type { ConsultationRequest } from "../schema";
 import {
   formatLisbonTime,
@@ -114,11 +116,12 @@ describe("renderConsultationConfirmation", () => {
       locale: "pt",
     });
 
-    // Until the translator delivers, PT strings are pseudo-translations of EN.
+    // Read from pt.json, so a revised translation doesn't break the test.
+    const copy = pt.Emails.consultationConfirmation;
     expect(email.html).toContain('lang="pt"');
-    expect(email.subject).toMatch(/^\[\[We’ve received your request/);
-    expect(email.html).toMatch(/\[\[Hi Ana Silva,/);
-    expect(email.text).toContain("within one business day");
+    expect(email.subject).toBe(copy.subject);
+    expect(email.html).toContain(copy.greeting.replace("{name}", "Ana Silva"));
+    expect(email.text).not.toContain("within one business day");
     expectSafeEmail(email.html);
   });
 

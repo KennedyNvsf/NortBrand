@@ -1,14 +1,14 @@
 {
   "Metadata": {
     "siteName": "NortBrand",
-    "homeTitle": "NortBrand — A Digital Brand Experience",
-    "homeDescription": "NortBrand treats a business website as a product, not a brochure.",
-    "servicesTitle": "Services",
+    "homeTitle": "NortBrand — Websites built like products, for small businesses",
+    "homeDescription": "NortBrand designs and builds websites for local and service-based businesses: clear, fast and made to bring in enquiries. Book a free consultation.",
+    "servicesTitle": "Web design, development and content services",
     "servicesDescription": "Web design, web development, content writing, social media management and website maintenance for local and service-based businesses.",
     "aboutTitle": "About",
     "aboutDescription": "NortBrand designs digital work for small businesses with the same care they give their own products and services.",
     "contactTitle": "Contact",
-    "contactDescription": "Book a free 30-minute consultation with NortBrand. We reply within one business day.",
+    "contactDescription": "Book a free 30-minute consultation with NortBrand. Tell us about your business and we’ll reply within one business day.",
     "privacyTitle": "Privacy Policy",
     "privacyDescription": "What personal information NortBrand collects through this website, why, and the choices you have.",
     "termsTitle": "Terms of Use",
@@ -44,7 +44,7 @@
     "services": "Services",
     "company": "Company",
     "follow": "Follow us",
-    "rights": "© {year} NortBrand. All rights reserved.",
+    "rights": "© {year} NortBrand · Made in Portugal",
     "legal": "Legal",
     "privacy": "Privacy Policy",
     "terms": "Terms of Use",
@@ -62,11 +62,11 @@
     "webDevelopment": "Fast, reliable builds with real product architecture underneath, ready to grow with you.",
     "contentWriting": "Clear, on-brand copy that explains what you do and why it matters — without the filler.",
     "socialMedia": "Consistent, on-brand content that keeps your business visible between projects.",
-    "maintenance": "Ongoing updates, monitoring, and small fixes, so your site keeps working as hard as you do."
+    "maintenance": "Ongoing updates, monitoring and small fixes, so your site keeps working as hard as you do."
   },
   "CtaBand": {
     "headline": "Got a project in mind? Let’s <highlight>talk</highlight>.",
-    "subtext": "Reading is a great start. A conversation is better — book a free consultation and let’s figure out what your business actually needs.",
+    "subtext": "Reading is a great start. A conversation is better — book a free consultation and let’s work out what your business actually needs.",
     "cardText": "30 minutes. No pressure. Just a real conversation about your project."
   },
   "StickyCta": {
@@ -77,30 +77,30 @@
   },
   "Home": {
     "hero": {
-      "eyebrow": "Digital product & web design studio",
+      "eyebrow": "A Digital Branding Experience",
       "title": "Websites built like <green>products</green>, not brochures.",
-      "lead": "We design and build modern websites, landing pages, and digital products for local and service-based businesses — functional from day one, built to grow.",
+      "lead": "We design and build modern websites, landing pages and digital products for local and service-based businesses — functional from day one, built to grow.",
       "secondary": "View Services"
     },
     "why": {
       "eyebrow": "Why it matters",
       "title": "The <red>businesses</red> that grow fastest aren’t always the best. They’re <underline>the clearest</underline>.",
-      "body": "A strong digital brand isn’t about looking nice — it’s about being instantly understood. When your website, your content and your presence all say the same thing clearly, people trust you faster, hesitate less, and choose you instead of the next tab over.",
+      "body": "A strong digital brand isn’t about looking nice — it’s about being understood at once. When your website, your content and your presence all say the same thing clearly, people trust you faster, hesitate less and choose you over the alternative one click away.",
       "points": {
         "first": "First impressions form in milliseconds",
-        "second": "Consistency builds trust faster than content",
+        "second": "Consistency earns trust before a word is read",
         "third": "Clarity converts better than cleverness"
       }
     },
     "services": {
       "eyebrow": "What we do",
-      "title": "One <green>studio</green>, the full stack of your digital presence.",
+      "title": "One <green>studio</green> for your whole digital presence.",
       "learnMore": "Learn More"
     },
     "philosophy": {
       "eyebrow": "Our philosophy",
       "title": "We don’t <red>guess</red> what your business needs. We <underline>ask</underline>.",
-      "body": "Every NortBrand project starts with a real conversation — about your customers, your goals, and what success actually looks like for your business. That’s how we make sure what we build doesn’t just look good, it performs.",
+      "body": "Every NortBrand project starts with a real conversation — about your customers, your goals and what success actually looks like for your business. That’s how we make sure what we build doesn’t just look good, it performs.",
       "points": {
         "first": "Every project starts with a conversation, not a template",
         "second": "Design decisions are tied to your actual business goals",
@@ -113,19 +113,19 @@
       "steps": {
         "discover": {
           "title": "Discover",
-          "body": "We start by understanding your business, your customers, and what success actually looks like for you."
+          "body": "We start with a free call about your business and goals, then send a clear proposal: scope, timeline and price."
         },
         "design": {
           "title": "Design",
-          "body": "A clear visual direction and structure, built around your content and your goals — not a template."
+          "body": "A clear visual direction and structure, built around your goals and refined with your feedback."
         },
         "build": {
           "title": "Build",
           "body": "A fast, reliable, functional website or product, built on solid technical foundations."
         },
         "launch": {
-          "title": "Launch & Grow",
-          "body": "We launch, then keep improving — content, performance, and features that grow with your business."
+          "title": "Launch & grow",
+          "body": "We launch, then keep improving — content, performance and features that grow with your business."
         }
       }
     }
@@ -133,10 +133,10 @@
   "Services": {
     "hero": {
       "eyebrow": "Services",
-      "title": "<red>Everything</red> your business needs to show up <green>online</green>.",
+      "title": "What your business <red>needs</red> to show up <green>online</green>.",
       "lead": "From your first landing page to ongoing maintenance — pick what you need now, add the rest as you grow.",
-      "quote": "The businesses that grow fastest aren’t always the best. They’re the clearest.",
-      "quoteSource": "On branding"
+      "quote": "Good design isn’t decoration. It’s how people decide whether to trust you.",
+      "quoteSource": "On design"
     },
     "blocks": {
       "label": "Our services",
@@ -151,7 +151,7 @@
     },
     "items": {
       "webDesign": {
-        "title": "Interfaces People Actually <greenUnderline>Enjoy</greenUnderline> Using",
+        "title": "Interfaces people actually <greenUnderline>enjoy</greenUnderline> using",
         "details": "Clean, modern interfaces built around your business and your customers — not a template with your logo on it. Every layout decision ties back to what you actually need people to do.",
         "included": {
           "first": "Custom visual design",
@@ -160,16 +160,16 @@
         }
       },
       "webDevelopment": {
-        "title": "Built to Perform, Built to <greenUnderline>Last</greenUnderline>",
+        "title": "Built to perform, built to <greenUnderline>last</greenUnderline>",
         "details": "Fast, reliable builds with real product architecture underneath, ready to grow with you — from a simple landing page to a full booking system.",
         "included": {
           "first": "Responsive development",
-          "second": "Performance optimization",
+          "second": "Performance optimisation",
           "third": "Clean, maintainable code"
         }
       },
       "contentWriting": {
-        "title": "Words That Do Their <greenUnderline>Job</greenUnderline>",
+        "title": "Words that do their <greenUnderline>job</greenUnderline>",
         "details": "Clear, on-brand copy that explains what you do and why it matters — without the filler. Every page says exactly what it needs to, and nothing more.",
         "included": {
           "first": "Website copywriting",
@@ -178,8 +178,8 @@
         }
       },
       "socialMedia": {
-        "title": "Stay Visible, Stay <greenUnderline>Consistent</greenUnderline>",
-        "details": "Consistent, on-brand content that keeps your business visible between projects — so people don’t forget you exist the moment they leave your site.",
+        "title": "Stay visible, stay <greenUnderline>consistent</greenUnderline>",
+        "details": "Consistent, on-brand content that keeps your business visible between projects — so people don’t forget you the moment they leave your site.",
         "included": {
           "first": "Content calendar & planning",
           "second": "Post design & copy",
@@ -187,8 +187,8 @@
         }
       },
       "maintenance": {
-        "title": "<greenUnderline>Peace of Mind</greenUnderline>, Built In",
-        "details": "Ongoing updates, monitoring, and small fixes, so your site keeps working as hard as you do — without you having to think about it.",
+        "title": "<greenUnderline>Peace of mind</greenUnderline>, built in",
+        "details": "Ongoing updates, monitoring and small fixes, so your site keeps working as hard as you do — without you having to think about it.",
         "included": {
           "first": "Regular updates & backups",
           "second": "Uptime monitoring",
@@ -202,26 +202,26 @@
       "body": "None of it is arbitrary. Here’s what actually goes into the work.",
       "points": {
         "brandIdentity": {
-          "title": "Brand Identity",
-          "body": "Your logo, colors, and typography aren’t decoration — they’re the visual shorthand people use to recognize and trust you before they’ve read a single word."
+          "title": "Brand identity",
+          "body": "Your logo, colours and typography aren’t decoration — they’re the visual shorthand people use to recognise and trust you before they’ve read a single word."
         },
         "visualDesign": {
-          "title": "Color & Visual Design",
-          "body": "Color, type and spacing do quiet work: they guide the eye, signal what matters, and make your business feel the same everywhere it shows up."
+          "title": "Colour & visual design",
+          "body": "Colour, type and spacing do quiet work: they guide the eye, signal what matters and make your business feel the same everywhere it shows up."
         },
         "contentStrategy": {
-          "title": "Content Strategy",
+          "title": "Content strategy",
           "body": "We plan what each page needs to say, and in what order, so visitors find their answers before they think to ask the question."
         },
         "growth": {
-          "title": "Growth & Marketing",
+          "title": "Growth & marketing",
           "body": "Launch is the starting line. Search visibility, clear calls to action and simple measurement keep your site bringing in work long after day one."
         }
       }
     },
     "cta": {
       "headline": "Ready to pick your starting point?",
-      "subtext": "You don’t need all five services on day one. Book a free consultation and we’ll figure out what actually matters first."
+      "subtext": "You don’t need all five services on day one. Book a free consultation and we’ll work out what matters first."
     }
   },
   "About": {
@@ -241,16 +241,16 @@
         "interacts": "How people interact with it",
         "works": "What actually needs to work"
       },
-      "outro": "From there, we shape the <strong>brand</strong>, <strong>experience</strong>, <strong>interface</strong>, and <strong>technology</strong> around that reality."
+      "outro": "From there, we shape the <strong>brand</strong>, <strong>experience</strong>, <strong>interface</strong> and <strong>technology</strong> around that reality."
     },
     "principle": {
       "eyebrow": "Our principle",
-      "title": "Minimalism, but <indent><greenUnderline>functional</greenUnderline> products.</indent>",
-      "body": "Every NortBrand project should be clear, purposeful, and built around the people who will actually use it — whether that means a focused business website <strong>today</strong> or a complete digital product that grows into bookings, customer experiences, and mobile applications <strong>tomorrow</strong>."
+      "title": "Minimalism, but <indent>always <greenUnderline>functional</greenUnderline>.</indent>",
+      "body": "Every NortBrand project should be clear, purposeful and built around the people who will actually use it — whether that means a focused business website <strong>today</strong> or a complete digital product that grows into bookings, customer experiences and mobile apps <strong>tomorrow</strong>."
     },
     "cta": {
       "headline": "Let’s start with <highlight>your business</highlight>.",
-      "subtext": "Book a free consultation and tell us what your business does, who it serves, and what actually needs to work."
+      "subtext": "Book a free consultation and tell us what your business does, who it serves and what actually needs to work."
     }
   },
   "Contact": {
@@ -290,7 +290,7 @@
       "sending": "Sending your request — please keep this page open.",
       "sent": {
         "title": "Request sent.",
-        "body": "Thanks for reaching out. We’ll reply within one business day — usually sooner.",
+        "body": "Thanks for getting in touch. We’ll reply within one business day — usually sooner — with a few times for your call.",
         "replyTo": "We’ll reply to",
         "home": "Back to home",
         "blog": "Read the blog"
@@ -317,7 +317,7 @@
           "body": "Fill in the form with a few details about your business and what you need. It takes about two minutes."
         },
         "reply": {
-          "title": "We reply within a day",
+          "title": "We reply in one business day",
           "body": "A real person reads your message and replies with a few questions and some times that work for a call."
         },
         "call": {
@@ -396,7 +396,7 @@
         },
         "rights": {
           "title": "Your rights",
-          "body": "Under the GDPR you can ask to access, correct, delete, or export your personal information, and to object to or restrict how we use it. You can withdraw consent at any time, and you can lodge a complaint with the Portuguese data protection authority (CNPD)."
+          "body": "Under the GDPR you can ask to access, correct, delete or export your personal information, and to object to or restrict how we use it. You can withdraw consent at any time, and you can lodge a complaint with the Portuguese data protection authority (CNPD)."
         },
         "contact": {
           "title": "Contact us",
@@ -418,7 +418,7 @@
         },
         "ip": {
           "title": "Intellectual property",
-          "body": "All content on this website, including text, graphics, logos, and designs, belongs to NortBrand or its licensors and is protected by intellectual property laws. You may not copy or reuse it without written permission."
+          "body": "All content on this website, including text, graphics, logos and designs, belongs to NortBrand or its licensors and is protected by intellectual property laws. You may not copy or reuse it without written permission."
         },
         "enquiries": {
           "title": "Enquiries and proposals",
@@ -461,7 +461,7 @@
       "subject": "We’ve received your request",
       "preview": "We’ll reply within one business day with times for your call.",
       "greeting": "Hi {name},",
-      "intro": "Thanks for reaching out about {service}. We’ve received your request and will reply within one business day with a few times for your free 30-minute call.",
+      "intro": "Thanks for getting in touch about {service}. We’ve received your request and will reply within one business day with a few times for your free 30-minute call.",
       "summaryTitle": "What you sent us",
       "serviceLabel": "Service",
       "phoneLabel": "Phone",
@@ -501,13 +501,13 @@
   "Newsletter": {
     "card": {
       "title": "Get ideas <red>worth reading</red>, straight to your inbox.",
-      "body": "One thoughtful email a month on design, branding, and building things that work. No spam, ever.",
+      "body": "One thoughtful email a month on design, branding and building things that work. No spam, ever.",
       "emailLabel": "Email address",
       "emailPlaceholder": "Enter your email",
       "submit": "Subscribe",
       "submitting": "Subscribing…",
       "consent": "By subscribing you agree to receive occasional emails from NortBrand. Read our <link>Privacy Policy</link>.",
-      "successTitle": "You’re in.",
+      "successTitle": "Almost there.",
       "successBody": "We’ve sent a confirmation link to {email}. Click it to finish subscribing.",
       "successNote": "You can unsubscribe at any time.",
       "rateLimited": "Too many attempts. Please wait an hour and try again.",
@@ -572,15 +572,15 @@
   },
   "Blog": {
     "eyebrow": "Blog",
-    "title": "Ideas on design, branding, and building things that work.",
-    "lead": "Notes from the studio on what actually moves the needle for local and service-based businesses.",
+    "title": "Ideas on design, branding and building things that work.",
+    "lead": "Notes from the studio on what actually makes a difference for local and service-based businesses.",
     "featuredLabel": "Featured article",
     "readMore": "Read More",
     "byline": "{author} · {date}",
     "articlesEyebrow": "Articles",
     "articlesTitle": "Check out our <indent><greenUnderline>newest</greenUnderline> articles</indent>",
     "searchLabel": "Search articles",
-    "searchPlaceholder": "Search articles...",
+    "searchPlaceholder": "Search articles…",
     "categoriesLabel": "Filter by category",
     "all": "All",
     "sortLabel": "Sort articles",

@@ -1,38 +1,38 @@
 {
   "Metadata": {
     "siteName": "NortBrand",
-    "homeTitle": "[[NortBrand — A Digital Brand Experience ~~~~ ~~~~ ~~~]]",
-    "homeDescription": "[[NortBrand treats a business website as a product, not a brochure. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-    "servicesTitle": "[[Services ~~]]",
-    "servicesDescription": "[[Web design, web development, content writing, social media management and website maintenance for local and service-based businesses. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-    "aboutTitle": "[[About ~~]]",
-    "aboutDescription": "[[NortBrand designs digital work for small businesses with the same care they give their own products and services. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-    "contactTitle": "[[Contact ~~]]",
-    "contactDescription": "[[Book a free 30-minute consultation with NortBrand. We reply within one business day. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-    "privacyTitle": "[[Privacy Policy ~~~~]]",
-    "privacyDescription": "[[What personal information NortBrand collects through this website, why, and the choices you have. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-    "termsTitle": "[[Terms of Use ~~~~]]",
-    "termsDescription": "[[The terms that apply when you use the NortBrand website. ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-    "notFoundTitle": "[[Page not found ~~~~]]",
-    "newsletterConfirmTitle": "[[Confirm your subscription ~~~~ ~~~~]]",
-    "newsletterConfirmDescription": "[[Confirm your subscription to the NortBrand newsletter. ~~~~ ~~~~ ~~~~ ~~~~]]",
-    "newsletterUnsubscribeTitle": "[[Unsubscribe ~~~]]",
-    "newsletterUnsubscribeDescription": "[[Stop receiving the NortBrand newsletter. ~~~~ ~~~~ ~~~~]]",
-    "blogTitle": "[[Blog ~]]",
-    "blogDescription": "[[Ideas on design, branding and building websites that work, from the NortBrand studio. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]"
+    "homeTitle": "NortBrand — Criação de sites e produtos digitais para empresas",
+    "homeDescription": "Desenhamos e desenvolvemos sites para negócios locais e empresas de serviços: claros, rápidos e pensados para gerar contactos. Marque uma conversa gratuita.",
+    "servicesTitle": "Criação de sites, webdesign e conteúdos",
+    "servicesDescription": "Webdesign, desenvolvimento web, redação de conteúdos, gestão de redes sociais e manutenção de sites para negócios locais e empresas de serviços.",
+    "aboutTitle": "Sobre nós",
+    "aboutDescription": "A NortBrand cria a presença digital de pequenas empresas com o mesmo cuidado que estas dedicam aos seus produtos e serviços.",
+    "contactTitle": "Contactos",
+    "contactDescription": "Marque uma conversa gratuita de 30 minutos com a NortBrand. Fale-nos do seu negócio e respondemos no prazo de um dia útil.",
+    "privacyTitle": "Política de Privacidade",
+    "privacyDescription": "Que dados pessoais a NortBrand recolhe através deste site, porquê e que escolhas tem ao seu dispor.",
+    "termsTitle": "Termos de Utilização",
+    "termsDescription": "Os termos aplicáveis à utilização do site da NortBrand.",
+    "notFoundTitle": "Página não encontrada",
+    "newsletterConfirmTitle": "Confirmar subscrição",
+    "newsletterConfirmDescription": "Confirme a sua subscrição da newsletter da NortBrand.",
+    "newsletterUnsubscribeTitle": "Cancelar subscrição",
+    "newsletterUnsubscribeDescription": "Deixe de receber a newsletter da NortBrand.",
+    "blogTitle": "Blog",
+    "blogDescription": "Ideias sobre design, marca e sites que funcionam, escritas pelo estúdio NortBrand."
   },
   "Common": {
-    "skipToContent": "[[Skip to content ~~~~ ~]]",
-    "bookConsultation": "Agendar Avaliação",
-    "sending": "A enviar",
+    "skipToContent": "Saltar para o conteúdo",
+    "bookConsultation": "Marcar conversa gratuita",
+    "sending": "A enviar…",
     "close": "Fechar",
-    "loading": "A Carregar"
+    "loading": "A carregar"
   },
   "Nav": {
-    "label": "[[Main ~]]",
-    "home": "[[NortBrand home ~~~~]]",
+    "label": "Principal",
+    "home": "Página inicial da NortBrand",
     "services": "Serviços",
-    "about": "Sobre",
+    "about": "Sobre nós",
     "blog": "Blog",
     "contact": "Contactos",
     "openMenu": "Abrir menu",
@@ -40,580 +40,580 @@
     "menuTitle": "Menu"
   },
   "Footer": {
-    "tagline": "[[NortBrand is a digital product and web design studio for local and service-based businesses. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-    "services": "[[Services ~~]]",
-    "company": "[[Company ~~]]",
-    "follow": "[[Follow us ~~~]]",
-    "rights": "[[© {year} NortBrand. All rights reserved. ~~~~ ~~~~ ~~~~]]",
-    "legal": "[[Legal ~~]]",
-    "privacy": "[[Privacy Policy ~~~~]]",
-    "terms": "[[Terms of Use ~~~~]]",
-    "cookies": "[[Cookie settings ~~~~ ~]]"
+    "tagline": "A NortBrand é um estúdio de webdesign e produtos digitais para negócios locais e empresas de serviços.",
+    "services": "Serviços",
+    "company": "Empresa",
+    "follow": "Siga-nos",
+    "rights": "© {year} NortBrand · Feito em Portugal",
+    "legal": "Legal",
+    "privacy": "Política de Privacidade",
+    "terms": "Termos de Utilização",
+    "cookies": "Definições de cookies"
   },
   "ServiceNames": {
-    "webDesign": "[[Web Design ~~~]]",
-    "webDevelopment": "[[Web Development ~~~~ ~]]",
-    "contentWriting": "[[Content Writing ~~~~ ~]]",
-    "socialMedia": "[[Social Media Management ~~~~ ~~~]]",
-    "maintenance": "[[Website Maintenance ~~~~ ~~]]"
+    "webDesign": "Webdesign",
+    "webDevelopment": "Desenvolvimento web",
+    "contentWriting": "Redação de conteúdos",
+    "socialMedia": "Gestão de redes sociais",
+    "maintenance": "Manutenção de sites"
   },
   "ServiceSummaries": {
-    "webDesign": "[[Clean, modern interfaces built around your business and your customers — not a template with your logo on it. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-    "webDevelopment": "[[Fast, reliable builds with real product architecture underneath, ready to grow with you. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-    "contentWriting": "[[Clear, on-brand copy that explains what you do and why it matters — without the filler. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-    "socialMedia": "[[Consistent, on-brand content that keeps your business visible between projects. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-    "maintenance": "[[Ongoing updates, monitoring, and small fixes, so your site keeps working as hard as you do. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+    "webDesign": "Interfaces limpas e modernas, pensadas para o seu negócio e para os seus clientes — não um template com o seu logótipo.",
+    "webDevelopment": "Sites rápidos e fiáveis, construídos sobre bases sólidas e prontos a crescer consigo.",
+    "contentWriting": "Textos claros e fiéis à sua marca, que explicam o que faz e porque é importante — sem palha.",
+    "socialMedia": "Conteúdo consistente e alinhado com a sua marca, que mantém o seu negócio visível entre projetos.",
+    "maintenance": "Atualizações, monitorização e pequenas correções contínuas, para que o seu site nunca deixe de trabalhar por si."
   },
   "CtaBand": {
-    "headline": "[[Got a project in mind? Let’s <highlight>talk</highlight>. ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-    "subtext": "[[Reading is a great start. A conversation is better — book a free consultation and let’s figure out what your business actually needs. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-    "cardText": "[[30 minutes. No pressure. Just a real conversation about your project. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+    "headline": "Tem um projeto em mente? <highlight>Vamos falar</highlight>.",
+    "subtext": "Ler é um bom começo, mas falar é ainda melhor. Marque uma conversa gratuita e descubra connosco aquilo de que o seu negócio precisa.",
+    "cardText": "30 minutos. Sem pressão. Só uma conversa a sério sobre o seu projeto."
   },
   "StickyCta": {
-    "label": "[[Book a free consultation ~~~~ ~~~]]",
-    "title": "[[Free consultation ~~~~ ~]]",
-    "meta": "[[30 minutes · No pressure ~~~~ ~~~]]",
-    "action": "[[Book now ~~]]"
+    "label": "Marcar conversa gratuita",
+    "title": "Conversa gratuita",
+    "meta": "30 minutos · Sem pressão",
+    "action": "Marcar agora"
   },
   "Home": {
     "hero": {
-      "eyebrow": "[[Digital product & web design studio ~~~~ ~~~~ ~~~]]",
-      "title": "[[Websites built like <green>products</green>, not brochures. ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-      "lead": "[[We design and build modern websites, landing pages, and digital products for local and service-based businesses — functional from day one, built to grow. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-      "secondary": "[[View Services ~~~~]]"
+      "eyebrow": "Branding digital, feito à medida",
+      "title": "Sites que são <green>produtos</green>, não folhetos.",
+      "lead": "Desenhamos e desenvolvemos sites, landing pages e produtos digitais para negócios locais e empresas de serviços — funcionais desde o primeiro dia e preparados para crescer.",
+      "secondary": "Ver serviços"
     },
     "why": {
-      "eyebrow": "[[Why it matters ~~~~]]",
-      "title": "[[The <red>businesses</red> that grow fastest aren’t always the best. They’re <underline>the clearest</underline>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-      "body": "[[A strong digital brand isn’t about looking nice — it’s about being instantly understood. When your website, your content and your presence all say the same thing clearly, people trust you faster, hesitate less, and choose you instead of the next tab over. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
+      "eyebrow": "Porque é importante",
+      "title": "Quem cresce mais depressa nem sempre é o <red>melhor</red>. É <underline>o mais claro</underline>.",
+      "body": "Uma marca digital forte não se resume a ter bom aspeto — é ser compreendida à primeira. Quando o site, os conteúdos e a presença online dizem a mesma coisa com clareza, as pessoas confiam mais depressa, hesitam menos e escolhem o seu negócio em vez da alternativa que está a um clique de distância.",
       "points": {
-        "first": "[[First impressions form in milliseconds ~~~~ ~~~~ ~~~]]",
-        "second": "[[Consistency builds trust faster than content ~~~~ ~~~~ ~~~~ ~]]",
-        "third": "[[Clarity converts better than cleverness ~~~~ ~~~~ ~~~~]]"
+        "first": "A primeira impressão é instantânea",
+        "second": "A consistência gera confiança à primeira vista",
+        "third": "A clareza convence mais do que o engenho"
       }
     },
     "services": {
-      "eyebrow": "[[What we do ~~~]]",
-      "title": "[[One <green>studio</green>, the full stack of your digital presence. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-      "learnMore": "[[Learn More ~~~]]"
+      "eyebrow": "O que fazemos",
+      "title": "Um <green>estúdio</green> para toda a sua presença digital.",
+      "learnMore": "Saber mais"
     },
     "philosophy": {
-      "eyebrow": "[[Our philosophy ~~~~]]",
-      "title": "[[We don’t <red>guess</red> what your business needs. We <underline>ask</underline>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-      "body": "[[Every NortBrand project starts with a real conversation — about your customers, your goals, and what success actually looks like for your business. That’s how we make sure what we build doesn’t just look good, it performs. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
+      "eyebrow": "A nossa filosofia",
+      "title": "Não <red>adivinhamos</red>. <underline>Perguntamos</underline>.",
+      "body": "Todos os projetos da NortBrand começam com uma conversa a sério — sobre os seus clientes, os seus objetivos e o que significa, de facto, ter sucesso no seu negócio. É assim que garantimos que aquilo que construímos não fica só bonito: funciona.",
       "points": {
-        "first": "[[Every project starts with a conversation, not a template ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-        "second": "[[Design decisions are tied to your actual business goals ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-        "third": "[[Success is measured in results, not just good looks ~~~~ ~~~~ ~~~~ ~~~]]"
+        "first": "Cada projeto começa com uma conversa, não com um template",
+        "second": "As decisões de design respondem aos objetivos reais do seu negócio",
+        "third": "O sucesso mede-se em resultados, não só na aparência"
       }
     },
     "process": {
-      "eyebrow": "Como Funciona",
-      "title": "[[A clear process, from first call to launch. ~~~~ ~~~~ ~~~~ ~]]",
+      "eyebrow": "Como funciona",
+      "title": "Um processo claro, da primeira conversa ao lançamento.",
       "steps": {
         "discover": {
-          "title": "[[Discover ~~]]",
-          "body": "[[We start by understanding your business, your customers, and what success actually looks like for you. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+          "title": "Descobrir",
+          "body": "Uma conversa gratuita sobre o seu negócio e objetivos, seguida de uma proposta clara: âmbito, prazos e preço."
         },
         "design": {
-          "title": "[[Design ~~]]",
-          "body": "[[A clear visual direction and structure, built around your content and your goals — not a template. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+          "title": "Desenhar",
+          "body": "Uma direção visual e uma estrutura claras, pensadas para os seus objetivos e afinadas com o seu feedback."
         },
         "build": {
-          "title": "[[Build ~~]]",
-          "body": "[[A fast, reliable, functional website or product, built on solid technical foundations. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]"
+          "title": "Construir",
+          "body": "Um site ou produto rápido, fiável e funcional, assente em bases técnicas sólidas."
         },
         "launch": {
-          "title": "[[Launch & Grow ~~~~]]",
-          "body": "[[We launch, then keep improving — content, performance, and features that grow with your business. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+          "title": "Lançar e crescer",
+          "body": "Lançamos e continuamos a melhorar: conteúdos, desempenho e novas funcionalidades."
         }
       }
     }
   },
   "Services": {
     "hero": {
-      "eyebrow": "[[Services ~~]]",
-      "title": "[[<red>Everything</red> your business needs to show up <green>online</green>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
-      "lead": "[[From your first landing page to ongoing maintenance — pick what you need now, add the rest as you grow. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
-      "quote": "[[The businesses that grow fastest aren’t always the best. They’re the clearest. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
-      "quoteSource": "[[On branding ~~~]]"
+      "eyebrow": "Serviços",
+      "title": "Cinco <red>serviços</red> para o seu negócio se destacar <green>online</green>.",
+      "lead": "Da primeira landing page à manutenção contínua — escolha o que precisa agora e acrescente o resto à medida que cresce.",
+      "quote": "Bom design não é decoração. É o que leva as pessoas a decidir se confiam em si.",
+      "quoteSource": "Sobre design"
     },
     "blocks": {
-      "label": "[[Our services ~~~~]]",
-      "jump": "[[Jump to a service ~~~~ ~]]",
-      "eyebrow": "[[{number} — {name} ~~~~ ~]]",
-      "moreDetails": "[[More Details ~~~~]]",
-      "moreDetailsLabel": "[[More Details: {name} ~~~~ ~~]]"
+      "label": "Os nossos serviços",
+      "jump": "Ir para um serviço",
+      "eyebrow": "{number} — {name}",
+      "moreDetails": "Ver detalhes",
+      "moreDetailsLabel": "Ver detalhes: {name}"
     },
     "details": {
-      "position": "[[{current} / {total} ~~~~ ~~]]",
-      "included": "[[What’s included ~~~~ ~]]"
+      "position": "{current} / {total}",
+      "included": "O que inclui"
     },
     "items": {
       "webDesign": {
-        "title": "[[Interfaces People Actually <greenUnderline>Enjoy</greenUnderline> Using ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-        "details": "[[Clean, modern interfaces built around your business and your customers — not a template with your logo on it. Every layout decision ties back to what you actually need people to do. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+        "title": "Interfaces que dá <greenUnderline>gosto</greenUnderline> usar",
+        "details": "Interfaces limpas e modernas, pensadas para o seu negócio e para os seus clientes — não um template com o seu logótipo. Cada decisão de layout parte daquilo que quer que as pessoas façam.",
         "included": {
-          "first": "[[Custom visual design ~~~~ ~~]]",
-          "second": "[[Mobile-first layouts ~~~~ ~~]]",
-          "third": "[[Up to 3 rounds of revisions ~~~~ ~~~~]]"
+          "first": "Design visual à medida",
+          "second": "Pensado primeiro para telemóvel",
+          "third": "Até 3 rondas de revisões"
         }
       },
       "webDevelopment": {
-        "title": "[[Built to Perform, Built to <greenUnderline>Last</greenUnderline> ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
-        "details": "[[Fast, reliable builds with real product architecture underneath, ready to grow with you — from a simple landing page to a full booking system. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
+        "title": "Feito para funcionar, feito para <greenUnderline>durar</greenUnderline>",
+        "details": "Sites rápidos e fiáveis, construídos sobre bases sólidas e prontos a crescer consigo — de uma simples landing page a um sistema de marcações completo.",
         "included": {
-          "first": "[[Responsive development ~~~~ ~~~]]",
-          "second": "[[Performance optimization ~~~~ ~~~]]",
-          "third": "[[Clean, maintainable code ~~~~ ~~~]]"
+          "first": "Desenvolvimento responsivo",
+          "second": "Otimização de desempenho",
+          "third": "Código limpo e fácil de manter"
         }
       },
       "contentWriting": {
-        "title": "[[Words That Do Their <greenUnderline>Job</greenUnderline> ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-        "details": "[[Clear, on-brand copy that explains what you do and why it matters — without the filler. Every page says exactly what it needs to, and nothing more. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
+        "title": "Palavras que <greenUnderline>trabalham</greenUnderline> por si",
+        "details": "Textos claros e fiéis à sua marca, que explicam o que faz e porque é importante — sem palha. Cada página diz exatamente o que precisa de dizer, e nada mais.",
         "included": {
-          "first": "[[Website copywriting ~~~~ ~~]]",
-          "second": "[[Tone & voice guidance ~~~~ ~~]]",
-          "third": "[[SEO-aware structure ~~~~ ~~]]"
+          "first": "Textos para o site",
+          "second": "Orientação de tom e voz",
+          "third": "Estrutura pensada para SEO"
         }
       },
       "socialMedia": {
-        "title": "[[Stay Visible, Stay <greenUnderline>Consistent</greenUnderline> ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
-        "details": "[[Consistent, on-brand content that keeps your business visible between projects — so people don’t forget you exist the moment they leave your site. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
+        "title": "Sempre visível, sempre <greenUnderline>consistente</greenUnderline>",
+        "details": "Conteúdo consistente e alinhado com a sua marca, que mantém o seu negócio visível entre projetos — para que ninguém se esqueça de si assim que sai do seu site.",
         "included": {
-          "first": "[[Content calendar & planning ~~~~ ~~~~]]",
-          "second": "[[Post design & copy ~~~~ ~]]",
-          "third": "[[Monthly performance review ~~~~ ~~~~]]"
+          "first": "Calendário e planeamento de conteúdos",
+          "second": "Design e texto das publicações",
+          "third": "Análise mensal de resultados"
         }
       },
       "maintenance": {
-        "title": "[[<greenUnderline>Peace of Mind</greenUnderline>, Built In ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-        "details": "[[Ongoing updates, monitoring, and small fixes, so your site keeps working as hard as you do — without you having to think about it. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
+        "title": "<greenUnderline>Tranquilidade</greenUnderline> incluída",
+        "details": "Atualizações, monitorização e pequenas correções contínuas, para que o seu site nunca deixe de trabalhar por si — sem ter de pensar nisso.",
         "included": {
-          "first": "[[Regular updates & backups ~~~~ ~~~~]]",
-          "second": "[[Uptime monitoring ~~~~ ~]]",
-          "third": "[[Priority support for fixes ~~~~ ~~~~]]"
+          "first": "Atualizações e backups regulares",
+          "second": "Monitorização da disponibilidade",
+          "third": "Suporte prioritário para correções"
         }
       }
     },
     "approach": {
-      "eyebrow": "[[Our approach ~~~~]]",
-      "title": "[[Every detail has a reason behind it. ~~~~ ~~~~ ~~~]]",
-      "body": "[[None of it is arbitrary. Here’s what actually goes into the work. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
+      "eyebrow": "A nossa abordagem",
+      "title": "Cada detalhe tem uma razão de ser.",
+      "body": "Nada é por acaso. Eis o que está por trás de cada projeto.",
       "points": {
         "brandIdentity": {
-          "title": "[[Brand Identity ~~~~]]",
-          "body": "[[Your logo, colors, and typography aren’t decoration — they’re the visual shorthand people use to recognize and trust you before they’ve read a single word. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+          "title": "Identidade de marca",
+          "body": "O logótipo, as cores e a tipografia não são decoração — são o atalho visual que as pessoas usam para reconhecer a sua marca e confiar nela antes de lerem uma única palavra."
         },
         "visualDesign": {
-          "title": "[[Color & Visual Design ~~~~ ~~]]",
-          "body": "[[Color, type and spacing do quiet work: they guide the eye, signal what matters, and make your business feel the same everywhere it shows up. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]"
+          "title": "Cor e design visual",
+          "body": "A cor, a tipografia e o espaçamento fazem um trabalho discreto: guiam o olhar, destacam o que importa e dão ao seu negócio a mesma imagem em todo o lado."
         },
         "contentStrategy": {
-          "title": "[[Content Strategy ~~~~ ~]]",
-          "body": "[[We plan what each page needs to say, and in what order, so visitors find their answers before they think to ask the question. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]"
+          "title": "Estratégia de conteúdos",
+          "body": "Planeamos o que cada página precisa de dizer, e por que ordem, para que os visitantes encontrem as respostas antes de pensarem em fazer a pergunta."
         },
         "growth": {
-          "title": "[[Growth & Marketing ~~~~ ~]]",
-          "body": "[[Launch is the starting line. Search visibility, clear calls to action and simple measurement keep your site bringing in work long after day one. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+          "title": "Crescimento e marketing",
+          "body": "O lançamento é só o ponto de partida. Visibilidade no Google, apelos à ação claros e métricas simples mantêm o seu site a trazer novos clientes muito depois do primeiro dia."
         }
       }
     },
     "cta": {
-      "headline": "[[Ready to pick your starting point? ~~~~ ~~~~ ~~]]",
-      "subtext": "[[You don’t need all five services on day one. Book a free consultation and we’ll figure out what actually matters first. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]"
+      "headline": "Vamos escolher por onde começar?",
+      "subtext": "Não precisa dos cinco serviços de uma vez. Marque uma conversa gratuita e vemos juntos o que importa primeiro."
     }
   },
   "About": {
     "hero": {
-      "eyebrow": "[[About NortBrand ~~~~ ~]]",
-      "title": "[[Digital work, designed with the <greenUnderline>same care</greenUnderline>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
-      "lead": "[[NortBrand started with a simple belief: small businesses deserve digital experiences that are designed with the same care as the products and services they provide. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+      "eyebrow": "Sobre a NortBrand",
+      "title": "Trabalho digital, desenhado com o <greenUnderline>mesmo cuidado</greenUnderline>.",
+      "lead": "A NortBrand nasceu de uma ideia simples: as pequenas empresas merecem experiências digitais desenhadas com o mesmo cuidado que põem nos produtos e serviços que oferecem."
     },
     "story": {
-      "eyebrow": "[[Our story ~~~]]",
-      "title": "[[<green>More</green> than a finished project. ~~~~ ~~~~ ~~~~ ~]]",
-      "statement": "[[NortBrand was created to approach digital work <red>differently</red>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-      "intro": "[[Instead of starting with templates or trends, we start by understanding the business: ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+      "eyebrow": "A nossa história",
+      "title": "<green>Mais</green> do que um projeto entregue.",
+      "statement": "A NortBrand foi criada para fazer o digital de forma <red>diferente</red>.",
+      "intro": "Em vez de começarmos por templates ou tendências, começamos por perceber o negócio:",
       "understanding": {
-        "does": "[[What it does ~~~~]]",
-        "serves": "[[Who it serves ~~~~]]",
-        "interacts": "[[How people interact with it ~~~~ ~~~~]]",
-        "works": "[[What actually needs to work ~~~~ ~~~~]]"
+        "does": "O que faz",
+        "serves": "A quem se dirige",
+        "interacts": "Como as pessoas interagem com ele",
+        "works": "O que tem mesmo de funcionar"
       },
-      "outro": "[[From there, we shape the <strong>brand</strong>, <strong>experience</strong>, <strong>interface</strong>, and <strong>technology</strong> around that reality. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+      "outro": "A partir daí, damos forma à <strong>marca</strong>, à <strong>experiência</strong>, à <strong>interface</strong> e à <strong>tecnologia</strong> em função dessa realidade."
     },
     "principle": {
-      "eyebrow": "[[Our principle ~~~~]]",
-      "title": "[[Minimalism, but <indent><greenUnderline>functional</greenUnderline> products.</indent> ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-      "body": "[[Every NortBrand project should be clear, purposeful, and built around the people who will actually use it — whether that means a focused business website <strong>today</strong> or a complete digital product that grows into bookings, customer experiences, and mobile applications <strong>tomorrow</strong>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]"
+      "eyebrow": "O nosso princípio",
+      "title": "Minimalismo, mas <indent>sempre <greenUnderline>funcional</greenUnderline>.</indent>",
+      "body": "Todos os projetos da NortBrand devem ser claros, ter um propósito e ser pensados para as pessoas que os vão usar — seja um site simples e eficaz <strong>hoje</strong>, seja um produto digital completo que evolui para marcações, experiências de cliente e aplicações móveis <strong>amanhã</strong>."
     },
     "cta": {
-      "headline": "[[Let’s start with <highlight>your business</highlight>. ~~~~ ~~~~ ~~~~ ~~~~]]",
-      "subtext": "[[Book a free consultation and tell us what your business does, who it serves, and what actually needs to work. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+      "headline": "Vamos começar pelo <highlight>seu negócio</highlight>.",
+      "subtext": "Marque uma conversa gratuita e conte-nos o que o seu negócio faz, a quem se dirige e o que tem mesmo de funcionar."
     }
   },
   "Contact": {
     "hero": {
-      "title": "[[Let’s start with a <greenUnderline>conversation</greenUnderline>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-      "lead": "[[Tell us a bit about your business and what you’re hoping to achieve. We’ll reply within one business day — no sales pitch, just a real answer. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
-      "detailsLabel": "[[Contact details ~~~~ ~]]",
-      "email": "[[Email ~~]]",
-      "phone": "[[Phone ~~]]",
-      "availability": "[[Availability ~~~~]]",
-      "hours": "[[Mon – Fri · {opens} – {closes} ~~~~ ~~~~ ~]]"
+      "title": "Vamos começar por <greenUnderline>conversar</greenUnderline>.",
+      "lead": "Conte-nos um pouco sobre o seu negócio e o que pretende alcançar. Respondemos no prazo de um dia útil — sem discurso comercial, só uma resposta a sério.",
+      "detailsLabel": "Dados de contacto",
+      "email": "Email",
+      "phone": "Telefone",
+      "availability": "Disponibilidade",
+      "hours": "seg. – sex. · {opens} – {closes}"
     },
     "form": {
-      "title": "[[Book a Consultation ~~~~ ~~]]",
-      "subtitle": "[[A free 30-minute call. No pressure, no obligation. ~~~~ ~~~~ ~~~~ ~~~]]",
-      "name": "[[Name ~]]",
-      "namePlaceholder": "[[Your name ~~~]]",
-      "email": "[[Email ~~]]",
-      "emailPlaceholder": "[[you@company.com ~~~~ ~]]",
-      "phone": "[[Phone (optional) ~~~~ ~]]",
-      "phonePlaceholder": "[[+351 000 000 000 ~~~~ ~]]",
-      "service": "[[I’m interested in ~~~~ ~]]",
-      "servicePlaceholder": "[[Select a service ~~~~ ~]]",
-      "message": "[[Tell us about your project ~~~~ ~~~~]]",
-      "messagePlaceholder": "[[What does your business do, and what are you hoping to achieve? ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
-      "submit": "[[Send Request ~~~~]]",
+      "title": "Marcar conversa gratuita",
+      "subtitle": "Uma chamada gratuita de 30 minutos. Sem pressão nem compromisso.",
+      "name": "Nome",
+      "namePlaceholder": "O seu nome",
+      "email": "Email",
+      "emailPlaceholder": "nome@empresa.pt",
+      "phone": "Telefone (opcional)",
+      "phonePlaceholder": "+351 000 000 000",
+      "service": "Tenho interesse em",
+      "servicePlaceholder": "Selecione um serviço",
+      "message": "Fale-nos do seu projeto",
+      "messagePlaceholder": "O que faz o seu negócio e o que pretende alcançar?",
+      "submit": "Enviar pedido",
       "errors": {
-        "nameRequired": "[[Please enter your name ~~~~ ~~~]]",
-        "nameTooLong": "[[Please keep your name under 120 characters ~~~~ ~~~~ ~~~~ ~]]",
-        "emailInvalid": "[[Enter a valid email address ~~~~ ~~~~]]",
-        "phoneInvalid": "[[Enter a valid phone number, or leave it empty ~~~~ ~~~~ ~~~~ ~~]]",
-        "serviceRequired": "[[Please choose a service ~~~~ ~~~]]",
-        "messageRequired": "[[Tell us a little about your project ~~~~ ~~~~ ~~~]]",
-        "messageTooShort": "[[Please write at least 10 characters ~~~~ ~~~~ ~~~]]",
-        "messageTooLong": "[[Please keep your message under 5,000 characters ~~~~ ~~~~ ~~~~ ~~]]"
+        "nameRequired": "Indique o seu nome",
+        "nameTooLong": "O nome deve ter menos de 120 caracteres",
+        "emailInvalid": "Indique um endereço de email válido",
+        "phoneInvalid": "Indique um número de telefone válido ou deixe o campo vazio",
+        "serviceRequired": "Selecione um serviço",
+        "messageRequired": "Fale-nos um pouco do seu projeto",
+        "messageTooShort": "Escreva pelo menos 10 caracteres",
+        "messageTooLong": "A mensagem deve ter menos de 5000 caracteres"
       },
-      "sending": "[[Sending your request — please keep this page open. ~~~~ ~~~~ ~~~~ ~~~]]",
+      "sending": "A enviar o seu pedido — mantenha esta página aberta.",
       "sent": {
-        "title": "[[Request sent. ~~~~]]",
-        "body": "[[Thanks for reaching out. We’ll reply within one business day — usually sooner. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
-        "replyTo": "[[We’ll reply to ~~~~]]",
-        "home": "[[Back to home ~~~~]]",
-        "blog": "[[Read the blog ~~~~]]"
+        "title": "Pedido enviado.",
+        "body": "Obrigado pelo contacto. Respondemos no prazo de um dia útil — normalmente antes — com alguns horários para a sua chamada.",
+        "replyTo": "Vamos responder para",
+        "home": "Voltar ao início",
+        "blog": "Ler o blog"
       },
       "failed": {
-        "title": "[[We couldn’t send your message ~~~~ ~~~~ ~]]",
-        "body": "[[Nothing was lost — your answers are still here. Please try again, or write to <email></email>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]"
+        "title": "Não foi possível enviar a sua mensagem",
+        "body": "Não se perdeu nada — as suas respostas continuam aqui. Tente novamente ou escreva para <email></email>."
       },
       "rateLimited": {
-        "title": "[[Too many requests ~~~~ ~]]",
-        "body": "[[You’ve sent several requests in the last hour. Please try again later, or write to <email></email>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]"
+        "title": "Demasiados pedidos",
+        "body": "Enviou vários pedidos na última hora. Tente novamente mais tarde ou escreva para <email></email>."
       },
-      "submitting": "[[Sending… ~~]]",
-      "tryAgain": "[[Try again ~~~]]",
-      "note": "[[We reply within one business day. ~~~~ ~~~~ ~~]]",
-      "privacy": "[[By sending, you agree we use your details to reply. <link>Privacy Policy</link> ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]"
+      "submitting": "A enviar…",
+      "tryAgain": "Tentar novamente",
+      "note": "Respondemos no prazo de um dia útil.",
+      "privacy": "Ao enviar, aceita que usemos os seus dados para lhe responder. <link>Política de Privacidade</link>"
     },
     "steps": {
-      "eyebrow": "[[What happens next ~~~~ ~]]",
-      "title": "[[Three steps. <indent>No <greenUnderline>surprises</greenUnderline>.</indent> ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
+      "eyebrow": "O que acontece a seguir",
+      "title": "Três passos. <indent>Sem <greenUnderline>surpresas</greenUnderline>.</indent>",
       "items": {
         "request": {
-          "title": "[[You send a request ~~~~ ~]]",
-          "body": "[[Fill in the form with a few details about your business and what you need. It takes about two minutes. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+          "title": "Envia o pedido",
+          "body": "Preencha o formulário com alguns dados sobre o seu negócio e aquilo de que precisa. Demora cerca de dois minutos."
         },
         "reply": {
-          "title": "[[We reply within a day ~~~~ ~~]]",
-          "body": "[[A real person reads your message and replies with a few questions and some times that work for a call. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+          "title": "Respondemos num dia útil",
+          "body": "Alguém da nossa equipa lê a sua mensagem e responde com algumas perguntas e horários possíveis para a chamada."
         },
         "call": {
-          "title": "[[We talk it through ~~~~ ~]]",
-          "body": "[[A relaxed 30-minute call to understand your goals. You’ll leave with a clear next step, whether or not we work together. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]"
+          "title": "Falamos sobre o projeto",
+          "body": "Uma conversa descontraída de 30 minutos para perceber os seus objetivos. Sai com um próximo passo claro, quer venhamos a trabalhar juntos ou não."
         }
       }
     },
     "faq": {
-      "eyebrow": "[[FAQ ~]]",
-      "title": "[[Frequently asked <red>questions</red> ~~~~ ~~~~ ~~~]]",
-      "body": "[[Can’t find what you’re looking for? Send us a message and we’ll answer you directly. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-      "link": "[[Send us a message ~~~~ ~]]",
+      "eyebrow": "FAQ",
+      "title": "Perguntas <red>frequentes</red>",
+      "body": "Não encontra o que procura? Envie-nos uma mensagem e respondemos diretamente.",
+      "link": "Enviar mensagem",
       "items": {
         "cost": {
-          "question": "[[How much does a website cost? ~~~~ ~~~~ ~]]",
-          "answer": "[[It depends on scope. A focused landing page costs far less than a multi-page build with booking features. After a short call we send a clear, itemised proposal, with no hidden fees. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]"
+          "question": "Quanto custa um site?",
+          "answer": "Depende do âmbito. Uma landing page focada custa bastante menos do que um site com várias páginas e sistema de marcações. Depois de uma conversa curta, enviamos uma proposta clara e detalhada, sem custos escondidos."
         },
         "timeline": {
-          "question": "[[How long does a project take? ~~~~ ~~~~ ~]]",
-          "answer": "[[It depends on scope and on how quickly content and feedback come together. The proposal includes a timeline with clear milestones, so you know what happens when. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]"
+          "question": "Quanto tempo demora um projeto?",
+          "answer": "Depende do âmbito e da rapidez com que os conteúdos e o feedback chegam. A proposta inclui um calendário com etapas claras, para saber o que acontece e quando."
         },
         "content": {
-          "question": "[[Do I need to have my content ready? ~~~~ ~~~~ ~~~]]",
-          "answer": "[[No. Bring what you have, and we’ll work out together what’s missing. Content writing is one of our services if you’d rather we handle it. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+          "question": "Preciso de ter os conteúdos prontos?",
+          "answer": "Não. Traga o que tiver e vemos juntos o que falta. A redação de conteúdos é um dos nossos serviços, se preferir que tratemos disso."
         },
         "international": {
-          "question": "[[Do you work with businesses outside Portugal? ~~~~ ~~~~ ~~~~ ~~]]",
-          "answer": "[[Yes. We work in English and Portuguese, and calls happen online, so where your business is based isn’t a barrier. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]"
+          "question": "Trabalham com empresas fora de Portugal?",
+          "answer": "Sim. Trabalhamos em português e inglês, e as reuniões são online, por isso a localização do seu negócio não é um obstáculo."
         },
         "afterLaunch": {
-          "question": "[[What happens after the site launches? ~~~~ ~~~~ ~~~]]",
-          "answer": "[[We don’t disappear. Website maintenance keeps your site updated, monitored and backed up, and we can keep improving it as your business grows. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+          "question": "O que acontece depois de o site estar online?",
+          "answer": "Não desaparecemos. Com a manutenção, o seu site fica atualizado, monitorizado e com cópias de segurança, e podemos continuar a melhorá-lo à medida que o seu negócio cresce."
         }
       }
     }
   },
   "Legal": {
-    "eyebrow": "[[Legal ~~]]",
-    "lastUpdated": "[[Last updated: {date} ~~~~ ~~]]",
-    "onThisPage": "[[On this page ~~~~]]",
-    "questionsTitle": "[[Questions about this page? ~~~~ ~~~~]]",
-    "questionsBody": "[[Write to <email></email> and we’ll answer directly. ~~~~ ~~~~ ~~~~ ~~~]]",
+    "eyebrow": "Legal",
+    "lastUpdated": "Última atualização: {date}",
+    "onThisPage": "Nesta página",
+    "questionsTitle": "Dúvidas sobre esta página?",
+    "questionsBody": "Escreva para <email></email> e respondemos diretamente.",
     "privacy": {
-      "title": "[[<greenUnderline>Privacy</greenUnderline> Policy ~~~~ ~~~~ ~~~~ ~~]]",
-      "lead": "[[This policy explains what personal information NortBrand collects through this website, why we collect it, and the choices you have. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
+      "title": "Política de <greenUnderline>Privacidade</greenUnderline>",
+      "lead": "Esta política explica que dados pessoais a NortBrand recolhe através deste site, porque os recolhe e que escolhas tem ao seu dispor.",
       "sections": {
         "whoWeAre": {
-          "title": "[[Who we are ~~~]]",
-          "body": "[[NortBrand Studio (“NortBrand”, “we”, “us”) is a digital product and web design studio based in Portugal. We are responsible for the personal information collected through this website. You can reach us at <email></email>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]"
+          "title": "Quem somos",
+          "body": "A NortBrand Studio («NortBrand», «nós») é um estúdio de webdesign e produtos digitais sediado em Portugal. Somos responsáveis pelos dados pessoais recolhidos através deste site. Pode contactar-nos através de <email></email>."
         },
         "collect": {
-          "title": "[[Information we collect ~~~~ ~~~]]",
-          "body": "[[We only collect information you choose to give us, plus basic technical data needed to run the site. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
+          "title": "Dados que recolhemos",
+          "body": "Recolhemos apenas os dados que decide fornecer-nos, além dos dados técnicos básicos necessários ao funcionamento do site.",
           "items": {
-            "contactForm": "[[Contact details and messages you send through the contact form (name, email, phone number, project details) ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-            "newsletter": "[[Your email address, if you subscribe to the newsletter ~~~~ ~~~~ ~~~~ ~~~~]]",
-            "usage": "[[Basic usage data such as pages visited and device type [analytics provider to be confirmed] ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+            "contactForm": "Dados de contacto e mensagens que envia através do formulário de contacto (nome, email, telefone e detalhes do projeto)",
+            "newsletter": "O seu endereço de email, caso subscreva a newsletter",
+            "usage": "Dados de utilização básicos, como as páginas visitadas e o tipo de dispositivo [fornecedor de análise a confirmar]"
           }
         },
         "use": {
-          "title": "[[How we use your information ~~~~ ~~~~]]",
-          "body": "[[We use your information to reply to your enquiries, deliver the services you ask for, send the newsletter you subscribed to, and improve how this website works. We do not sell your personal information. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+          "title": "Como utilizamos os seus dados",
+          "body": "Utilizamos os seus dados para responder aos seus pedidos, prestar os serviços que solicita, enviar a newsletter que subscreveu e melhorar o funcionamento deste site. Não vendemos os seus dados pessoais."
         },
         "cookies": {
-          "title": "[[Cookies and analytics ~~~~ ~~]]",
-          "body": "[[We use one essential cookie, nb_consent, to remember your cookie choice for 6 months. Only with your consent, Google Analytics sets the _ga cookie and a _ga_ cookie named after our analytics property, to measure how the site is used; this data may be transferred to the United States. You can change your choice at any time from Cookie settings in the footer. [Cookie details to be confirmed.] ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]"
+          "title": "Cookies e análise",
+          "body": "Utilizamos um cookie essencial, nb_consent, para guardar a sua escolha de cookies durante 6 meses. Apenas com o seu consentimento, o Google Analytics define o cookie _ga e um cookie _ga_ com o nome da nossa propriedade de análise, para medir a utilização do site; estes dados podem ser transferidos para os Estados Unidos. Pode alterar a sua escolha a qualquer momento em «Definições de cookies», no rodapé. [Detalhes dos cookies a confirmar.]"
         },
         "sharing": {
-          "title": "[[Sharing your information ~~~~ ~~~]]",
-          "body": "[[We only share personal information with service providers who help us operate the website and our business, such as hosting and email providers, and only as needed to provide those services. [List of providers to be confirmed.] ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]"
+          "title": "Partilha dos seus dados",
+          "body": "Só partilhamos dados pessoais com prestadores de serviços que nos ajudam a gerir o site e o nosso negócio, como fornecedores de alojamento e de email, e apenas na medida necessária para prestarem esses serviços. [Lista de fornecedores a confirmar.]"
         },
         "retention": {
-          "title": "[[How long we keep it ~~~~ ~~]]",
-          "body": "[[We keep personal information only for as long as needed for the purposes described above, or as required by law. [Retention periods to be confirmed.] ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+          "title": "Durante quanto tempo os guardamos",
+          "body": "Guardamos os dados pessoais apenas durante o tempo necessário para as finalidades descritas acima, ou pelo período exigido por lei. [Prazos de conservação a confirmar.]"
         },
         "rights": {
-          "title": "[[Your rights ~~~]]",
-          "body": "[[Under the GDPR you can ask to access, correct, delete, or export your personal information, and to object to or restrict how we use it. You can withdraw consent at any time, and you can lodge a complaint with the Portuguese data protection authority (CNPD). ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+          "title": "Os seus direitos",
+          "body": "Ao abrigo do RGPD, pode pedir o acesso, a retificação, o apagamento ou a portabilidade dos seus dados pessoais, bem como opor-se ao seu tratamento ou pedir a sua limitação. Pode retirar o consentimento a qualquer momento e apresentar reclamação à Comissão Nacional de Proteção de Dados (CNPD)."
         },
         "contact": {
-          "title": "[[Contact us ~~~]]",
-          "body": "[[For any questions about this policy or your data, write to <email></email>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+          "title": "Contacte-nos",
+          "body": "Para qualquer questão sobre esta política ou sobre os seus dados, escreva para <email></email>."
         }
       }
     },
     "terms": {
-      "title": "[[<greenUnderline>Terms</greenUnderline> of Use ~~~~ ~~~~ ~~~~ ~~]]",
-      "lead": "[[By using this website you agree to the terms below. We’ve kept them clear and short, because they’re meant to be read. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
+      "title": "<greenUnderline>Termos</greenUnderline> de Utilização",
+      "lead": "Ao utilizar este site, aceita os termos abaixo. Mantivemo-los claros e curtos, porque são para ser lidos.",
       "sections": {
         "acceptance": {
-          "title": "[[Acceptance of these terms ~~~~ ~~~~]]",
-          "body": "[[By accessing or using the NortBrand website, you agree to these Terms of Use. If you don’t agree, please don’t use the site. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+          "title": "Aceitação dos termos",
+          "body": "Ao aceder ou utilizar o site da NortBrand, aceita estes Termos de Utilização. Se não concordar, não utilize o site."
         },
         "use": {
-          "title": "[[Using the website ~~~~ ~]]",
-          "body": "[[You may use this website for lawful purposes only. Please don’t attempt to disrupt the site, access areas you aren’t authorised to, or use it in a way that harms NortBrand or other visitors. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+          "title": "Utilização do site",
+          "body": "Pode utilizar este site apenas para fins lícitos. Não tente perturbar o seu funcionamento, aceder a áreas para as quais não tem autorização, nem utilizá-lo de forma que prejudique a NortBrand ou outros visitantes."
         },
         "ip": {
-          "title": "[[Intellectual property ~~~~ ~~]]",
-          "body": "[[All content on this website, including text, graphics, logos, and designs, belongs to NortBrand or its licensors and is protected by intellectual property laws. You may not copy or reuse it without written permission. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+          "title": "Propriedade intelectual",
+          "body": "Todos os conteúdos deste site, incluindo textos, gráficos, logótipos e designs, pertencem à NortBrand ou aos seus licenciantes e estão protegidos pela legislação de propriedade intelectual. Não pode copiá-los nem reutilizá-los sem autorização escrita."
         },
         "enquiries": {
-          "title": "[[Enquiries and proposals ~~~~ ~~~]]",
-          "body": "[[Sending a contact request doesn’t create a client relationship. Any project work is covered by a separate written agreement. [To be confirmed.] ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+          "title": "Pedidos e propostas",
+          "body": "O envio de um pedido de contacto não cria uma relação contratual. Qualquer trabalho é regido por um acordo escrito separado. [A confirmar.]"
         },
         "links": {
-          "title": "[[Third-party links ~~~~ ~]]",
-          "body": "[[This website may link to third-party sites. We aren’t responsible for their content or privacy practices. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]"
+          "title": "Ligações para sites de terceiros",
+          "body": "Este site pode conter ligações para sites de terceiros. Não somos responsáveis pelos respetivos conteúdos nem pelas suas práticas de privacidade."
         },
         "liability": {
-          "title": "[[Limitation of liability ~~~~ ~~~]]",
-          "body": "[[We do our best to keep the information on this website accurate and up to date, but we provide it “as is”, without warranties. To the extent permitted by law, NortBrand is not liable for losses arising from your use of the site. [To be reviewed by legal counsel.] ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+          "title": "Limitação de responsabilidade",
+          "body": "Fazemos o possível para manter a informação deste site correta e atualizada, mas disponibilizamo-la «tal como está», sem garantias. Na medida permitida por lei, a NortBrand não é responsável por perdas resultantes da utilização do site. [A rever por um advogado.]"
         },
         "changes": {
-          "title": "[[Changes to these terms ~~~~ ~~~]]",
-          "body": "[[We may update these terms from time to time. The latest version will always be available on this page, with the date of the last update. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+          "title": "Alterações a estes termos",
+          "body": "Podemos atualizar estes termos periodicamente. A versão mais recente estará sempre disponível nesta página, com a data da última atualização."
         },
         "law": {
-          "title": "[[Governing law ~~~~]]",
-          "body": "[[These terms are governed by the laws of Portugal. [Jurisdiction to be confirmed.] ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]"
+          "title": "Lei aplicável",
+          "body": "Estes termos regem-se pela lei portuguesa. [Foro competente a confirmar.]"
         },
         "contact": {
-          "title": "[[Contact ~~]]",
-          "body": "[[Questions about these terms? Write to <email></email>. ~~~~ ~~~~ ~~~~ ~~~~]]"
+          "title": "Contacto",
+          "body": "Dúvidas sobre estes termos? Escreva para <email></email>."
         }
       }
     }
   },
   "NotFound": {
-    "title": "[[We couldn’t <greenUnderline>find that page</greenUnderline>. ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-    "lead": "[[The link may be broken, or the page may have moved. Here’s where you can go instead. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-    "home": "[[Back to home ~~~~]]",
-    "contact": "[[Contact us ~~~]]"
+    "title": "Não <greenUnderline>encontrámos esta página</greenUnderline>.",
+    "lead": "A ligação pode estar quebrada ou a página pode ter mudado de sítio. Pode seguir por aqui.",
+    "home": "Voltar ao início",
+    "contact": "Falar connosco"
   },
   "LocaleSwitcher": {
-    "label": "[[Language ~~]]"
+    "label": "Idioma"
   },
   "Emails": {
     "consultationConfirmation": {
-      "subject": "[[We’ve received your request ~~~~ ~~~~]]",
-      "preview": "[[We’ll reply within one business day with times for your call. ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-      "greeting": "[[Hi {name}, ~~~]]",
-      "intro": "[[Thanks for reaching out about {service}. We’ve received your request and will reply within one business day with a few times for your free 30-minute call. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-      "summaryTitle": "[[What you sent us ~~~~ ~]]",
-      "serviceLabel": "[[Service ~~]]",
-      "phoneLabel": "[[Phone ~~]]",
-      "messageLabel": "[[Message ~~]]",
-      "signoff": "[[Talk soon, ~~~]]",
-      "team": "[[The {studio} team ~~~~ ~]]",
-      "footer": "[[You’re receiving this because you sent a consultation request on {site}. Questions? Reply to this email or write to {email}. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+      "subject": "Recebemos o seu pedido",
+      "preview": "Respondemos no prazo de um dia útil com horários para a sua chamada.",
+      "greeting": "Olá, {name},",
+      "intro": "Obrigado por nos ter contactado sobre {service}. Recebemos o seu pedido e vamos responder no prazo de um dia útil com alguns horários para a sua conversa gratuita de 30 minutos.",
+      "summaryTitle": "O que nos enviou",
+      "serviceLabel": "Serviço",
+      "phoneLabel": "Telefone",
+      "messageLabel": "Mensagem",
+      "signoff": "Até breve,",
+      "team": "A equipa {studio}",
+      "footer": "Recebeu este email porque enviou um pedido de contacto em {site}. Dúvidas? Responda a este email ou escreva para {email}."
     },
     "consultationAlert": {
-      "subject": "[[New consultation request: {name} · {service} ~~~~ ~~~~ ~~~~ ~]]",
-      "preview": "[[{service} · received {receivedAt} ~~~~ ~~~~ ~~]]",
-      "heading": "[[New consultation request ~~~~ ~~~]]",
-      "nameLabel": "[[Name ~]]",
-      "emailLabel": "[[Email ~~]]",
-      "phoneLabel": "[[Phone ~~]]",
-      "serviceLabel": "[[Service ~~]]",
-      "localeLabel": "[[Language ~~]]",
-      "receivedLabel": "[[Received ~~]]",
-      "messageLabel": "[[Message ~~]]",
-      "referenceLabel": "[[Reference ~~~]]",
-      "noPhone": "[[Not given ~~~]]",
-      "receivedAt": "[[{date} (Lisbon time) ~~~~ ~~]]",
-      "footer": "[[Reply to this email to answer {name} directly. We promise a reply within one business day. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]"
+      "subject": "Novo pedido de conversa: {name} · {service}",
+      "preview": "{service} · recebido {receivedAt}",
+      "heading": "Novo pedido de conversa",
+      "nameLabel": "Nome",
+      "emailLabel": "Email",
+      "phoneLabel": "Telefone",
+      "serviceLabel": "Serviço",
+      "localeLabel": "Idioma",
+      "receivedLabel": "Recebido",
+      "messageLabel": "Mensagem",
+      "referenceLabel": "Referência",
+      "noPhone": "Não indicado",
+      "receivedAt": "{date} (hora de Lisboa)",
+      "footer": "Responda a este email para falar diretamente com {name}. Prometemos resposta no prazo de um dia útil."
     },
     "newsletterConfirmation": {
-      "subject": "[[Confirm your subscription to the {studio} newsletter ~~~~ ~~~~ ~~~~ ~~~~]]",
-      "preview": "[[One click and you’re on the list. ~~~~ ~~~~ ~~]]",
-      "heading": "[[Confirm your subscription ~~~~ ~~~~]]",
-      "intro": "[[Someone, hopefully you, asked to receive the {studio} newsletter at {email}. Press the button to confirm. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-      "button": "[[Confirm subscription ~~~~ ~~]]",
-      "expiry": "[[This link works for 7 days. ~~~~ ~~~~]]",
-      "fallback": "[[If the button doesn’t work, copy this link into your browser: ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-      "ignore": "[[Didn’t ask for this? Ignore this email and you won’t hear from us. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-      "footer": "[[You’re receiving this because this address was entered in the newsletter form on {site}. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]"
+      "subject": "Confirme a sua subscrição da newsletter {studio}",
+      "preview": "Um clique e fica na lista.",
+      "heading": "Confirme a sua subscrição",
+      "intro": "Recebemos um pedido para enviar a newsletter {studio} para {email}. Carregue no botão para confirmar.",
+      "button": "Confirmar subscrição",
+      "expiry": "Esta ligação é válida durante 7 dias.",
+      "fallback": "Se o botão não funcionar, copie esta ligação para o seu navegador:",
+      "ignore": "Não fez este pedido? Ignore este email e não voltará a receber notícias nossas.",
+      "footer": "Recebeu este email porque este endereço foi introduzido no formulário da newsletter em {site}."
     }
   },
   "Newsletter": {
     "card": {
-      "title": "[[Get ideas <red>worth reading</red>, straight to your inbox. ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-      "body": "[[One thoughtful email a month on design, branding, and building things that work. No spam, ever. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-      "emailLabel": "[[Email address ~~~~]]",
-      "emailPlaceholder": "[[Enter your email ~~~~ ~]]",
-      "submit": "[[Subscribe ~~~]]",
-      "submitting": "[[Subscribing… ~~~~]]",
-      "consent": "[[By subscribing you agree to receive occasional emails from NortBrand. Read our <link>Privacy Policy</link>. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-      "successTitle": "[[You’re in. ~~~]]",
-      "successBody": "[[We’ve sent a confirmation link to {email}. Click it to finish subscribing. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-      "successNote": "[[You can unsubscribe at any time. ~~~~ ~~~~ ~~]]",
-      "rateLimited": "[[Too many attempts. Please wait an hour and try again. ~~~~ ~~~~ ~~~~ ~~~~]]",
-      "failed": "[[We couldn’t subscribe you just now. Please try again. ~~~~ ~~~~ ~~~~ ~~~~]]"
+      "title": "Ideias que <red>valem a pena ler</red>, no seu email.",
+      "body": "Um email por mês sobre design, marca e sites que funcionam. Nada de spam.",
+      "emailLabel": "Endereço de email",
+      "emailPlaceholder": "O seu email",
+      "submit": "Subscrever",
+      "submitting": "A subscrever…",
+      "consent": "Ao subscrever, aceita receber emails ocasionais da NortBrand. Leia a nossa <link>Política de Privacidade</link>.",
+      "successTitle": "Falta só um passo.",
+      "successBody": "Enviámos uma ligação de confirmação para {email}. Clique nela para concluir a subscrição.",
+      "successNote": "Pode cancelar a subscrição a qualquer momento.",
+      "rateLimited": "Demasiadas tentativas. Aguarde uma hora e tente novamente.",
+      "failed": "Não foi possível concluir a subscrição. Tente novamente."
     },
     "errors": {
-      "emailInvalid": "[[Enter a valid email address ~~~~ ~~~~]]"
+      "emailInvalid": "Indique um endereço de email válido"
     },
     "confirm": {
-      "readyTitle": "[[Confirm your <red>subscription</red>. ~~~~ ~~~~ ~~~]]",
-      "readyLead": "[[Press the button to start receiving the NortBrand newsletter at {email}. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-      "confirm": "[[Confirm subscription ~~~~ ~~]]",
-      "confirming": "[[Confirming… ~~~]]",
-      "confirmedTitle": "[[You’re <green>subscribed</green>. ~~~~ ~~~~ ~~]]",
-      "confirmedLead": "[[Thanks for confirming. Your first email arrives with the next issue. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-      "expiredTitle": "[[This link has <red>expired</red>. ~~~~ ~~~~ ~~]]",
-      "expiredLead": "[[Confirmation links work for 7 days. Subscribe again below and we’ll send you a new one. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-      "invalidTitle": "[[This link <red>doesn’t work</red>. ~~~~ ~~~~ ~~]]",
-      "invalidLead": "[[It may be incomplete, or a newer link has replaced it. Subscribe again below and we’ll send you a fresh one. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-      "failedTitle": "[[Something <red>went wrong</red>. ~~~~ ~~~~ ~~]]",
-      "failedLead": "[[We couldn’t confirm your subscription just now. Please try again in a moment. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~]]",
-      "tryAgain": "[[Try again ~~~]]",
-      "home": "[[Back to home ~~~~]]"
+      "readyTitle": "Confirme a sua <red>subscrição</red>.",
+      "readyLead": "Carregue no botão para começar a receber a newsletter da NortBrand em {email}.",
+      "confirm": "Confirmar subscrição",
+      "confirming": "A confirmar…",
+      "confirmedTitle": "Subscrição <green>confirmada</green>.",
+      "confirmedLead": "Obrigado por confirmar. O primeiro email chega com a próxima edição.",
+      "expiredTitle": "Esta ligação <red>expirou</red>.",
+      "expiredLead": "As ligações de confirmação são válidas durante 7 dias. Subscreva novamente abaixo e enviamos-lhe uma nova.",
+      "invalidTitle": "Esta ligação <red>não funciona</red>.",
+      "invalidLead": "Pode estar incompleta ou ter sido substituída por uma mais recente. Subscreva novamente abaixo e enviamos-lhe uma nova.",
+      "failedTitle": "Algo <red>correu mal</red>.",
+      "failedLead": "Não foi possível confirmar a sua subscrição. Tente novamente daqui a pouco.",
+      "tryAgain": "Tentar novamente",
+      "home": "Voltar ao início"
     },
     "unsubscribe": {
-      "readyTitle": "[[Unsubscribe from the <red>newsletter</red>? ~~~~ ~~~~ ~~~~ ~]]",
-      "readyLead": "[[{email} will stop receiving the NortBrand newsletter. ~~~~ ~~~~ ~~~~ ~~~~]]",
-      "unsubscribe": "[[Unsubscribe ~~~]]",
-      "unsubscribing": "[[Unsubscribing… ~~~~]]",
-      "doneTitle": "[[You’re <green>unsubscribed</green>. ~~~~ ~~~~ ~~~]]",
-      "doneLead": "[[You won’t receive the newsletter any more. Changed your mind? You can subscribe again any time. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-      "invalidTitle": "[[This link <red>doesn’t work</red>. ~~~~ ~~~~ ~~]]",
-      "invalidLead": "[[It may be incomplete. Use the unsubscribe link in any newsletter, or write to <email>{address}</email> and we’ll remove you. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-      "failedTitle": "[[Something <red>went wrong</red>. ~~~~ ~~~~ ~~]]",
-      "failedLead": "[[We couldn’t unsubscribe you just now. Please try again in a moment. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-      "tryAgain": "[[Try again ~~~]]",
-      "home": "[[Back to home ~~~~]]"
+      "readyTitle": "Cancelar a subscrição da <red>newsletter</red>?",
+      "readyLead": "{email} vai deixar de receber a newsletter da NortBrand.",
+      "unsubscribe": "Cancelar subscrição",
+      "unsubscribing": "A cancelar…",
+      "doneTitle": "Subscrição <green>cancelada</green>.",
+      "doneLead": "Deixará de receber a newsletter. Mudou de ideias? Pode voltar a subscrever quando quiser.",
+      "invalidTitle": "Esta ligação <red>não funciona</red>.",
+      "invalidLead": "Pode estar incompleta. Use a ligação de cancelamento de qualquer newsletter ou escreva para <email>{address}</email> e removemos o seu endereço.",
+      "failedTitle": "Algo <red>correu mal</red>.",
+      "failedLead": "Não foi possível cancelar a subscrição. Tente novamente daqui a pouco.",
+      "tryAgain": "Tentar novamente",
+      "home": "Voltar ao início"
     }
   },
   "Consent": {
     "banner": {
-      "label": "[[Cookie consent ~~~~]]",
-      "title": "[[Cookies, kept simple. ~~~~ ~~]]",
-      "body": "[[We use essential cookies to make this site work. With your consent, we’d also use analytics cookies to understand how it’s used and make it better. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-      "manage": "[[Manage preferences ~~~~ ~]]",
-      "privacy": "[[Privacy Policy ~~~~]]",
-      "reject": "[[Reject non-essential ~~~~ ~~]]",
-      "accept": "[[Accept all ~~~]]"
+      "label": "Consentimento de cookies",
+      "title": "Cookies, sem complicações.",
+      "body": "Utilizamos cookies essenciais para que este site funcione. Com o seu consentimento, usamos também cookies de análise para perceber como é utilizado e melhorá-lo.",
+      "manage": "Gerir preferências",
+      "privacy": "Política de Privacidade",
+      "reject": "Rejeitar não essenciais",
+      "accept": "Aceitar todos"
     },
     "preferences": {
-      "title": "[[Cookie preferences ~~~~ ~]]",
-      "body": "[[Choose which cookies you’re happy for us to use. You can change this at any time. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-      "essentialTitle": "[[Essential cookies ~~~~ ~]]",
-      "essentialBody": "[[Needed for the site to work, including remembering this choice. Always on. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-      "analyticsTitle": "[[Analytics cookies ~~~~ ~]]",
-      "analyticsBody": "[[Help us understand how the site is used so we can improve it. Off unless you say yes. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-      "rejectAll": "[[Reject all ~~~]]",
-      "save": "[[Save preferences ~~~~ ~]]",
-      "close": "[[Close ~~]]"
+      "title": "Preferências de cookies",
+      "body": "Escolha os cookies que aceita que utilizemos. Pode alterar esta escolha a qualquer momento.",
+      "essentialTitle": "Cookies essenciais",
+      "essentialBody": "Necessários para o site funcionar, incluindo para guardar esta escolha. Sempre ativos.",
+      "analyticsTitle": "Cookies de análise",
+      "analyticsBody": "Ajudam-nos a perceber como o site é utilizado, para o podermos melhorar. Desativados, a menos que os aceite.",
+      "rejectAll": "Rejeitar todos",
+      "save": "Guardar preferências",
+      "close": "Fechar"
     },
-    "saved": "[[Your cookie choice is saved. ~~~~ ~~~~]]"
+    "saved": "A sua escolha de cookies foi guardada."
   },
   "Blog": {
-    "eyebrow": "[[Blog ~]]",
-    "title": "[[Ideas on design, branding, and building things that work. ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-    "lead": "[[Notes from the studio on what actually moves the needle for local and service-based businesses. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-    "featuredLabel": "[[Featured article ~~~~ ~]]",
-    "readMore": "[[Read More ~~~]]",
-    "byline": "[[{author} · {date} ~~~~ ~]]",
-    "articlesEyebrow": "[[Articles ~~]]",
-    "articlesTitle": "[[Check out our <indent><greenUnderline>newest</greenUnderline> articles</indent> ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~]]",
-    "searchLabel": "[[Search articles ~~~~ ~]]",
-    "searchPlaceholder": "[[Search articles... ~~~~ ~]]",
-    "categoriesLabel": "[[Filter by category ~~~~ ~]]",
-    "all": "[[All ~]]",
-    "sortLabel": "[[Sort articles ~~~~]]",
-    "sortLatest": "[[Latest ~~]]",
-    "sortOldest": "[[Oldest ~~]]",
-    "showing": "[[Showing {shown} of {total, plural, one {# article} other {# articles}} ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-    "noResultsTitle": "[[No articles found. ~~~~ ~]]",
-    "noResultsQuery": "[[We couldn’t find anything for “{q}”. Try a different keyword, or clear your filters. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]",
-    "noResultsFilters": "[[There are no articles here yet. Try another topic, or clear your filters. ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-    "clearFilters": "[[Clear filters ~~~~]]",
-    "popularTopics": "[[Popular topics ~~~~]]",
-    "paginationLabel": "[[Pagination ~~~]]",
-    "previousPage": "[[Previous page ~~~~]]",
-    "nextPage": "[[Next page ~~~]]",
-    "page": "[[Page {page} ~~~]]",
-    "loading": "[[Loading articles ~~~~ ~]]"
+    "eyebrow": "Blog",
+    "title": "Ideias sobre design, marca e sites que funcionam.",
+    "lead": "Notas do estúdio sobre o que faz realmente a diferença para negócios locais e empresas de serviços.",
+    "featuredLabel": "Artigo em destaque",
+    "readMore": "Ler mais",
+    "byline": "{author} · {date}",
+    "articlesEyebrow": "Artigos",
+    "articlesTitle": "Leia os nossos <indent>artigos <greenUnderline>mais recentes</greenUnderline></indent>",
+    "searchLabel": "Pesquisar artigos",
+    "searchPlaceholder": "Pesquisar artigos…",
+    "categoriesLabel": "Filtrar por categoria",
+    "all": "Todos",
+    "sortLabel": "Ordenar artigos",
+    "sortLatest": "Mais recentes",
+    "sortOldest": "Mais antigos",
+    "showing": "A mostrar {shown} de {total, plural, one {# artigo} other {# artigos}}",
+    "noResultsTitle": "Nenhum artigo encontrado.",
+    "noResultsQuery": "Não encontrámos nada para «{q}». Experimente outra palavra-chave ou limpe os filtros.",
+    "noResultsFilters": "Ainda não há artigos aqui. Experimente outro tema ou limpe os filtros.",
+    "clearFilters": "Limpar filtros",
+    "popularTopics": "Temas populares",
+    "paginationLabel": "Paginação",
+    "previousPage": "Página anterior",
+    "nextPage": "Página seguinte",
+    "page": "Página {page}",
+    "loading": "A carregar artigos"
   },
   "BlogPost": {
-    "breadcrumbLabel": "[[Breadcrumb ~~~]]",
-    "readTime": "[[{minutes} min read ~~~~ ~]]",
-    "onThisPage": "[[On this page ~~~~]]",
-    "backToTop": "[[Back to top ~~~]]",
-    "getStarted": "[[Get started with NortBrand ~~~~ ~~~~]]",
-    "tags": "[[Tags ~]]",
-    "share": "[[Share ~~]]",
-    "shareNative": "[[Share this article ~~~~ ~]]",
-    "shareEmail": "[[Share by email ~~~~]]",
-    "copyLink": "[[Copy link ~~~]]",
-    "linkCopied": "[[Link copied ~~~]]",
-    "copyFailed": "[[Couldn’t copy the link. Copy it from the address bar instead. ~~~~ ~~~~ ~~~~ ~~~~ ~~]]",
-    "writtenBy": "[[Written by ~~~]]",
-    "moreArticles": "[[More articles ~~~~]]",
-    "keepReading": "[[Keep reading ~~~~]]",
-    "relatedTitle": "[[More from <indent>the <greenUnderline>studio</greenUnderline></indent> ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~]]"
+    "breadcrumbLabel": "Navegação estrutural",
+    "readTime": "{minutes} min de leitura",
+    "onThisPage": "Nesta página",
+    "backToTop": "Voltar ao topo",
+    "getStarted": "Comece a trabalhar com a NortBrand",
+    "tags": "Etiquetas",
+    "share": "Partilhar",
+    "shareNative": "Partilhar este artigo",
+    "shareEmail": "Partilhar por email",
+    "copyLink": "Copiar ligação",
+    "linkCopied": "Ligação copiada",
+    "copyFailed": "Não foi possível copiar a ligação. Copie-a a partir da barra de endereço.",
+    "writtenBy": "Escrito por",
+    "moreArticles": "Mais artigos",
+    "keepReading": "Continue a ler",
+    "relatedTitle": "Mais do <indent><greenUnderline>estúdio</greenUnderline></indent>"
   }
 }

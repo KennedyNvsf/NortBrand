@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import pt from "../../../../messages/pt.json";
+
 import { renderNewsletterConfirmation } from "./render";
 
 const url =
@@ -33,7 +35,9 @@ describe("renderNewsletterConfirmation", () => {
       url,
     );
     expect(email.html).toContain('lang="pt"');
-    // Pseudo-translated until the Portuguese copy arrives.
-    expect(email.subject).toContain("[[");
+    // Read from pt.json, so a revised translation doesn't break the test.
+    expect(email.subject).toBe(
+      pt.Emails.newsletterConfirmation.subject.replace("{studio}", "NortBrand"),
+    );
   });
 });
