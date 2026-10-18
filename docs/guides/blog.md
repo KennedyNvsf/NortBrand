@@ -8,9 +8,10 @@ revalidation webhook) is in [CMS](./cms.md).
 
 The listing (Figma 05 Blog › Listing `204:3`, tablet `370:260`, mobile `370:628`):
 
-- **Header:** green eyebrow, the page's H1 and a lead. The red squiggle follows the
-  headline's last word at every size. It is the Sticky CTA trigger
-  (`data-sticky-cta-trigger`).
+- **Header:** the page's H1 and a lead. The red squiggle follows the headline's last
+  word at every size. It is the Sticky CTA trigger (`data-sticky-cta-trigger`).
+  Figma's green "Blog" eyebrow was removed by the lead's decision (#74). The
+  `Blog.eyebrow` key stays: the post header and the post breadcrumb still use it.
 - **Featured article:** the newest post, with a 4:3 cover, badge, title, excerpt,
   byline and Read More.
 - **Articles:** the section heading, then the control bar (search, category chips,
@@ -89,7 +90,7 @@ category or sort resets the page to 1. It is unit-tested.
 The listing uses the same motion vocabulary as Home, and invents no new timings
 ([Motion](./motion.md)):
 
-- **Hero (CSS, first paint):** eyebrow, headline and lead enter 110 ms apart
+- **Hero (CSS, first paint):** the headline, then the lead, enter 110 ms apart
   (`enterItem`). The squiggle then draws itself (`LogoMark draw="once"`), timed like a
   hero underline: `--mark-delay` is `500ms + index × --enter-step`.
 - **The squiggle's placement:** it follows the headline's last word at cap height, in
