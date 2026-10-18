@@ -7,7 +7,7 @@ the guides always match the code.
 
 | Guide                                               | Covers                                                                                                                                            |
 | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Localization](./localization.md)                   | EN/PT routing, messages, hreflang, pseudo-localization, release guard                                                                             |
+| [Localization](./localization.md)                   | EN/PT routing, messages, hreflang, pseudo-localization, release guard, translation changes                                                        |
 | [Components](./components.md)                       | Logo, Badge, FieldError, Select, icons, TextLink, ServiceCard, ArticleCard                                                                        |
 | [Navigation](./navigation.md)                       | SiteNav, sticky header, active links, mobile menu, language switcher                                                                              |
 | [Page layout](./layout.md)                          | The (site) route group, SiteFooter, services and legal links, cached year                                                                         |

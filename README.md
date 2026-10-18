@@ -81,9 +81,10 @@ a dialog, goes in its own spec file.
 
 ## Translations
 
-`messages/en.json` is the source. Until the professional Portuguese translation arrives,
-`messages/pt.json` holds pseudo strings: the English text wrapped in `[[ ]]` and padded
-about 30% with `~` runs, so longer Portuguese layouts get tested early.
+`messages/en.json` is the source. `messages/pt.json` holds the professional Portuguese
+translation (#76), which may still change until launch. A string the translator hasn't
+done yet is a pseudo string: the English text wrapped in `[[ ]]` and padded about 30%
+with `~` runs, so the layout is still tested with Portuguese-length text.
 
 - After adding or changing English keys, run `pnpm i18n:pseudo`. Keys English no longer
   has are dropped, and new keys become pseudo strings.
@@ -91,7 +92,10 @@ about 30% with `~` runs, so longer Portuguese layouts get tested early.
   survive. The script cannot tell when the English behind a real translation changes:
   when you change the meaning of an English string, delete its Portuguese value so it
   becomes pseudo again and goes back to the translator.
-- `src/i18n/messages.test.ts` fails if the two files don't have exactly the same keys.
+- `src/i18n/messages.test.ts` fails if the two files don't have exactly the same keys, or
+  if a Portuguese string loses or changes a placeholder (`{year}`) or a rich-text tag
+  (`<green>`).
+- How translation changes travel until launch: [Localization § 6](docs/guides/localization.md).
 
 **Release guard.** `pnpm build` prints a warning listing the pseudo keys. With
 `VERCEL_ENV=production` or `RELEASE_BUILD=1` it fails instead, and `pnpm check:release`

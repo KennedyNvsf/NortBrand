@@ -124,12 +124,13 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md
 
 - **English copy:** `messages/en.json` holds the Figma copy as a draft until the final
   English copy arrives (due 21 October). Keys are namespaced by page and component.
-- **Portuguese copy:** a professional translator provides it.
-  - Until it arrives, `pnpm i18n:pseudo` generates `messages/pt.json` from `en.json`. Each
-    string is wrapped in `[[ ]]`, padded about 30% longer, and ICU placeholders are kept
-    intact.
-  - `en.json` and `pt.json` must always have exactly the same keys. A unit test enforces
-    this.
+- **Portuguese copy:** a professional translator provides it. The first full translation
+  is in `messages/pt.json` (#76) and may change until launch.
+  - When English changes, its PT value is deleted and `pnpm i18n:pseudo` marks the key
+    for the translator: wrapped in `[[ ]]`, padded about 30% longer, ICU placeholders
+    intact. Process: docs/guides/localization.md § 6.
+  - `en.json` and `pt.json` must always have exactly the same keys, and each PT string
+    the same placeholders and rich-text tags. A unit test enforces both.
 - **Release guard:** any remaining `[[ ]]` string fails the build when
   `VERCEL_ENV=production` or `RELEASE_BUILD=1`. Other builds only print a warning. Run
   `pnpm check:release` before launch.
