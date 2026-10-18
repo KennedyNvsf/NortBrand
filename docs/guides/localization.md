@@ -234,6 +234,7 @@ what stops English text from shipping on the Portuguese site.
 | Launch with fake Portuguese           | release guard + `src/i18n/release-guard.test.ts`                |
 | Page missing hreflang or wrong `lang` | page harness `tests/e2e/pages.spec.ts`, every page × locale     |
 | Long PT text breaks the mobile layout | page harness 390 px overflow check, on the real Portuguese      |
+| A copy change breaks an e2e spec      | specs read copy through `tests/e2e/copy.ts`, not typed in       |
 
 ## 6. Day-to-day rules
 
@@ -265,3 +266,26 @@ The first full translation is in, but copy can still change on either side until
   it in CI (`tests/e2e/pages.spec.ts`).
 - **Blog posts are not here.** They are translated in the Studio
   ([Editing the blog](./editing-the-blog.md)).
+
+### Copy in e2e specs (`tests/e2e/copy.ts`)
+
+When the real translation landed (#76), 16 specs failed although every page worked.
+Each one had copy typed into it: an English heading the final copy had reworded, or a
+Portuguese check that only passed because pseudo strings still contained the English
+(`/Subscribe|\[\[/`). So a spec that names copy reads it from `messages/`:
+
+```ts
+import { copy, localeOf, tagText } from "./copy";
+
+page.getByRole("button", { name: copy("pt", "Contact.form.submit") }); // "Enviar pedido"
+copy("en", "Services.hero.title"); // rich-text tags dropped: "What your business needs…"
+tagText("pt", "Newsletter.card.consent", "link"); // the text inside <link>: "Política de Privacidade"
+localeOf("/pt/contact"); // "pt", for helpers that take a path
+```
+
+- `copy` throws on an unknown key, so a renamed key fails loudly instead of matching
+  nothing.
+- Fixture data (post titles, the `[PT]` marker, typed form values) stays literal: it
+  comes from the fake backend, not from `messages/`.
+- Older specs still type copy that hasn't changed. Move each to `copy()` when you next
+  touch it, or when a copy change breaks it.
