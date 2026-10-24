@@ -1,5 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import { copy } from "./copy";
+
 /*
  * Services page (ticket #10). Accessibility, H1, hreflang and overflow are covered by
  * the page harness (pages.spec.ts). The desktop project exercises the Dialog, the
@@ -63,16 +65,16 @@ async function enterStage(page: Page) {
   return stage;
 }
 
+const heroTitle = copy("en", "Services.hero.title");
+
 test.describe("services page", () => {
   test("hero has the H1 and the quote", async ({ page }) => {
     await page.goto("/en/services");
-    const hero = page.getByRole("region", { name: /Everything your business/ });
+    const hero = page.getByRole("region", { name: heroTitle });
 
-    await expect(hero.getByRole("heading", { level: 1 })).toHaveText(
-      "Everything your business needs to show up online.",
-    );
+    await expect(hero.getByRole("heading", { level: 1 })).toHaveText(heroTitle);
     await expect(hero.locator("blockquote")).toContainText(
-      "aren’t always the best",
+      copy("en", "Services.hero.quote"),
     );
   });
 
@@ -81,7 +83,7 @@ test.describe("services page", () => {
     page,
   }) => {
     await page.goto("/en/services");
-    const hero = page.getByRole("region", { name: /Everything your business/ });
+    const hero = page.getByRole("region", { name: heroTitle });
     const box = await hero.boundingBox();
     const viewport = page.viewportSize();
     expect(box?.height ?? 0).toBeGreaterThanOrEqual(viewport?.height ?? 0);
@@ -128,17 +130,17 @@ test.describe("services page", () => {
     const { trigger, details } = await openDetails(
       page,
       "Web Development",
-      "Built to Perform, Built to Last",
+      copy("en", "Services.items.webDevelopment.title"),
     );
     await expect(details).toHaveAttribute(
       "data-slot",
       isMobile(page) ? "drawer-content" : "dialog-content",
     );
-    await expect(details.getByRole("listitem")).toHaveText([
-      "Responsive development",
-      "Performance optimization",
-      "Clean, maintainable code",
-    ]);
+    await expect(details.getByRole("listitem")).toHaveText(
+      ["first", "second", "third"].map((item) =>
+        copy("en", `Services.items.webDevelopment.included.${item}`),
+      ),
+    );
     await expect(
       details.getByRole("link", { name: "Book a Consultation" }),
     ).toHaveAttribute("href", "/en/contact");
@@ -171,12 +173,18 @@ test.describe("services page", () => {
   test("our approach switches points", async ({ page }) => {
     await page.goto("/en/services");
     const section = page.getByRole("region", {
-      name: "Every detail has a reason behind it.",
+      name: copy("en", "Services.approach.title"),
     });
+    const point = (key: string) =>
+      copy("en", `Services.approach.points.${key}.title`);
 
     if (isMobile(page)) {
-      const first = section.getByRole("button", { name: "Brand Identity" });
-      const third = section.getByRole("button", { name: "Content Strategy" });
+      const first = section.getByRole("button", {
+        name: point("brandIdentity"),
+      });
+      const third = section.getByRole("button", {
+        name: point("contentStrategy"),
+      });
       await expect(first).toHaveAttribute("aria-expanded", "true");
 
       await untilHydrated(async () => {
@@ -189,7 +197,7 @@ test.describe("services page", () => {
       });
       await expect(first).toHaveAttribute("aria-expanded", "false");
     } else {
-      const tab = section.getByRole("tab", { name: "Content Strategy" });
+      const tab = section.getByRole("tab", { name: point("contentStrategy") });
       await untilHydrated(async () => {
         await tab.click();
         await expect(tab).toHaveAttribute("aria-selected", "true", {
@@ -198,11 +206,11 @@ test.describe("services page", () => {
       });
       await expect(
         section.getByRole("tabpanel").getByRole("heading", { level: 3 }),
-      ).toHaveText("Content Strategy");
+      ).toHaveText(point("contentStrategy"));
 
       await page.keyboard.press("ArrowDown");
       await expect(
-        section.getByRole("tab", { name: "Growth & Marketing" }),
+        section.getByRole("tab", { name: point("growth") }),
       ).toBeFocused();
     }
   });
@@ -343,7 +351,7 @@ test.describe("services hero with reduced motion", () => {
 
   test("the video never starts and the photo stays", async ({ page }) => {
     await page.goto("/en/services");
-    const hero = page.getByRole("region", { name: /Everything your business/ });
+    const hero = page.getByRole("region", { name: heroTitle });
     await expect(hero.getByRole("heading", { level: 1 })).toBeVisible();
     const state = await hero
       .locator("video")

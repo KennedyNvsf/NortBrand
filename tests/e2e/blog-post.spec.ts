@@ -1,6 +1,8 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
+import { copy } from "./copy";
+
 /*
  * The blog post page (#61) against the e2e fixtures (src/features/blog/e2e-backend.ts,
  * E2E_FAKE_BACKEND=1). The first three posts exist in English and Portuguese with
@@ -219,7 +221,9 @@ test.describe("blog post on mobile", () => {
     await page.goto(translated.pt);
     await expect(toc(page)).toBeHidden();
     await expect(
-      page.getByRole("link", { name: /Agendar|Book a Consultation/ }).last(),
+      page
+        .getByRole("link", { name: copy("pt", "Common.bookConsultation") })
+        .last(),
     ).toBeVisible();
 
     const overflow = await page.evaluate(

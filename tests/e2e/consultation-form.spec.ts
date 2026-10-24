@@ -1,6 +1,8 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
+import { copy, localeOf } from "./copy";
+
 /*
  * The consultation form (#39) against the fake backend (playwright.config.ts sets
  * E2E_FAKE_BACKEND=1; src/features/consultation/e2e-backend.ts). The name picks the
@@ -15,7 +17,9 @@ async function openForm(page: Page, path = "/en/contact") {
   await page.goto(path);
   const card = page.locator('[data-form-slot="consultation"]');
   await expect(
-    card.getByRole("button", { name: "Send Request" }),
+    card.getByRole("button", {
+      name: copy(localeOf(path), "Contact.form.submit"),
+    }),
   ).toBeEnabled();
   // Hydrated, the form token requested; now let the minimum fill time pass.
   await page.waitForTimeout(MIN_FILL_MS);
@@ -90,7 +94,7 @@ test.describe("consultation form", () => {
     await card.locator('button[type="submit"]').click();
     await expect(
       card.locator('[data-slot="field-error"]').first(),
-    ).toContainText("[[");
+    ).toContainText(copy("pt", "Contact.form.errors.nameRequired"));
   });
 
   test("keeps every answer when sending fails, and offers Try again", async ({

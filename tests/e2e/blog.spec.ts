@@ -1,6 +1,8 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
+import { copy, localeOf } from "./copy";
+
 /*
  * The blog listing (#60) against the e2e fixtures (src/features/blog/e2e-backend.ts,
  * E2E_FAKE_BACKEND=1): 10 English posts, the newest featured, so the grid holds 9 over
@@ -14,7 +16,9 @@ function cards(page: Page) {
 }
 
 function featured(page: Page) {
-  return page.getByRole("region", { name: "Featured article" });
+  return page.getByRole("region", {
+    name: copy(localeOf(new URL(page.url()).pathname), "Blog.featuredLabel"),
+  });
 }
 
 async function expectNoAxeViolations(page: Page) {
@@ -30,9 +34,7 @@ test.describe("blog listing", () => {
     page,
   }) => {
     await page.goto("/en/blog");
-    await expect(page.locator("h1")).toHaveText(
-      "Ideas on design, branding, and building things that work.",
-    );
+    await expect(page.locator("h1")).toHaveText(copy("en", "Blog.title"));
     await expect(featured(page)).toContainText(
       "Why Your Website Should Work Like a Product, Not a Brochure",
     );
@@ -141,7 +143,7 @@ test.describe("blog listing", () => {
 
   test("lists Portuguese posts with translated copy", async ({ page }) => {
     await page.goto("/pt/blog");
-    await expect(page.locator("h1")).toContainText("[[");
+    await expect(page.locator("h1")).toHaveText(copy("pt", "Blog.title"));
     await expect(featured(page)).toContainText("[PT]");
     await expect(cards(page)).toHaveCount(2);
   });

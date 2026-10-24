@@ -6,6 +6,8 @@ import {
   type Request,
 } from "@playwright/test";
 
+import { copy } from "./copy";
+
 /*
  * GA4 after consent (#43, ADR-007). Every request to a Google domain is counted and
  * answered with an empty script, so nothing leaves the machine and gtag's queue
@@ -291,7 +293,9 @@ test.describe("what reaches analytics", () => {
     await card.getByRole("textbox").fill("maria@studio.pt");
     await card.getByRole("button", { name: "Subscribe" }).click();
     await expect(
-      card.getByRole("heading", { name: "You’re in." }),
+      card.getByRole("heading", {
+        name: copy("en", "Newsletter.card.successTitle"),
+      }),
     ).toBeVisible();
 
     const calls = await dataLayer(page);

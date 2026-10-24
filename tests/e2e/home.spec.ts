@@ -1,5 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import { copy } from "./copy";
+
 /* Home page (ticket #9). Accessibility and overflow are covered by the page harness. */
 
 const isMobile = (page: Page) => (page.viewportSize()?.width ?? 0) < 768;
@@ -24,7 +26,9 @@ test.describe("home page", () => {
     page,
   }) => {
     await page.goto("/pt");
-    const services = page.getByRole("region", { name: /studio/ });
+    const services = page.getByRole("region", {
+      name: copy("pt", "Home.services.title"),
+    });
     const cards = services.locator('[data-slot="service-card"]');
 
     await expect(cards).toHaveCount(5);
@@ -37,16 +41,15 @@ test.describe("home page", () => {
   test("shows the four process steps in order", async ({ page }) => {
     await page.goto("/en");
     const steps = page
-      .getByRole("region", { name: /A clear process/ })
+      .getByRole("region", { name: copy("en", "Home.process.title") })
       .getByRole("listitem");
 
     await expect(steps).toHaveCount(4);
-    await expect(steps.getByRole("heading", { level: 3 })).toHaveText([
-      "Discover",
-      "Design",
-      "Build",
-      "Launch & Grow",
-    ]);
+    await expect(steps.getByRole("heading", { level: 3 })).toHaveText(
+      ["discover", "design", "build", "launch"].map((step) =>
+        copy("en", `Home.process.steps.${step}.title`),
+      ),
+    );
   });
 
   test("sticky CTA appears after the hero and steps aside for the CTA band", async ({

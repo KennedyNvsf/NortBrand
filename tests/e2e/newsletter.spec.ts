@@ -3,6 +3,8 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 import { createHmac } from "node:crypto";
 import { existsSync } from "node:fs";
 
+import { copy, localeOf, tagText } from "./copy";
+
 /*
  * The Newsletter card and the link pages (#41) against the fake backend
  * (playwright.config.ts sets E2E_FAKE_BACKEND=1; src/features/newsletter/e2e-backend.ts).
@@ -55,22 +57,27 @@ async function openCard(page: Page, path = "/en/newsletter/confirm") {
   await page.goto(path);
   const card = page.locator("[data-newsletter-card]");
   await expect(
-    card.getByRole("button", { name: /Subscribe|\[\[/ }),
+    card.getByRole("button", {
+      name: copy(localeOf(path), "Newsletter.card.submit"),
+    }),
   ).toBeEnabled();
   return card;
 }
+
+/* Double opt-in: the card asks the visitor to confirm from their inbox. */
+const successTitle = copy("en", "Newsletter.card.successTitle");
 
 function emailField(card: Locator) {
   return card.getByRole("textbox");
 }
 
 test.describe("newsletter card", () => {
-  test("subscribes and shows You're in", async ({ page }) => {
+  test("subscribes and asks to confirm from the inbox", async ({ page }) => {
     const card = await openCard(page);
     await emailField(card).fill("Maria@Studio.pt");
     await card.getByRole("button", { name: "Subscribe" }).click();
 
-    const title = card.getByRole("heading", { name: "You’re in." });
+    const title = card.getByRole("heading", { name: successTitle });
     await expect(title).toBeFocused();
     await expect(card).toContainText("maria@studio.pt");
     await expect(card).toContainText("You can unsubscribe at any time.");
@@ -109,7 +116,7 @@ test.describe("newsletter card", () => {
     await expect(submit).toHaveAttribute("aria-busy", "true");
     await expect(emailField(card)).toBeDisabled();
     await expect(
-      card.getByRole("heading", { name: "You’re in." }),
+      card.getByRole("heading", { name: successTitle }),
     ).toBeVisible();
   });
 
@@ -137,9 +144,13 @@ test.describe("newsletter card", () => {
   }) => {
     const card = await openCard(page, "/pt/newsletter/confirm");
     await expect(
-      card.getByRole("link", { name: /Privacy Policy/ }),
+      card.getByRole("link", {
+        name: tagText("pt", "Newsletter.card.consent", "link"),
+      }),
     ).toHaveAttribute("href", "/pt/legal/privacy");
-    await expect(card.getByRole("heading", { level: 2 })).toContainText("[[");
+    await expect(card.getByRole("heading", { level: 2 })).toHaveText(
+      copy("pt", "Newsletter.card.title"),
+    );
   });
 
   test("stacks the field and button on mobile, one row from tablet", async ({

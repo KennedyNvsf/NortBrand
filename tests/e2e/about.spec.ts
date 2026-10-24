@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+import { copy } from "./copy";
+
 /* About page (ticket #11). Accessibility and overflow are covered by the page harness. */
 
 test.describe("about page", () => {
@@ -34,8 +36,11 @@ test.describe("about page", () => {
     await page.goto("/en/about");
 
     await expect(
-      page.getByRole("heading", { level: 2, name: /Minimalism, but/ }),
-    ).toHaveText("Minimalism, but functional products.");
+      page.getByRole("heading", {
+        level: 2,
+        name: copy("en", "About.principle.title"),
+      }),
+    ).toBeVisible();
     await expect(page.locator("#cta-band-title")).toHaveText(
       "Let’s start with your business.",
     );

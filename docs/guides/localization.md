@@ -185,11 +185,18 @@ tool like `tsx`. The trade-off is that Node needs exact file paths, so these fil
 `./pseudo.ts` with the extension, which is why `tsconfig.json` has
 `allowImportingTsExtensions`.
 
-### `src/i18n/messages.test.ts`: the parity check
+### `src/i18n/messages.test.ts`: the parity checks
 
-It flattens both files to key lists (`Common.close`, `Home.title`, …) and compares them.
-If someone adds a key to `en.json` and forgets to run the script, `pnpm test` fails and
-lists exactly which key is missing.
+1. **Keys.** It flattens both files to key lists (`Common.close`, `Home.title`, …) and
+   compares them. If someone adds a key to `en.json` and forgets to run the script,
+   `pnpm test` fails and lists exactly which key is missing.
+2. **Placeholders and tags (#76).** For every key it compares what a translation must
+   carry over unchanged: the ICU argument names (`{year}`, the `count` in
+   `{count, plural, …}`) and the rich-text tags (`<green>`, `</red>`). A translator who
+   translates `{year}` to `{ano}`, or drops a `<green>`, would break that string at runtime
+   (a formatting error, or a highlight that silently vanishes); the test catches it
+   first and names the key. Plural keywords (`one`, `other`) and the words inside branches are ignored,
+   because those are translated.
 
 ### `src/i18n/release-guard.ts`: the launch safety net
 
@@ -210,8 +217,10 @@ worth understanding:
    The first run sets the flag, and the workers inherit it and skip the warning. In
    strict mode we always check, because failing is what matters there.
 
-**Consequence:** once Vercel is connected, production deployments fail until the PT
-translation is complete. Review on preview deployments until launch.
+**Consequence:** a production deployment fails whenever a pseudo string is left. Since the
+first full translation (#76) the guard passes, so an English change that hasn't been
+translated yet blocks production until its Portuguese arrives. That is intended: it is
+what stops English text from shipping on the Portuguese site.
 
 ## 5. How the tests protect this
 
@@ -219,11 +228,13 @@ translation is complete. Review on preview deployments until launch.
 | ------------------------------------- | --------------------------------------------------------------- |
 | Proxy redirects the wrong way         | `src/proxy.test.ts` (unit) + `tests/e2e/i18n.spec.ts` (browser) |
 | Missing translation key               | `src/i18n/messages.test.ts`                                     |
+| Translation breaks `{year}` or a tag  | `src/i18n/messages.test.ts` (placeholders and tags)             |
 | Pseudo string breaks `{placeholders}` | `src/i18n/pseudo.test.ts`                                       |
 | Partial translation gets wiped        | `src/i18n/pseudo.test.ts` ("keeps real translations")           |
 | Launch with fake Portuguese           | release guard + `src/i18n/release-guard.test.ts`                |
 | Page missing hreflang or wrong `lang` | page harness `tests/e2e/pages.spec.ts`, every page × locale     |
-| Long PT text breaks the mobile layout | page harness 390 px overflow check, run on the pseudo strings   |
+| Long PT text breaks the mobile layout | page harness 390 px overflow check, on the real Portuguese      |
+| A copy change breaks an e2e spec      | specs read copy through `tests/e2e/copy.ts`, not typed in       |
 
 ## 6. Day-to-day rules
 
@@ -236,3 +247,45 @@ translation is complete. Review on preview deployments until launch.
    Delete the PT value, so it becomes pseudo again and goes back to the translator. The
    script can't detect this on its own.
 5. **Before launch:** `pnpm check:release` must pass.
+
+### Translation changes until launch (#76)
+
+The first full translation is in, but copy can still change on either side until
+30 November. Each change takes one of three routes:
+
+| What changed                    | What you do                                                                                              | What protects it                                     |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| English wording, same meaning   | Edit `en.json` only (a typo, a comma). The Portuguese stands.                                            | Review                                               |
+| English meaning, or a new key   | Edit `en.json`, delete the PT value, run `pnpm i18n:pseudo`. The key is now `[[…]]` for the translators. | Release guard: production can't ship it untranslated |
+| Portuguese from the translators | Paste their values into `pt.json`, key for key. Never edit `en.json` in the same step.                   | `pnpm test`: keys, placeholders and tags             |
+
+- **Finding what needs translating:** `pnpm build` lists every pseudo key; send the
+  translators those keys with the English, never the whole file again.
+- **Importing a batch:** run `pnpm test` (parity), then check the pages it touches at
+  390 px in PT. Long Portuguese is the usual cause of overflow; the page harness catches
+  it in CI (`tests/e2e/pages.spec.ts`).
+- **Blog posts are not here.** They are translated in the Studio
+  ([Editing the blog](./editing-the-blog.md)).
+
+### Copy in e2e specs (`tests/e2e/copy.ts`)
+
+When the real translation landed (#76), 16 specs failed although every page worked.
+Each one had copy typed into it: an English heading the final copy had reworded, or a
+Portuguese check that only passed because pseudo strings still contained the English
+(`/Subscribe|\[\[/`). So a spec that names copy reads it from `messages/`:
+
+```ts
+import { copy, localeOf, tagText } from "./copy";
+
+page.getByRole("button", { name: copy("pt", "Contact.form.submit") }); // "Enviar pedido"
+copy("en", "Services.hero.title"); // rich-text tags dropped: "What your business needs…"
+tagText("pt", "Newsletter.card.consent", "link"); // the text inside <link>: "Política de Privacidade"
+localeOf("/pt/contact"); // "pt", for helpers that take a path
+```
+
+- `copy` throws on an unknown key, so a renamed key fails loudly instead of matching
+  nothing.
+- Fixture data (post titles, the `[PT]` marker, typed form values) stays literal: it
+  comes from the fake backend, not from `messages/`.
+- Older specs still type copy that hasn't changed. Move each to `copy()` when you next
+  touch it, or when a copy change breaks it.
