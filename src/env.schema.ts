@@ -35,6 +35,10 @@ export const serverSchema = z.object({
   SANITY_REVALIDATE_SECRET: z.string().min(32, "Use at least 32 characters"),
   RESEND_API_KEY: z.string().startsWith("re_", "Resend keys start with re_"),
   RESEND_SEGMENT_ID: nonEmpty,
+  /** Verifies Resend webhooks (/api/newsletter/resend-webhook): the endpoint's signing secret. */
+  RESEND_WEBHOOK_SECRET: z
+    .string()
+    .startsWith("whsec_", "Resend webhook secrets start with whsec_"),
   /** Sender, `Name <address>` or `address`. `onboarding@resend.dev` until the domain is verified. */
   EMAIL_FROM: z
     .string()

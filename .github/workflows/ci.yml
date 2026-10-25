@@ -27,6 +27,7 @@ env:
   SANITY_REVALIDATE_SECRET: placeholder-placeholder-placeholder-00
   RESEND_API_KEY: re_placeholder
   RESEND_SEGMENT_ID: placeholder
+  RESEND_WEBHOOK_SECRET: whsec_cGxhY2Vob2xkZXItcGxhY2Vob2xkZXI=
   EMAIL_FROM: NortBrand <onboarding@resend.dev>
   NOTIFY_TO_EMAIL: team@example.com
   IP_HASH_SALT: placeholder-placeholder-placeholder-00

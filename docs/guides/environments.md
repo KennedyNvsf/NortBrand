@@ -136,6 +136,15 @@ recipient is refused. The free tier allows 100 emails a day.
    `nortbrand-preview`. Full access is needed because the newsletter adds and removes
    contacts; sending-only keys cannot. Each key is stored only in Vercel.
 6. Decide the team inbox for new requests (`NOTIFY_TO_EMAIL`).
+7. **Webhooks → Add Webhook** (once the site has a URL, #45), one per environment:
+   - Endpoint: `https://<site>/api/newsletter/resend-webhook`.
+   - Events: **contact.updated** only. Other events are acknowledged and ignored, so
+     subscribing to more only adds traffic.
+   - Copy the **signing secret** (`whsec_…`) into `RESEND_WEBHOOK_SECRET` for that
+     environment, and redeploy.
+   - Check it from the webhook's attempts log: unsubscribe a test contact in Resend and
+     look for **200**. A **401** means the secret is wrong; a **500** means the database or
+     Resend failed and Resend will retry (docs/guides/newsletter.md).
 
 ## 4. Sentry
 
@@ -212,6 +221,7 @@ column by hand.
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | prod publishable key                   | dev publishable key                 | dev key, or local²                  |
 | `RESEND_API_KEY`                | `nortbrand-production` key             | `nortbrand-preview` key             | `nortbrand-preview` key             |
 | `RESEND_SEGMENT_ID`             | Newsletter segment                     | same                                | same                                |
+| `RESEND_WEBHOOK_SECRET`         | production webhook secret              | preview webhook secret              | any `whsec_` value                  |
 | `EMAIL_FROM`                    | `NortBrand <hello@send.nortbrand.com>` | `NortBrand <onboarding@resend.dev>` | `NortBrand <onboarding@resend.dev>` |
 | `NOTIFY_TO_EMAIL`               | team inbox                             | your own inbox                      | your own inbox                      |
 | `IP_HASH_SALT`                  | generated                              | generated (different)               | any 32+ characters                  |

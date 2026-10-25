@@ -103,7 +103,7 @@ src/app/[locale]/        pages: home, services, about, blog, contact, legal
   (site)/                route group: pages with SiteNav + SiteFooter (404 sits outside)
 src/app/studio/[[...tool]]/  embedded Sanity Studio (noindex, excluded from i18n middleware)
 src/app/api/revalidate/  signed Sanity webhook
-src/app/api/newsletter/  one-click unsubscribe (RFC 8058); api/health/newsletter checks the Vault secret
+src/app/api/newsletter/  one-click unsubscribe (RFC 8058), Resend webhook; api/health/newsletter checks the Vault secret
 src/components/ui/       shadcn primitives restyled to tokens
 src/components/site/     SiteNav, SiteFooter, CtaBand, StickyCta, Logo, shared primitives
 src/features/            consultation/, newsletter/, blog/, consent/
@@ -207,6 +207,8 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   `/unsubscribe` are static, noindex, out of the sitemap, and send no Referer.
 - Unsubscribe deletes the Resend contact. `/api/newsletter/unsubscribe` is the RFC 8058
   one-click endpoint; `/api/health/newsletter` checks that the app and Vault secrets match.
+- `/api/newsletter/resend-webhook` (signed `contact.updated`) brings unsubscribes made in
+  Resend back to the database through the same `unsubscribe_newsletter` path (#86).
 
 ## Cookie consent
 
@@ -240,7 +242,7 @@ Public: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABAS
 `NEXT_PUBLIC_SENTRY_DSN` (optional; Sentry is off when empty).
 
 Server-only: `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`, `RESEND_API_KEY`,
-`RESEND_SEGMENT_ID`, `EMAIL_FROM`, `NOTIFY_TO_EMAIL`, `IP_HASH_SALT`, `NEWSLETTER_TOKEN_SECRET`.
+`RESEND_SEGMENT_ID`, `RESEND_WEBHOOK_SECRET`, `EMAIL_FROM`, `NOTIFY_TO_EMAIL`, `IP_HASH_SALT`, `NEWSLETTER_TOKEN_SECRET`.
 
 Build only (Vercel, optional): `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`.
 Account setup and the per-environment matrix: `docs/guides/environments.md`.

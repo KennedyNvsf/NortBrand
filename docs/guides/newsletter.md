@@ -42,6 +42,12 @@ Unsubscribe page (#41) or a mail client's one-click POST ── { email, token }
   zod + checkUnsubscribeToken → { invalid }
   rpc unsubscribe_newsletter  → { unsubscribed }
   after(): Resend contact deleted
+
+Resend webhook (#86) ── POST /api/newsletter/resend-webhook, raw body + svix-* headers
+  verifyResendWebhook       → 401, nothing read or changed (missing, forged or stale signature)
+  not contact.updated with unsubscribed: true → 200 { ignored }
+  sign unsubscribe|<email> with NEWSLETTER_TOKEN_SECRET, then the unsubscribe path above
+                            → 200 { unsubscribed } · 200 { invalid } · 500 { failed } (Resend retries)
 ```
 
 There is no enumeration. A new, pending or already subscribed address gets the same
@@ -114,6 +120,27 @@ unsubscribed address. A contact that is already gone counts as removed.
 a link scanner that opens the URL with a GET gets 405 and unsubscribes no one. It returns
 200 for a valid link, 400 for an invalid one and 500 on failure.
 
+**`resend-webhook.ts` and `src/app/api/newsletter/resend-webhook/route.ts` (#86).**
+Broadcasts carry Resend's own `List-Unsubscribe` header. When someone uses a mail
+client's one-click unsubscribe, Resend marks the contact `unsubscribed` and our database
+never hears about it. Resend reports the change with a `contact.updated` webhook:
+
+- The route reads the **raw** body (a re-serialised body would not match the
+  signature) and calls `verifyResendWebhook` (`src/lib/resend-webhook.ts`). That runs
+  the Resend SDK's Svix check with `RESEND_WEBHOOK_SECRET`. A missing, forged or
+  over-5-minutes-old signature returns `null`, and the route answers **401** before
+  reading anything.
+- `syncResendUnsubscribe` validates the event with zod. It acts only on
+  `contact.updated` with `unsubscribed: true`; everything else is acknowledged as
+  `ignored`. A resubscribe (`unsubscribed: false`) is ignored on purpose: subscribing
+  always goes through our double opt-in.
+- It normalises the address like `schema.ts` and signs its unsubscribe token. Then it
+  calls the same `unsubscribeNewsletter` the page uses, so the database change, the
+  Resend contact deletion and the failure reporting are one code path.
+- Status codes steer Resend's retries: **500** only for `failed`, where a retry may
+  work. Everything else is **200**, including an address our schema rejects, since a
+  retry can't fix it. The response body never contains the address.
+
 **`src/app/api/health/newsletter/route.ts`.** Signs an unsubscribe token for
 `healthcheck@nortbrand.invalid` and asks `unsubscribe_newsletter` to verify it. The
 function returns true for any valid token. No row can match that address, so the check
@@ -174,9 +201,17 @@ outcome: `e2e-failed@`, `e2e-rate-limited@`, `e2e-slow@` or `e2e-used@`. The swi
   a scanner could subscribe someone without their consent. The cost is one extra click.
 - **Our signed unsubscribe link (decided 2026-10-16).** Resend's built-in unsubscribe
   updates only Resend. Templates use the contact property `unsubscribe_url` instead, so
-  the database learns about every unsubscribe. The gap is that Resend's own
-  `List-Unsubscribe` header on broadcasts still goes to Resend (tech debt: a
-  `contact.updated` webhook).
+  the database learns about every unsubscribe. Resend's own `List-Unsubscribe` header on
+  broadcasts still goes to Resend, and the `contact.updated` webhook brings those back
+  (#86).
+- **The webhook reuses `unsubscribe_newsletter` (#86).** A new database function that
+  unsubscribed an address without a token would be callable by anyone with the public
+  key (ADR-002), so anyone could unsubscribe anyone. Instead, the app proves the
+  webhook came from Resend, then signs the same token a link carries. Postgres checks it
+  again exactly as for a link, so no SQL changed and the existing pgTAP tests cover it.
+- **The Resend contact is deleted after a Resend unsubscribe, too (#86).** That's the
+  rule for every unsubscribe, so Resend keeps no data. Resending to that address is
+  impossible either way: it needs a new double opt-in, which creates a fresh contact.
 - **Segments, not Audiences (decided 2026-10-16).** Resend replaced Audiences with
   Segments, and `audienceId` is deprecated in the SDK. The variable is
   `RESEND_SEGMENT_ID`.
@@ -193,18 +228,21 @@ outcome: `e2e-failed@`, `e2e-rate-limited@`, `e2e-slow@` or `e2e-used@`. The swi
 
 ## 5. Tests
 
-| File                                    | Covers                                                                                |
-| --------------------------------------- | ------------------------------------------------------------------------------------- |
-| `newsletter/links.test.ts`              | SQL token vectors, purpose separation, the 7-day boundary, tampering, URL encoding    |
-| `newsletter/subscribe.test.ts`          | Normalising, no enumeration, honeypot, validation, PT429, errors by code              |
-| `newsletter/confirm.test.ts`            | Confirmed, expired, tampered, malformed, refused by the database, errors              |
-| `newsletter/unsubscribe.test.ts`        | Valid, tampered, mismatched secrets, errors                                           |
-| `newsletter/notify.test.ts`             | Email in the visitor's locale, segment properties, failures reported by code          |
-| `newsletter/emails/render.test.ts`      | The link as a button and as text, locale, no images or scripts                        |
-| `lib/resend.test.ts`                    | Create, update-and-add fallback, delete, `not_found`, error names only                |
-| `tests/e2e/newsletter.spec.ts`          | Card states, axe on the dark card, mobile stacking, PT; confirm and unsubscribe flows |
-| `tests/e2e/pages.spec.ts` (routes.ts)   | Both link pages in both locales: one H1, axe, 200 + noindex, no canonical             |
-| `supabase/tests/03_newsletter.test.sql` | The same rules in SQL (#36)                                                           |
+| File                                          | Covers                                                                                                     |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `newsletter/links.test.ts`                    | SQL token vectors, purpose separation, the 7-day boundary, tampering, URL encoding                         |
+| `newsletter/subscribe.test.ts`                | Normalising, no enumeration, honeypot, validation, PT429, errors by code                                   |
+| `newsletter/confirm.test.ts`                  | Confirmed, expired, tampered, malformed, refused by the database, errors                                   |
+| `newsletter/unsubscribe.test.ts`              | Valid, tampered, mismatched secrets, errors                                                                |
+| `newsletter/notify.test.ts`                   | Email in the visitor's locale, segment properties, failures reported by code                               |
+| `newsletter/emails/render.test.ts`            | The link as a button and as text, locale, no images or scripts                                             |
+| `lib/resend.test.ts`                          | Create, update-and-add fallback, delete, `not_found`, error names only                                     |
+| `lib/resend-webhook.test.ts`                  | Real Svix check: signed, tampered, wrong secret, stale timestamp, missing headers                          |
+| `newsletter/resend-webhook.test.ts`           | Only `contact.updated` + `unsubscribed: true` acts; token valid for the normalised address; others ignored |
+| `api/newsletter/resend-webhook/route.test.ts` | 401 before anything, 200/500 by result, raw body passed on, no address in the response                     |
+| `tests/e2e/newsletter.spec.ts`                | Card states, axe on the dark card, mobile stacking, PT; confirm and unsubscribe flows                      |
+| `tests/e2e/pages.spec.ts` (routes.ts)         | Both link pages in both locales: one H1, axe, 200 + noindex, no canonical                                  |
+| `supabase/tests/03_newsletter.test.sql`       | The same rules in SQL (#36)                                                                                |
 
 ## 6. Setup and day-to-day
 
@@ -216,5 +254,10 @@ outcome: `e2e-failed@`, `e2e-rate-limited@`, `e2e-slow@` or `e2e-used@`. The swi
    Supabase project. Check it by opening `/api/health/newsletter`.
 3. **Writing a broadcast:** send to the segment, filtered by the `locale` property for
    each language. Use the contact's `unsubscribe_url` property as the unsubscribe link.
-4. **Until the domain is verified (#45):** Resend delivers only to the account's own
+4. **Resend webhook (#86), before the first broadcast:** add the `contact.updated`
+   webhook for each environment and put its signing secret in `RESEND_WEBHOOK_SECRET`
+   ([Environments](./environments.md) § 3, step 7). Without it, one-click unsubscribes
+   from the mail client stay in Resend only. Locally any `whsec_` value starts the app;
+   real webhooks can't reach localhost.
+5. **Until the domain is verified (#45):** Resend delivers only to the account's own
    address, so test with that address.
