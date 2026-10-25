@@ -64,7 +64,7 @@ export function organizationJsonLd({
     "@id": organizationId(siteUrl),
     name: config.name,
     url: new URL("/", siteUrl).toString(),
-    logo: new URL("/icon.svg", siteUrl).toString(),
+    logo: new URL("/images/logo-square.png", siteUrl).toString(),
     description,
     address: { "@type": "PostalAddress", addressCountry: "PT" },
     ...(!email.placeholder && { email: email.value }),

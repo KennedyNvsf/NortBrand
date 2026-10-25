@@ -106,6 +106,48 @@ test.describe("page metadata", () => {
     expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1200, 630]);
   });
 
+  test("serves the favicon, the Apple touch icon and the square logo", async ({
+    page,
+    request,
+  }) => {
+    await page.goto("/en");
+
+    // ICO header: reserved 0, type 1 (icon), then the image count.
+    const favicon = await request.get("/favicon.ico");
+    expect(favicon.status()).toBe(200);
+    const ico = await favicon.body();
+    expect([ico.readUInt16LE(0), ico.readUInt16LE(2)]).toEqual([0, 1]);
+    expect(ico.readUInt16LE(4)).toBe(3);
+
+    const appleIcon = page.locator('link[rel="apple-touch-icon"]');
+    await expect(appleIcon).toHaveAttribute("sizes", "180x180");
+    const appleHref = await appleIcon.getAttribute("href");
+    const apple = await request.get(appleHref ?? "");
+    expect(apple.headers()["content-type"]).toBe("image/png");
+    const applePng = await apple.body();
+    expect([applePng.readUInt32BE(16), applePng.readUInt32BE(20)]).toEqual([
+      180, 180,
+    ]);
+
+    // The Organization logo is a square raster (Google asks for 112 px or more).
+    const organization = (await jsonLd(page)).find(
+      (block): block is { logo: string } =>
+        typeof block === "object" &&
+        block !== null &&
+        "@type" in block &&
+        block["@type"] === "Organization" &&
+        "logo" in block &&
+        typeof block.logo === "string",
+    );
+    expect(organization?.logo).toMatch(/\/images\/logo-square\.png$/);
+    const logo = await request.get(new URL(organization?.logo ?? "").pathname);
+    expect(logo.headers()["content-type"]).toBe("image/png");
+    const logoPng = await logo.body();
+    expect([logoPng.readUInt32BE(16), logoPng.readUInt32BE(20)]).toEqual([
+      512, 512,
+    ]);
+  });
+
   test("Services lists the five services as Service JSON-LD", async ({
     page,
   }) => {
