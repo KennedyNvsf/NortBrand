@@ -21,6 +21,7 @@ const validServer = {
   SANITY_REVALIDATE_SECRET: "x".repeat(32),
   RESEND_API_KEY: "re_123",
   RESEND_SEGMENT_ID: "segment",
+  RESEND_WEBHOOK_SECRET: "whsec_c2VjcmV0LXNlY3JldC1zZWNyZXQ=",
   EMAIL_FROM: "NortBrand <onboarding@resend.dev>",
   NOTIFY_TO_EMAIL: "team@example.com",
   IP_HASH_SALT: "s".repeat(32),
@@ -83,6 +84,12 @@ describe("parseServerEnv", () => {
     expect(() =>
       parseServerEnv({ ...validServer, NEWSLETTER_TOKEN_SECRET: "short" }),
     ).toThrow(/NEWSLETTER_TOKEN_SECRET/);
+  });
+
+  it("rejects a Resend webhook secret without the whsec_ prefix", () => {
+    expect(() =>
+      parseServerEnv({ ...validServer, RESEND_WEBHOOK_SECRET: "secret" }),
+    ).toThrow(/RESEND_WEBHOOK_SECRET/);
   });
 
   it("rejects a Resend key without the re_ prefix", () => {
