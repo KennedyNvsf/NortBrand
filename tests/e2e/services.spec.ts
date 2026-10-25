@@ -215,6 +215,34 @@ test.describe("services page", () => {
     }
   });
 
+  test("a focused tab panel shows the focus ring (#93)", async ({ page }) => {
+    test.skip(
+      isMobile(page),
+      "the tabs show from md; mobile uses the accordion",
+    );
+    await page.goto("/en/services");
+    const section = page.getByRole("region", {
+      name: copy("en", "Services.approach.title"),
+    });
+    const tab = section.getByRole("tab", {
+      name: copy("en", "Services.approach.points.brandIdentity.title"),
+    });
+    await untilHydrated(async () => {
+      await tab.focus();
+      await expect(tab).toBeFocused({ timeout: 1000 });
+    });
+
+    // Radix makes the panel the next tab stop after the selected tab (WCAG 2.4.7).
+    await page.keyboard.press("Tab");
+    const panel = section.getByRole("tabpanel");
+    await expect(panel).toBeFocused();
+    const ring = await panel.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return [style.outlineStyle, style.outlineWidth, style.outlineOffset];
+    });
+    expect(ring).toEqual(["solid", "2px", "2px"]);
+  });
+
   test.describe("pinned blocks (desktop)", () => {
     test.beforeEach(({ page }) => {
       test.skip(isMobile(page), "the stage pins on desktop only");
