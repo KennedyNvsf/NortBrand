@@ -50,6 +50,11 @@ function TabsTrigger({
   );
 }
 
+/*
+ * Radix makes the panel a tab stop (tabindex 0), so the global :focus-visible ring
+ * applies to it; no `outline-none` here (WCAG 2.4.7, #93). Mouse users focus the
+ * trigger, not the panel, so they never see it.
+ */
 function TabsContent({
   className,
   ...props
@@ -57,7 +62,7 @@ function TabsContent({
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
-      className={cn("outline-none", className)}
+      className={className}
       {...props}
     />
   );

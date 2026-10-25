@@ -196,6 +196,14 @@ shadcn-style wrappers over `radix-ui`, which is already a dependency, so nothing
 installed. The accordion animates with the tw-animate `accordion-down/up` keyframes at
 `--duration-base`; reduced motion shortens it to the global 150 ms rule.
 
+**Tab panels keep the focus ring (#93).** Radix gives each panel `tabindex="0"`, so after
+the selected tab, **Tab** moves into the panel. Keyboard users need to see where focus
+went (WCAG 2.4.7). The shadcn default `outline-none` on `TabsContent` hid it, so it was
+removed; the global `:focus-visible` rule in `globals.css` (2 px, 2 px offset) now draws
+the ring. Clicking a tab focuses the trigger, not the panel, so mouse users never see it.
+Don't add `outline-none` to a focusable element; if a design needs a different ring,
+change the `:focus-visible` style instead.
+
 ### `lib/use-media-query.ts`
 
 `useSyncExternalStore` subscribes to `matchMedia` without effects or extra renders, and
@@ -219,7 +227,8 @@ That is why the first dialog render had an inset dark panel. Overrides like `p-0
   hreflang, no overflow at 390 px), in EN and PT, on desktop and mobile.
 - `tests/e2e/services.spec.ts`: hero; five blocks with slug ids; anchor below the header;
   open → title, items, Book link → focus stays inside → Esc closes → focus returns (Dialog
-  on desktop, Drawer on mobile); Close button; tabs on desktop, accordion on mobile.
+  on desktop, Drawer on mobile); Close button; tabs on desktop, accordion on mobile; Tab
+  from the selected tab focuses its panel, which draws the 2 px ring (#93).
 - **Hydration in tests:** a click on server-rendered HTML before React hydrates it does
   nothing, and `networkidle` does not guarantee hydration on a busy machine.
   `untilHydrated()` retries the action until its effect is visible. Use the same pattern
