@@ -14,6 +14,10 @@ import { Link } from "@/i18n/navigation";
  * (site) route group on purpose: the nav stays, but there is no footer and no sticky
  * CTA (Handoff: "Footer: shared by every page except the 404"). noindex, and no
  * canonical or hreflang: a 404 has no URL worth indexing.
+ *
+ * The <title> is also rendered here (React 19 hoists it into the head): with Cache
+ * Components the notFound() boundary renders in the browser and its metadata title
+ * never arrives, so the tab kept the Home title (WCAG 2.4.2, #94; see tech-debt).
  */
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -22,10 +26,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function LocaleNotFound() {
-  const t = await getTranslations("NotFound");
+  const [t, tMeta] = await Promise.all([
+    getTranslations("NotFound"),
+    getTranslations("Metadata"),
+  ]);
 
   return (
     <div className="flex min-h-dvh flex-col">
+      <title>{`${tMeta("notFoundTitle")} · ${tMeta("siteName")}`}</title>
       <SiteNav />
       <NotFoundContent
         title={t.rich("title", highlightTags)}

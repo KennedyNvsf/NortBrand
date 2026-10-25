@@ -62,9 +62,30 @@ Prefetching, and with the boundary moved one level down). What still holds:
 - **Status 404** and `<meta name="robots" content="noindex">` are in the server response.
 - The localized 404 renders with JavaScript, at the right `lang`.
 
-Consequences: the tab title stays the site default, and without JavaScript the page is
-blank. Both are logged in `docs/tech-debt.md`, with the follow-up to re-test on the
-next Next.js release.
+Consequence: without JavaScript the page is blank. This is logged in
+`docs/tech-debt.md`, with the follow-up to re-test on the next Next.js release.
+
+### The 404 title (#94)
+
+The metadata title from `generateMetadata` never reaches the browser-rendered boundary,
+so the tab used to keep the Home title (WCAG 2.4.2 Page Titled). `not-found.tsx` now
+also renders the title itself:
+
+```tsx
+<title>{`${tMeta("notFoundTitle")} · ${tMeta("siteName")}`}</title>
+```
+
+React 19 hoists a `<title>` rendered anywhere in the tree into `<head>`, in front of
+any existing `<title>`, and removes it when the component unmounts. The minimal server
+document still carries the layout's default title, so the 404's head has two; the
+browser uses the first, ours. Client navigation away from the 404 removes ours and
+leaves the next page's title. The string is built by hand in the same `… · NortBrand` format as the
+layout's title template, because the template only applies to metadata titles.
+`generateMetadata` keeps its title and `noindex`: if a later Next.js release
+server-renders the boundary, the metadata title is the one that works without JavaScript.
+`tests/e2e/system.spec.ts` › "404 title (#94)" checks both locales, an unknown page and an
+unknown post, that ours is the first `<title>`, and that leaving the 404 restores the
+next page's title.
 
 ## 2. The loading splash
 
