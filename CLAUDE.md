@@ -80,7 +80,8 @@ React Email · Sanity (blog only) · Sentry · Vitest · Playwright · pnpm · N
   policies.
 - **ADR-006, i18n.** Routes live under `/[locale]` (`en`, `pt`). Middleware handles only the
   bare `/`, in this order: preference cookie, then `Accept-Language`, then `pt`. Prefixed URLs
-  are never redirected. Emit `hreflang` for `en`, `pt` and `x-default`.
+  are never redirected. Emit `hreflang` for `en`, `pt` and `x-default`. `nortbrand.pt` only
+  redirects to `nortbrand.com/pt` (`src/lib/seo/domain-redirects.ts`, #85).
 - **ADR-007, GA4 loads only after analytics consent.** Declining means no Google request at all.
 - No auth in the MVP. No global state library, no client data-fetching library, no date
   library.

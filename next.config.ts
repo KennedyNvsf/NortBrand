@@ -5,6 +5,7 @@ import { withSentryConfig } from "@sentry/nextjs/config";
 
 import { validateEnv } from "./src/env.schema";
 import { isReleaseBuild, runReleaseGuard } from "./src/i18n/release-guard";
+import { legacyDomainRedirects } from "./src/lib/seo/domain-redirects";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
@@ -17,6 +18,14 @@ const nextConfig: NextConfig = {
     ],
   },
   partialPrefetching: true,
+  // nortbrand.pt → nortbrand.com/pt (ADR-006, #85). Host-matched, so other hosts never
+  // see these rules.
+  redirects: () =>
+    Promise.resolve(
+      legacyDomainRedirects(
+        process.env.NEXT_PUBLIC_SITE_URL ?? "https://nortbrand.com",
+      ),
+    ),
   turbopack: {
     rules: {
       "*.css": {

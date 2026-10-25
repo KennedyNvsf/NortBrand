@@ -4,17 +4,18 @@
 
 ## 1. What we built
 
-| Output                                  | Where                                                   | Notes                                                |
-| --------------------------------------- | ------------------------------------------------------- | ---------------------------------------------------- |
-| Title, description, canonical, hreflang | every page's `generateMetadata`                         | one call: `localizedPageMetadata`                    |
-| Open Graph + Twitter card               | same                                                    | locale `en_GB` / `pt_PT`, large image card           |
-| Share image (1200 × 630 PNG)            | `app/[locale]/opengraph-image.tsx`                      | prerendered per locale, ~32 KB                       |
-| `sitemap.xml`                           | `app/sitemap.ts`                                        | every page × locale, with hreflang + x-default       |
-| `robots.txt`                            | `app/robots.ts`                                         | blocks `/studio`, `/api/`; previews block everything |
-| Organization JSON-LD                    | `[locale]/layout.tsx`                                   | every page; `logo` is the 512 px square PNG          |
-| Favicon, Apple touch icon               | `app/favicon.ico`, `app/apple-icon.png`, `app/icon.svg` | generated from the mark (`pnpm icons:generate`)      |
-| Service JSON-LD                         | Services page                                           | the five services, one per block                     |
-| noindex on Vercel previews              | `pageMetadata` + `robots.txt`                           | from `VERCEL_ENV` at build time                      |
+| Output                                  | Where                                                   | Notes                                                                          |
+| --------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| Title, description, canonical, hreflang | every page's `generateMetadata`                         | one call: `localizedPageMetadata`                                              |
+| Open Graph + Twitter card               | same                                                    | locale `en_GB` / `pt_PT`, large image card                                     |
+| Share image (1200 × 630 PNG)            | `app/[locale]/opengraph-image.tsx`                      | prerendered per locale, ~32 KB                                                 |
+| `sitemap.xml`                           | `app/sitemap.ts`                                        | every page × locale, with hreflang + x-default                                 |
+| `robots.txt`                            | `app/robots.ts`                                         | blocks `/studio`, `/api/`; previews block everything                           |
+| Organization JSON-LD                    | `[locale]/layout.tsx`                                   | every page; `logo` is the 512 px square PNG                                    |
+| Favicon, Apple touch icon               | `app/favicon.ico`, `app/apple-icon.png`, `app/icon.svg` | generated from the mark (`pnpm icons:generate`)                                |
+| Service JSON-LD                         | Services page                                           | the five services, one per block                                               |
+| `nortbrand.pt` → `nortbrand.com/pt`     | `next.config.ts` redirects                              | host-matched 308s (`lib/seo/domain-redirects.ts`); [Go-live](./go-live.md) § 1 |
+| noindex on Vercel previews              | `pageMetadata` + `robots.txt`                           | from `VERCEL_ENV` at build time                                                |
 
 Every page stays static. The image, sitemap and robots routes are prerendered too.
 
@@ -102,6 +103,7 @@ false`), so search engines never learn stand-in data. They appear automatically 
     on Open Graph and Twitter, noindex only on previews
   - `buildSitemap`: every page × locale, absolute hreflang + x-default, no blog or studio
   - `buildRobots`: production and preview
+  - `legacyDomainRedirects`: the four `nortbrand.pt` rules in order, the anchored host, page sections from `sitePages`
   - `organizationJsonLd`: required properties; placeholders left out; confirmed details
     included
   - `servicesJsonLd` and `serializeJsonLd`
