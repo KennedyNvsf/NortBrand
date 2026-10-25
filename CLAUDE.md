@@ -292,6 +292,7 @@ pnpm test:e2e       # playwright
 pnpm build
 pnpm i18n:pseudo    # regenerate placeholder pt.json from en.json (keeps real translations; --reset for all)
 pnpm check:release  # strict guard: pseudo translations + draft legal text; must pass before launch
+pnpm icons:generate # favicon.ico, apple-icon.png, logo-square.png from src/app/icon.svg (commit the output)
 pnpm db:start / db:stop / db:reset / db:types / db:test   # local Supabase (Docker)
 pnpm sanity:types   # extract the Sanity schema and regenerate src/lib/sanity/sanity.types.ts
 pnpm sanity:seed    # test authors, categories and posts into the development dataset

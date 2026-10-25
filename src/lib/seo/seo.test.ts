@@ -83,7 +83,7 @@ describe("organizationJsonLd", () => {
       "@id": "https://nortbrand.com/#organization",
       name: "NortBrand",
       url: "https://nortbrand.com/",
-      logo: "https://nortbrand.com/icon.svg",
+      logo: "https://nortbrand.com/images/logo-square.png",
       description: "A studio",
       address: { "@type": "PostalAddress", addressCountry: "PT" },
     });
