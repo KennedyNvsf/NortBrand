@@ -58,13 +58,15 @@ created on 16 October 2026 (#58); its steps are in § 9.
    Variables"**: on. Sentry reads `VERCEL_ENV` to label errors.
 6. **Settings → Deployment Protection:** keep Vercel Authentication on for previews, and
    create a **Protection Bypass for Automation** secret. Ticket #44 gives it to the CI e2e job.
-7. Do not add a domain yet. The production domain and the `nortbrand.pt` redirect are part of
-   M5.
+7. Do not add a domain here. The production domain, `www` and `nortbrand.pt` are added on
+   launch day, in order, by the [Go-live runbook](./go-live.md) § 3.
 
 **Expect Production deployments of `main` to fail until launch prep.** With
 `VERCEL_ENV=production` the release guard is strict (`docs/guides/localization.md`): it
 stops a build while any Portuguese message is still pseudo-translated. That is deliberate.
-Previews are unaffected, and the failure disappears once the real translations land in M5.
+Previews are unaffected. The Portuguese translation landed in #76, so production builds
+pass, unless an English string changes and its Portuguese one is still being translated
+(`docs/guides/localization.md` § 6).
 (Draft legal text is caught separately, by `pnpm check:release`.)
 
 ## 2. Supabase (ADR-002)
@@ -188,7 +190,7 @@ openssl rand -base64 48
 | -------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | `IP_HASH_SALT`             | Salts visitor IP hashes. Changing it resets rate limits.                                                          |
 | `NEWSLETTER_TOKEN_SECRET`  | Signs confirm and unsubscribe links. Changing it voids links already sent. Also stored in Supabase Vault (below). |
-| `SANITY_REVALIDATE_SECRET` | Verifies the Sanity webhook (M4).                                                                                 |
+| `SANITY_REVALIDATE_SECRET` | Verifies the Sanity webhook (§ 9).                                                                                |
 
 The database verifies newsletter tokens itself (#36), so each Supabase project needs the
 same `NEWSLETTER_TOKEN_SECRET` in Vault. In the dashboard, open **SQL Editor** and run, with
@@ -230,15 +232,21 @@ column by hand.
 | `SENTRY_AUTH_TOKEN`             | token                                  | token                               | not set                             |
 | `SENTRY_ORG`, `SENTRY_PROJECT`  | slugs                                  | slugs                               | not set                             |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | `G-…`                                  | `G-…`                               | `G-…`                               |
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | `placeholder` until M4                 | same                                | same                                |
-| `NEXT_PUBLIC_SANITY_DATASET`    | `production`                           | same                                | same                                |
-| `SANITY_API_READ_TOKEN`         | `placeholder` until M4                 | same                                | same                                |
-| `SANITY_REVALIDATE_SECRET`      | generated                              | generated                           | any 32+ characters                  |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | `p4bc960d`                             | same                                | same                                |
+| `NEXT_PUBLIC_SANITY_DATASET`    | `production`                           | `development`³                      | `development`³                      |
+| `SANITY_API_READ_TOKEN`         | Viewer token (§ 9)                     | Viewer token (its own)              | Viewer token (your own)             |
+| `SANITY_REVALIDATE_SECRET`      | generated                              | generated (different)               | any 32+ characters                  |
 
 1. Previews keep the production site URL on purpose: canonical links and `hreflang` must
    never point at a preview, and previews are `noindex` already (`docs/guides/seo.md`).
 2. `pnpm db:start` prints a local API URL and anon key. Use them to work without touching the
    dev project.
+3. Only Production reads the `production` dataset, so test posts never reach the live
+   site (§ 9). To work on live content from your machine before the site has a URL,
+   stop any server on port 3000, then start one for that session only:
+   `$env:NEXT_PUBLIC_SANITY_DATASET = "production"; pnpm dev` (PowerShell). Check that
+   the Studio's top-left corner says **production**, and close that terminal afterwards.
+   Never change `.env.local` for it.
 
 Preview builds send real email. Keep `NOTIFY_TO_EMAIL` pointed at your own inbox outside
 Production so test requests never reach the team.
