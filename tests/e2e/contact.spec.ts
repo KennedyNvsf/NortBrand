@@ -15,8 +15,8 @@ test.describe("contact page", () => {
     );
     const details = hero.getByRole("list", { name: "Contact details" });
     await expect(
-      details.getByRole("link", { name: /hello@nortbrand\.com/ }),
-    ).toHaveAttribute("href", "mailto:hello@nortbrand.com");
+      details.getByRole("link", { name: /hello@nortbrand.pt/ }),
+    ).toHaveAttribute("href", "mailto:hello@nortbrand.pt");
     await expect(
       details.getByRole("link", { name: /\+351 000 000 000/ }),
     ).toHaveAttribute("href", "tel:+351000000000");

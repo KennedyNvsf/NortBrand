@@ -19,9 +19,7 @@ test.describe("legal pages", () => {
     ).toHaveCount(8);
     await expect(page.locator("#your-rights h2")).toHaveText("Your rights");
     await expect(
-      page
-        .locator("article")
-        .getByRole("link", { name: "hello@nortbrand.com" }),
+      page.locator("article").getByRole("link", { name: "hello@nortbrand.pt" }),
     ).toHaveCount(2);
     await expect(
       page.getByText(/^Last updated: October 4, 2026$/),

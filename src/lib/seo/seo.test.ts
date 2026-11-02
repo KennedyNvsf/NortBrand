@@ -13,7 +13,7 @@ import {
   servicesJsonLd,
 } from "./structured-data";
 
-const SITE = "https://nortbrand.com";
+const SITE = "https://nortbrand.pt";
 
 describe("isPreviewDeployment", () => {
   it("is true only for Vercel preview builds", () => {
@@ -30,22 +30,22 @@ describe("buildSitemap", () => {
     expect(sitemap).toHaveLength(sitePages.length * 2);
     expect(sitemap.map((entry) => entry.url)).toEqual(
       expect.arrayContaining([
-        "https://nortbrand.com/en",
-        "https://nortbrand.com/pt",
-        "https://nortbrand.com/en/services",
-        "https://nortbrand.com/pt/legal/terms",
+        "https://nortbrand.pt/en",
+        "https://nortbrand.pt/pt",
+        "https://nortbrand.pt/en/services",
+        "https://nortbrand.pt/pt/legal/terms",
       ]),
     );
   });
 
   it("gives every entry absolute hreflang alternates, including x-default", () => {
     const services = sitemap.find(
-      (entry) => entry.url === "https://nortbrand.com/en/services",
+      (entry) => entry.url === "https://nortbrand.pt/en/services",
     );
     expect(services?.alternates?.languages).toEqual({
-      en: "https://nortbrand.com/en/services",
-      pt: "https://nortbrand.com/pt/services",
-      "x-default": "https://nortbrand.com/pt/services",
+      en: "https://nortbrand.pt/en/services",
+      pt: "https://nortbrand.pt/pt/services",
+      "x-default": "https://nortbrand.pt/pt/services",
     });
   });
 
@@ -59,7 +59,7 @@ describe("buildRobots", () => {
   it("allows crawling in production except the Studio and API, with the sitemap", () => {
     expect(buildRobots(SITE, { preview: false })).toEqual({
       rules: { userAgent: "*", allow: "/", disallow: ["/studio", "/api/"] },
-      sitemap: "https://nortbrand.com/sitemap.xml",
+      sitemap: "https://nortbrand.pt/sitemap.xml",
     });
   });
 
@@ -80,10 +80,10 @@ describe("organizationJsonLd", () => {
     expect(organization).toMatchObject({
       "@context": "https://schema.org",
       "@type": "Organization",
-      "@id": "https://nortbrand.com/#organization",
+      "@id": "https://nortbrand.pt/#organization",
       name: "NortBrand",
-      url: "https://nortbrand.com/",
-      logo: "https://nortbrand.com/images/logo-square.png",
+      url: "https://nortbrand.pt/",
+      logo: "https://nortbrand.pt/images/logo-square.png",
       description: "A studio",
       address: { "@type": "PostalAddress", addressCountry: "PT" },
     });
@@ -105,7 +105,7 @@ describe("organizationJsonLd", () => {
       ...site,
       contact: {
         ...site.contact,
-        email: { value: "studio@nortbrand.com", placeholder: false },
+        email: { value: "studio@nortbrand.pt", placeholder: false },
         phone: { value: "+351210000000", placeholder: false },
       },
       social: [
@@ -124,7 +124,7 @@ describe("organizationJsonLd", () => {
         config: confirmed,
       }),
     ).toMatchObject({
-      email: "studio@nortbrand.com",
+      email: "studio@nortbrand.pt",
       telephone: "+351210000000",
       sameAs: ["https://www.instagram.com/nortbrand"],
     });
@@ -135,7 +135,7 @@ describe("servicesJsonLd", () => {
   it("lists each service with its block URL and the organization as provider", () => {
     const graph = servicesJsonLd({
       siteUrl: SITE,
-      pageUrl: "https://nortbrand.com/en/services",
+      pageUrl: "https://nortbrand.pt/en/services",
       services: [
         { slug: "web-design", name: "Web Design", description: "Interfaces" },
       ],
@@ -145,12 +145,12 @@ describe("servicesJsonLd", () => {
       "@graph": [
         {
           "@type": "Service",
-          "@id": "https://nortbrand.com/en/services#web-design",
+          "@id": "https://nortbrand.pt/en/services#web-design",
           name: "Web Design",
           serviceType: "Web Design",
           description: "Interfaces",
-          url: "https://nortbrand.com/en/services#web-design",
-          provider: { "@id": "https://nortbrand.com/#organization" },
+          url: "https://nortbrand.pt/en/services#web-design",
+          provider: { "@id": "https://nortbrand.pt/#organization" },
         },
       ],
     });
@@ -191,23 +191,23 @@ describe("buildSitemap with blog posts", () => {
 
   it("lists each post once, in its own language, with lastModified", () => {
     const post = sitemap.find(
-      (entry) => entry.url === "https://nortbrand.com/en/blog/brand-refresh",
+      (entry) => entry.url === "https://nortbrand.pt/en/blog/brand-refresh",
     );
     expect(post?.lastModified).toBe("2026-10-01T10:00:00Z");
     expect(post?.alternates?.languages).toEqual({
-      en: "https://nortbrand.com/en/blog/brand-refresh",
-      pt: "https://nortbrand.com/pt/blog/renovar-a-marca",
-      "x-default": "https://nortbrand.com/pt/blog/renovar-a-marca",
+      en: "https://nortbrand.pt/en/blog/brand-refresh",
+      pt: "https://nortbrand.pt/pt/blog/renovar-a-marca",
+      "x-default": "https://nortbrand.pt/pt/blog/renovar-a-marca",
     });
   });
 
   it("gives an untranslated post no alternate in the other language", () => {
     const post = sitemap.find(
-      (entry) => entry.url === "https://nortbrand.com/en/blog/only-english",
+      (entry) => entry.url === "https://nortbrand.pt/en/blog/only-english",
     );
     expect(post?.alternates?.languages).toEqual({
-      en: "https://nortbrand.com/en/blog/only-english",
-      "x-default": "https://nortbrand.com/en/blog/only-english",
+      en: "https://nortbrand.pt/en/blog/only-english",
+      "x-default": "https://nortbrand.pt/en/blog/only-english",
     });
   });
 });
@@ -215,7 +215,7 @@ describe("buildSitemap with blog posts", () => {
 describe("blogPostingJsonLd", () => {
   const base = {
     siteUrl: SITE,
-    url: "https://nortbrand.com/en/blog/brand-refresh",
+    url: "https://nortbrand.pt/en/blog/brand-refresh",
     language: "en",
     title: "5 Signs Your Brand Needs a Refresh",
     description: "Some signals are obvious.",
@@ -234,7 +234,7 @@ describe("blogPostingJsonLd", () => {
     ).toEqual({
       "@context": "https://schema.org",
       "@type": "BlogPosting",
-      "@id": "https://nortbrand.com/en/blog/brand-refresh#article",
+      "@id": "https://nortbrand.pt/en/blog/brand-refresh#article",
       headline: "5 Signs Your Brand Needs a Refresh",
       description: "Some signals are obvious.",
       url: base.url,
@@ -245,7 +245,7 @@ describe("blogPostingJsonLd", () => {
       articleSection: "Branding",
       image: "https://cdn/x.jpg",
       author: { "@type": "Person", name: "Ana Ribeiro" },
-      publisher: { "@id": "https://nortbrand.com/#organization" },
+      publisher: { "@id": "https://nortbrand.pt/#organization" },
     });
   });
 
@@ -261,21 +261,21 @@ describe("breadcrumbJsonLd", () => {
   it("numbers the trail from 1, in order", () => {
     expect(
       breadcrumbJsonLd([
-        { name: "Blog", url: "https://nortbrand.com/en/blog" },
-        { name: "Post", url: "https://nortbrand.com/en/blog/post" },
+        { name: "Blog", url: "https://nortbrand.pt/en/blog" },
+        { name: "Post", url: "https://nortbrand.pt/en/blog/post" },
       ]).itemListElement,
     ).toEqual([
       {
         "@type": "ListItem",
         position: 1,
         name: "Blog",
-        item: "https://nortbrand.com/en/blog",
+        item: "https://nortbrand.pt/en/blog",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Post",
-        item: "https://nortbrand.com/en/blog/post",
+        item: "https://nortbrand.pt/en/blog/post",
       },
     ]);
   });

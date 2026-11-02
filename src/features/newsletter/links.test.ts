@@ -104,12 +104,12 @@ describe("checkUnsubscribeToken", () => {
 });
 
 describe("link URLs", () => {
-  const site = "https://nortbrand.com";
+  const site = "https://nortbrand.pt";
 
   it("builds the confirm page link with the signed issue time", () => {
     const url = new URL(confirmUrl(site, "pt", email, issuedAt, secret));
     expect(url.origin + url.pathname).toBe(
-      "https://nortbrand.com/pt/newsletter/confirm",
+      "https://nortbrand.pt/pt/newsletter/confirm",
     );
     expect(Object.fromEntries(url.searchParams)).toEqual({
       email,

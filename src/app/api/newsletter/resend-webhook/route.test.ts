@@ -27,7 +27,7 @@ const body = JSON.stringify({
 });
 
 function request(headers: Record<string, string> = {}) {
-  return new Request("https://nortbrand.com/api/newsletter/resend-webhook", {
+  return new Request("https://nortbrand.pt/api/newsletter/resend-webhook", {
     method: "POST",
     body,
     headers,

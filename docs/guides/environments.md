@@ -1,6 +1,7 @@
 # Environments and accounts
 
-**Covers:** #35, #45. **Decisions:** ADR-002 (Supabase), ADR-005 (Vercel Pro), ADR-007 (GA4).
+**Covers:** #35, #45, #98. **Decisions:** ADR-002 (Supabase), ADR-005 (Vercel Pro),
+ADR-007 (GA4), ADR-008 (domain).
 
 The site runs on five outside services. The human lead owns every account (some are paid
 and all hold personal data); the code only reads their values from environment variables.
@@ -43,7 +44,7 @@ created on 16 October 2026 (#58); its steps are in § 9.
 
 - A password manager entry for each service (database passwords especially: Supabase shows
   them once).
-- Later (#45): access to the DNS for `nortbrand.com` (Resend needs four records).
+- Later (#45): access to the DNS for `nortbrand.pt` (Resend needs four records).
 - Docker Desktop on your machine for the local database (`pnpm db:start`). It is free for
   small businesses.
 
@@ -58,7 +59,7 @@ created on 16 October 2026 (#58); its steps are in § 9.
    Variables"**: on. Sentry reads `VERCEL_ENV` to label errors.
 6. **Settings → Deployment Protection:** keep Vercel Authentication on for previews, and
    create a **Protection Bypass for Automation** secret. Ticket #44 gives it to the CI e2e job.
-7. Do not add a domain here. The production domain, `www` and `nortbrand.pt` are added on
+7. Do not add a domain here. `nortbrand.pt` and `www` (ADR-008) are added on
    launch day, in order, by the [Go-live runbook](./go-live.md) § 3.
 
 **Expect Production deployments of `main` to fail until launch prep.** With
@@ -108,12 +109,12 @@ recipient is refused. The free tier allows 100 emails a day.
 
 **Later (#45).** Steps 1–3 and the `nortbrand-production` key, once the domain is bought.
 
-1. **Domains → Add Domain:** `send.nortbrand.com` (a sending subdomain keeps the main
+1. **Domains → Add Domain:** `send.nortbrand.pt` (a sending subdomain keeps the main
    domain's reputation separate). Region: **EU (Ireland)**.
 2. Add the records Resend shows at your DNS provider: the MX and SPF TXT on `send`, and
    the DKIM TXT on `resend._domainkey.send`. Wait for **Verified**.
 3. Add a DMARC record on the root domain if none exists:
-   `_dmarc.nortbrand.com TXT "v=DMARC1; p=none; rua=mailto:<your inbox>"`. Tighten to
+   `_dmarc.nortbrand.pt TXT "v=DMARC1; p=none; rua=mailto:<your inbox>"`. Tighten to
    `p=quarantine` after a few weeks of clean reports.
 4. **Segments → Create:** "Newsletter". Copy its ID (`RESEND_SEGMENT_ID`). Then
    create two string **contact properties**, `locale` (fallback `en`) and `unsubscribe_url`.
@@ -163,7 +164,7 @@ recipient is refused. The free tier allows 100 emails a day.
 Create the property now so the measurement ID exists; the tag loads only after consent
 (#43).
 
-1. Create a GA4 property and a **Web** data stream for `https://nortbrand.com`. Copy the
+1. Create a GA4 property and a **Web** data stream for `https://nortbrand.pt`. Copy the
    measurement ID (`G-…`).
 2. **Data collection:** Google Signals **off**; granular location and device data **off**.
 3. **Data retention:** 2 months.
@@ -216,26 +217,26 @@ column for each value. Development is what `vercel env pull` writes into `.env.l
 Until Vercel exists (#45), copy `.env.example` to `.env.local` and fill in the Development
 column by hand.
 
-| Variable                        | Production                             | Preview                             | Development (`.env.local`)          |
-| ------------------------------- | -------------------------------------- | ----------------------------------- | ----------------------------------- |
-| `NEXT_PUBLIC_SITE_URL`          | `https://nortbrand.com`                | `https://nortbrand.com`¹            | `http://localhost:3000`             |
-| `NEXT_PUBLIC_SUPABASE_URL`      | prod project URL                       | dev project URL                     | dev URL, or local²                  |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | prod publishable key                   | dev publishable key                 | dev key, or local²                  |
-| `RESEND_API_KEY`                | `nortbrand-production` key             | `nortbrand-preview` key             | `nortbrand-preview` key             |
-| `RESEND_SEGMENT_ID`             | Newsletter segment                     | same                                | same                                |
-| `RESEND_WEBHOOK_SECRET`         | production webhook secret              | preview webhook secret              | any `whsec_` value                  |
-| `EMAIL_FROM`                    | `NortBrand <hello@send.nortbrand.com>` | `NortBrand <onboarding@resend.dev>` | `NortBrand <onboarding@resend.dev>` |
-| `NOTIFY_TO_EMAIL`               | team inbox                             | your own inbox                      | your own inbox                      |
-| `IP_HASH_SALT`                  | generated                              | generated (different)               | any 32+ characters                  |
-| `NEWSLETTER_TOKEN_SECRET`       | generated                              | generated (different)               | any 32+ characters                  |
-| `NEXT_PUBLIC_SENTRY_DSN`        | DSN                                    | DSN                                 | empty (off)                         |
-| `SENTRY_AUTH_TOKEN`             | token                                  | token                               | not set                             |
-| `SENTRY_ORG`, `SENTRY_PROJECT`  | slugs                                  | slugs                               | not set                             |
-| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | `G-…`                                  | `G-…`                               | `G-…`                               |
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | `p4bc960d`                             | same                                | same                                |
-| `NEXT_PUBLIC_SANITY_DATASET`    | `production`                           | `development`³                      | `development`³                      |
-| `SANITY_API_READ_TOKEN`         | Viewer token (§ 9)                     | Viewer token (its own)              | Viewer token (your own)             |
-| `SANITY_REVALIDATE_SECRET`      | generated                              | generated (different)               | any 32+ characters                  |
+| Variable                        | Production                            | Preview                             | Development (`.env.local`)          |
+| ------------------------------- | ------------------------------------- | ----------------------------------- | ----------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`          | `https://nortbrand.pt`                | `https://nortbrand.pt`¹             | `http://localhost:3000`             |
+| `NEXT_PUBLIC_SUPABASE_URL`      | prod project URL                      | dev project URL                     | dev URL, or local²                  |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | prod publishable key                  | dev publishable key                 | dev key, or local²                  |
+| `RESEND_API_KEY`                | `nortbrand-production` key            | `nortbrand-preview` key             | `nortbrand-preview` key             |
+| `RESEND_SEGMENT_ID`             | Newsletter segment                    | same                                | same                                |
+| `RESEND_WEBHOOK_SECRET`         | production webhook secret             | preview webhook secret              | any `whsec_` value                  |
+| `EMAIL_FROM`                    | `NortBrand <hello@send.nortbrand.pt>` | `NortBrand <onboarding@resend.dev>` | `NortBrand <onboarding@resend.dev>` |
+| `NOTIFY_TO_EMAIL`               | team inbox                            | your own inbox                      | your own inbox                      |
+| `IP_HASH_SALT`                  | generated                             | generated (different)               | any 32+ characters                  |
+| `NEWSLETTER_TOKEN_SECRET`       | generated                             | generated (different)               | any 32+ characters                  |
+| `NEXT_PUBLIC_SENTRY_DSN`        | DSN                                   | DSN                                 | empty (off)                         |
+| `SENTRY_AUTH_TOKEN`             | token                                 | token                               | not set                             |
+| `SENTRY_ORG`, `SENTRY_PROJECT`  | slugs                                 | slugs                               | not set                             |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | `G-…`                                 | `G-…`                               | `G-…`                               |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | `p4bc960d`                            | same                                | same                                |
+| `NEXT_PUBLIC_SANITY_DATASET`    | `production`                          | `development`³                      | `development`³                      |
+| `SANITY_API_READ_TOKEN`         | Viewer token (§ 9)                    | Viewer token (its own)              | Viewer token (your own)             |
+| `SANITY_REVALIDATE_SECRET`      | generated                             | generated (different)               | any 32+ characters                  |
 
 1. Previews keep the production site URL on purpose: canonical links and `hreflang` must
    never point at a preview, and previews are `noindex` already (`docs/guides/seo.md`).

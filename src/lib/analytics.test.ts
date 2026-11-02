@@ -148,12 +148,12 @@ describe("withdrawal", () => {
         written.push(value);
       },
     };
-    deleteGaCookies(doc, "www.nortbrand.com");
+    deleteGaCookies(doc, "www.nortbrand.pt");
     expect(written).toEqual(
       expect.arrayContaining([
         "_ga=; Max-Age=0; Path=/",
-        "_ga=; Max-Age=0; Path=/; Domain=.nortbrand.com",
-        "_ga_ABC=; Max-Age=0; Path=/; Domain=.www.nortbrand.com",
+        "_ga=; Max-Age=0; Path=/; Domain=.nortbrand.pt",
+        "_ga_ABC=; Max-Age=0; Path=/; Domain=.www.nortbrand.pt",
       ]),
     );
     expect(written.some((value) => value.startsWith("other="))).toBe(false);

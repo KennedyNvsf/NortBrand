@@ -18,7 +18,7 @@ const rendered = {
 
 function emailDeps() {
   return {
-    confirmUrl: vi.fn(() => "https://nortbrand.com/pt/newsletter/confirm?x"),
+    confirmUrl: vi.fn(() => "https://nortbrand.pt/pt/newsletter/confirm?x"),
     render: vi.fn(() => Promise.resolve(rendered)),
     send: vi.fn<(email: OutgoingEmail) => Promise<SendResult>>(() =>
       Promise.resolve({ ok: true }),
@@ -36,7 +36,7 @@ describe("sendConfirmationEmail", () => {
     expect(deps.render).toHaveBeenCalledWith(
       "ana@example.com",
       "pt",
-      "https://nortbrand.com/pt/newsletter/confirm?x",
+      "https://nortbrand.pt/pt/newsletter/confirm?x",
     );
     expect(deps.send).toHaveBeenCalledWith({
       ...rendered,
