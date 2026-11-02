@@ -31,6 +31,37 @@ test.describe("404", () => {
   }
 });
 
+test.describe("404 title (#94)", () => {
+  // The boundary renders in the browser, so the title arrives with it: React hoists the
+  // <title> in front of the layout's default one, which stays in the minimal server
+  // document. The first <title> is the document title. Before #94 the tab kept Home's.
+  for (const [path, title] of [
+    ["/en/no-such-page", "Page not found · NortBrand"],
+    ["/pt/no-such-page", "Página não encontrada · NortBrand"],
+    ["/en/blog/no-such-post", "Page not found · NortBrand"],
+    ["/pt/blog/no-such-post", "Página não encontrada · NortBrand"],
+  ] as const) {
+    test(`${path} has its own localized title`, async ({ page }) => {
+      const response = await page.goto(path);
+      expect(response?.status()).toBe(404);
+      await expect(page).toHaveTitle(title);
+      await expect(page.locator("head title").first()).toHaveJSProperty(
+        "textContent",
+        title,
+      );
+    });
+  }
+
+  test("leaving the 404 restores the next page's title", async ({ page }) => {
+    await page.goto("/en/no-such-page");
+    await expect(page).toHaveTitle("Page not found · NortBrand");
+    await page.getByRole("main").getByRole("link").first().click();
+    await page.waitForURL("**/en");
+    await expect(page).not.toHaveTitle(/Page not found/);
+    await expect(page.locator("head title")).toHaveCount(1);
+  });
+});
+
 test.describe("loading splash", () => {
   test("never appears on a fast load", async ({ page }) => {
     await page.goto("/en");
