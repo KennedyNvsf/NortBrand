@@ -19,7 +19,7 @@ function makeDeps(
 ) {
   return {
     notifyTo: "team@example.com",
-    studioEmail: "hello@nortbrand.com",
+    studioEmail: "hello@nortbrand.pt",
     renderAlert: vi.fn(() =>
       Promise.resolve({
         subject: "alert",
@@ -79,7 +79,7 @@ describe("sendConsultationEmails", () => {
       expect.objectContaining({
         subject: "thanks",
         to: "ana@example.com",
-        replyTo: "hello@nortbrand.com",
+        replyTo: "hello@nortbrand.pt",
       }),
     );
     expect(deps.markNotified).toHaveBeenCalledExactlyOnceWith(requestId);

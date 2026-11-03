@@ -29,8 +29,9 @@ Implementation notes:
 - **Detection on every URL.** Rejected: browser settings could override an explicit link,
   and crawlers would see redirects.
 - **Hand-rolled i18n.** Rejected: it would need custom routing, plural rules and formatting.
-- **Locale by domain.** Not the routing model. nortbrand.pt only redirects to
-  `nortbrand.com/pt`.
+- **Locale by domain.** Not the routing model. Both languages live on one domain,
+  `nortbrand.pt` (ADR-008, which replaced the earlier plan of `nortbrand.com` with
+  `nortbrand.pt` redirecting to `/pt`).
 
 ## Consequences
 

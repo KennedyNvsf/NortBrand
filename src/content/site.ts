@@ -42,7 +42,7 @@ export const site = {
   timeZone: "Europe/Lisbon",
   contact: {
     // TODO(client): confirm the public contact email.
-    email: { value: "hello@nortbrand.com", placeholder: true },
+    email: { value: "hello@nortbrand.pt", placeholder: true },
     // TODO(client): replace with the real phone number.
     phone: { value: "+351000000000", placeholder: true },
     phoneDisplay: { value: "+351 000 000 000", placeholder: true },

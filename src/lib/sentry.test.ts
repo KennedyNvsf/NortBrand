@@ -40,9 +40,9 @@ describe("stripQuery", () => {
   it("drops the query string and fragment", () => {
     expect(
       stripQuery(
-        "https://nortbrand.com/en/newsletter/confirm?email=a@b.c&t=x#top",
+        "https://nortbrand.pt/en/newsletter/confirm?email=a@b.c&t=x#top",
       ),
-    ).toBe("https://nortbrand.com/en/newsletter/confirm");
+    ).toBe("https://nortbrand.pt/en/newsletter/confirm");
   });
 });
 
@@ -53,7 +53,7 @@ describe("scrubEvent", () => {
       user: { email: "visitor@example.com", ip_address: "1.2.3.4" },
       request: {
         method: "POST",
-        url: "https://nortbrand.com/en/contact?service=seo",
+        url: "https://nortbrand.pt/en/contact?service=seo",
         data: { email: "visitor@example.com" },
         cookies: { NEXT_LOCALE: "en" },
         headers: { "x-forwarded-for": "1.2.3.4" },
@@ -62,7 +62,7 @@ describe("scrubEvent", () => {
     };
     expect(scrubEvent(event)).toEqual({
       type: undefined,
-      request: { method: "POST", url: "https://nortbrand.com/en/contact" },
+      request: { method: "POST", url: "https://nortbrand.pt/en/contact" },
     });
   });
 

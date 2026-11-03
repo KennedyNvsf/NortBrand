@@ -5,7 +5,7 @@ import pt from "../../../../messages/pt.json";
 import { renderNewsletterConfirmation } from "./render";
 
 const url =
-  "https://nortbrand.com/en/newsletter/confirm?email=ana%40example.com&issued=1700000000&token=QGarSH8806G_BeOERWNKMVOnGN5hhKLabFIabU3Fngo";
+  "https://nortbrand.pt/en/newsletter/confirm?email=ana%40example.com&issued=1700000000&token=QGarSH8806G_BeOERWNKMVOnGN5hhKLabFIabU3Fngo";
 
 describe("renderNewsletterConfirmation", () => {
   it("links the confirm page, as a button and as plain text", async () => {

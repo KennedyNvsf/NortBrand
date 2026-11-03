@@ -8,7 +8,7 @@ import {
 } from "./env.schema";
 
 const validPublic = {
-  NEXT_PUBLIC_SITE_URL: "https://nortbrand.com",
+  NEXT_PUBLIC_SITE_URL: "https://nortbrand.pt",
   NEXT_PUBLIC_SUPABASE_URL: "https://abcd.supabase.co",
   NEXT_PUBLIC_SUPABASE_ANON_KEY: "anon-key",
   NEXT_PUBLIC_SANITY_PROJECT_ID: "abc123",

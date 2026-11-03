@@ -14,7 +14,7 @@ guard blocks a launch build that still contains any.
 ## 2. What happens when someone visits
 
 ```
-Visitor types nortbrand.com/
+Visitor types nortbrand.pt/
         │
         ▼
 src/proxy.ts  (runs ONLY for "/")
