@@ -2,6 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
 import { copy } from "./copy";
+import { findSmallTouchTargets } from "./touch-targets";
 
 /*
  * The blog post page (#61) against the e2e fixtures (src/features/blog/e2e-backend.ts,
@@ -240,4 +241,16 @@ test.describe("blog post on mobile", () => {
       "data-visible",
     );
   });
+
+  // Posts are not in the shared harness (routes.ts), so their touch targets are checked
+  // here: the breadcrumb, the tag chip, share links and the body's UI links (#95).
+  for (const [locale, url] of Object.entries(translated)) {
+    test(`has 44 px touch targets (${locale})`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.goto(url);
+      await expect(page.locator("h1")).toBeVisible();
+
+      expect(await findSmallTouchTargets(page)).toEqual([]);
+    });
+  }
 });

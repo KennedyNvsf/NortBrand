@@ -42,7 +42,7 @@ export async function PostHeader({
             <li>
               <Link
                 href="/blog"
-                className="inline-flex min-h-11 items-center rounded-sm text-text-muted transition-colors duration-(--duration-fast) ease-standard hover:text-text-primary lg:min-h-0"
+                className="touch-target inline-flex min-h-11 items-center rounded-sm text-text-muted transition-colors duration-(--duration-fast) ease-standard hover:text-text-primary lg:min-h-0"
               >
                 {tBlog("eyebrow")}
               </Link>
@@ -56,7 +56,7 @@ export async function PostHeader({
                   pathname: "/blog",
                   query: { category: post.category.slug },
                 }}
-                className="inline-flex min-h-11 items-center rounded-sm font-semibold text-text-accent underline-offset-4 hover:underline lg:min-h-0"
+                className="touch-target inline-flex min-h-11 items-center rounded-sm font-semibold text-text-accent underline-offset-4 hover:underline lg:min-h-0"
               >
                 {post.category.name ?? post.category.slug}
               </Link>

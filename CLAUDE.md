@@ -270,7 +270,9 @@ Rules:
 - Focus ring 2 px with 2 px offset.
 - One H1 per page.
 - 44 pt minimum tap targets on touch for buttons, nav items and form controls. Inline text
-  links inside body copy are exempt from this check.
+  links inside body copy are exempt from this check. Use `min-h-11`/`size-11`, or the
+  `touch-target` utility to grow a small element's hit area without changing its look.
+  The page harness hit-tests every control at 390 px (docs/guides/accessibility.md).
 - Errors always pair an icon with text.
 - `prefers-reduced-motion` falls back to opacity fades of 150 ms or less.
 

@@ -43,7 +43,7 @@ export function CategoryChips({
                   aria-current={active ? "true" : undefined}
                   scroll={false}
                   className={cn(
-                    "min-h-11 px-3 text-small md:min-h-9 lg:min-h-0 lg:px-sm lg:text-caption",
+                    "touch-target min-h-11 px-3 text-small md:min-h-9 lg:min-h-0 lg:px-sm lg:text-caption",
                     !active &&
                       "transition-colors duration-(--duration-fast) ease-standard hover:bg-border-strong/40",
                   )}

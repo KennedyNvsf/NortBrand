@@ -2,6 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 import { locales, localizedPath, routes } from "./routes";
+import { findSmallTouchTargets } from "./touch-targets";
 
 /*
  * Shared page harness: the per-page checks from the definition of done in CLAUDE.md,
@@ -86,6 +87,17 @@ for (const route of routes) {
             document.documentElement.clientWidth,
         );
         expect(overflow).toBeLessThanOrEqual(0);
+      });
+
+      test("has 44 px touch targets at 390 px", async ({ page }) => {
+        // Reduced motion: scroll reveals become opacity only, so nothing is mid-slide
+        // while it is hit-tested.
+        await page.emulateMedia({ reducedMotion: "reduce" });
+        await page.setViewportSize(MOBILE_VIEWPORT);
+        await page.goto(url);
+        await expect(page.locator("h1")).toBeVisible();
+
+        expect(await findSmallTouchTargets(page)).toEqual([]);
       });
     });
   }

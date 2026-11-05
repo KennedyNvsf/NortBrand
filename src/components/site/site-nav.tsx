@@ -25,7 +25,7 @@ export async function SiteNav() {
   return (
     <SiteHeader>
       <div className="mx-auto flex max-w-(--container-canvas) items-center justify-between gap-lg px-(--gutter) py-3.5 md:py-4 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:py-lg">
-        <Link href="/" className="justify-self-start rounded-sm">
+        <Link href="/" className="touch-target justify-self-start rounded-sm">
           <Logo label={t("home")} />
         </Link>
 

@@ -58,7 +58,10 @@ export function MobileMenu() {
         <div className="flex min-h-full flex-col px-(--gutter) pt-3.5 pb-7 md:pt-4">
           <div className="flex items-center justify-between">
             <SheetClose asChild>
-              <Link href="/" className="rounded-sm text-text-primary">
+              <Link
+                href="/"
+                className="touch-target rounded-sm text-text-primary"
+              >
                 <Logo label={t("home")} />
               </Link>
             </SheetClose>

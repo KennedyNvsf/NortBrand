@@ -75,7 +75,7 @@ export async function NoResults({
                       query: listingQuery(params, { q: "", category: slug }),
                     }}
                     scroll={false}
-                    className="min-h-11 px-3 text-small md:min-h-9 lg:min-h-0 lg:px-sm lg:text-caption"
+                    className="touch-target min-h-11 px-3 text-small md:min-h-9 lg:min-h-0 lg:px-sm lg:text-caption"
                   >
                     {name ?? slug}
                   </Link>
