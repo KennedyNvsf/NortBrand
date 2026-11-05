@@ -80,7 +80,9 @@ next-intl adds the locale _before_ the `#`: `/pt/services#web-design`.
 The Handoff asks for links "on a 44pt pitch on touch". Each link is
 `min-h-11` (44 px) with no gap between rows, so the rows themselves create the rhythm.
 On desktop, `lg:min-h-0 lg:gap-md` switches to the tighter 15 px text with 16 px gaps
-from Figma.
+from Figma. A link can still be narrower than 44 px ("Blog"), and so can the logo link
+(21 px tall), so both carry `touch-target`, which widens the hit area without changing
+the look ([Accessibility](./accessibility.md)).
 
 ### Headings and landmarks
 
