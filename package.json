@@ -21,6 +21,8 @@
     "i18n:pseudo": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/i18n-pseudo.mts",
     "check:release": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-release.mts",
     "icons:generate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-icons.mts",
+    "lhci": "pnpm dlx @lhci/cli@0.15.1",
+    "lighthouse:summary": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/lighthouse-summary.mts",
     "db:start": "supabase start",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
