@@ -1,6 +1,6 @@
 # Environments and accounts
 
-**Covers:** #35, #45, #98. **Decisions:** ADR-002 (Supabase), ADR-005 (Vercel Pro),
+**Covers:** #35, #45, #98, #101. **Decisions:** ADR-002 (Supabase), ADR-005 (Vercel Pro),
 ADR-007 (GA4), ADR-008 (domain).
 
 The site runs on five outside services. The human lead owns every account (some are paid
@@ -75,8 +75,9 @@ pass, unless an English string changes and its Portuguese one is still being tra
 Create **two** projects in the same EU region (Frankfurt `eu-central-1` or Ireland
 `eu-west-1`), named `nortbrand-dev` and `nortbrand-prod`. Create `nortbrand-dev` now on the
 free tier; it pauses after a week without requests, and **Restore** in the dashboard wakes
-it. Create `nortbrand-prod` at launch prep (#45), and decide its plan then: a paused
-production database would take the form offline. For each:
+it. Create `nortbrand-prod` at launch prep (#45) on the **Free** plan too: the lead
+decided on 2026-11-05 to run a 3–4 month trial with a keep-alive and review it by
+**31 March 2027** (see [Keep-alive](#keep-alive-free-plan-trial-101) below). For each:
 
 1. Save the database password in the password manager.
 2. **Authentication → Sign In / Providers:** turn **off** "Allow new users to sign up". The
@@ -97,6 +98,61 @@ pnpm exec supabase link --project-ref <dev-ref>  # asks for the dev database pas
 
 Migrations reach a project only through `pnpm exec supabase db push`, run deliberately:
 dev first, production after the pull request is merged. Nothing in CI pushes to a database.
+
+### Keep-alive (Free plan trial, #101)
+
+**Why.** Supabase pauses Free projects after about a week of low activity. While
+`nortbrand-prod` is paused, every consultation request shows _Send failed_ and every
+newsletter signup fails. Pro removes pausing contractually; the lead chose to try Free
+first (#45) and accepted two risks for the trial: Supabase can still pause the project
+at its discretion (the keep-alive makes that unlikely, not impossible), and Free has
+**no automatic backups**. Both are in `docs/tech-debt.md`.
+
+**How it works at runtime.** Two schedulers call the same route every day, 12 hours
+apart, so one failing never leaves a week without activity:
+
+```
+06:00 UTC  Vercel Cron (vercel.json) ──┐
+                                       ├─► GET https://nortbrand.pt/api/health/newsletter
+18:17 UTC  GitHub Actions ─────────────┘        │
+           (.github/workflows/keepalive.yml)    ▼
+                                    unsubscribe_newsletter RPC with a probe token
+                                    (healthcheck@nortbrand.invalid): a real query,
+                                    writes nothing, not rate-limited
+                                                │
+                                    200 {"status":"ok"}  or  503 {"status":"error",…}
+```
+
+The route already existed (#36) to check that `NEWSLETTER_TOKEN_SECRET` matches Vault, so
+the ping costs no new code and no migration, and doubles as a daily check of the secrets.
+
+**Alerting.** Vercel Cron only logs its result. The GitHub workflow is the alarm: anything
+but a 200 (after three retries 20 s apart, which cover a cold start) fails the run, and
+GitHub emails the repository owner. A failure means one of: the database is paused or down,
+the secrets no longer match, or the site is down. In each case look at the run's error
+line (it shows the response body: a status and a Postgres error code, never personal data),
+then the Supabase dashboard. A paused project is woken with **Restore**.
+
+**Files.**
+
+| File                              | Why                                                                                                                                                                                                                                 |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `vercel.json`                     | The `crons` entry. Vercel runs crons on Production deployments only, so previews never ping. Daily is also the Hobby limit, should the plan ever change.                                                                            |
+| `.github/workflows/keepalive.yml` | Daily at 18:17 UTC (off the hour: GitHub delays runs at :00) and on demand (**Actions → Supabase keep-alive → Run workflow**). No checkout and no secrets; `permissions: {}`. Private repo, so the schedule is never auto-disabled. |
+
+**Configuration.** The workflow calls `https://nortbrand.pt` (ADR-008), so there is
+nothing to forget at cut-over. The repository variable `KEEPALIVE_URL` (Settings →
+Secrets and variables → Actions → Variables) overrides it, for example to try a
+`*.vercel.app` deployment. Until DNS points at Vercel the run fails, which is why this
+workflow is merged on launch day ([Go-live runbook](./go-live.md) § 3).
+
+**Supabase's own warning.** Supabase emails the organisation owner before it pauses a
+project. Make sure that address is an inbox someone reads; that email is the last chance
+to act if both pings have been failing.
+
+**Ending the trial.** By 31 March 2027, decide: stay on Free (keep all of this), or move
+`nortbrand-prod` to Pro in the dashboard. On Pro, delete the `crons` entry and the
+workflow, or keep the workflow purely as an uptime alarm, and remove the tech-debt entry.
 
 ## 3. Resend
 

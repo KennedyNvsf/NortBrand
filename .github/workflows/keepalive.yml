@@ -1,0 +1,49 @@
+name: Supabase keep-alive
+
+# Keeps the Free-plan production database from pausing, and alerts when it can't be
+# reached (#101; decision in #45: Free for a trial, review by 31 March 2027).
+# It is the second of two daily pings; Vercel Cron (vercel.json) is the first, 12 hours
+# earlier, so one scheduler failing never leaves a week without activity.
+# A failed run makes GitHub email the repository owner: the database is paused or down,
+# the app's newsletter secret no longer matches Vault, or the site is down.
+# Guide: docs/guides/environments.md § 2.
+
+on:
+  schedule:
+    # 18:17 UTC. Off the hour: GitHub delays or drops scheduled runs at :00 under load.
+    - cron: "17 18 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: keepalive
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    name: Check the production database
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      # ADR-008: the only production domain. The repository variable overrides it, e.g.
+      # to try a *.vercel.app deployment.
+      SITE_URL: ${{ vars.KEEPALIVE_URL || 'https://nortbrand.pt' }}
+    steps:
+      - name: Call /api/health/newsletter
+        # The route runs a real database call (unsubscribe_newsletter with a probe token)
+        # that writes nothing and is not rate-limited. 200 means the database answered
+        # and the secrets match; 503 or no answer fails the run. Retries cover a cold
+        # start or a database waking up. The body holds only a status and an error code.
+        run: |
+          url="${SITE_URL%/}/api/health/newsletter"
+          out=$(mktemp)
+          echo "GET $url"
+          # -o rewrites the file on each attempt, so it holds the last answer only.
+          curl --silent --show-error --fail-with-body \
+            --retry 3 --retry-all-errors --retry-delay 20 \
+            --max-time 30 --output "$out" "$url" || {
+            echo "::error title=Keep-alive failed::$url did not answer 200. Body: $([ -s "$out" ] && cat "$out" || echo none)"
+            exit 1
+          }
+          cat "$out"

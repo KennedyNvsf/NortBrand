@@ -172,6 +172,10 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md
 - `newsletter_subscribers`: id, email (unique, lowercase), locale, status
   (`pending`|`subscribed`|`unsubscribed`), consent_at, confirmed_at, unsubscribed_at,
   created_at. Uses **double opt-in**.
+- Plan: `nortbrand-prod` runs on Free as a trial (lead, 2026-11-05, #45; review by
+  31 March 2027). Vercel Cron (`vercel.json`) and `.github/workflows/keepalive.yml` call
+  `/api/health/newsletter` daily so it never pauses; a failed run is the alert. No backups
+  on Free (accepted). Guide: docs/guides/environments.md § 2.
 - Rate limit: 5 writes per `ip_hash` per hour, and 100 public writes per hour in total
   (`private.write_events`, pruned after an hour). Rejections raise SQLSTATE `PT429` (HTTP
   429). Length and enum rules are mirrored as `CHECK` constraints; zod must match them.
