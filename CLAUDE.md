@@ -299,6 +299,8 @@ pnpm test:e2e       # playwright
 pnpm build
 pnpm i18n:pseudo    # regenerate placeholder pt.json from en.json (keeps real translations; --reset for all)
 pnpm check:release  # strict guard: pseudo translations + draft legal text; must pass before launch
+pnpm lhci autorun   # Lighthouse budgets (after E2E_FAKE_BACKEND=1 pnpm build); not a dependency, runs via pnpm dlx
+pnpm lighthouse:summary  # score table from the last Lighthouse run
 pnpm icons:generate # favicon.ico, apple-icon.png, logo-square.png from src/app/icon.svg (commit the output)
 pnpm db:start / db:stop / db:reset / db:types / db:test   # local Supabase (Docker)
 pnpm sanity:types   # extract the Sanity schema and regenerate src/lib/sanity/sanity.types.ts
@@ -329,8 +331,9 @@ Ticket → Branch → Implement → Validate → Push → Pull Request → Walkt
     `feat(ui): add Card component variants (#23)`.
   - Every commit builds.
 - **CI (every PR):** required: typecheck/lint/format/unit/build, e2e (desktop), e2e
-  (mobile, Chromium at iPhone 14 size), Database (pgTAP). Informational: e2e in WebKit (two
-  shards), not a merge gate because it is unstable on the runners. Guide:
+  (mobile, Chromium at iPhone 14 size), Database (pgTAP), Lighthouse (mobile) (budgets in
+  `lighthouserc.json`; required once added to branch protection). Informational: e2e in
+  WebKit (two shards), not a merge gate because it is unstable on the runners. Guide:
   docs/guides/ci.md.
 - **Validation before pushing**
   - Run typecheck, lint, format:check, unit tests and build. Run e2e when pages or flows

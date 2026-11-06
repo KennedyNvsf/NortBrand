@@ -74,6 +74,14 @@ major and minor versions without review.
 Neither one is in the site's bundle or on the server at runtime. Both process our own
 input, not visitors'. Re-check them whenever `sanity` or `shadcn` is upgraded.
 
+**Lighthouse CI is kept out of `package.json` (decided 2026-11-05, #83).** `@lhci/cli`
+0.15.1 brings five high findings through Lighthouse and Puppeteer (`tmp`,
+`extract-zip` ×2, `basic-ftp`, `zod` 3), and `zod` 3 can't be patched with an override.
+It runs through `pnpm dlx` instead (the `lhci` script, exact version), only in CI and on
+demand, against our own build, in a job with no secrets. The trade-off is that its own
+dependencies aren't locked by our lockfile. When upgrading it, change the version in
+the `lhci` script, and check that the new version is older than the minimum release age.
+
 ## 5. The Sentry notice in `next dev`
 
 `next dev` also warns that `src/instrumentation-client.ts` doesn't export

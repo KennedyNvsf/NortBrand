@@ -139,6 +139,65 @@ jobs:
             test-results/
           retention-days: 14
 
+  # Lighthouse budgets (#83) on 5 pages x EN/PT, mobile profile, against this PR's own
+  # production build with the fake backend, like e2e. Budgets live in lighthouserc.json.
+  # @lhci/cli runs through `pnpm lhci` (pnpm dlx, exact version) and is deliberately not in
+  # package.json: its Lighthouse/Puppeteer tree carries high audit findings that would
+  # break the go-live audit gate (decided 2026-11-05, docs/guides/dependencies.md). This
+  # job has read-only permissions and no secrets. Reports are a workflow artifact, not
+  # public storage: the site is not launched. Moves to Vercel previews with #45.
+  lighthouse:
+    name: Lighthouse (mobile)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up pnpm (version from packageManager)
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - name: Set up Node (version from .nvmrc)
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+        env:
+          E2E_FAKE_BACKEND: "1"
+
+      # collect starts `pnpm start` itself (lighthouserc.json); Chrome is preinstalled
+      # on GitHub's Ubuntu runners.
+      - name: Run Lighthouse
+        run: pnpm lhci collect
+        env:
+          E2E_FAKE_BACKEND: "1"
+
+      - name: Save the reports
+        if: always()
+        run: pnpm lhci upload
+
+      - name: Score table in the run summary
+        if: always()
+        run: pnpm --silent lighthouse:summary >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the reports
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/reports/
+          retention-days: 14
+
+      # Last, so the summary and the reports exist even when a budget fails.
+      - name: Check the budgets
+        run: pnpm lhci assert
+
   # pgTAP against a fresh local database with every migration applied (#36), so a
   # migration cannot weaken RLS or the write functions unnoticed. Docker is available
   # on GitHub's Ubuntu runners; only Postgres is started.
