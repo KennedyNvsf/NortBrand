@@ -120,7 +120,7 @@ sanity/                  schemas + Studio config
 supabase/                migrations/, seed.sql, tests/ (pgTAP)
 src/features/*/emails/   React Email templates (per feature)
 tests/e2e/               Playwright
-docs/                    README, adr/, guides/, runbook, tech-debt.md
+docs/                    README, adr/, guides/, runbook, tech-debt.md, accessibility-audit.md (#84)
 ```
 
 ## Content, translation and assets
