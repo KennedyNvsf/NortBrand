@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { animate } from "motion/react";
 
-import { prefersReducedMotion } from "@/components/motion/reveal-engine";
+import { loadRevealEngine } from "@/components/motion/load-reveal-engine";
+import { prefersReducedMotion } from "@/components/motion/reveal-dom";
 import { motionTokens } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +17,8 @@ import { cn } from "@/lib/utils";
  *   contents: spring gentle). It is a 1 px bar scaled to the link's height, as the nav
  *   underline is, so only transforms animate. It appears in place the first time and
  *   always moves without travel under reduced motion. Before hydration (or without
- *   JavaScript) the active link draws its own red rule instead.
+ *   JavaScript) the active link draws its own red rule instead, and it keeps it until
+ *   Motion has loaded after hydration (loadRevealEngine, #105).
  */
 
 export type TocItem = { id: string; label: string };
@@ -25,6 +26,7 @@ export type TocItem = { id: string; label: string };
 /* Below the sticky header (~93 px on desktop), with some breathing room. */
 const READING_LINE = 120;
 const SLIDE = motionTokens.spring.gentle;
+const noop = () => undefined;
 
 function findActiveId(items: TocItem[]): string | undefined {
   const atBottom =
@@ -81,29 +83,33 @@ export function TableOfContents({
     const marker = markerRef.current;
     if (!list || !marker || !activeId) return;
 
-    const place = (instant: boolean) => {
-      const link = list.querySelector<HTMLElement>(
-        `a[href="#${CSS.escape(activeId)}"]`,
-      );
-      if (!link) return;
-      const target = { y: link.offsetTop, scaleY: link.offsetHeight };
-      animate(
-        marker,
-        target,
-        instant || prefersReducedMotion() ? { duration: 0 } : SLIDE,
-      );
-    };
-
-    place(!shown.current);
-    shown.current = true;
-    setPlaced(true);
-
-    const onResize = () => {
-      place(true);
-    };
-    window.addEventListener("resize", onResize);
+    let active = true;
+    let onResize: (() => void) | undefined;
+    loadRevealEngine().then(({ animate }) => {
+      if (!active) return;
+      const place = (instant: boolean) => {
+        const link = list.querySelector<HTMLElement>(
+          `a[href="#${CSS.escape(activeId)}"]`,
+        );
+        if (!link) return;
+        const target = { y: link.offsetTop, scaleY: link.offsetHeight };
+        animate(
+          marker,
+          target,
+          instant || prefersReducedMotion() ? { duration: 0 } : SLIDE,
+        );
+      };
+      place(!shown.current);
+      shown.current = true;
+      setPlaced(true);
+      onResize = () => {
+        place(true);
+      };
+      window.addEventListener("resize", onResize);
+    }, noop);
     return () => {
-      window.removeEventListener("resize", onResize);
+      active = false;
+      if (onResize) window.removeEventListener("resize", onResize);
     };
   }, [activeId]);
 

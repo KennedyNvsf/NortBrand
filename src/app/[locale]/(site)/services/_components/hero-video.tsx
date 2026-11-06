@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { prefersReducedMotion } from "@/components/motion/reveal-engine";
+import { prefersReducedMotion } from "@/components/motion/reveal-dom";
 import { cn } from "@/lib/utils";
 
 /*
