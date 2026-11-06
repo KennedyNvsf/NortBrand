@@ -98,6 +98,11 @@ React Email · Sanity (blog only) · Sentry · Vitest · Playwright · pnpm · N
   on its first request (`ensureStatic = "navigation"`), then is cached.
 - Check the build output to confirm marketing pages are static. A page that becomes dynamic
   unexpectedly is a bug.
+- **What loads before the first paint** (docs/guides/performance.md, #105): no `@/env` or
+  zod in client components (pass values as props); widgets go in the layout only if every
+  page uses them; dialogs, drawers and menus load with `next/dynamic`, prefetched when
+  idle; `NextIntlClientProvider` gets only `CLIENT_MESSAGE_PATHS` (add a namespace there
+  when a client component needs it; a unit test enforces it).
 
 ## Repository layout
 
@@ -157,7 +162,8 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md, accessibi
   `motion.*`, so the engine stays lazy-loaded.
 - Scroll reveals: mark elements with `revealItem(kind)` and wrap the section in
   `<RevealGroup>` (src/components/motion). It never hides content that is already
-  visible or before hydration. Hero entrances use `enterItem(index)` (CSS). Reveal
+  visible or before hydration. Shared components use `reveal-dom.ts` up front and get
+  `play()`/`animate()` from `loadRevealEngine()` after hydration (#105). Hero entrances use `enterItem(index)` (CSS). Reveal
   values were raised after the #27 review; see src/lib/motion.ts.
 - Booking links use `<BookingButton>` (arrow → calendar on hover).
 - Every animation has a reduced-motion path: opacity only, 150 ms or less, no path drawing.

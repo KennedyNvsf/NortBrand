@@ -60,7 +60,10 @@ Motion and intl providers. The Studio is outside it. It renders three things:
 
 - a polite live region, which announces the banner since the banner never takes focus;
 - the banner, inside `AnimatePresence` so it can play its exit;
-- the preferences.
+- the preferences. They load in their own chunk (#105): `next/dynamic`, prefetched when
+  the browser is idle, mounted the first time they open, then kept mounted so they can
+  animate closed and return focus. Most visits never open them, and the Dialog and
+  vaul Drawer behind them are about 20 KiB of JavaScript ([Performance](./performance.md)).
 
 **`components/cookie-banner.tsx`.** Figma 328:513, desktop 326:16, tablet 382:268 and
 mobile 382:131.
@@ -141,8 +144,9 @@ this.
   - A new event means a new entry in that map, reviewed for personal data. The type
     system then refuses any other name or parameter.
 
-**`components/google-analytics.tsx`.** Mounted next to the ConsentManager. It follows
-`useConsent()`:
+**`components/google-analytics.tsx`.** Mounted next to the ConsentManager. The layout
+passes it `measurementId` from the validated `publicEnv`. It must not import `@/env`
+itself: that would put zod in every page’s JavaScript (#105). It follows `useConsent()`:
 
 - **Analytics accepted.** It enables GA and sends one page view, then one per `usePathname()`
   change.
