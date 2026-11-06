@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef, type FocusEvent } from "react";
-import { animate } from "motion/react";
+import { useEffect, useRef, type FocusEvent } from "react";
 import { useTranslations } from "next-intl";
 
-import { prefersReducedMotion } from "@/components/motion/reveal-engine";
+import { loadRevealEngine } from "@/components/motion/load-reveal-engine";
+import { prefersReducedMotion } from "@/components/motion/reveal-dom";
 import { isActiveRoute, navItems } from "@/content/navigation";
 import { Link, usePathname } from "@/i18n/navigation";
 import { motionTokens } from "@/lib/motion";
@@ -20,9 +20,13 @@ import { cn } from "@/lib/utils";
  * (the same travelling accent as Services › Our approach) and fades when the pointer
  * or focus leaves. It appears in place without sliding the first time, and always
  * with reduced motion. The bar is 1 px wide and scaled to the link width.
+ * Motion's animate() loads after hydration (loadRevealEngine, #105); until then the
+ * bar simply stays hidden.
  */
 const SLIDE = motionTokens.spring.accent;
 const FADE = { duration: motionTokens.duration.fast } as const;
+
+const noop = () => undefined;
 
 export function NavLinks() {
   const t = useTranslations("Nav");
@@ -30,21 +34,29 @@ export function NavLinks() {
   const barRef = useRef<HTMLSpanElement>(null);
   const shown = useRef(false);
 
+  useEffect(() => {
+    loadRevealEngine().catch(noop);
+  }, []);
+
   const showUnder = (link: HTMLElement) => {
     const bar = barRef.current;
     if (!bar) return;
     const target = { x: link.offsetLeft, scaleX: link.offsetWidth };
     const instant = !shown.current || prefersReducedMotion();
-    animate(bar, target, instant ? { duration: 0 } : SLIDE);
-    animate(bar, { opacity: 1 }, FADE);
     shown.current = true;
+    void loadRevealEngine().then(({ animate }) => {
+      animate(bar, target, instant ? { duration: 0 } : SLIDE);
+      animate(bar, { opacity: 1 }, FADE);
+    }, noop);
   };
 
   const hideBar = () => {
     const bar = barRef.current;
     if (!bar) return;
-    animate(bar, { opacity: 0 }, FADE);
     shown.current = false;
+    void loadRevealEngine().then(({ animate }) => {
+      animate(bar, { opacity: 0 }, FADE);
+    }, noop);
   };
 
   const onBlur = (event: FocusEvent<HTMLUListElement>) => {

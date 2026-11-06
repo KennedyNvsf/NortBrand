@@ -3,6 +3,7 @@ import { expect, test } from "@playwright/test";
 
 import { locales, localizedPath, routes } from "./routes";
 import { findSmallTouchTargets } from "./touch-targets";
+import { settleAnimations } from "./settle";
 
 /*
  * Shared page harness: the per-page checks from the definition of done in CLAUDE.md,
@@ -30,6 +31,7 @@ for (const route of routes) {
         await page.goto(url);
         // Audit the rendered page: the 404 boundary renders in the browser.
         await expect(page.locator("h1")).toBeVisible();
+        await settleAnimations(page);
         const { violations } = await new AxeBuilder({ page })
           .withTags([...WCAG_TAGS])
           .analyze();

@@ -3,6 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 
 import { copy } from "./copy";
 import { findSmallTouchTargets } from "./touch-targets";
+import { settleAnimations } from "./settle";
 
 /*
  * The blog post page (#61) against the e2e fixtures (src/features/blog/e2e-backend.ts,
@@ -55,6 +56,8 @@ test.describe("blog post", () => {
     await expect(
       related.locator('[data-slot="article-card"]').first(),
     ).toContainText("How to Choose Colors That Actually Convert");
+
+    await settleAnimations(page);
 
     const { violations } = await new AxeBuilder({ page })
       .include("main")

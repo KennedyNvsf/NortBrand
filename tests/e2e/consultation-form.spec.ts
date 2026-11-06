@@ -2,6 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
 import { copy, localeOf } from "./copy";
+import { settleAnimations } from "./settle";
 
 /*
  * The consultation form (#39) against the fake backend (playwright.config.ts sets
@@ -40,6 +41,7 @@ async function fillValid(card: Locator, name: string) {
 }
 
 async function expectNoAxeViolations(page: Page) {
+  await settleAnimations(page);
   const { violations } = await new AxeBuilder({ page })
     .include('[data-form-slot="consultation"]')
     .withTags(WCAG_TAGS)

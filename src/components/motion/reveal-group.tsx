@@ -8,14 +8,17 @@ import {
   type ReactNode,
   type RefCallback,
 } from "react";
+import type { AnimationPlaybackControls } from "motion/react";
+
+import { loadRevealEngine } from "./load-reveal-engine";
 import {
   hide,
   isBelowFold,
-  play,
   prefersReducedMotion,
   revealItemsOf,
   stopAll,
-} from "./reveal-engine";
+  unhide,
+} from "./reveal-dom";
 
 /*
  * Scroll reveal for a section (Motion Spec › Global, revised after #27 review). The
@@ -27,9 +30,14 @@ import {
  * - Never hides content the reader can already see: only items still below the fold
  *   after mount are hidden. Above the fold, before hydration and without JavaScript,
  *   the page is simply there.
+ * - The animating half of the engine loads after hydration (loadRevealEngine, #105).
+ *   Items that arrive before it has loaded play as soon as it has; if it fails to
+ *   load, every hidden item is shown.
  * - `disabled`: a parent that drives the items itself (ServiceStage on desktop).
  * - `contents`: the group adds no box (display: contents), for wrapping a flex child.
  */
+
+const noop = () => undefined;
 
 /** Reveal once the item's top is 12% above the bottom of the viewport. */
 const ROOT_MARGIN = "0px 0px -12% 0px";
@@ -67,7 +75,12 @@ export function RevealGroup({
     const reduced = prefersReducedMotion();
     hide(pending, reduced);
 
-    const controls: ReturnType<typeof play> = [];
+    let active = true;
+    const controls: AnimationPlaybackControls[] = [];
+    const engine = loadRevealEngine();
+    engine.catch(() => {
+      if (active) unhide(pending);
+    });
     const observer = new IntersectionObserver(
       (entries) => {
         const arrived = pending.filter((item) =>
@@ -77,22 +90,20 @@ export function RevealGroup({
         );
         if (arrived.length === 0) return;
         for (const item of arrived) observer.unobserve(item);
-        controls.push(...play(arrived, { reduced }));
+        void engine.then(({ play }) => {
+          if (active) controls.push(...play(arrived, { reduced }));
+        }, noop);
       },
       { rootMargin: ROOT_MARGIN },
     );
     for (const item of pending) observer.observe(item);
 
     return () => {
+      active = false;
       observer.disconnect();
       stopAll(controls);
       // Leave nothing hidden if the group is disabled or unmounted mid-way.
-      for (const item of pending) {
-        item.style.opacity = "";
-        item.style.transform = "";
-        item.style.strokeDashoffset = "";
-        item.style.removeProperty("--draw");
-      }
+      unhide(pending);
     };
   }, [disabled]);
 

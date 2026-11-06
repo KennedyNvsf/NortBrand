@@ -1,15 +1,26 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { AnimatePresence } from "motion/react";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 
 import {
   useConsent,
   useConsentPreferencesOpen,
   useConsentSavedThisVisit,
 } from "../consent-store";
-import { ConsentPreferences } from "./consent-preferences";
 import { CookieBanner } from "./cookie-banner";
+
+/*
+ * The preferences panel (Radix Dialog on tablet and up, vaul Drawer on mobile) is about
+ * 20 KiB of JavaScript that most visits never open. It loads in its own chunk: fetched
+ * when the browser is idle after load, and mounted the first time it opens. It then
+ * stays mounted so it can play its close animation and return focus (#105).
+ */
+const loadPreferences = () =>
+  import("./consent-preferences").then((m) => m.ConsentPreferences);
+const ConsentPreferences = dynamic(loadPreferences);
 
 /*
  * Mounted once in the [locale] layout, on every page including the 404 (the Sanity
@@ -24,6 +35,23 @@ export function ConsentManager() {
   const consent = useConsent();
   const preferencesOpen = useConsentPreferencesOpen();
   const saved = useConsentSavedThisVisit();
+  const [preferencesMounted, setPreferencesMounted] = useState(false);
+
+  if (preferencesOpen && !preferencesMounted) setPreferencesMounted(true);
+
+  useEffect(() => {
+    const prefetch = () => void loadPreferences();
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(prefetch, { timeout: 5000 });
+      return () => {
+        window.cancelIdleCallback(id);
+      };
+    }
+    const id = setTimeout(prefetch, 3000);
+    return () => {
+      clearTimeout(id);
+    };
+  }, []);
 
   const undecided = consent.status === "undecided";
   const current = consent.status === "decided" ? consent.consent : null;
@@ -40,7 +68,9 @@ export function ConsentManager() {
       <AnimatePresence>
         {undecided ? <CookieBanner key="banner" /> : null}
       </AnimatePresence>
-      <ConsentPreferences open={preferencesOpen} current={current} />
+      {preferencesMounted ? (
+        <ConsentPreferences open={preferencesOpen} current={current} />
+      ) : null}
     </>
   );
 }

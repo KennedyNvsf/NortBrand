@@ -42,13 +42,24 @@ easing drifts from `motion.ts`.
 
 ## 3. The reveal system
 
-One vocabulary for every section, in three files under `src/components/motion/`:
+One vocabulary for every section, in these files under `src/components/motion/`:
 
-| File               | Role                                                                          | Runs on                              |
-| ------------------ | ----------------------------------------------------------------------------- | ------------------------------------ |
-| `reveal-item.ts`   | **markers**: `revealItem(kind)` and `enterItem(index)` return data attributes | server and client (no Motion import) |
-| `reveal-engine.ts` | **how** items animate: `hide()`, `play()`                                     | client                               |
-| `reveal-group.tsx` | **when**: as each item scrolls in                                             | client                               |
+| File                    | Role                                                                          | Runs on                              |
+| ----------------------- | ----------------------------------------------------------------------------- | ------------------------------------ |
+| `reveal-item.ts`        | **markers**: `revealItem(kind)` and `enterItem(index)` return data attributes | server and client (no Motion import) |
+| `reveal-dom.ts`         | finding, measuring and hiding items: `hide()`, `unhide()`, `isBelowFold()`    | client (no Motion runtime)           |
+| `reveal-engine.ts`      | **how** items animate: `play()`, plus Motion's `animate()`                    | client, loaded after hydration       |
+| `load-reveal-engine.ts` | `loadRevealEngine()`: fetches the engine once, in its own chunk               | client                               |
+| `reveal-group.tsx`      | **when**: as each item scrolls in                                             | client                               |
+
+**Why the engine loads late (#105).** The engine pulls in Motion's `animate()`, about
+17 KiB gzipped. Lighthouse counts every script requested before the first paint
+([Performance](./performance.md)), so components on every page (RevealGroup,
+ProcessTrack, NavLinks, the table of contents) import only `reveal-dom.ts` up front.
+They hide items as before, call `loadRevealEngine()` from an effect, and play once it
+resolves. If it fails to load, they `unhide()` everything, so content never stays
+hidden. The Services components (ServiceStage, ApproachTabs) still import the engine
+directly: they place items inside layout effects, which can't wait for a chunk.
 
 Markup stays server-rendered. A section opts in like this:
 

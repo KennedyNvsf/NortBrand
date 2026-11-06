@@ -47,6 +47,7 @@ checkout → pnpm install → playwright install <browser> --with-deps
   - The analytics spec intercepts every Google domain.
   - The placeholder env values at the top of the workflow are enough: no job needs a
     real secret.
+- **axe audits the page at rest.** Every spec calls `settleAnimations(page)` (`tests/e2e/settle.ts`) before `new AxeBuilder`. It waits for running animations to finish, because an element caught mid-fade fails colour contrast against a blend. That race appeared on the mobile runner once the reveal engine loaded after hydration (#105).
 - **Retries.** Each test retries up to twice in CI. A trace is recorded on the first retry.
 - **WebKit shards.** WebKit is several times slower than Chromium on the runner (the first
   run took 18 minutes), so it runs as two parallel shards (`--shard=1/2`, `2/2`).
@@ -68,7 +69,7 @@ migration that weakens RLS, the grants or a write function fails this check.
 
 ```text
 pnpm build                  # E2E_FAKE_BACKEND=1, so the blog uses its fixture posts
-pnpm lhci collect           # starts `pnpm start --port 3200`, runs Lighthouse on 10 URLs
+pnpm lhci collect           # starts `pnpm start --port 3200`, runs Lighthouse 3× on 10 URLs
 pnpm lhci upload            # writes HTML + JSON reports to .lighthouseci/reports/
 pnpm lighthouse:summary     # the score table in the run summary
 pnpm lhci assert            # checks the budgets; fails the job on an "error" budget
@@ -77,6 +78,13 @@ pnpm lhci assert            # checks the budgets; fails the job on an "error" bu
 - **Pages:** Home, Services, Blog, a translated post and Contact, each in EN and PT
   (`lighthouserc.json`). Lighthouse's default **mobile** profile: a Moto G-sized screen,
   4× CPU slowdown and a slow-4G network, simulated.
+- **Three runs per URL, median (#105):** a single run swung by ±0.5 s, mostly because
+  the first request to each route hits a cold `next start`. Every assertion uses
+  `aggregationMethod: "median"`, and the table and reports show the median run. The
+  job takes about 10 minutes.
+- **Simulated, not observed:** the reported LCP is Lighthouse's replay on a slow phone,
+  and it counts every script requested before the first paint. The browser on the
+  runner paints in about 0.2 s. See [Performance](./performance.md) § 1.
 - **First visit:** Lighthouse starts with no cookies, so the consent banner shows, as
   it does for a real first-time visitor.
 - **Where to read results:** the score table at the top of the run's summary page, and
@@ -90,11 +98,11 @@ pnpm lhci assert            # checks the budgets; fails the job on an "error" bu
 
 **The budgets** (agreed in the #83 PR):
 
-| Assertion                                   | Level | Why                                                                                                          |
-| ------------------------------------------- | ----- | ------------------------------------------------------------------------------------------------------------ |
-| Accessibility, best practices, SEO ≥ 95     | error | All are 100 today; deterministic, so a drop is a real regression. 95 leaves room for a new Lighthouse audit. |
-| Cumulative layout shift ≤ 0.1               | error | 0 today; Google's "good" threshold.                                                                          |
-| Performance ≥ 90, LCP ≤ 2.5 s, TBT ≤ 300 ms | warn  | CI runners and a local `next start` (no CDN) make timing noisy. They become errors on Vercel previews (#45). |
+| Assertion                                   | Level | Why                                                                                                                                                                                       |
+| ------------------------------------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Accessibility, best practices, SEO ≥ 95     | error | All are 100 today; deterministic, so a drop is a real regression. 95 leaves room for a new Lighthouse audit.                                                                              |
+| Cumulative layout shift ≤ 0.1               | error | 0 today; Google's "good" threshold.                                                                                                                                                       |
+| Performance ≥ 90, LCP ≤ 2.5 s, TBT ≤ 300 ms | warn  | Runner speed varies (benchmark index 2177–3916 across #105's runs) and a local `next start` has no CDN, brotli or HTTP/2. Confirmed at #105: they become errors on Vercel previews (#45). |
 
 **Run it locally:** `E2E_FAKE_BACKEND=1 pnpm build`, then `E2E_FAKE_BACKEND=1 pnpm lhci
 autorun` (collect, upload and assert), then `pnpm lighthouse:summary`. Local performance

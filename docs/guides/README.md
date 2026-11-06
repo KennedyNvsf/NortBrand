@@ -26,11 +26,12 @@ the guides always match the code.
 | [Database](./database.md)                           | Tables, RLS without policies, the write functions, rate limits, newsletter tokens, pgTAP, migrations                                              |
 | [Newsletter](./newsletter.md)                       | Double opt-in, signed links, Resend segment, health check, the Newsletter card and the link pages                                                 |
 | [Cookie consent](./consent.md)                      | The consent cookie and store, banner, preferences, Switch, footer settings, sticky CTA gate, GA4 after consent                                    |
-| [CI](./ci.md)                                       | The four pull-request checks, e2e on a production build, pgTAP in Docker, reading failures                                                        |
+| [CI](./ci.md)                                       | The pull-request checks, Lighthouse budgets, e2e on a production build, pgTAP in Docker, reading failures                                         |
 | [Dependencies](./dependencies.md)                   | Exact pins, release age, patching a vulnerable package (direct, in range, scoped override), open advisories                                       |
 | [CMS (Sanity)](./cms.md)                            | Content model (post/author/category), translation plugins, embedded Studio, type generation                                                       |
 | [Editing the blog](./editing-the-blog.md)           | For editors: writing, images and alt text, translating, publishing, what happens after Publish                                                    |
 | [Accessibility](./accessibility.md)                 | 44 px touch targets: the `touch-target` utility and the harness hit-test check                                                                    |
+| [Performance](./performance.md)                     | What loads before first paint, simulated vs observed LCP, lazy chunks, client messages, rules for new code                                        |
 | [Blog](./blog.md)                                   | The listing (URL state, streamed results, search, filters, paging) and the post page (TOC, language switch, related); blog SEO (JSON-LD, sitemap) |
 
 Each guide follows the same shape: what we built, how it works at runtime, the files one
