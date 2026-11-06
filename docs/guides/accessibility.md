@@ -99,3 +99,6 @@ A failure tells you which element failed, its box, and where the first miss land
   areas overlap and the harness fails.
 - Text links inside paragraphs are exempt. Keep them `display: inline` so the check
   recognises them.
+
+The pre-launch audit report, with results for every page and check, is in
+[`docs/accessibility-audit.md`](../accessibility-audit.md) (#84).
