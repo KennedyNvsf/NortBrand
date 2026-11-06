@@ -2,6 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
 import { copy, localeOf } from "./copy";
+import { settleAnimations } from "./settle";
 
 /*
  * The blog listing (#60) against the e2e fixtures (src/features/blog/e2e-backend.ts,
@@ -22,6 +23,7 @@ function featured(page: Page) {
 }
 
 async function expectNoAxeViolations(page: Page) {
+  await settleAnimations(page);
   const { violations } = await new AxeBuilder({ page })
     .include("main")
     .withTags(WCAG_TAGS)

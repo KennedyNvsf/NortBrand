@@ -47,6 +47,7 @@ checkout → pnpm install → playwright install <browser> --with-deps
   - The analytics spec intercepts every Google domain.
   - The placeholder env values at the top of the workflow are enough: no job needs a
     real secret.
+- **axe audits the page at rest.** Every spec calls `settleAnimations(page)` (`tests/e2e/settle.ts`) before `new AxeBuilder`. It waits for running animations to finish, because an element caught mid-fade fails colour contrast against a blend. That race appeared on the mobile runner once the reveal engine loaded after hydration (#105).
 - **Retries.** Each test retries up to twice in CI. A trace is recorded on the first retry.
 - **WebKit shards.** WebKit is several times slower than Chromium on the runner (the first
   run took 18 minutes), so it runs as two parallel shards (`--shard=1/2`, `2/2`).

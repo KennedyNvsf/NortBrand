@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
+import { settleAnimations } from "./settle";
 
 /*
  * Cookie banner and preferences (#42, ADR-007). Every other spec starts with a choice
@@ -31,6 +32,8 @@ test.describe("cookie banner", () => {
     const pageLink = page.locator("main a").first();
     await pageLink.focus();
     await expect(pageLink).toBeFocused();
+
+    await settleAnimations(page);
 
     const { violations } = await new AxeBuilder({ page })
       .include("[data-consent-banner]")
@@ -104,6 +107,8 @@ test.describe("cookie preferences", () => {
     await expect(essential).toBeChecked();
     await expect(essential).toBeDisabled();
     await expect(analytics).not.toBeChecked();
+
+    await settleAnimations(page);
 
     const { violations } = await new AxeBuilder({ page })
       .include("[data-consent-preferences]")

@@ -4,6 +4,7 @@ import { createHmac } from "node:crypto";
 import { existsSync } from "node:fs";
 
 import { copy, localeOf, tagText } from "./copy";
+import { settleAnimations } from "./settle";
 
 /*
  * The Newsletter card and the link pages (#41) against the fake backend
@@ -45,6 +46,7 @@ function unsubscribePath(email: string, token?: string): string {
 const now = () => Math.floor(Date.now() / 1000);
 
 async function expectNoAxeViolations(page: Page, selector = "main") {
+  await settleAnimations(page);
   const { violations } = await new AxeBuilder({ page })
     .include(selector)
     .withTags(WCAG_TAGS)
