@@ -3,13 +3,14 @@
 The written report for #84. It records what was checked, on which pages, and the result
 of each check. Target: WCAG 2.2 AA plus the project rules in CLAUDE.md › Accessibility.
 
-| Pass                          | Date       | Build                           | Status                                                   |
-| ----------------------------- | ---------- | ------------------------------- | -------------------------------------------------------- |
-| Early pass (1440, 768, 390)   | 2026-10-25 | `main` before #93               | Done. Three failures found, each fixed in its own ticket |
-| Automated pass (this report)  | 2026-11-06 | `main` at `152d8ec` (after #95) | Done. No open failure                                    |
-| Screen readers                | —          | —                               | **Pending**, needs a person (§ 5)                        |
-| Safari (macOS and iOS)        | —          | —                               | **Pending** (§ 5)                                        |
-| Rerun with final copy + legal | —          | after #77 and #78               | **Pending** (§ 5)                                        |
+| Pass                          | Date       | Build                            | Status                                                   |
+| ----------------------------- | ---------- | -------------------------------- | -------------------------------------------------------- |
+| Early pass (1440, 768, 390)   | 2026-10-25 | `main` before #93                | Done. Three failures found, each fixed in its own ticket |
+| Automated pass (this report)  | 2026-11-06 | `main` at `152d8ec` (after #95)  | Done. No open failure                                    |
+| Screen readers                | —          | —                                | **Pending**, needs a person (§ 5)                        |
+| WebKit engine (§ 4.1)         | 2026-11-07 | `main` at `76576f9` (after #105) | Done. No open failure; keyboard limited (§ 4.1)          |
+| Real Safari (iOS)             | —          | —                                | **Pending**, needs an iPhone (§ 5)                       |
+| Rerun with final copy + legal | —          | after #77 and #78                | **Pending** (§ 5)                                        |
 
 #84 stays open until the pending passes are recorded here.
 
@@ -127,14 +128,31 @@ navigation is behind the menu button.
 Both forms render errors through `FieldError` (`src/components/ui/field-error.tsx`),
 which always pairs a `CircleAlert` icon with the text, as CLAUDE.md requires.
 
+### 4.1 WebKit pass (Safari's engine)
+
+No Apple device is available, so the same checks ran in Playwright's WebKit (the engine
+inside Safari) on Windows, at 1440 and 390, on all 28 pages: 56 page checks.
+
+- **Pass on every page:** one H1 and one `main`, `lang` and title, canonical and
+  `hreflang`, no overflow, reduced motion, 44 px targets at 390, no keyboard trap, and a
+  visible ring on every focus stop.
+- **axe:** About (EN) at 1440 reported 19 `color-contrast` nodes once. Three reruns
+  reported none, so it is the same mid-fade sample as ¹ in § 3.
+- **Keyboard is limited in WebKit.** It follows Safari's default, where Tab moves only
+  between buttons and form fields and skips links. (People who browse by keyboard turn on
+  "Press Tab to highlight each item", or use Option+Tab.) In this WebKit build Option+Tab
+  doesn't reach links either, so link-by-link navigation was checked in Chromium only.
+- **What WebKit can't show:** iOS Safari's own behaviour (the bottom toolbar, safe areas,
+  zoom on input focus) and VoiceOver. Those stay on the iPhone check in § 5.
+
 ## 5. Still to do before #84 closes
 
-| Item                          | Who                   | What                                                                                                                      |
-| ----------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| VoiceOver (macOS Safari, iOS) | a person              | Home, Services (tabs), Contact (form: errors, send failed, success), Blog (filters), one post, mobile menu, cookie banner |
-| NVDA (Windows, Firefox)       | a person              | The same pages                                                                                                            |
-| Safari                        | a person, or CI       | Same pages at 1440 and 390. CI's WebKit runs are informational only (`docs/guides/ci.md`)                                 |
-| Rerun with the final content  | Claude, after #77/#78 | This automated pass again, with the final English copy, the final Portuguese and the final legal text                     |
+| Item                         | Who                    | What                                                                                                                                    |
+| ---------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| VoiceOver (iOS)              | a person, on an iPhone | Home, Services (tabs), Contact (form: errors, send failed, success), Blog (filters), one post, mobile menu, cookie banner               |
+| NVDA (Windows, Firefox)      | a person               | The same pages                                                                                                                          |
+| Real Safari (iOS)            | a person, on an iPhone | The same pages: layout under the toolbar and safe areas, no zoom when a form field is focused, the menu and cookie sheet. Engine: § 4.1 |
+| Rerun with the final content | Claude, after #77/#78  | This automated pass again, with the final English copy, the final Portuguese and the final legal text                                   |
 
 For each screen-reader pass, record here: landmarks and headings read in order; every
 control has a name and role; form errors are announced; the menu, dialog and banner move
