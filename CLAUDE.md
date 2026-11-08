@@ -148,6 +148,10 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md, accessibi
     alt text wherever it isn't decorative.
   - Collages and logomark panels are Figma placeholders. They live in
     `public/images/placeholder/`, use `alt=""`, and are logged in `docs/tech-debt.md`.
+  - Replacing a panel with a photo (#82): pass `image` to `FeatureSplit` (or use
+    `PhotoPanel`). Photos go in `src/assets/images/` at 1600 px wide with metadata
+    stripped; they settle and drift like the mark did. Home's two are AI-generated
+    (tech debt).
 - **Logo:** `LOGONORT` (`54:16`), exported as an optimized SVG. The wordmark is converted
   to paths, and the SVG uses `currentColor`.
 - **Navigation:** links to unbuilt pages show the designed 404 until those pages ship.

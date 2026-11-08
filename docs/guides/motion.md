@@ -84,6 +84,17 @@ module that imports `motion/react` must not be evaluated on the server.
 | `pop`            | scale 0.88 → 1 on a spring with slight overshoot                 | collages, the CTA card              |
 | `draw`           | SVG stroke draws (1.2 s in-out; the path needs `pathLength={1}`) | the mark in image panels            |
 | `underline`      | a keyword underline draws left to right, 250 ms after its turn   | highlighted words (`highlight.tsx`) |
+| `settle`         | scale 1.016 → 1 over 1.6 s, no fade (its panel fades); see below | photos in panels (`PhotoPanel`)     |
+
+**Photo panels (#82).** When a section's placeholder becomes a photograph, `PhotoPanel`
+keeps the panel's arrival (`left`/`right`) and replaces the mark's `draw` with `settle`:
+the photo zooms out inside the arriving panel, 100 ms behind it. Duration and curve are
+the Services hero's `--animate-hero-settle` (1.6 s, emphasized), so both photo moments
+share a rhythm; the zoom is a fifth of the hero's (1.6% instead of 8%, decided by the
+lead on 8 November) because a full hero zoom inside a small, already-moving panel read
+as an effect. Values: `revealSpec.settleScale` / `.settleDuration`. With reduced motion
+there is no scale at all. The settle and the desktop parallax sit on separate layers, so
+they never compete for one element's transform.
 
 **How a group behaves:**
 

@@ -1,9 +1,11 @@
+import type { StaticImageData } from "next/image";
 import type { ReactNode } from "react";
 
 import { RevealGroup } from "@/components/motion/reveal-group";
 import { revealItem } from "@/components/motion/reveal-item";
 import { CheckList } from "@/components/site/check-list";
 import { MarkPanel } from "@/components/site/mark-panel";
+import { PhotoPanel } from "@/components/site/photo-panel";
 import { SectionHeader } from "@/components/site/section-header";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +18,11 @@ import { cn } from "@/lib/utils";
  * - On scroll the panel slides in from its own side and its mark draws, then the
  *   eyebrow, title, body and each point follow, 100 ms apart (RevealGroup). The section
  *   clips horizontally so the slide never adds a scrollbar.
+ * - `image`: a photograph replaces the placeholder panel (#82). It settles (zooms out)
+ *   as the panel arrives, where the mark used to draw, and drifts on desktop.
+ *   `imageClassName` keeps the subject in frame when the panel crops. On mobile a photo
+ *   panel is 4:3, not the placeholder's 224 px: a group photo needs the height (lead's
+ *   decision, 2026-11-08).
  */
 type FeatureSplitProps = {
   id: string;
@@ -26,6 +33,8 @@ type FeatureSplitProps = {
   panel: "start" | "end";
   align?: "start" | "end";
   panelClassName?: string;
+  /** A photograph instead of the MarkPanel placeholder; `sizes` is the panel's width. */
+  image?: { src: StaticImageData; sizes: string; imageClassName?: string };
 };
 
 export function FeatureSplit({
@@ -37,6 +46,7 @@ export function FeatureSplit({
   panel,
   align = "start",
   panelClassName,
+  image,
 }: FeatureSplitProps) {
   return (
     <section
@@ -56,7 +66,18 @@ export function FeatureSplit({
             panelClassName,
           )}
         >
-          <MarkPanel draw parallax className="h-56 w-full md:h-auto" />
+          {image ? (
+            <PhotoPanel
+              src={image.src}
+              sizes={image.sizes}
+              imageClassName={image.imageClassName}
+              parallax
+              settle
+              className="aspect-[4/3] w-full md:aspect-auto md:h-auto"
+            />
+          ) : (
+            <MarkPanel draw parallax className="h-56 w-full md:h-auto" />
+          )}
         </div>
         <div
           className={cn(

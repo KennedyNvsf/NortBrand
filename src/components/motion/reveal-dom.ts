@@ -40,7 +40,7 @@ export function isBelowFold(element: Element) {
 }
 
 const hiddenTransform: Record<
-  Exclude<RevealKind, "draw" | "underline">,
+  Exclude<RevealKind, "draw" | "underline" | "settle">,
   string
 > = {
   up: `translateY(${revealSpec.distance}px)`,
@@ -62,6 +62,12 @@ export function hide(items: HTMLElement[], reduced: boolean) {
     }
     if (kind === "underline") {
       if (!reduced) item.style.setProperty("--draw", "0");
+      continue;
+    }
+    // Scale only: the panel around the photo does the fading.
+    if (kind === "settle") {
+      if (!reduced)
+        item.style.transform = `scale(${String(revealSpec.settleScale)})`;
       continue;
     }
     item.style.opacity = "0";
