@@ -19,12 +19,14 @@ tiers and a local database until then; #45 tracks the paid steps.
 | Resend account and segment | Now                 | Free tier           |
 | Sentry                     | Now                 | Free Developer plan |
 | GA4 property               | Now                 | Free                |
-| Domain and Resend DNS      | By 9 November (#45) | Paid                |
-| Vercel Pro                 | By 9 November (#45) | Paid                |
+| Domain (`nortbrand.pt`)    | Bought (#98)        | Paid                |
+| Vercel Pro                 | Done 7 November     | Paid                |
+| Resend DNS                 | By 9 November (#45) | Free                |
 | Supabase `nortbrand-prod`  | Launch prep (#45)   | Free or Pro: decide |
 
-Until Vercel exists there are no hosted previews: work locally, and CI runs the checks
-against a production build of each pull request (#44).
+Vercel project `nort-brand/nort-brand` builds a protected preview of every branch. CI
+still runs its checks against a production build of each pull request (#44) until the
+e2e job moves to previews (#45).
 
 | Service  | What it does here                                       | Environments                       |
 | -------- | ------------------------------------------------------- | ---------------------------------- |
@@ -53,22 +55,51 @@ created on 16 October 2026 (#58); its steps are in § 9.
 1. Create a **Pro** team called NortBrand. Hobby is non-commercial only.
 2. **Add New → Project**, import `KennedyNvsf/NortBrand` from GitHub. Framework: Next.js.
    Leave the build and install commands at their defaults (pnpm is detected from the lockfile).
-3. **Settings → General → Node.js Version: 24.x** (matches `.nvmrc`).
-4. **Settings → Git:** production branch `main`. Preview deployments for every branch stay on.
-5. **Settings → Environment Variables → "Automatically expose System Environment
+3. **Settings → General → Node.js Version: 24.x** (matches `.nvmrc`). The `engines` field
+   in `package.json` forces 24.x anyway, and the build log warns when the setting differs.
+4. **Settings → Functions → Function Region:** the region next to the Supabase projects:
+   Frankfurt `fra1` for `eu-central-1`, Dublin `dub1` for `eu-west-1`. The default is the
+   US (`iad1`), which adds a transatlantic round trip to every form submission and keeps
+   request handling outside the EU. To check it, request any page with
+   `vercel curl <url> -- -s -D - -o /dev/null`: the second part of `X-Vercel-Id`
+   (`cdg1::fra1::…`) is the function region.
+5. **Settings → Git:** production branch `main`. Preview deployments for every branch stay on.
+6. **Settings → Environment Variables → "Automatically expose System Environment
    Variables"**: on. Sentry reads `VERCEL_ENV` to label errors.
-6. **Settings → Deployment Protection:** keep Vercel Authentication on for previews, and
+7. **Settings → Deployment Protection:** keep Vercel Authentication on for previews, and
    create a **Protection Bypass for Automation** secret. Ticket #44 gives it to the CI e2e job.
-7. Do not add a domain here. `nortbrand.pt` and `www` (ADR-008) are added on
+8. Do not add a domain here. `nortbrand.pt` and `www` (ADR-008) are added on
    launch day, in order, by the [Go-live runbook](./go-live.md) § 3.
 
-**Expect Production deployments of `main` to fail until launch prep.** With
-`VERCEL_ENV=production` the release guard is strict (`docs/guides/localization.md`): it
-stops a build while any Portuguese message is still pseudo-translated. That is deliberate.
-Previews are unaffected. The Portuguese translation landed in #76, so production builds
-pass, unless an English string changes and its Portuguese one is still being translated
-(`docs/guides/localization.md` § 6).
-(Draft legal text is caught separately, by `pnpm check:release`.)
+**Expect Production deployments of `main` to fail until launch prep.** Each merge to
+`main` shows a red "Vercel" status on the commit; it does not block anything.
+
+- Until the Production column of § 7 is filled in, `src/env.ts` stops the build with
+  `EnvValidationError` (seen on the first deployments, 7 November).
+- After that, the release guard is strict on `VERCEL_ENV=production`
+  (`docs/guides/localization.md`): it stops a build while any Portuguese message is still
+  pseudo-translated. That is deliberate. The Portuguese translation landed in #76, so
+  production builds pass unless an English string changes and its Portuguese one is still
+  being translated (§ 6 of that guide). Draft legal text is caught separately, by
+  `pnpm check:release`.
+
+Previews are unaffected by both.
+
+### Reading a preview
+
+Previews sit behind Vercel Authentication, so `curl` gets a login page. Sign the CLI in
+once (`pnpm dlx vercel login`, which opens the browser), link it from a folder **outside**
+the repository, and request pages through it:
+
+```sh
+pnpm dlx vercel link --yes --project nort-brand --scope nort-brand
+pnpm dlx vercel curl https://<preview>.vercel.app/api/health/newsletter --scope nort-brand
+pnpm dlx vercel inspect https://<preview>.vercel.app --logs --scope nort-brand   # build log
+```
+
+Linking inside the repository makes the CLI add `.vercel` and `.env*` to `.gitignore`
+(the second would hide `.env.example`) and a `VERCEL_OIDC_TOKEN` line to `.env.local`. In
+Git Bash, pass full URLs: a bare `/en` is turned into a Windows path.
 
 ## 2. Supabase (ADR-002)
 
@@ -111,11 +142,35 @@ recipient is refused. The free tier allows 100 emails a day.
 
 1. **Domains → Add Domain:** `send.nortbrand.pt` (a sending subdomain keeps the main
    domain's reputation separate). Region: **EU (Ireland)**.
-2. Add the records Resend shows at your DNS provider: the MX and SPF TXT on `send`, and
-   the DKIM TXT on `resend._domainkey.send`. Wait for **Verified**.
-3. Add a DMARC record on the root domain if none exists:
-   `_dmarc.nortbrand.pt TXT "v=DMARC1; p=none; rua=mailto:<your inbox>"`. Tighten to
-   `p=quarantine` after a few weeks of clean reports.
+2. Add the records Resend shows, at Dynadot (**DNS Settings → Dynadot DNS → Subdomain
+   Records**). Copy each value from Resend: it changes its record set from time to time.
+   As of 8 November 2026 it was:
+
+   | Subdomain (Dynadot adds `.nortbrand.pt`) | Type  | Value                                |
+   | ---------------------------------------- | ----- | ------------------------------------ |
+   | `resend._domainkey.send`                 | TXT   | the DKIM key, `p=MIG…IDAQAB`         |
+   | `rsend.send`                             | CNAME | `rsend-euw1.forge.rmta.net` (SPF)    |
+   | `send.send`                              | CNAME | `send.forge.rmta.net` (SPF, bounces) |
+   | `_dmarc`                                 | TXT   | `v=DMARC1; p=none;` (see step 3)     |
+   - `send.send` is right: it becomes `send.send.nortbrand.pt`. Typing the full name
+     makes `….nortbrand.pt.nortbrand.pt`.
+   - Leave **Enable receiving** off in Resend. The site only sends, so there is no MX.
+   - TTL 300 (or blank); **Dynamic DNS** off; then **Save DNS**.
+   - The domain was bought on Dynadot's parking page. Switch **Dynadot Parking** to
+     **Dynadot DNS** (same nameservers, `ns1/ns2.dyna-ns.net`), never to **Name
+     Servers**, which hands the zone to another provider. The root stays empty until
+     launch day ([Go-live](./go-live.md) § 3).
+   - Check before pressing **Verify**, straight from Dynadot's nameserver (no cache):
+     `nslookup -type=TXT resend._domainkey.send.nortbrand.pt ns1.dyna-ns.net`, and the
+     zone's `serial` (`nslookup -type=SOA nortbrand.pt ns1.dyna-ns.net`) goes up on
+     every save.
+
+   Wait for **Verified**. Once it is, set Preview's `EMAIL_FROM` to
+   `NortBrand <hello@send.nortbrand.pt>` too, so preview mail reaches any address.
+
+3. DMARC on the root domain, if none exists: `v=DMARC1; p=none;`, optionally with
+   `rua=mailto:<your inbox>` for weekly reports. Tighten to `p=quarantine` after a few
+   weeks of clean reports.
 4. **Segments → Create:** "Newsletter". Copy its ID (`RESEND_SEGMENT_ID`). Then
    create two string **contact properties**, `locale` (fallback `en`) and `unsubscribe_url`.
    The newsletter sets both on every confirmed contact (docs/guides/newsletter.md).
@@ -137,7 +192,13 @@ recipient is refused. The free tier allows 100 emails a day.
 
 5. **API Keys:** create two **Full access** keys, `nortbrand-production` and
    `nortbrand-preview`. Full access is needed because the newsletter adds and removes
-   contacts; sending-only keys cannot. Each key is stored only in Vercel.
+   contacts; sending-only keys cannot. Each key is stored only in Vercel (and the preview
+   key in your `.env.local`). Resend shows a token once, so create the production key
+   straight into Vercel without copying it anywhere: with the preview key,
+   `POST https://api.resend.com/api-keys` `{ "name": "nortbrand-production",
+"permission": "full_access" }` and pipe the returned `token` into
+   `vercel env add RESEND_API_KEY --environment production --sensitive` (done this way on
+   8 November).
 6. Decide the team inbox for new requests (`NOTIFY_TO_EMAIL`).
 7. **Webhooks → Add Webhook** (once the site has a URL, #45), one per environment:
    - Endpoint: `https://<site>/api/newsletter/resend-webhook`.
@@ -194,7 +255,8 @@ openssl rand -base64 48
 | `SANITY_REVALIDATE_SECRET` | Verifies the Sanity webhook (§ 9).                                                                                |
 
 The database verifies newsletter tokens itself (#36), so each Supabase project needs the
-same `NEWSLETTER_TOKEN_SECRET` in Vault. In the dashboard, open **SQL Editor** and run, with
+same `NEWSLETTER_TOKEN_SECRET` in Vault. Preview and Development both use `nortbrand-dev`,
+which holds one Vault value, so **they share one secret**; Production has its own. In the dashboard, open **SQL Editor** and run, with
 that environment's value:
 
 ```sql
@@ -228,7 +290,7 @@ column by hand.
 | `EMAIL_FROM`                    | `NortBrand <hello@send.nortbrand.pt>` | `NortBrand <onboarding@resend.dev>` | `NortBrand <onboarding@resend.dev>` |
 | `NOTIFY_TO_EMAIL`               | team inbox                            | your own inbox                      | your own inbox                      |
 | `IP_HASH_SALT`                  | generated                             | generated (different)               | any 32+ characters                  |
-| `NEWSLETTER_TOKEN_SECRET`       | generated                             | generated (different)               | any 32+ characters                  |
+| `NEWSLETTER_TOKEN_SECRET`       | generated                             | same as Development⁴                | generated, also in dev Vault        |
 | `NEXT_PUBLIC_SENTRY_DSN`        | DSN                                   | DSN                                 | empty (off)                         |
 | `SENTRY_AUTH_TOKEN`             | token                                 | token                               | not set                             |
 | `SENTRY_ORG`, `SENTRY_PROJECT`  | slugs                                 | slugs                               | not set                             |
@@ -248,6 +310,23 @@ column by hand.
    `$env:NEXT_PUBLIC_SANITY_DATASET = "production"; pnpm dev` (PowerShell). Check that
    the Studio's top-left corner says **production**, and close that terminal afterwards.
    Never change `.env.local` for it.
+4. Both point at `nortbrand-dev`, whose Vault holds one value (§ 6). If they differ,
+   `/api/health/newsletter` on the preview answers `secret_mismatch`.
+
+### Entering values
+
+Every mistake in the first preview (7 November) was in how a value was entered, and each
+stopped the build or the newsletter check:
+
+- **Type short values by hand.** A pasted `https://nortbrand.pt` carried an invisible
+  zero-width space, and `src/env.ts` rejected it as an invalid URL.
+- **Match the format.** `EMAIL_FROM` is `Name <address>` or a plain address; a bare
+  `<address>` fails.
+- **Copy the value Next uses.** `.env.local` may wrap a value in quotes or backticks, which
+  Next strips. Paste only what is inside them, or Vercel gets two extra characters.
+- **Sensitive values can't be read back**, from the dashboard or `vercel env pull` (it
+  returns a short placeholder). Check a secret by its effect instead: the build passing,
+  `/api/health/newsletter` answering `ok`, a test email arriving.
 
 Preview builds send real email. Keep `NOTIFY_TO_EMAIL` pointed at your own inbox outside
 Production so test requests never reach the team.
@@ -265,9 +344,14 @@ Production so test requests never reach the team.
 
 **Later (#45).**
 
-- [ ] A preview deployment of any branch builds (env validation passes).
+- [x] A preview deployment of any branch builds (env validation passes). 7 November:
+      8 pages in both languages answer 200 from the prerender cache, and
+      `/api/health/newsletter` answers `ok`.
 - [ ] The same Sentry check on a preview appears under environment `preview`.
-- [ ] Resend shows the domain as Verified.
+- [x] Resend shows the domain as Verified (8 November, `send.nortbrand.pt`, EU Ireland).
+      A consultation request on the preview sent the team alert and the visitor
+      confirmation from `hello@send.nortbrand.pt` to an address outside the Resend
+      account; neither went to spam.
 
 ## How the code uses this
 
