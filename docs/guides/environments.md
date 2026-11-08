@@ -12,17 +12,17 @@ This guide is the runbook for creating them, and the reference for which value g
 Paid services wait until November (launch is 30 November 2026). Development runs on free
 tiers and a local database until then; #45 tracks the paid steps.
 
-| Step                       | When                | Cost                |
-| -------------------------- | ------------------- | ------------------- |
-| Local Supabase (Docker)    | Now                 | Free                |
-| Supabase `nortbrand-dev`   | Now                 | Free tier           |
-| Resend account and segment | Now                 | Free tier           |
-| Sentry                     | Now                 | Free Developer plan |
-| GA4 property               | Now                 | Free                |
-| Domain (`nortbrand.pt`)    | Bought (#98)        | Paid                |
-| Vercel Pro                 | Done 7 November     | Paid                |
-| Resend DNS                 | By 9 November (#45) | Free                |
-| Supabase `nortbrand-prod`  | Launch prep (#45)   | Free or Pro: decide |
+| Step                       | When            | Cost                |
+| -------------------------- | --------------- | ------------------- |
+| Local Supabase (Docker)    | Now             | Free                |
+| Supabase `nortbrand-dev`   | Now             | Free tier           |
+| Resend account and segment | Now             | Free tier           |
+| Sentry                     | Now             | Free Developer plan |
+| GA4 property               | Now             | Free                |
+| Domain (`nortbrand.pt`)    | Bought (#98)    | Paid                |
+| Vercel Pro                 | Done 7 November | Paid                |
+| Resend DNS                 | Done 8 November | Free                |
+| Supabase `nortbrand-prod`  | Done 8 November | Free (#102 trial)   |
 
 Vercel project `nort-brand/nort-brand` builds a protected preview of every branch. CI
 still runs its checks against a production build of each pull request (#44) until the
@@ -62,7 +62,10 @@ created on 16 October 2026 (#58); its steps are in § 9.
    US (`iad1`), which adds a transatlantic round trip to every form submission and keeps
    request handling outside the EU. To check it, request any page with
    `vercel curl <url> -- -s -D - -o /dev/null`: the second part of `X-Vercel-Id`
-   (`cdg1::fra1::…`) is the function region.
+   (`cdg1::fra1::…`) is the function region. **Chosen: `dub1` only**, next to
+   `nortbrand-prod` (`eu-west-1`). Select one region: with several (the default list
+   included `iad1`), a visitor is served from the closest one, so a US visitor's form
+   submission would run in Washington and cross the Atlantic twice to the database.
 5. **Settings → Git:** production branch `main`. Preview deployments for every branch stay on.
 6. **Settings → Environment Variables → "Automatically expose System Environment
    Variables"**: on. Sentry reads `VERCEL_ENV` to label errors.
@@ -106,8 +109,17 @@ Git Bash, pass full URLs: a bare `/en` is turned into a Windows path.
 Create **two** projects in the same EU region (Frankfurt `eu-central-1` or Ireland
 `eu-west-1`), named `nortbrand-dev` and `nortbrand-prod`. Create `nortbrand-dev` now on the
 free tier; it pauses after a week without requests, and **Restore** in the dashboard wakes
-it. Create `nortbrand-prod` at launch prep (#45), and decide its plan then: a paused
-production database would take the form offline. For each:
+it. A paused production database would take the form offline, so `nortbrand-prod` runs on
+Free only with the keep-alive (#102); Pro is the fallback.
+
+**`nortbrand-prod` (created 8 November 2026, #45):** ref `sobyanefxeexdwmqujcn`, region
+`eu-west-1` (Ireland), Free plan. Sign-ups off, Enforce SSL on. Migrations
+`20261015120000` and `20261015204624` pushed the same day after the lead's approval, with
+no seed. Checked through the public key: both tables refuse reads and inserts (`42501`),
+and the functions answer. The CLI is linked back to `nortbrand-dev` afterwards, so a
+later local command cannot reach production by accident.
+
+For each project:
 
 1. Save the database password in the password manager.
 2. **Authentication → Sign In / Providers:** turn **off** "Allow new users to sign up". The
@@ -236,7 +248,9 @@ Create the property now so the measurement ID exists; the tag loads only after c
    page views would include the query string.
 
 The code also switches off Google Signals and ad personalization in the tag config, and
-never sends personal data (docs/guides/consent.md › Analytics). Use one property for
+never sends personal data (docs/guides/consent.md › Analytics). **Decided 8 November:**
+Production and Preview share one property (`G-JW9ZV63FH4`), so testers who click Accept
+on a preview appear in it. Use one property for
 production. For preview and development, either leave `NEXT_PUBLIC_GA_MEASUREMENT_ID` on a
 separate test property or accept that testers who click Accept appear in it.
 
@@ -353,6 +367,15 @@ Production so test requests never reach the team.
       A consultation request on the preview sent the team alert and the visitor
       confirmation from `hello@send.nortbrand.pt` to an address outside the Resend
       account; neither went to spam.
+- [x] Production (8 November): `main` builds with every Production variable (51 pages,
+      marketing pages static, release guard clear). On `nort-brand-ruby.vercel.app`:
+      pages answer 200 from the CDN cache, `robots.txt` allows crawling with the
+      sitemap, canonical points at `https://nortbrand.pt`, `/api/health/newsletter`
+      answers `ok` from `dub1`.
+
+> **The production alias is public before launch** (decided 8 November; see
+> docs/tech-debt.md). Vercel's Standard Protection covers previews and deployment URLs,
+> not production domains, and `nort-brand-ruby.vercel.app` is one.
 
 ## How the code uses this
 
