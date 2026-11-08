@@ -347,7 +347,8 @@ Production so test requests never reach the team.
 - [x] A preview deployment of any branch builds (env validation passes). 7 November:
       8 pages in both languages answer 200 from the prerender cache, and
       `/api/health/newsletter` answers `ok`.
-- [ ] The same Sentry check on a preview appears under environment `preview`.
+- [x] The same Sentry check on a preview appears under environment `preview` (8
+      November), with no IP address, cookies or query string.
 - [x] Resend shows the domain as Verified (8 November, `send.nortbrand.pt`, EU Ireland).
       A consultation request on the preview sent the team alert and the visitor
       confirmation from `hello@send.nortbrand.pt` to an address outside the Resend

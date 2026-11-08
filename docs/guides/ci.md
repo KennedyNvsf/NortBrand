@@ -15,8 +15,10 @@ What runs on every pull request to `main`, and how to read a failure (#44).
 | **e2e (webkit 1/2, informational)** | no       | The mobile specs in real WebKit, in two shards                                 |
 | **e2e (webkit 2/2, informational)** | no       | The other half                                                                 |
 | **Lighthouse (mobile)**             | yes¹     | 5 pages × EN/PT meet the Lighthouse budgets (§ 4)                              |
+| **e2e (preview)**                   | no²      | The host-independent specs against this PR's own Vercel preview (§ 2.1)        |
 
 ¹ Once the lead adds it to the branch protection rule (a repository setting).
+² Informational at first (#45). The lead makes it required after a run of green PRs.
 
 **Why WebKit is informational (decided 2026-10-16).** On the 2-vCPU Linux runners,
 WebKit renders in software with one worker. Two runs of identical code gave opposite
@@ -56,6 +58,53 @@ checkout → pnpm install → playwright install <browser> --with-deps
 - **CI timeouts.** In CI, each test gets 60 s and each assertion 10 s
   (`playwright.config.ts`). Locally the defaults of 30 s and 5 s stay, so real slowness
   still fails on a laptop.
+
+### 2.1 The preview job (#45)
+
+```text
+Vercel API: deployment for the PR's head commit, not production → wait for READY
+→ pnpm test:e2e --project=desktop --project=mobile-chromium
+    E2E_BASE_URL=<preview>  (no webServer: the deployment is the server)
+    └─ globalSetup tests/e2e/preview-setup.ts: bypass secret → Vercel bypass cookie
+```
+
+The local-build jobs prove the code; this one proves the **deployment**: Vercel's CDN,
+functions in `fra1`, the real environment variables and the Sanity `development`
+dataset. A preview that builds but breaks at runtime (a missing variable, a region, a
+redirect) shows up here.
+
+- **Finding the preview.** Vercel posts a commit status but no GitHub deployment
+  events, so `deployment_status` never fires. The job asks
+  `GET /v6/deployments?projectId=…&sha=<head sha>` with `VERCEL_TOKEN` (a token scoped
+  to the NortBrand team) and polls every 15 s for up to 20 minutes. `ERROR` or
+  `CANCELED` fails at once. The project and team ids in the workflow are not secret.
+- **Getting past Vercel Authentication.** `VERCEL_AUTOMATION_BYPASS_SECRET` is sent
+  once, by the global setup, with `x-vercel-set-bypass-cookie`. Vercel answers with a
+  cookie for the preview host, and the saved storage state (`playwright/.auth/`,
+  git-ignored) carries it into every test. The secret never rides on page requests, so
+  third-party hosts a page loads (Sanity CDN, Sentry) never see it.
+- **What runs there.** Everything except the specs in `PREVIEW_IGNORED`
+  (`tests/e2e/target.ts`):
+  - consultation form and newsletter: a preview would write to the dev database and send
+    email;
+  - both blog specs: they assert the fixture posts;
+  - analytics, consent and i18n: they replace the browser state or open new contexts,
+    which drops the bypass cookie, and what they test doesn't depend on the host.
+- **Previews are noindex by design** (`src/lib/seo/deployment.ts`). `onPreview` flips
+  two assertions: every page expects `noindex`, and `robots.txt` must disallow
+  everything with no sitemap line.
+- **Run it locally** against any preview (the secret is under Vercel → Deployment
+  Protection; keep it in your shell only):
+
+  ```sh
+  E2E_BASE_URL=https://<preview>.vercel.app VERCEL_AUTOMATION_BYPASS_SECRET=… \
+    pnpm exec playwright test --project=desktop
+  ```
+
+- **Rotating the secrets.** `VERCEL_TOKEN` expires (no later than 31 March 2027): make a
+  new one scoped to the team and replace the repository secret. A new bypass secret in
+  Vercel means updating `VERCEL_AUTOMATION_BYPASS_SECRET` too. A wrong secret fails the
+  setup with "The preview answered 401…".
 
 ## 3. How the database job works
 
@@ -127,6 +176,6 @@ numbers depend on the machine. Each report shows its _benchmark index_, and belo
 
 ## 6. Not yet
 
-- **Vercel previews.** e2e and Lighthouse run against a local build, not a preview
-  deployment, until Vercel Pro is in place (#45). Then Lighthouse points at the preview
-  URL, and the performance budgets become errors.
+- **Lighthouse on previews.** Lighthouse still runs against a local build. Pointing it at
+  the preview URL, with the performance budgets as errors, is the next step after the
+  e2e preview job (§ 2.1) has proven stable.
