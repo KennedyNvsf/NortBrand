@@ -165,7 +165,8 @@ recipient is refused. The free tier allows 100 emails a day.
      zone's `serial` (`nslookup -type=SOA nortbrand.pt ns1.dyna-ns.net`) goes up on
      every save.
 
-   Wait for **Verified**.
+   Wait for **Verified**. Once it is, set Preview's `EMAIL_FROM` to
+   `NortBrand <hello@send.nortbrand.pt>` too, so preview mail reaches any address.
 
 3. DMARC on the root domain, if none exists: `v=DMARC1; p=none;`, optionally with
    `rua=mailto:<your inbox>` for weekly reports. Tighten to `p=quarantine` after a few
@@ -191,7 +192,13 @@ recipient is refused. The free tier allows 100 emails a day.
 
 5. **API Keys:** create two **Full access** keys, `nortbrand-production` and
    `nortbrand-preview`. Full access is needed because the newsletter adds and removes
-   contacts; sending-only keys cannot. Each key is stored only in Vercel.
+   contacts; sending-only keys cannot. Each key is stored only in Vercel (and the preview
+   key in your `.env.local`). Resend shows a token once, so create the production key
+   straight into Vercel without copying it anywhere: with the preview key,
+   `POST https://api.resend.com/api-keys` `{ "name": "nortbrand-production",
+"permission": "full_access" }` and pipe the returned `token` into
+   `vercel env add RESEND_API_KEY --environment production --sensitive` (done this way on
+   8 November).
 6. Decide the team inbox for new requests (`NOTIFY_TO_EMAIL`).
 7. **Webhooks → Add Webhook** (once the site has a URL, #45), one per environment:
    - Endpoint: `https://<site>/api/newsletter/resend-webhook`.
@@ -341,7 +348,10 @@ Production so test requests never reach the team.
       8 pages in both languages answer 200 from the prerender cache, and
       `/api/health/newsletter` answers `ok`.
 - [ ] The same Sentry check on a preview appears under environment `preview`.
-- [ ] Resend shows the domain as Verified.
+- [x] Resend shows the domain as Verified (8 November, `send.nortbrand.pt`, EU Ireland).
+      A consultation request on the preview sent the team alert and the visitor
+      confirmation from `hello@send.nortbrand.pt` to an address outside the Resend
+      account; neither went to spam.
 
 ## How the code uses this
 
