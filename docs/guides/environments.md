@@ -142,11 +142,34 @@ recipient is refused. The free tier allows 100 emails a day.
 
 1. **Domains → Add Domain:** `send.nortbrand.pt` (a sending subdomain keeps the main
    domain's reputation separate). Region: **EU (Ireland)**.
-2. Add the records Resend shows at your DNS provider: the MX and SPF TXT on `send`, and
-   the DKIM TXT on `resend._domainkey.send`. Wait for **Verified**.
-3. Add a DMARC record on the root domain if none exists:
-   `_dmarc.nortbrand.pt TXT "v=DMARC1; p=none; rua=mailto:<your inbox>"`. Tighten to
-   `p=quarantine` after a few weeks of clean reports.
+2. Add the records Resend shows, at Dynadot (**DNS Settings → Dynadot DNS → Subdomain
+   Records**). Copy each value from Resend: it changes its record set from time to time.
+   As of 8 November 2026 it was:
+
+   | Subdomain (Dynadot adds `.nortbrand.pt`) | Type  | Value                                |
+   | ---------------------------------------- | ----- | ------------------------------------ |
+   | `resend._domainkey.send`                 | TXT   | the DKIM key, `p=MIG…IDAQAB`         |
+   | `rsend.send`                             | CNAME | `rsend-euw1.forge.rmta.net` (SPF)    |
+   | `send.send`                              | CNAME | `send.forge.rmta.net` (SPF, bounces) |
+   | `_dmarc`                                 | TXT   | `v=DMARC1; p=none;` (see step 3)     |
+   - `send.send` is right: it becomes `send.send.nortbrand.pt`. Typing the full name
+     makes `….nortbrand.pt.nortbrand.pt`.
+   - Leave **Enable receiving** off in Resend. The site only sends, so there is no MX.
+   - TTL 300 (or blank); **Dynamic DNS** off; then **Save DNS**.
+   - The domain was bought on Dynadot's parking page. Switch **Dynadot Parking** to
+     **Dynadot DNS** (same nameservers, `ns1/ns2.dyna-ns.net`), never to **Name
+     Servers**, which hands the zone to another provider. The root stays empty until
+     launch day ([Go-live](./go-live.md) § 3).
+   - Check before pressing **Verify**, straight from Dynadot's nameserver (no cache):
+     `nslookup -type=TXT resend._domainkey.send.nortbrand.pt ns1.dyna-ns.net`, and the
+     zone's `serial` (`nslookup -type=SOA nortbrand.pt ns1.dyna-ns.net`) goes up on
+     every save.
+
+   Wait for **Verified**.
+
+3. DMARC on the root domain, if none exists: `v=DMARC1; p=none;`, optionally with
+   `rua=mailto:<your inbox>` for weekly reports. Tighten to `p=quarantine` after a few
+   weeks of clean reports.
 4. **Segments → Create:** "Newsletter". Copy its ID (`RESEND_SEGMENT_ID`). Then
    create two string **contact properties**, `locale` (fallback `en`) and `unsubscribe_url`.
    The newsletter sets both on every confirmed contact (docs/guides/newsletter.md).
