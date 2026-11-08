@@ -42,17 +42,22 @@ Each item is a ticket or a check. Launch waits until every box is ticked.
 
 **Accounts (#45)**
 
-- [ ] Vercel Pro project set up ([Environments](./environments.md) § 1), with every
-      **Production** variable from § 7 filled in. Values come from the password manager,
-      never from chat.
+- [x] Vercel Pro project set up ([Environments](./environments.md) § 1), with every
+      **Production** variable from § 7 filled in (8 November, #45). Values come from the
+      password manager, never from chat.
 - [ ] A **Production deployment of `main` is green** on its `*.vercel.app` URL. It runs
-      the strict release guard, so this also proves the translations are final.
-- [ ] Supabase `nortbrand-prod` created (§ 2). 🔒 Migrations pushed:
+      the strict release guard, so this also proves the translations are final. First
+      green on 8 November (#45); recheck on the launch commit, after #77 and #78.
+- [x] Supabase `nortbrand-prod` created (§ 2). 🔒 Migrations pushed:
       `pnpm exec supabase link --project-ref <prod-ref>`, then
       `pnpm exec supabase db push`. 🔒 The Vault secret `newsletter_token_secret` set (§ 6).
-- [ ] Resend: `send.nortbrand.pt` shows **Verified**; the `nortbrand-production` key
+      Done 8 November (#45); push again after any new migration.
+- [x] Resend: `send.nortbrand.pt` shows **Verified**; the `nortbrand-production` key
       is in Vercel (§ 3).
-- [ ] Sentry and GA4 values are in Vercel (§ 4, § 5).
+- [x] Sentry and GA4 values are in Vercel (§ 4, § 5).
+- [ ] Look through the consultation requests and newsletter rows in `nortbrand-prod`
+      that arrived through the public `nort-brand-ruby.vercel.app` alias before launch
+      (docs/tech-debt.md). Delete test and spam rows; keep real ones.
 
 **DNS preparation (T−2)**
 
@@ -73,6 +78,8 @@ Do the steps in this order. Each one ends with its check; don't move on until it
 3. **Add the domains on Vercel.** Settings → Domains:
    - `nortbrand.pt`, assigned to **Production**;
    - `www.nortbrand.pt`, **Redirect to** `nortbrand.pt` (308).
+   - `nort-brand-ruby.vercel.app` (public since 8 November, docs/tech-debt.md):
+     **Redirect to** `nortbrand.pt` (308), or remove it, once `nortbrand.pt` answers.
 
    Vercel then lists the DNS records each domain needs. Use the values it shows; they
    are not copied here because Vercel can change them.
