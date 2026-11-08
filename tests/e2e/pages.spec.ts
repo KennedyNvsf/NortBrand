@@ -4,6 +4,7 @@ import { expect, test } from "@playwright/test";
 import { locales, localizedPath, routes } from "./routes";
 import { findSmallTouchTargets } from "./touch-targets";
 import { settleAnimations } from "./settle";
+import { onPreview } from "./target";
 
 /*
  * Shared page harness: the per-page checks from the definition of done in CLAUDE.md,
@@ -71,7 +72,8 @@ for (const route of routes) {
         const response = await page.goto(url);
         expect(response?.status()).toBe(isNotFound ? 404 : 200);
         const robots = page.locator('meta[name="robots"]');
-        if (isNoindex) {
+        // Every page of a Vercel preview is noindex (src/lib/seo/deployment.ts).
+        if (isNoindex || onPreview) {
           await expect(robots).toHaveAttribute("content", /noindex/);
         } else {
           await expect(robots).toHaveCount(0);
