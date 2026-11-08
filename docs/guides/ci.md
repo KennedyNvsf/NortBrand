@@ -52,6 +52,7 @@ checkout → pnpm install → playwright install <browser> --with-deps
 - **axe audits the page at rest.** Every spec calls `settleAnimations(page)` (`tests/e2e/settle.ts`) before `new AxeBuilder`. It waits for running animations to finish, because an element caught mid-fade fails colour contrast against a blend. That race appeared on the mobile runner once the reveal engine loaded after hydration (#105).
   - It samples each animation's `currentTime` twice, about 100 ms apart, and ignores any that didn't advance. Headless WebKit can leave a CSS colour transition `running` with `currentTime` stuck at 0 for good. It never finishes, so a plain "wait until nothing runs" timed out every axe spec in WebKit (#108).
   - It never fails a test. After 5 s it records a `settle-timeout` annotation (visible in the HTML report) and lets axe run. Motion itself is tested in `motion.spec.ts`.
+  - The 100 ms gap is waited out in the test runner, not inside the page (#112). A timer inside `page.evaluate` never fires when a WebKit page stalls, and `page.evaluate` has no timeout of its own, so the first version hung each test until the 60 s limit (14 times in PR #111's WebKit shards). Each in-page call is now synchronous and raced against the 5 s deadline.
 - **Retries.** Each test retries up to twice in CI. A trace is recorded on the first retry.
 - **WebKit shards.** WebKit is several times slower than Chromium on the runner (the first
   run took 18 minutes), so it runs as two parallel shards (`--shard=1/2`, `2/2`).
