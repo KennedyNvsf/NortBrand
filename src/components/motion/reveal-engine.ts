@@ -54,6 +54,8 @@ export function play(
         return animate(item, { strokeDashoffset: 0 }, { duration: 0 });
       if (kind === "underline")
         return animate(item, { "--draw": 1 }, { duration: 0 });
+      if (kind === "settle")
+        return animate(item, { scale: 1 }, { duration: 0 });
       return animate(
         item,
         { opacity: [0, 1] },
@@ -107,6 +109,12 @@ export function play(
             x: [kind === "left" ? -revealSpec.slide : revealSpec.slide, 0],
           },
           reveal,
+        );
+      case "settle":
+        return animate(
+          item,
+          { scale: [revealSpec.settleScale, 1] },
+          { ...reveal, duration: revealSpec.settleDuration },
         );
       case "up":
         return animate(
