@@ -1,7 +1,8 @@
 ---
 name: "nb-se"
-description: "Implements and refactors NortBrand applications at senior/production-grade engineering level using the established Next.js, React, TypeScript, Tailwind CSS, shadcn/ui, Radix UI, Lucide, Motion, Supabase, PostgreSQL, Sanity CMS (when a project review approves it), and React Native/Expo stack. Enforces strict type safety, reusable architecture, Server/Client Component boundaries, secure Supabase access, multi-tenant database integrity, RLS, migrations, validation, accessibility, responsive UI, performance, testing, and disciplined animation. Use for all NortBrand coding, UI, database, API, authentication, booking, component, feature, refactoring, and integration work."
+description: "Implements and refactors NortBrand applications at senior/production-grade engineering level using the established Next.js, React, TypeScript, Tailwind CSS, shadcn/ui, Radix UI, Lucide, Motion, Supabase, PostgreSQL, Sanity CMS (when a project review approves it), and React Native/Expo stack. Enforces strict type safety, reusable architecture, Server/Client Component boundaries, secure Supabase access, multi-tenant database integrity, RLS, migrations, validation, accessibility, responsive UI, performance, testing, and disciplined animation. Implements payments, checkout, Stripe, webhooks, refunds and certified invoicing when the project brief approves them. Use for all NortBrand coding, UI, database, API, authentication, booking, payment, component, feature, refactoring, and integration work."
 ---
+
 # NortBrand Senior Code Implementation
 
 ## 1. PURPOSE
@@ -114,6 +115,29 @@ When Sanity is approved:
 * Embed the Studio inside the app only if the brief says so. Mark the Studio route `noindex` and exclude it from locale middleware.
 * Make alt text a required field on every image. Serve images through the Sanity CDN with the framework image component.
 * Render Portable Text through an explicit component map. Never render it as raw HTML.
+
+---
+
+# 2.2 PAYMENTS
+
+Payments are opt-in per project, like Sanity.
+
+Write payment code only when the Technical Architecture Brief or an ADR records the payment platform, the allowed payment methods per flow, and the payment timing. If any of those is missing, ask instead of guessing. Payment flows are expensive to change once real money has moved through them.
+
+The default platform is Stripe. Before writing any payment code, read `references/payments.md`. It covers the module layout, data model, checkout and webhook flow, Portuguese payment-method limits, certified invoicing, marketplaces, mobile and testing.
+
+These rules hold on every project, whatever the provider:
+
+* The server calculates every amount. Never accept a price, total, discount or currency from the client.
+* An order becomes paid only when the provider confirms it server-side: a verified webhook, or a server-side API lookup that runs through the same idempotent function. A redirect to the success page proves nothing.
+* Verify every webhook signature against the raw request body before parsing it.
+* Process each provider event at most once. Store provider event IDs behind a unique constraint.
+* Store money as integer minor units with an ISO currency code. Never floats.
+* Change payment state only through server-side database functions. No client role writes payment fields.
+* Use the provider's hosted or embedded checkout by default. Never build a raw card form.
+* Payment secret keys and webhook secrets are server-only. Never `NEXT_PUBLIC_`.
+* Use test keys in every environment except production.
+* For Portuguese merchants, every paid order gets a certified invoice and every refund a credit note, through the client's certified invoicing software.
 
 ---
 
@@ -2142,6 +2166,7 @@ Before considering an implementation complete, verify:
 [ ] Motion used intentionally
 [ ] Reduced motion considered
 [ ] No unnecessary dependencies added
+[ ] Payments, when in scope: references/payments.md section 20 checklist completed
 [ ] Tests added/updated where appropriate
 [ ] Typecheck executed
 [ ] Lint executed
