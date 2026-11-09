@@ -152,7 +152,7 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md, accessibi
     `PhotoPanel`). Photos go in `src/assets/images/` at 1600 px wide with metadata
     stripped; they settle and drift like the mark did. Home's two are AI-generated
     (tech debt). Service collages take photos per slug from
-    `services/_components/service-photos.ts` (Web Design so far; Pexels, unrecorded).
+    `services/_components/service-photos.ts` (Web Design and Web Development so far; sources partly unrecorded, see tech debt).
 - **Logo:** `LOGONORT` (`54:16`), exported as an optimized SVG. The wordmark is converted
   to paths, and the SVG uses `currentColor`.
 - **Navigation:** links to unbuilt pages show the designed 404 until those pages ship.

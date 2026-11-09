@@ -2,6 +2,8 @@ import type { StaticImageData } from "next/image";
 
 import webDesign from "@/assets/images/service-web-design.jpg";
 import webDesignDetail from "@/assets/images/service-web-design-detail.jpg";
+import webDevelopment from "@/assets/images/service-web-development.jpg";
+import webDevelopmentDetail from "@/assets/images/service-web-development-detail.jpg";
 import type { ServiceSlug } from "@/content/services";
 
 /** One photo in a service collage, and where to anchor it in its crop. */
@@ -29,5 +31,11 @@ export const servicePhotos: Partial<Record<ServiceSlug, CollagePhotos>> = {
   "web-design": {
     main: { src: webDesign, position: "object-[62%_50%]" },
     detail: { src: webDesignDetail, position: "object-[38%_50%]" },
+  },
+  "web-development": {
+    // The laptop is wider than the panel shows; keep its screen, let the trackpad crop.
+    main: { src: webDevelopment, position: "object-[12%_50%]" },
+    // Portrait: the square crops top and bottom; keep the JSX block.
+    detail: { src: webDevelopmentDetail, position: "object-[50%_45%]" },
   },
 };
