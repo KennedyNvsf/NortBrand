@@ -8,6 +8,8 @@
  *   pop    scale 0.88 → 1 on a spring with a small overshoot (images, cards)
  *   draw   an SVG stroke draws itself; the path needs pathLength={1}
  *   underline  a keyword underline (utility underline-draw) draws left to right
+ *   settle a photo zooms out from 101.6% inside its panel; no fade of its own, the panel
+ *          around it fades in (PhotoPanel). None with reduced motion.
  */
 
 import type { CSSProperties } from "react";
@@ -19,6 +21,7 @@ export const REVEAL_KINDS = [
   "pop",
   "draw",
   "underline",
+  "settle",
 ] as const;
 export type RevealKind = (typeof REVEAL_KINDS)[number];
 

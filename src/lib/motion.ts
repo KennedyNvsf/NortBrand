@@ -49,6 +49,14 @@ export const revealSpec = {
   lineDuration: 1.6,
   /** How long a keyword underline waits after its turn, so its headline lands first. */
   underlineLag: 0.25,
+  /**
+   * A photo settling inside its arriving panel ("settle", #82). Duration and curve match
+   * the Services hero photo (globals.css --animate-hero-settle: 1.6 s, emphasized); the
+   * zoom is a fifth of the hero's 8% (lead's decision, 2026-11-08), because a panel is
+   * small and already sliding in, so a full hero zoom read as an effect.
+   */
+  settleScale: 1.016,
+  settleDuration: 1.6,
 } as const;
 
 /**

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
+import asking from "@/assets/images/asking.jpg";
+import homeWhy from "@/assets/images/home-why.jpg";
 import { CtaBand } from "@/components/site/cta-band";
 import { FeatureSplit } from "@/components/site/feature-split";
 import { highlightTags } from "@/components/site/highlight";
@@ -42,6 +44,15 @@ export default async function HomePage() {
         panel="start"
         align="end"
         panelClassName="lg:h-150 lg:w-130"
+        image={{
+          src: homeWhy,
+          // Panel width: the container (20 px gutters) below 768, 280 on tablet, 520 on desktop.
+          sizes:
+            "(min-width: 1024px) 520px, (min-width: 768px) 280px, calc(100vw - 40px)",
+          // Faces sit top-left: y keeps them in the short mobile crop, x in the narrow
+          // tablet panel (desktop and mobile do not crop sideways).
+          imageClassName: "object-[35%_16%]",
+        }}
       />
       <HomeServices />
       <FeatureSplit
@@ -56,6 +67,14 @@ export default async function HomePage() {
         ]}
         panel="end"
         panelClassName="lg:h-140 lg:w-120"
+        image={{
+          src: asking,
+          // Panel width: the container (20 px gutters) below 768, 280 on tablet, 480 on desktop.
+          sizes:
+            "(min-width: 1024px) 480px, (min-width: 768px) 280px, calc(100vw - 40px)",
+          // Keeps the three faces in the shorter mobile crop.
+          imageClassName: "object-[50%_48%]",
+        }}
       />
       <HomeProcess />
       <CtaBand />
