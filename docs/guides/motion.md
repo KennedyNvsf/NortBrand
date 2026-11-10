@@ -148,7 +148,10 @@ they never compete for one element's transform.
   when the pointer leaves.
 - **Service cards:** lift 4 px on hover, and the icon tile scales and tilts.
 - **Details dialog / drawer:** after it opens, its rows rise in 60 ms apart
-  (`stagger-in`, CSS: the content mounts on every open).
+  (`stagger-in`, CSS: the content mounts on every open). On desktop the red panel's
+  logomark draws itself after the dialog's entrance: the `mark-draw` keyframes on the
+  panel-draw timing (1.2 s, `--ease-draw`). With reduced motion it is simply drawn.
+  Details in `services-page.md` (#119).
 
 ### Home
 

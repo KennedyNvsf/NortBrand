@@ -202,9 +202,32 @@ with a square overlapping its top-right corner.
 ### `service-details.tsx`
 
 - Tablet and desktop share one `DialogContent`. From `lg` it becomes a two-column grid
-  with the dark `VisualPanel` (position, 120 px icon tile, logomark watermark). Below
-  `lg`, the panel is hidden and the small icon tile and "01 / 05" show in the header
-  instead (Figma `362:383`).
+  with the `VisualPanel` (position, 120 px icon tile, logomark watermark). Below `lg`,
+  the panel is hidden and the small icon tile and "01 / 05" show in the header instead
+  (Figma `362:383`).
+- **The panel is primary red** (`bg-action-primary-fill`, #DC2626, the primary
+  button's fill), not Figma's dark panel (`317:58`). That's the lead's decision (#119).
+  The small icon tile below `lg` stands in for the panel, so it is red too.
+  - The position label is full white: white at 70% on red is below 4.5:1, and full
+    white is 4.83:1.
+  - `data-surface="dark"` stays: it makes the focus ring white, which red needs as
+    well.
+- **The watermark draws itself on open** (#119). It uses the `mark-draw` keyframes with
+  `DRAW_TIMING`:
+  - after `--duration-base` (the dialog's own entrance), the stroke draws over
+    `revealSpec.drawDuration` (1.2 s) on `--ease-draw`, the same timing as a mark
+    drawing in a panel (reveal kind `draw`).
+  - The content mounts on every open, so the draw replays each time, with no
+    JavaScript.
+  - **Why not the logo's 900 ms emphasized curve:** only the first ~40% of the path
+    shows inside the panel, and that front-loaded curve drew it in about 100 ms. On
+    the in-out curve the visible stretch draws over about half a second.
+  - **Why inline styles:** Tailwind emits `motion-safe:animate-*` after plain
+    utilities, and its `animation` shorthand resets any delay or timing class. Inline
+    longhands always win.
+  - **Reduced motion:** no animation; the mark is simply drawn.
+  - Measured on a production build: hidden until 250 ms, about 70% drawn by 1.0 s,
+    complete at about 1.45 s.
 - `DetailsBody` is shared by the Dialog and the Drawer. It receives `Title`,
   `Description` and `Close` as components, so the same markup uses Radix parts in one
   container and vaul parts in the other.
