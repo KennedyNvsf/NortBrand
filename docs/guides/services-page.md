@@ -171,7 +171,10 @@ with a square overlapping its top-right corner.
   hairline ring). The square keeps its surface-coloured border. It clips with
   `overflow-hidden`, so the photo follows the border's inner radius.
 - **Without:** the Figma placeholder, with the glyphs in `public/images/placeholder/`
-  and `data-placeholder="image"` (tech debt).
+  and `data-placeholder="image"`. All five services have photos (#82, 10 November), so
+  this branch is only a fallback for a service added later.
+- **Crop anchors per photo** (in `service-photos.ts`) are chosen by eye at 1440 / 768 / 390. A photo much wider than its panel (Website Maintenance's 1.86 : 1 code shot)
+  shows only about 60% of its width, so the anchor matters more there.
 - **Decorative either way.** The collage is `aria-hidden` and the photos have `alt=""`.
   The text beside the collage carries the meaning.
 - **Why the photos live in `service-photos.ts`, not `src/content/services.ts`:** the
@@ -182,7 +185,9 @@ with a square overlapping its top-right corner.
   With `sizes` describing only the panel, desktop browsers picked the 1080 px file for a
   photo drawn about 1150 device pixels wide. `coverSizes()` multiplies each piece's
   share of the collage by `max(1, photo aspect ÷ panel aspect)`, so a photo with a
-  different shape still gets the right file. If the collage widths in
+  different shape still gets the right file. A portrait photo (Web Development's detail)
+  is drawn at its panel's width, so its factor is 1, and the crop anchor picks which
+  band of it shows. If the collage widths in
   `service-blocks.tsx` change, update the `COLLAGE_*` constants.
 - **No `settle`, unlike Home.** On Home the panel slides, so the photo's 1.6% zoom is
   the only scale movement. Here the `pop` already scales each panel from 0.88 to 1, photo
