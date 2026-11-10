@@ -171,7 +171,10 @@ with a square overlapping its top-right corner.
   hairline ring). The square keeps its surface-coloured border. It clips with
   `overflow-hidden`, so the photo follows the border's inner radius.
 - **Without:** the Figma placeholder, with the glyphs in `public/images/placeholder/`
-  and `data-placeholder="image"` (tech debt).
+  and `data-placeholder="image"`. All five services have photos (#82, 10 November), so
+  this branch is only a fallback for a service added later.
+- **Crop anchors per photo** (in `service-photos.ts`) are chosen by eye at 1440 / 768 / 390. A photo much wider than its panel (Website Maintenance's 1.86 : 1 code shot)
+  shows only about 60% of its width, so the anchor matters more there.
 - **Decorative either way.** The collage is `aria-hidden` and the photos have `alt=""`.
   The text beside the collage carries the meaning.
 - **Why the photos live in `service-photos.ts`, not `src/content/services.ts`:** the
