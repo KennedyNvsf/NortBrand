@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 
 import { ServiceCollage } from "./service-collage";
 import { ServiceDetails } from "./service-details";
+import { servicePhotos } from "./service-photos";
 import { ServiceStage } from "./service-stage";
 
 /*
@@ -49,6 +50,7 @@ export async function ServiceBlocks() {
           >
             <div className="container-page flex flex-col gap-7 py-2xl md:flex-row md:items-center md:gap-10 md:py-16 lg:justify-center lg:gap-16 lg:py-2xl lg:pr-[calc(var(--gutter)+--spacing(19))]">
               <ServiceCollage
+                photos={servicePhotos[slug]}
                 className={cn(
                   "w-full md:w-78 lg:w-139",
                   index % 2 === 1 && "md:order-last",

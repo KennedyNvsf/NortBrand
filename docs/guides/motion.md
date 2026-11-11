@@ -42,13 +42,24 @@ easing drifts from `motion.ts`.
 
 ## 3. The reveal system
 
-One vocabulary for every section, in three files under `src/components/motion/`:
+One vocabulary for every section, in these files under `src/components/motion/`:
 
-| File               | Role                                                                          | Runs on                              |
-| ------------------ | ----------------------------------------------------------------------------- | ------------------------------------ |
-| `reveal-item.ts`   | **markers**: `revealItem(kind)` and `enterItem(index)` return data attributes | server and client (no Motion import) |
-| `reveal-engine.ts` | **how** items animate: `hide()`, `play()`                                     | client                               |
-| `reveal-group.tsx` | **when**: as each item scrolls in                                             | client                               |
+| File                    | Role                                                                          | Runs on                              |
+| ----------------------- | ----------------------------------------------------------------------------- | ------------------------------------ |
+| `reveal-item.ts`        | **markers**: `revealItem(kind)` and `enterItem(index)` return data attributes | server and client (no Motion import) |
+| `reveal-dom.ts`         | finding, measuring and hiding items: `hide()`, `unhide()`, `isBelowFold()`    | client (no Motion runtime)           |
+| `reveal-engine.ts`      | **how** items animate: `play()`, plus Motion's `animate()`                    | client, loaded after hydration       |
+| `load-reveal-engine.ts` | `loadRevealEngine()`: fetches the engine once, in its own chunk               | client                               |
+| `reveal-group.tsx`      | **when**: as each item scrolls in                                             | client                               |
+
+**Why the engine loads late (#105).** The engine pulls in Motion's `animate()`, about
+17 KiB gzipped. Lighthouse counts every script requested before the first paint
+([Performance](./performance.md)), so components on every page (RevealGroup,
+ProcessTrack, NavLinks, the table of contents) import only `reveal-dom.ts` up front.
+They hide items as before, call `loadRevealEngine()` from an effect, and play once it
+resolves. If it fails to load, they `unhide()` everything, so content never stays
+hidden. The Services components (ServiceStage, ApproachTabs) still import the engine
+directly: they place items inside layout effects, which can't wait for a chunk.
 
 Markup stays server-rendered. A section opts in like this:
 
@@ -73,6 +84,17 @@ module that imports `motion/react` must not be evaluated on the server.
 | `pop`            | scale 0.88 → 1 on a spring with slight overshoot                 | collages, the CTA card              |
 | `draw`           | SVG stroke draws (1.2 s in-out; the path needs `pathLength={1}`) | the mark in image panels            |
 | `underline`      | a keyword underline draws left to right, 250 ms after its turn   | highlighted words (`highlight.tsx`) |
+| `settle`         | scale 1.016 → 1 over 1.6 s, no fade (its panel fades); see below | photos in panels (`PhotoPanel`)     |
+
+**Photo panels (#82).** When a section's placeholder becomes a photograph, `PhotoPanel`
+keeps the panel's arrival (`left`/`right`) and replaces the mark's `draw` with `settle`:
+the photo zooms out inside the arriving panel, 100 ms behind it. Duration and curve are
+the Services hero's `--animate-hero-settle` (1.6 s, emphasized), so both photo moments
+share a rhythm; the zoom is a fifth of the hero's (1.6% instead of 8%, decided by the
+lead on 8 November) because a full hero zoom inside a small, already-moving panel read
+as an effect. Values: `revealSpec.settleScale` / `.settleDuration`. With reduced motion
+there is no scale at all. The settle and the desktop parallax sit on separate layers, so
+they never compete for one element's transform.
 
 **How a group behaves:**
 
@@ -126,7 +148,10 @@ module that imports `motion/react` must not be evaluated on the server.
   when the pointer leaves.
 - **Service cards:** lift 4 px on hover, and the icon tile scales and tilts.
 - **Details dialog / drawer:** after it opens, its rows rise in 60 ms apart
-  (`stagger-in`, CSS: the content mounts on every open).
+  (`stagger-in`, CSS: the content mounts on every open). On desktop the red panel's
+  logomark draws itself after the dialog's entrance: the `mark-draw` keyframes on the
+  panel-draw timing (1.2 s, `--ease-draw`). With reduced motion it is simply drawn.
+  Details in `services-page.md` (#119).
 
 ### Home
 

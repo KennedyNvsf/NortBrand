@@ -593,6 +593,31 @@ body[data-scroll-locked] [data-slot="sticky-cta"] {
   padding-inline: var(--gutter);
 }
 
+/*
+ * Touch target (CLAUDE.md › Accessibility: 44 pt minimum on touch, #95). An invisible
+ * ::after centred on the element grows the hit area to at least 44 × 44 while the
+ * element keeps its designed size, so nothing moves. A tap on a pseudo-element hits its
+ * element. Below desktop only, like the rest of the touch sizing (`lg:min-h-0`): on
+ * desktop the element is left exactly as it was. The element must not use ::after for
+ * anything else; the e2e harness (tests/e2e/touch-targets.ts) checks the real hit area
+ * at 390 px.
+ */
+@utility touch-target {
+  @media (width < 64rem) {
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: max(100%, 44px);
+      height: max(100%, 44px);
+      translate: -50% -50%;
+    }
+  }
+}
+
 @layer base {
   * {
     @apply border-border;

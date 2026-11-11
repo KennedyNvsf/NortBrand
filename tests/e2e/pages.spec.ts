@@ -2,6 +2,9 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 import { locales, localizedPath, routes } from "./routes";
+import { findSmallTouchTargets } from "./touch-targets";
+import { settleAnimations } from "./settle";
+import { onPreview } from "./target";
 
 /*
  * Shared page harness: the per-page checks from the definition of done in CLAUDE.md,
@@ -29,6 +32,7 @@ for (const route of routes) {
         await page.goto(url);
         // Audit the rendered page: the 404 boundary renders in the browser.
         await expect(page.locator("h1")).toBeVisible();
+        await settleAnimations(page);
         const { violations } = await new AxeBuilder({ page })
           .withTags([...WCAG_TAGS])
           .analyze();
@@ -68,7 +72,8 @@ for (const route of routes) {
         const response = await page.goto(url);
         expect(response?.status()).toBe(isNotFound ? 404 : 200);
         const robots = page.locator('meta[name="robots"]');
-        if (isNoindex) {
+        // Every page of a Vercel preview is noindex (src/lib/seo/deployment.ts).
+        if (isNoindex || onPreview) {
           await expect(robots).toHaveAttribute("content", /noindex/);
         } else {
           await expect(robots).toHaveCount(0);
@@ -86,6 +91,17 @@ for (const route of routes) {
             document.documentElement.clientWidth,
         );
         expect(overflow).toBeLessThanOrEqual(0);
+      });
+
+      test("has 44 px touch targets at 390 px", async ({ page }) => {
+        // Reduced motion: scroll reveals become opacity only, so nothing is mid-slide
+        // while it is hit-tested.
+        await page.emulateMedia({ reducedMotion: "reduce" });
+        await page.setViewportSize(MOBILE_VIEWPORT);
+        await page.goto(url);
+        await expect(page.locator("h1")).toBeVisible();
+
+        expect(await findSmallTouchTargets(page)).toEqual([]);
       });
     });
   }

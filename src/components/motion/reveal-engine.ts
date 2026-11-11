@@ -2,12 +2,19 @@ import { animate, type AnimationPlaybackControls } from "motion/react";
 
 import { motionTokens, reducedMotionDuration, revealSpec } from "@/lib/motion";
 
-import {
-  REVEAL_GROUP,
-  REVEAL_ITEM,
-  REVEAL_KINDS,
-  type RevealKind,
-} from "./reveal-item";
+import { hide, kindOf } from "./reveal-dom";
+
+// The DOM helpers live in reveal-dom.ts; re-exported for the Services components,
+// which load this module up front. animate() is exported for loadRevealEngine().
+export {
+  hide,
+  isBelowFold,
+  prefersReducedMotion,
+  revealItemsOf,
+  stopAll,
+  unhide,
+} from "./reveal-dom";
+export { animate };
 
 /*
  * The reveal engine shared by every animated section. Markup stays server-rendered
@@ -15,58 +22,11 @@ import {
  * (RevealGroup, ServiceStage, ProcessTrack, ApproachTabs) decides *when* its items
  * play, and this module decides *how*.
  *
- * `hide` sets the start state synchronously, so an item never flashes at its final
- * state for one frame before its animation starts. Reduced motion: opacity only,
- * 150 ms, all at once; strokes are simply drawn.
+ * Reduced motion: opacity only, 150 ms, all at once; strokes are simply drawn.
+ *
+ * This module imports the Motion runtime. Components on every page load it after
+ * hydration with loadRevealEngine() and use reveal-dom.ts until then (#105).
  */
-
-function kindOf(item: Element): RevealKind {
-  const kind = item.getAttribute(REVEAL_ITEM);
-  return REVEAL_KINDS.find((known) => known === kind) ?? "up";
-}
-
-/** The items owned by `root`: inside it, and not inside a nested group. */
-export function revealItemsOf(root: Element): HTMLElement[] {
-  return Array.from(
-    root.querySelectorAll<HTMLElement>(`[${REVEAL_ITEM}]`),
-  ).filter((item) => item.parentElement?.closest(`[${REVEAL_GROUP}]`) === root);
-}
-
-/** Read at the moment an animation starts (effects and event handlers only). */
-export function prefersReducedMotion() {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-/** True when the element starts below the visible viewport. */
-export function isBelowFold(element: Element) {
-  return element.getBoundingClientRect().top > window.innerHeight;
-}
-
-const hiddenTransform: Record<
-  Exclude<RevealKind, "draw" | "underline">,
-  string
-> = {
-  up: `translateY(${revealSpec.distance}px)`,
-  left: `translateX(${-revealSpec.slide}px)`,
-  right: `translateX(${revealSpec.slide}px)`,
-  pop: `scale(${revealSpec.popScale})`,
-};
-
-export function hide(items: HTMLElement[], reduced: boolean) {
-  for (const item of items) {
-    const kind = kindOf(item);
-    if (kind === "draw") {
-      if (!reduced) item.style.strokeDashoffset = "1";
-      continue;
-    }
-    if (kind === "underline") {
-      if (!reduced) item.style.setProperty("--draw", "0");
-      continue;
-    }
-    item.style.opacity = "0";
-    item.style.transform = reduced ? "" : hiddenTransform[kind];
-  }
-}
 
 type PlayOptions = {
   reduced: boolean;
@@ -94,6 +54,8 @@ export function play(
         return animate(item, { strokeDashoffset: 0 }, { duration: 0 });
       if (kind === "underline")
         return animate(item, { "--draw": 1 }, { duration: 0 });
+      if (kind === "settle")
+        return animate(item, { scale: 1 }, { duration: 0 });
       return animate(
         item,
         { opacity: [0, 1] },
@@ -148,6 +110,12 @@ export function play(
           },
           reveal,
         );
+      case "settle":
+        return animate(
+          item,
+          { scale: [revealSpec.settleScale, 1] },
+          { ...reveal, duration: revealSpec.settleDuration },
+        );
       case "up":
         return animate(
           item,
@@ -156,8 +124,4 @@ export function play(
         );
     }
   });
-}
-
-export function stopAll(controls: AnimationPlaybackControls[]) {
-  for (const control of controls) control.stop();
 }

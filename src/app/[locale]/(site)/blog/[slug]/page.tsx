@@ -7,6 +7,7 @@ import { RevealGroup } from "@/components/motion/reveal-group";
 import { revealItem } from "@/components/motion/reveal-item";
 import { AlternatePaths } from "@/components/site/alternate-paths";
 import { JsonLd } from "@/components/site/json-ld";
+import { Toaster } from "@/components/ui/sonner";
 import { publicEnv } from "@/env";
 import {
   getBlogPost,
@@ -153,48 +154,52 @@ export default async function BlogPostPage({ params }: { params: Params }) {
   const categoryName = post.category.name ?? post.category.slug;
 
   return (
-    <main id="main">
-      <JsonLd
-        data={blogPostingJsonLd({
-          siteUrl,
-          url,
-          language: locale,
-          title: post.title,
-          description: post.seo?.description ?? post.excerpt,
-          publishedAt: post.publishedAt,
-          updatedAt: post._updatedAt,
-          section: post.category.name,
-          image: shareCover(post.cover)?.url,
-          author: post.author.name,
-        })}
-      />
-      <JsonLd
-        data={breadcrumbJsonLd([
-          { name: tBlog("eyebrow"), url: `${siteUrl}/${locale}/blog` },
-          {
-            name: categoryName,
-            url: `${siteUrl}/${locale}/blog?category=${encodeURIComponent(post.category.slug)}`,
-          },
-          { name: post.title, url },
-        ])}
-      />
-      <AlternatePaths paths={postPaths(locale, slug, post.translations)} />
-      <PostHeader
-        post={post}
-        locale={locale}
-        minutes={readingMinutes(post.body)}
-      />
-      <PostCover cover={post.cover} />
-      <PostArticle post={post} url={url} />
-      <AuthorCard author={post.author} />
-      <RelatedPosts posts={related} locale={locale} />
-      <section className="bg-bg-surface px-(--gutter) pt-3 pb-14 md:pb-18 lg:pt-5 lg:pb-25">
-        <RevealGroup className="mx-auto max-w-[calc(var(--container-canvas)-2*var(--gutter))]">
-          <div {...revealItem()}>
-            <NewsletterCard />
-          </div>
-        </RevealGroup>
-      </section>
-    </main>
+    <>
+      <main id="main">
+        <JsonLd
+          data={blogPostingJsonLd({
+            siteUrl,
+            url,
+            language: locale,
+            title: post.title,
+            description: post.seo?.description ?? post.excerpt,
+            publishedAt: post.publishedAt,
+            updatedAt: post._updatedAt,
+            section: post.category.name,
+            image: shareCover(post.cover)?.url,
+            author: post.author.name,
+          })}
+        />
+        <JsonLd
+          data={breadcrumbJsonLd([
+            { name: tBlog("eyebrow"), url: `${siteUrl}/${locale}/blog` },
+            {
+              name: categoryName,
+              url: `${siteUrl}/${locale}/blog?category=${encodeURIComponent(post.category.slug)}`,
+            },
+            { name: post.title, url },
+          ])}
+        />
+        <AlternatePaths paths={postPaths(locale, slug, post.translations)} />
+        <PostHeader
+          post={post}
+          locale={locale}
+          minutes={readingMinutes(post.body)}
+        />
+        <PostCover cover={post.cover} />
+        <PostArticle post={post} url={url} />
+        <AuthorCard author={post.author} />
+        <RelatedPosts posts={related} locale={locale} />
+        <section className="bg-bg-surface px-(--gutter) pt-3 pb-14 md:pb-18 lg:pt-5 lg:pb-25">
+          <RevealGroup className="mx-auto max-w-[calc(var(--container-canvas)-2*var(--gutter))]">
+            <div {...revealItem()}>
+              <NewsletterCard />
+            </div>
+          </RevealGroup>
+        </section>
+      </main>
+      {/* Only the share links toast (copy link), so sonner loads on posts only (#105). */}
+      <Toaster />
+    </>
   );
 }

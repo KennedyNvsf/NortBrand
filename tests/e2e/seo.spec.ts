@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
 import { locales, localizedPath, routes } from "./routes";
+import { onPreview } from "./target";
 
 /*
  * SEO output (ticket #15) against the production build: crawl files, social meta and
@@ -42,9 +43,20 @@ test.describe("crawl files", () => {
   test("robots.txt keeps the Studio out and points to the sitemap", async ({
     request,
   }) => {
+    test.skip(
+      onPreview,
+      "a preview's robots.txt disallows everything (next test)",
+    );
     const text = await (await request.get("/robots.txt")).text();
     expect(text).toContain("Disallow: /studio");
     expect(text).toMatch(/Sitemap: \S+\/sitemap\.xml/);
+  });
+
+  test("a preview's robots.txt disallows everything", async ({ request }) => {
+    test.skip(!onPreview, "only Vercel previews block all crawling");
+    const text = await (await request.get("/robots.txt")).text();
+    expect(text).toMatch(/Disallow: \/\s*$/m);
+    expect(text).not.toContain("Sitemap:");
   });
 
   test("the embedded Studio is noindex and never sent through the locale proxy", async ({

@@ -95,6 +95,20 @@ For each request it works out the locale and dynamically imports
 `messages/${locale}.json`. It also sets `timeZone: "Europe/Lisbon"`, so dates format
 consistently on the server and in the browser.
 
+### `src/i18n/client-messages.ts`: what reaches the browser (#105)
+
+Server components read the whole dictionary on the server. Client components read
+theirs from `NextIntlClientProvider`, and whatever it gets is serialized into every
+page's HTML. So the `[locale]` layout passes only `pickMessages(await getMessages())`:
+the namespaces in `CLIENT_MESSAGE_PATHS` (`Nav`, `Consent`, `Newsletter`,
+`Contact.form`…). That keeps Legal, Emails and page copy out of the HTML, about 9 KiB
+gzipped on Home.
+
+**A client component that uses a new namespace** must add it to `CLIENT_MESSAGE_PATHS`.
+`client-messages.test.ts` scans every `"use client"` file and fails until you do. It
+can't see a component that has no directive but is imported by a client one, so keep
+`useTranslations` calls in files that declare `"use client"`.
+
 ### `messages/en.json` and `messages/pt.json`: the dictionaries
 
 Namespaced by page or component:

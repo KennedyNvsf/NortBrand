@@ -3,7 +3,6 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
-import { publicEnv } from "@/env";
 import {
   disableAnalytics,
   enableAnalytics,
@@ -20,11 +19,13 @@ import { useConsent } from "../consent-store";
  *
  * Page views: one when analytics starts, then one per client-side navigation
  * (usePathname). The path only; the query string never reaches Google.
+ *
+ * The layout passes `measurementId` from the validated `publicEnv`. Don't import
+ * `@/env` here: it brings zod into every page's client bundle (#105).
  */
-export function GoogleAnalytics() {
+export function GoogleAnalytics({ measurementId }: { measurementId: string }) {
   const consent = useConsent();
   const pathname = usePathname();
-  const measurementId = publicEnv.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   const accepted = consent.status === "decided" && consent.consent.analytics;
   const withdrawn = consent.status === "decided" && !consent.consent.analytics;
 

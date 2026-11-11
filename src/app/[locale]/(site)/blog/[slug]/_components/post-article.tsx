@@ -59,9 +59,8 @@ export async function PostArticle({
             <div className="flex items-center gap-2.5">
               <p className="text-overline text-text-muted">{t("tags")}</p>
               <Badge asChild>
-                {/* 44 px tap area on touch without changing the badge's size. */}
                 <Link
-                  className="relative after:absolute after:-inset-2.5 after:content-[''] lg:after:hidden"
+                  className="touch-target"
                   href={{
                     pathname: "/blog",
                     query: { category: post.category.slug },

@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
-import { animate } from "motion/react";
+import type { AnimationPlaybackControls } from "motion/react";
 
-import { RevealGroup } from "@/components/motion/reveal-group";
+import { loadRevealEngine } from "@/components/motion/load-reveal-engine";
 import {
   hide,
   isBelowFold,
-  play,
   prefersReducedMotion,
   stopAll,
-} from "@/components/motion/reveal-engine";
+  unhide,
+} from "@/components/motion/reveal-dom";
+import { RevealGroup } from "@/components/motion/reveal-group";
 import { REVEAL_ITEM } from "@/components/motion/reveal-item";
 import { motionTokens, revealSpec } from "@/lib/motion";
 import { MEDIA_LG, useMediaQuery } from "@/lib/use-media-query";
@@ -26,6 +27,8 @@ import { MEDIA_LG, useMediaQuery } from "@/lib/use-media-query";
  *   on mobile the connector behind them draws top to bottom when the list arrives.
  * - Nothing is hidden if the section is already on screen when the page loads.
  * - Reduced motion: the line is simply drawn, the cards fade in (150 ms).
+ * - Motion loads after hydration (loadRevealEngine, #105); if it fails, everything is
+ *   shown at once.
  * Decorative (aria-hidden). The step cards stay server-rendered, passed as children.
  */
 
@@ -39,6 +42,8 @@ const CARD_DELAYS = [0.1, 0.45, 0.8, 1.15];
 const DESKTOP_AMOUNT = 0.6;
 const MOBILE_AMOUNT = 0.15;
 const THRESHOLDS = Array.from({ length: 11 }, (_, step) => step / 10);
+
+const noop = () => undefined;
 
 export function ProcessTrack({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -64,7 +69,17 @@ export function ProcessTrack({ children }: { children: ReactNode }) {
       connector.style.transform = "scaleY(0)";
     }
 
-    const controls: ReturnType<typeof play> = [];
+    const reset = () => {
+      unhide(cards);
+      path.style.strokeDashoffset = "";
+      connector.style.transform = "";
+    };
+    let active = true;
+    const controls: AnimationPlaybackControls[] = [];
+    const engine = loadRevealEngine();
+    engine.catch(() => {
+      if (active) reset();
+    });
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry) return;
@@ -75,31 +90,30 @@ export function ProcessTrack({ children }: { children: ReactNode }) {
         if (!arrived) return;
         observer.disconnect();
 
-        controls.push(...play(cards, { reduced, delays: CARD_DELAYS }));
-        if (reduced) return;
-        const line = {
-          duration: revealSpec.lineDuration,
-          ease: motionTokens.ease.draw,
-        };
-        controls.push(
-          isLg
-            ? animate(path, { strokeDashoffset: [1, 0] }, line)
-            : animate(connector, { scaleY: [0, 1] }, line),
-        );
+        void engine.then(({ animate, play }) => {
+          if (!active) return;
+          controls.push(...play(cards, { reduced, delays: CARD_DELAYS }));
+          if (reduced) return;
+          const line = {
+            duration: revealSpec.lineDuration,
+            ease: motionTokens.ease.draw,
+          };
+          controls.push(
+            isLg
+              ? animate(path, { strokeDashoffset: [1, 0] }, line)
+              : animate(connector, { scaleY: [0, 1] }, line),
+          );
+        }, noop);
       },
       { threshold: THRESHOLDS },
     );
     observer.observe(root);
 
     return () => {
+      active = false;
       observer.disconnect();
       stopAll(controls);
-      for (const card of cards) {
-        card.style.opacity = "";
-        card.style.transform = "";
-      }
-      path.style.strokeDashoffset = "";
-      connector.style.transform = "";
+      reset();
     };
   }, [isLg]);
 

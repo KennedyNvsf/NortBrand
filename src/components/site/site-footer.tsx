@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
  */
 
 const linkClassName = cn(
-  "inline-flex min-h-11 items-center rounded-sm text-body text-text-primary lg:min-h-0 lg:text-nav lg:font-normal",
+  "touch-target inline-flex min-h-11 items-center rounded-sm text-body text-text-primary lg:min-h-0 lg:text-nav lg:font-normal",
   "transition-colors duration-(--duration-fast) ease-standard hover:text-text-accent",
 );
 
@@ -69,7 +69,10 @@ export async function SiteFooter() {
       <div className="mx-auto max-w-(--container-canvas) px-(--gutter) pt-14 md:pt-20 lg:pt-(--section-y)">
         <div className="flex flex-col gap-9 pb-10 md:gap-11 md:pb-2xl lg:flex-row lg:gap-20">
           <div className="flex flex-col items-start gap-lg lg:w-80 lg:shrink-0">
-            <Link href="/" className="rounded-sm text-text-primary">
+            <Link
+              href="/"
+              className="touch-target rounded-sm text-text-primary"
+            >
               <Logo label={nav("home")} />
             </Link>
             <p className="text-small text-text-muted">{t("tagline")}</p>

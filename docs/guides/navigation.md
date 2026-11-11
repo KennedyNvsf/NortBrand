@@ -112,13 +112,23 @@ Not designed in Figma; placement agreed with the developer (desktop nav + menu).
   hide it from the people looking for it.
 - The current option is bold and `aria-current="true"`.
 
-### `mobile-menu.tsx` (client): the full-screen menu
+### `mobile-menu.tsx` and `mobile-menu-panel.tsx` (client): the full-screen menu
 
-Built on the shadcn `Sheet` (Radix Dialog). Radix gives us, for free:
+`mobile-menu.tsx` is only the (≡) button. The menu itself, in `mobile-menu-panel.tsx`,
+loads in its own chunk (#105, [Performance](./performance.md)):
+
+- prefetched when the browser is idle, or when the button is hovered or focused;
+- mounted the first time the menu opens, then kept mounted so it can animate closed.
+
+The button carries `aria-haspopup="dialog"`, `aria-expanded` and, while open,
+`aria-controls`, as a Radix trigger would.
+
+The panel is built on the shadcn `Sheet` (Radix Dialog). Radix gives us, for free:
 
 - **focus trap**: Tab cycles inside the menu, never behind it
 - **scroll lock**: the page behind doesn't scroll
-- **Esc to close**, and **focus returns** to the (≡) button
+- **Esc to close**. Focus returns to the (≡) button through `onCloseAutoFocus`,
+  because the button isn't a Radix trigger any more.
 
 Details:
 

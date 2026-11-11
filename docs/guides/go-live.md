@@ -42,20 +42,25 @@ Each item is a ticket or a check. Launch waits until every box is ticked.
 
 **Accounts (#45)**
 
-- [ ] Vercel Pro project set up ([Environments](./environments.md) § 1), with every
-      **Production** variable from § 7 filled in. Values come from the password manager,
-      never from chat.
+- [x] Vercel Pro project set up ([Environments](./environments.md) § 1), with every
+      **Production** variable from § 7 filled in (8 November, #45). Values come from the
+      password manager, never from chat.
 - [ ] A **Production deployment of `main` is green** on its `*.vercel.app` URL. It runs
-      the strict release guard, so this also proves the translations are final.
-- [ ] Supabase `nortbrand-prod` created (§ 2). 🔒 Migrations pushed:
+      the strict release guard, so this also proves the translations are final. First
+      green on 8 November (#45); recheck on the launch commit, after #77 and #78.
+- [x] Supabase `nortbrand-prod` created (§ 2). 🔒 Migrations pushed:
       `pnpm exec supabase link --project-ref <prod-ref>`, then
       `pnpm exec supabase db push`. 🔒 The Vault secret `newsletter_token_secret` set (§ 6).
       Free plan (lead's decision, #45): the Supabase owner email goes to an inbox someone
       reads, because it carries the "pausing soon" warning ([Environments](./environments.md)
       § 2, Keep-alive).
-- [ ] Resend: `send.nortbrand.pt` shows **Verified**; the `nortbrand-production` key
+      Done 8 November (#45); push again after any new migration.
+- [x] Resend: `send.nortbrand.pt` shows **Verified**; the `nortbrand-production` key
       is in Vercel (§ 3).
-- [ ] Sentry and GA4 values are in Vercel (§ 4, § 5).
+- [x] Sentry and GA4 values are in Vercel (§ 4, § 5).
+- [ ] Look through the consultation requests and newsletter rows in `nortbrand-prod`
+      that arrived through the public `nort-brand-ruby.vercel.app` alias before launch
+      (docs/tech-debt.md). Delete test and spam rows; keep real ones.
 
 **DNS preparation (T−2)**
 
@@ -76,6 +81,8 @@ Do the steps in this order. Each one ends with its check; don't move on until it
 3. **Add the domains on Vercel.** Settings → Domains:
    - `nortbrand.pt`, assigned to **Production**;
    - `www.nortbrand.pt`, **Redirect to** `nortbrand.pt` (308).
+   - `nort-brand-ruby.vercel.app` (public since 8 November, docs/tech-debt.md):
+     **Redirect to** `nortbrand.pt` (308), or remove it, once `nortbrand.pt` answers.
 
    Vercel then lists the DNS records each domain needs. Use the values it shows; they
    are not copied here because Vercel can change them.
@@ -134,12 +141,10 @@ ticket (#85).
 **Forms and email** (with your own address)
 
 - [ ] `/api/health/newsletter` → `{"status":"ok"}`.
-- [ ] Keep-alive (#101): merge its pull request now that the domain answers. It is the one
-      exception to the freeze: it changes no page, and its production deployment is what
-      registers the cron. Wait for that deployment to be green, then **Actions → Supabase
-      keep-alive → Run workflow**: the run is green and logs `{"status":"ok"}`. Vercel →
-      Settings → Cron Jobs lists `/api/health/newsletter`; its first run (06:00 UTC) shows
-      200 in the logs.
+- [ ] Keep-alive (#101): delete the `KEEPALIVE_URL` repository variable (it points at the
+      `*.vercel.app` alias until launch), so the workflow calls `nortbrand.pt`. Then
+      **Actions → Supabase keep-alive → Run workflow**: the run is green and logs
+      `{"status":"ok"}`. Vercel → Settings → Cron Jobs still lists `/api/health/newsletter`.
 - [ ] Send the consultation form in PT. The confirmation email arrives in Portuguese, and
       the team alert reaches `NOTIFY_TO_EMAIL`. The row is in `nortbrand-prod` with
       `notified_at` set. Afterwards, set its status to `spam` in the dashboard so it never
@@ -176,8 +181,8 @@ Every rollback gets a ticket afterwards, saying what happened, why, and the foll
 ## 6. After launch (first two weeks)
 
 - **Day 1–3:** watch Sentry, Vercel's function logs and both webhook attempt logs daily.
-- **Day 2:** the keep-alive ran once from each scheduler: a green scheduled run under
-  Actions, and a 200 from the Vercel cron in the logs.
+- **Day 2:** the keep-alive's scheduled run against `nortbrand.pt` is green under Actions,
+  and the Vercel cron shows a 200 in the logs.
 - **Day 3:** Search Console → Pages: both locales are being indexed; no "Duplicate
   without user-selected canonical" on `/en` vs `/pt`.
 - **Day 7:** raise the DNS TTLs back to their normal value (for example 3600 s). 🔒

@@ -1,6 +1,17 @@
+import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
 import { copy } from "./copy";
+import { settleAnimations } from "./settle";
+
+/* Same tags as the page harness (pages.spec.ts). */
+const WCAG_TAGS = [
+  "wcag2a",
+  "wcag2aa",
+  "wcag21a",
+  "wcag21aa",
+  "wcag22aa",
+] as const;
 
 /*
  * Services page (ticket #10). Accessibility, H1, hreflang and overflow are covered by
@@ -168,6 +179,46 @@ test.describe("services page", () => {
     );
     await details.getByRole("button", { name: "Close" }).last().click();
     await expect(details).toBeHidden();
+  });
+
+  test("the red details panel passes axe and its mark finishes drawn (#119)", async ({
+    page,
+  }) => {
+    test.skip(isMobile(page), "the visual panel shows from lg only");
+    await page.goto("/en/services");
+    const { details } = await openDetails(
+      page,
+      "Web Design",
+      copy("en", "Services.items.webDesign.title"),
+    );
+    const mark = details.locator("svg path[stroke]").first();
+    // The draw is running: the stroke starts hidden and is animated by mark-draw.
+    await expect
+      .poll(() =>
+        mark.evaluate((path) => {
+          const [animation] = path.getAnimations();
+          return animation instanceof CSSAnimation
+            ? animation.animationName
+            : null;
+        }),
+      )
+      .toBe("mark-draw");
+
+    await settleAnimations(page);
+    await expect
+      .poll(() =>
+        mark.evaluate((path) => getComputedStyle(path).strokeDashoffset),
+      )
+      .toMatch(/^0(px)?$/);
+
+    // Contrast of the white label and icon on the red fill, among the rest.
+    const { violations } = await new AxeBuilder({ page })
+      .include('[role="dialog"]')
+      .withTags([...WCAG_TAGS])
+      .analyze();
+    expect(
+      violations.map((v) => `${v.id}: ${v.help} × ${v.nodes.length}`),
+    ).toEqual([]);
   });
 
   test("our approach switches points", async ({ page }) => {
@@ -371,6 +422,29 @@ test.describe("services page", () => {
       page.getByRole("navigation", { name: "Jump to a service" }),
     ).toBeHidden();
     await expect(page.locator("main article")).toHaveCount(5);
+  });
+});
+
+test.describe("details panel with reduced motion", () => {
+  test.use({ reducedMotion: "reduce" });
+
+  test("the mark is simply drawn, with no animation (#119)", async ({
+    page,
+  }) => {
+    test.skip(isMobile(page), "the visual panel shows from lg only");
+    await page.goto("/en/services");
+    const { details } = await openDetails(
+      page,
+      "Web Design",
+      copy("en", "Services.items.webDesign.title"),
+    );
+    const mark = details.locator("svg path[stroke]").first();
+    const state = await mark.evaluate((path) => ({
+      animations: path.getAnimations().length,
+      offset: getComputedStyle(path).strokeDashoffset,
+    }));
+    expect(state.animations).toBe(0);
+    expect(state.offset).toMatch(/^0(px)?$/);
   });
 });
 

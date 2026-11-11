@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import { locale as rootLocale } from "next/root-params";
 
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { JsonLd } from "@/components/site/json-ld";
 import { LoadingSplash, splashScript } from "@/components/site/loading-splash";
-import { Toaster } from "@/components/ui/sonner";
 import { ConsentManager } from "@/features/consent/components/consent-manager";
 import { GoogleAnalytics } from "@/features/consent/components/google-analytics";
 import { publicEnv } from "@/env";
 import { site } from "@/content/site";
+import { pickMessages } from "@/i18n/client-messages";
 import { routing } from "@/i18n/routing";
 import { organizationJsonLd } from "@/lib/seo/structured-data";
 
@@ -45,6 +45,8 @@ export default async function LocaleLayout({
 
   const t = await getTranslations("Common");
   const metadata = await getTranslations("Metadata");
+  // Only what client components read; the rest stays on the server (#105).
+  const clientMessages = pickMessages(await getMessages());
 
   return (
     // suppressHydrationWarning: the splash script sets data-splash on <html> before
@@ -65,13 +67,15 @@ export default async function LocaleLayout({
         >
           {t("skipToContent")}
         </a>
-        <NextIntlClientProvider>
+        <NextIntlClientProvider messages={clientMessages}>
           <MotionProvider>
             {children}
             {/* Cookie banner and preferences on every page (ADR-007, #42). */}
             <ConsentManager />
             {/* GA4, only after analytics consent (#43). */}
-            <GoogleAnalytics />
+            <GoogleAnalytics
+              measurementId={publicEnv.NEXT_PUBLIC_GA_MEASUREMENT_ID}
+            />
           </MotionProvider>
         </NextIntlClientProvider>
         {/* Organization on every page (brief, "SEO"). */}
@@ -82,7 +86,6 @@ export default async function LocaleLayout({
             config: site,
           })}
         />
-        <Toaster />
       </body>
     </html>
   );

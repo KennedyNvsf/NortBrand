@@ -10,7 +10,7 @@ mobile sheet `362:307`.
 
 ```
 Photo hero        transparent nav over a photo · H1 · lead · quote card
-Service blocks    5 × (collage placeholder | eyebrow · H2 · summary · More Details)
+Service blocks    5 × (collage | eyebrow · H2 · summary · More Details)
                   More Details → Dialog (tablet, desktop) or Drawer (mobile)
 Our approach      tab list + panel (tablet, desktop) · accordion (mobile)
 CTA band          Services headline override
@@ -26,7 +26,8 @@ src/app/[locale]/(site)/services/
    _components/services-hero.tsx     server
    _components/hero-video.tsx        CLIENT: the looping hero video
    _components/service-blocks.tsx    server: one <article id={slug}> per service
-   _components/service-collage.tsx   server: decorative placeholder
+   _components/service-collage.tsx   server: two photos, or the Figma placeholder
+   _components/service-photos.ts     each service's collage photos, by slug (#82)
    _components/service-details.tsx   CLIENT: the Dialog / Drawer
    _components/services-approach.tsx server, composing client Tabs + Accordion
 src/content/services.ts              serviceSlugs, services, includedKeys
@@ -158,20 +159,75 @@ mobile e2e test tabs six times and asserts focus never leaves.
   ticket adds it with the pinned blocks. Until then, text and collage are exactly where
   Figma puts them.
 
-### `service-collage.tsx`
+### `service-collage.tsx` and `service-photos.ts`
 
-A placeholder for photography (`CLAUDE.md`, Images): `aria-hidden`,
-`data-placeholder="image"`. Every position is a percentage of the Figma 555 × 449 frame
-(`aspect-555/449`), so one component scales to every breakpoint's collage width
-(350 / 312 / 556 px). The two image glyphs are the Figma exports in
-`public/images/placeholder/`.
+Every position is a percentage of the Figma 555 × 449 frame (`aspect-555/449`), so one
+component scales to every breakpoint's collage width (350 / 312 / 556 px): a large panel,
+with a square overlapping its top-right corner.
+
+- **With photos (#82):** `servicePhotos[slug]` gives a `main` and a `detail` photo, each
+  with an optional object-position class to keep its subject in the crop. Both render
+  through `PhotoPanel`, the same component as the Home photos (blur placeholder,
+  hairline ring). The square keeps its surface-coloured border. It clips with
+  `overflow-hidden`, so the photo follows the border's inner radius.
+- **Without:** the Figma placeholder, with the glyphs in `public/images/placeholder/`
+  and `data-placeholder="image"`. All five services have photos (#82, 10 November), so
+  this branch is only a fallback for a service added later.
+- **Crop anchors per photo** (in `service-photos.ts`) are chosen by eye at 1440 / 768 / 390. A photo much wider than its panel (Website Maintenance's 1.86 : 1 code shot)
+  shows only about 60% of its width, so the anchor matters more there.
+- **Decorative either way.** The collage is `aria-hidden` and the photos have `alt=""`.
+  The text beside the collage carries the meaning.
+- **Why the photos live in `service-photos.ts`, not `src/content/services.ts`:** the
+  consultation form and analytics also import `services.ts`. Image imports there would
+  add the photos' data (including blur placeholders) to those client bundles.
+- **`sizes` is computed, not written by hand.** `object-cover` scales a 3:2 photo to the
+  height of the 1.1:1 main panel, so the photo is drawn about 1.36× wider than the panel.
+  With `sizes` describing only the panel, desktop browsers picked the 1080 px file for a
+  photo drawn about 1150 device pixels wide. `coverSizes()` multiplies each piece's
+  share of the collage by `max(1, photo aspect ÷ panel aspect)`, so a photo with a
+  different shape still gets the right file. A portrait photo (Web Development's detail)
+  is drawn at its panel's width, so its factor is 1, and the crop anchor picks which
+  band of it shows. If the collage widths in
+  `service-blocks.tsx` change, update the `COLLAGE_*` constants.
+- **No `settle`, unlike Home.** On Home the panel slides, so the photo's 1.6% zoom is
+  the only scale movement. Here the `pop` already scales each panel from 0.88 to 1, photo
+  included, so a settle would not be visible. As two more reveal items it would also
+  delay the square and the copy by 100–200 ms on every stage step, because the engine
+  staggers items by DOM order.
+- **Adding a service's photos:** export at 1600 px wide with metadata stripped, put the
+  files in `src/assets/images/service-<slug>.jpg` and `service-<slug>-detail.jpg`, add
+  an entry to `servicePhotos`, check the crop at 1440 / 768 / 390, and record the
+  licence in `docs/tech-debt.md`.
 
 ### `service-details.tsx`
 
 - Tablet and desktop share one `DialogContent`. From `lg` it becomes a two-column grid
-  with the dark `VisualPanel` (position, 120 px icon tile, logomark watermark). Below
-  `lg`, the panel is hidden and the small icon tile and "01 / 05" show in the header
-  instead (Figma `362:383`).
+  with the `VisualPanel` (position, 120 px icon tile, logomark watermark). Below `lg`,
+  the panel is hidden and the small icon tile and "01 / 05" show in the header instead
+  (Figma `362:383`).
+- **The panel is primary red** (`bg-action-primary-fill`, #DC2626, the primary
+  button's fill), not Figma's dark panel (`317:58`). That's the lead's decision (#119).
+  The small icon tile below `lg` stands in for the panel, so it is red too.
+  - The position label is full white: white at 70% on red is below 4.5:1, and full
+    white is 4.83:1.
+  - `data-surface="dark"` stays: it makes the focus ring white, which red needs as
+    well.
+- **The watermark draws itself on open** (#119). It uses the `mark-draw` keyframes with
+  `DRAW_TIMING`:
+  - after `--duration-base` (the dialog's own entrance), the stroke draws over
+    `revealSpec.drawDuration` (1.2 s) on `--ease-draw`, the same timing as a mark
+    drawing in a panel (reveal kind `draw`).
+  - The content mounts on every open, so the draw replays each time, with no
+    JavaScript.
+  - **Why not the logo's 900 ms emphasized curve:** only the first ~40% of the path
+    shows inside the panel, and that front-loaded curve drew it in about 100 ms. On
+    the in-out curve the visible stretch draws over about half a second.
+  - **Why inline styles:** Tailwind emits `motion-safe:animate-*` after plain
+    utilities, and its `animation` shorthand resets any delay or timing class. Inline
+    longhands always win.
+  - **Reduced motion:** no animation; the mark is simply drawn.
+  - Measured on a production build: hidden until 250 ms, about 70% drawn by 1.0 s,
+    complete at about 1.45 s.
 - `DetailsBody` is shared by the Dialog and the Drawer. It receives `Title`,
   `Description` and `Close` as components, so the same markup uses Radix parts in one
   container and vaul parts in the other.

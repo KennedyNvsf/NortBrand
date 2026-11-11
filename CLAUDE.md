@@ -98,6 +98,11 @@ React Email · Sanity (blog only) · Sentry · Vitest · Playwright · pnpm · N
   on its first request (`ensureStatic = "navigation"`), then is cached.
 - Check the build output to confirm marketing pages are static. A page that becomes dynamic
   unexpectedly is a bug.
+- **What loads before the first paint** (docs/guides/performance.md, #105): no `@/env` or
+  zod in client components (pass values as props); widgets go in the layout only if every
+  page uses them; dialogs, drawers and menus load with `next/dynamic`, prefetched when
+  idle; `NextIntlClientProvider` gets only `CLIENT_MESSAGE_PATHS` (add a namespace there
+  when a client component needs it; a unit test enforces it).
 
 ## Repository layout
 
@@ -120,7 +125,7 @@ sanity/                  schemas + Studio config
 supabase/                migrations/, seed.sql, tests/ (pgTAP)
 src/features/*/emails/   React Email templates (per feature)
 tests/e2e/               Playwright
-docs/                    README, adr/, guides/, runbook, tech-debt.md
+docs/                    README, adr/, guides/, runbook, tech-debt.md, accessibility-audit.md (#84)
 ```
 
 ## Content, translation and assets
@@ -141,8 +146,15 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md
 - **Images:**
   - The sea photo is a launch asset. It needs optimized, responsive crops, and meaningful
     alt text wherever it isn't decorative.
-  - Collages and logomark panels are Figma placeholders. They live in
-    `public/images/placeholder/`, use `alt=""`, and are logged in `docs/tech-debt.md`.
+  - Logomark panels are Figma placeholders (the service collages have photos since #82).
+    Placeholders live in `public/images/placeholder/`, use `alt=""`, and are logged in
+    `docs/tech-debt.md`.
+  - Replacing a panel with a photo (#82): pass `image` to `FeatureSplit` (or use
+    `PhotoPanel`). Photos go in `src/assets/images/` at 1600 px wide with metadata
+    stripped; they settle and drift like the mark did. Home's two are AI-generated
+    (tech debt). Service collages take photos per slug from
+    `services/_components/service-photos.ts` (all five; sources partly unrecorded, see
+    tech debt).
 - **Logo:** `LOGONORT` (`54:16`), exported as an optimized SVG. The wordmark is converted
   to paths, and the SVG uses `currentColor`.
 - **Navigation:** links to unbuilt pages show the designed 404 until those pages ship.
@@ -157,7 +169,8 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md
   `motion.*`, so the engine stays lazy-loaded.
 - Scroll reveals: mark elements with `revealItem(kind)` and wrap the section in
   `<RevealGroup>` (src/components/motion). It never hides content that is already
-  visible or before hydration. Hero entrances use `enterItem(index)` (CSS). Reveal
+  visible or before hydration. Shared components use `reveal-dom.ts` up front and get
+  `play()`/`animate()` from `loadRevealEngine()` after hydration (#105). Hero entrances use `enterItem(index)` (CSS). Reveal
   values were raised after the #27 review; see src/lib/motion.ts.
 - Booking links use `<BookingButton>` (arrow → calendar on hover).
 - Every animation has a reduced-motion path: opacity only, 150 ms or less, no path drawing.
@@ -274,7 +287,9 @@ Rules:
 - Focus ring 2 px with 2 px offset.
 - One H1 per page.
 - 44 pt minimum tap targets on touch for buttons, nav items and form controls. Inline text
-  links inside body copy are exempt from this check.
+  links inside body copy are exempt from this check. Use `min-h-11`/`size-11`, or the
+  `touch-target` utility to grow a small element's hit area without changing its look.
+  The page harness hit-tests every control at 390 px (docs/guides/accessibility.md).
 - Errors always pair an icon with text.
 - `prefers-reduced-motion` falls back to opacity fades of 150 ms or less.
 
@@ -301,6 +316,8 @@ pnpm test:e2e       # playwright
 pnpm build
 pnpm i18n:pseudo    # regenerate placeholder pt.json from en.json (keeps real translations; --reset for all)
 pnpm check:release  # strict guard: pseudo translations + draft legal text; must pass before launch
+pnpm lhci autorun   # Lighthouse budgets (after E2E_FAKE_BACKEND=1 pnpm build); not a dependency, runs via pnpm dlx
+pnpm lighthouse:summary  # score table from the last Lighthouse run
 pnpm icons:generate # favicon.ico, apple-icon.png, logo-square.png from src/app/icon.svg (commit the output)
 pnpm db:start / db:stop / db:reset / db:types / db:test   # local Supabase (Docker)
 pnpm sanity:types   # extract the Sanity schema and regenerate src/lib/sanity/sanity.types.ts
@@ -331,9 +348,12 @@ Ticket → Branch → Implement → Validate → Push → Pull Request → Walkt
     `feat(ui): add Card component variants (#23)`.
   - Every commit builds.
 - **CI (every PR):** required: typecheck/lint/format/unit/build, e2e (desktop), e2e
-  (mobile, Chromium at iPhone 14 size), Database (pgTAP). Informational: e2e in WebKit (two
-  shards), not a merge gate because it is unstable on the runners. Guide:
-  docs/guides/ci.md.
+  (mobile, Chromium at iPhone 14 size), Database (pgTAP), Lighthouse (mobile) (budgets in
+  `lighthouserc.json`; required once added to branch protection). Informational: e2e in
+  WebKit (two shards), not a merge gate because it is unstable on the runners; e2e
+  (preview), the host-independent specs against the PR's own Vercel preview
+  (`E2E_BASE_URL`, `tests/e2e/target.ts`), required once it has proven stable (#45).
+  Guide: docs/guides/ci.md.
 - **Validation before pushing**
   - Run typecheck, lint, format:check, unit tests and build. Run e2e when pages or flows
     changed.
