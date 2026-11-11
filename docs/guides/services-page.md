@@ -196,8 +196,8 @@ with a square overlapping its top-right corner.
   staggers items by DOM order.
 - **Adding a service's photos:** export at 1600 px wide with metadata stripped, put the
   files in `src/assets/images/service-<slug>.jpg` and `service-<slug>-detail.jpg`, add
-  an entry to `servicePhotos`, check the crop at 1440 / 768 / 390, and record the
-  licence in `docs/tech-debt.md`.
+  an entry to `servicePhotos`, check the crop at 1440 / 768 / 390, and add it to the
+  register in [Images](./images.md).
 
 ### `service-details.tsx`
 
@@ -311,4 +311,5 @@ That is why the first dialog render had an inset dark panel. Overrides like `p-0
   keyword in each title.
 - **Swap a photo:** collages in `service-photos.ts`, approach points in `points` in
   `services-approach.tsx`. Export at 1600 px with metadata stripped, set a crop anchor,
-  check 1440 / 768 / 390 on a production build, and log the licence in tech debt.
+  check 1440 / 768 / 390 on a production build, and update the register in
+  [Images](./images.md).

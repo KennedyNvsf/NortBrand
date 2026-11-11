@@ -19,6 +19,7 @@ the guides always match the code.
 | [System states](./system-states.md)                 | The localized 404 (catch-all, `ensureStatic`), loading splash, `LogoMark` drawing                                                                 |
 | [SEO](./seo.md)                                     | Page metadata, share image, sitemap, robots, JSON-LD, preview noindex                                                                             |
 | [Motion](./motion.md)                               | Motion Spec: tokens, `MotionProvider`, `<Reveal>`, journey line, Services stage, menu stagger                                                     |
+| [Images and media](./images.md)                     | Register of every photo and video (source, licence, credit, notes), exporting, naming, crops, `sizes`, alt text                                   |
 | [Services page](./services-page.md)                 | Photo hero, service blocks, Dialog/Drawer details, Tabs/Accordion, useMediaQuery, `cn` fix                                                        |
 | [Environments](./environments.md)                   | Account runbook (Vercel, Supabase, Resend, Sentry, GA4), env matrix, Sentry scrubbing, local Supabase, Free-plan keep-alive                       |
 | [Go-live runbook](./go-live.md)                     | Launch day: prerequisites, domain and DNS cut-over, webhooks, Search Console, checks, rollback                                                    |
