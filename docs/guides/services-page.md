@@ -243,8 +243,20 @@ with a square overlapping its top-right corner.
   `TabsList` and `TabsContent` show from `md`; the `Accordion` shows below `md`. Rendering
   both is cheaper than a media-query hook here: no hydration swap, no layout shift.
   Display-none images are not downloaded.
-- Figma designs only "Brand Identity". The other three points use draft copy and
-  `MarkPanel` (logged in tech debt).
+- Figma designs only "Brand Identity". The other three points use draft copy (logged in
+  tech debt).
+- **Photos (#82):** every point has the lead's photo in `points` (1600 px, metadata
+  stripped), so `image` is required and the old `MarkPanel` fallback is gone.
+  - Each point can set `position`, an object-position class that keeps its subject in
+    the landscape panel (480 × 320 desktop, about 364 × 260 tablet, 350 × 220 mobile).
+    The photos are 3:2 like the desktop panel, so crops are slight; a portrait photo
+    would show only a band, and its anchor would need checking at every width.
+  - Decorative (`alt=""`): the point's title and copy carry the meaning.
+  - `sizes` follows the panel: 480 px, about half the viewport on tablet, and the
+    container (`100vw - 40px`) on mobile.
+  - Check crops on a production build (`pnpm build && pnpm start`): the dev server
+    can serve stale CSS that lacks a newly added `object-[…]` class, so every crop
+    falls back to centred.
 
 ### `ui/tabs.tsx`, `ui/accordion.tsx`
 
@@ -297,6 +309,6 @@ That is why the first dialog render had an inset dark panel. Overrides like `p-0
   Renaming a slug also needs a database migration (consultation requests store it).
 - **Change dialog copy:** edit `messages/en.json`. Keep exactly one `<greenUnderline>`
   keyword in each title.
-- **Real photography:** replace `ServiceCollage` per service, and the `MarkPanel` points
-  in `services-approach.tsx`, with `next/image` and meaningful alt text. Then remove the
-  tech-debt entries.
+- **Swap a photo:** collages in `service-photos.ts`, approach points in `points` in
+  `services-approach.tsx`. Export at 1600 px with metadata stripped, set a crop anchor,
+  check 1440 / 768 / 390 on a production build, and log the licence in tech debt.

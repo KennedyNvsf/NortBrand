@@ -5,7 +5,6 @@ import { getTranslations } from "next-intl/server";
 import { RevealGroup } from "@/components/motion/reveal-group";
 import { revealItem } from "@/components/motion/reveal-item";
 import { BookingButton } from "@/components/site/booking-button";
-import { MarkPanel } from "@/components/site/mark-panel";
 import {
   Accordion,
   AccordionContent,
@@ -14,6 +13,9 @@ import {
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
 import brandIdentityImage from "@/assets/images/approach-brand-identity.jpg";
+import contentStrategyImage from "@/assets/images/approach-content-strategy.jpg";
+import growthImage from "@/assets/images/approach-growth.jpg";
+import visualDesignImage from "@/assets/images/approach-visual-design.jpg";
 
 import { ApproachTabs } from "./approach-tabs";
 
@@ -27,16 +29,26 @@ import { ApproachTabs } from "./approach-tabs";
  * travelling accent and the panel slide-in) and Accordion are the client boundary.
  * - On scroll the heading, the points and the selected panel reveal (RevealGroup); the
  *   panel's items slide in from the right, as they do on every change.
- * Figma designs only the Brand Identity point. The other three use draft copy and the
- * logomark placeholder until imagery and final copy arrive (docs/tech-debt.md).
+ * Figma designs only the Brand Identity point; the other three use draft copy until the
+ * final copy arrives (docs/tech-debt.md). Each point has the lead's photo (#82): 1600 px,
+ * metadata stripped, decorative (alt=""), with an object-position that keeps its subject
+ * in the landscape panel.
  */
 
 const points = [
   { key: "brandIdentity", image: brandIdentityImage },
-  { key: "visualDesign" },
-  { key: "contentStrategy" },
-  { key: "growth" },
-] as const satisfies readonly { key: string; image?: StaticImageData }[];
+  {
+    key: "visualDesign",
+    image: visualDesignImage,
+    position: "object-[50%_30%]",
+  },
+  { key: "contentStrategy", image: contentStrategyImage },
+  { key: "growth", image: growthImage, position: "object-[60%_55%]" },
+] as const satisfies readonly {
+  key: string;
+  image: StaticImageData;
+  position?: string;
+}[];
 
 type Point = (typeof points)[number];
 
@@ -45,21 +57,20 @@ const DEFAULT_POINT = points[0].key;
 const mediaClassName = "h-55 w-full shrink-0 md:h-65 lg:h-80";
 
 function PointMedia({ point }: { point: Point }) {
-  if (!("image" in point)) {
-    return (
-      <div {...revealItem("right")} className="w-full">
-        <MarkPanel className={cn(mediaClassName, "shadow-card")} />
-      </div>
-    );
-  }
   return (
     <Image
       {...revealItem("right")}
       src={point.image}
       alt=""
       placeholder="blur"
-      sizes="(min-width: 1024px) 480px, (min-width: 768px) 50vw, 100vw"
-      className={cn(mediaClassName, "rounded-lg object-cover shadow-card")}
+      // Panel width: 480 on desktop, about half the viewport on tablet, the container
+      // (20 px gutters) on mobile.
+      sizes="(min-width: 1024px) 480px, (min-width: 768px) 50vw, calc(100vw - 40px)"
+      className={cn(
+        mediaClassName,
+        "rounded-lg object-cover shadow-card",
+        "position" in point && point.position,
+      )}
     />
   );
 }
