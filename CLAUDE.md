@@ -146,8 +146,8 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md, accessibi
 - **Images:**
   - The sea photo is a launch asset. It needs optimized, responsive crops, and meaningful
     alt text wherever it isn't decorative.
-  - Logomark panels are Figma placeholders (the service collages have photos since #82).
-    Placeholders live in `public/images/placeholder/`, use `alt=""`, and are logged in
+  - Logomark panels are Figma placeholders (the service collages and the "Our approach"
+    points have photos since #82). Placeholders live in `public/images/placeholder/`, use `alt=""`, and are logged in
     `docs/tech-debt.md`.
   - Replacing a panel with a photo (#82): pass `image` to `FeatureSplit` (or use
     `PhotoPanel`). Photos go in `src/assets/images/` at 1600 px wide with metadata
