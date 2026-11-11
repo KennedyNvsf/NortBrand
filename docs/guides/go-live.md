@@ -12,6 +12,34 @@ of repeating them.
 > service (database migration, Sanity webhook, Search Console) needs the lead's approval
 > in the conversation first (CLAUDE.md). Each one is marked **🔒** below.
 
+## Status: the domain went live early (11 November)
+
+The lead chose a **quiet cut-over 19 days before launch** (#85, 11 November): the domain
+served nothing, the site was already public on the `vercel.app` alias, and proving DNS,
+TLS and the integrations early makes launch day a non-event. Search Console and the
+sitemap submission wait for launch day, so nothing asks Google to index draft copy.
+
+| Step (§ 3)                   | State on 11 November                                                                                                                                                                                                                                                                                                                            |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 3. Domains on Vercel         | ✅ `nortbrand.pt` and `www.nortbrand.pt` added and verified (the lead ran `vercel domains add`)                                                                                                                                                                                                                                                 |
+| 4. DNS at Dynadot            | ✅ apex `A` `216.198.79.1` and `64.29.17.1`; `www` `CNAME` `13f61df1485ef5de.vercel-dns-017.com` (TTL 300). Email records untouched                                                                                                                                                                                                             |
+| 5. TLS                       | ✅ certificates issued for both hosts                                                                                                                                                                                                                                                                                                           |
+| `www` → apex 308 redirect    | ✅ set through the API (`vercel api … -f redirect=nortbrand.pt -F redirectStatusCode=308`): `www.nortbrand.pt/<path>?<query>` → 308 to the same path and query on the apex                                                                                                                                                                      |
+| 6. Sanity CORS and webhook   | ✅ origin `https://nortbrand.pt` (credentials); webhook `nortbrand-production` (`LbNY4vUQyejp6fR9`) → `https://nortbrand.pt/api/revalidate`, dataset `production`, signed with a **new** `SANITY_REVALIDATE_SECRET` (rotated in Vercel, production redeployed). Signed test → 200 (`blog-list`, `blog-posts`); unsigned or wrongly signed → 401 |
+| 6. Resend webhook            | ⏳ lead: `contact.updated` → `https://nortbrand.pt/api/newsletter/resend-webhook`                                                                                                                                                                                                                                                               |
+| Keep-alive (#101)            | ✅ `KEEPALIVE_URL` deleted; a manual run called `https://nortbrand.pt/…` → `{"status":"ok"}`                                                                                                                                                                                                                                                    |
+| `nort-brand-ruby.vercel.app` | still public; redirect it to `nortbrand.pt` on launch day (step 3)                                                                                                                                                                                                                                                                              |
+| 8. Search Console            | ⏸ launch day                                                                                                                                                                                                                                                                                                                                    |
+
+Checks run on 11 November against `https://nortbrand.pt`: `/` → 307 to `/pt` (or `/en`
+with an English `Accept-Language`); `/en`, `/pt` and every nav page 200; health `ok`;
+`robots.txt` allows crawling with the production sitemap; canonical and `hreflang` on
+`/pt` point to `https://nortbrand.pt/…`.
+
+**What's left for launch morning:** freeze `main`, merge the content tickets (#77, #78,
+#79), redeploy, redirect the `vercel.app` alias, run § 4, then § 3 step 8 (Search Console).
+Steps 3–5 of § 3 are already done.
+
 ## 1. The shape of launch day
 
 | Domain              | Serves                                     | Set up where                          |
@@ -64,11 +92,15 @@ Each item is a ticket or a check. Launch waits until every box is ticked.
 
 **DNS preparation (T−2)**
 
-- [ ] Write down the current DNS records for `nortbrand.pt` (a screenshot or export
-      from the registrar). This is the DNS rollback.
-- [ ] 🔒 Lower the TTL of the records you will change (apex `A`/`ALIAS` and `www`) to
-      **300 seconds**, at least a day ahead, so the switch and any rollback spread in
-      minutes.
+- [x] Write down the current DNS records for `nortbrand.pt`. This is the DNS rollback.
+      Checked 11 November (#85), from public DNS: - Nameservers: `ns1.dyna-ns.net`, `ns2.dyna-ns.net` (Dynadot). Records are edited
+      in the Dynadot dashboard, which only the lead can reach. - **No apex or `www` record exists.** Nothing is served on the domain today, so
+      the cut-over adds two records and the rollback is deleting them; no old site
+      comes back. - Email records, never to be touched: `_dmarc` TXT `v=DMARC1; p=none;`,
+      `resend._domainkey.send` TXT (DKIM), `rsend.send` and `send.send` CNAME
+      (Resend SPF and bounces). No MX.
+- [x] TTL: the zone's default TTL is already **300 seconds**, so a new record or a
+      rollback spreads in minutes. Nothing to lower.
 
 ## 3. Cut-over, in order (launch morning)
 
@@ -87,8 +119,21 @@ Do the steps in this order. Each one ends with its check; don't move on until it
    Vercel then lists the DNS records each domain needs. Use the values it shows; they
    are not copied here because Vercel can change them.
 
-4. 🔒 **Point DNS at Vercel**, at the registrar: the apex record and the `www` record,
-   exactly as Vercel shows them. Leave every `send.*`, `_dmarc`,
+   From a terminal (the CLI is installed and linked, `vercel whoami` → the lead's
+   account), the same is:
+
+   ```sh
+   vercel domains add nortbrand.pt nort-brand --scope nort-brand
+   vercel domains add www.nortbrand.pt nort-brand --scope nort-brand
+   vercel domains inspect nortbrand.pt --scope nort-brand   # the records Vercel expects
+   ```
+
+   Set the `www` redirect in the dashboard (Settings → Domains → `www.nortbrand.pt` →
+   **Redirect to** `nortbrand.pt`, 308). Claude Code's permission rules block domain
+   commands, so the lead runs these, or allows them first.
+
+4. 🔒 **Point DNS at Vercel**, in the Dynadot dashboard (Domains → `nortbrand.pt` → DNS
+   settings): the apex record and the `www` record, exactly as Vercel shows them. Leave every `send.*`, `_dmarc`,
    `resend._domainkey.*` and MX record alone: they are the email.
    Check: both hosts show **Valid Configuration** on Vercel (minutes with a 300 s TTL).
 5. **TLS.** Vercel issues the certificates by itself once DNS resolves. Check:
@@ -141,10 +186,9 @@ ticket (#85).
 **Forms and email** (with your own address)
 
 - [ ] `/api/health/newsletter` → `{"status":"ok"}`.
-- [ ] Keep-alive (#101): delete the `KEEPALIVE_URL` repository variable (it points at the
-      `*.vercel.app` alias until launch), so the workflow calls `nortbrand.pt`. Then
-      **Actions → Supabase keep-alive → Run workflow**: the run is green and logs
-      `{"status":"ok"}`. Vercel → Settings → Cron Jobs still lists `/api/health/newsletter`.
+- [x] Keep-alive (#101): the `KEEPALIVE_URL` variable was deleted on 11 November, when
+      the domain went live, and a manual run called `https://nortbrand.pt/…` →
+      `{"status":"ok"}`. On launch day just confirm the last scheduled run is green.
 - [ ] Send the consultation form in PT. The confirmation email arrives in Portuguese, and
       the team alert reaches `NOTIFY_TO_EMAIL`. The row is in `nortbrand-prod` with
       `notified_at` set. Afterwards, set its status to `spam` in the dashboard so it never
