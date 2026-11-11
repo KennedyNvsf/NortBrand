@@ -42,12 +42,7 @@ const points = [
     image: visualDesignImage,
     position: "object-[50%_30%]",
   },
-  // Portrait: the panel shows a band; keep the "Content plan" heading and first rows.
-  {
-    key: "contentStrategy",
-    image: contentStrategyImage,
-    position: "object-[50%_35%]",
-  },
+  { key: "contentStrategy", image: contentStrategyImage },
   { key: "growth", image: growthImage, position: "object-[60%_55%]" },
 ] as const satisfies readonly {
   key: string;

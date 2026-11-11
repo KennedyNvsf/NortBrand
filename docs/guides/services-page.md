@@ -249,8 +249,8 @@ with a square overlapping its top-right corner.
   stripped), so `image` is required and the old `MarkPanel` fallback is gone.
   - Each point can set `position`, an object-position class that keeps its subject in
     the landscape panel (480 × 320 desktop, about 364 × 260 tablet, 350 × 220 mobile).
-    Content Strategy is portrait, so only a band of it shows; `50% 35%` keeps the
-    "Content plan" heading and the first rows.
+    The photos are 3:2 like the desktop panel, so crops are slight; a portrait photo
+    would show only a band, and its anchor would need checking at every width.
   - Decorative (`alt=""`): the point's title and copy carry the meaning.
   - `sizes` follows the panel: 480 px, about half the viewport on tablet, and the
     container (`100vw - 40px`) on mobile.
