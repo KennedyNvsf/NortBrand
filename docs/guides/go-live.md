@@ -51,6 +51,9 @@ Each item is a ticket or a check. Launch waits until every box is ticked.
 - [x] Supabase `nortbrand-prod` created (§ 2). 🔒 Migrations pushed:
       `pnpm exec supabase link --project-ref <prod-ref>`, then
       `pnpm exec supabase db push`. 🔒 The Vault secret `newsletter_token_secret` set (§ 6).
+      Free plan (lead's decision, #45): the Supabase owner email goes to an inbox someone
+      reads, because it carries the "pausing soon" warning ([Environments](./environments.md)
+      § 2, Keep-alive).
       Done 8 November (#45); push again after any new migration.
 - [x] Resend: `send.nortbrand.pt` shows **Verified**; the `nortbrand-production` key
       is in Vercel (§ 3).
@@ -138,6 +141,10 @@ ticket (#85).
 **Forms and email** (with your own address)
 
 - [ ] `/api/health/newsletter` → `{"status":"ok"}`.
+- [ ] Keep-alive (#101): delete the `KEEPALIVE_URL` repository variable (it points at the
+      `*.vercel.app` alias until launch), so the workflow calls `nortbrand.pt`. Then
+      **Actions → Supabase keep-alive → Run workflow**: the run is green and logs
+      `{"status":"ok"}`. Vercel → Settings → Cron Jobs still lists `/api/health/newsletter`.
 - [ ] Send the consultation form in PT. The confirmation email arrives in Portuguese, and
       the team alert reaches `NOTIFY_TO_EMAIL`. The row is in `nortbrand-prod` with
       `notified_at` set. Afterwards, set its status to `spam` in the dashboard so it never
@@ -174,6 +181,8 @@ Every rollback gets a ticket afterwards, saying what happened, why, and the foll
 ## 6. After launch (first two weeks)
 
 - **Day 1–3:** watch Sentry, Vercel's function logs and both webhook attempt logs daily.
+- **Day 2:** the keep-alive's scheduled run against `nortbrand.pt` is green under Actions,
+  and the Vercel cron shows a 200 in the logs.
 - **Day 3:** Search Console → Pages: both locales are being indexed; no "Duplicate
   without user-selected canonical" on `/en` vs `/pt`.
 - **Day 7:** raise the DNS TTLs back to their normal value (for example 3600 s). 🔒

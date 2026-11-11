@@ -1,6 +1,6 @@
 # Environments and accounts
 
-**Covers:** #35, #45, #98. **Decisions:** ADR-002 (Supabase), ADR-005 (Vercel Pro),
+**Covers:** #35, #45, #98, #101. **Decisions:** ADR-002 (Supabase), ADR-005 (Vercel Pro),
 ADR-007 (GA4), ADR-008 (domain).
 
 The site runs on five outside services. The human lead owns every account (some are paid
@@ -22,7 +22,7 @@ tiers and a local database until then; #45 tracks the paid steps.
 | Domain (`nortbrand.pt`)    | Bought (#98)    | Paid                |
 | Vercel Pro                 | Done 7 November | Paid                |
 | Resend DNS                 | Done 8 November | Free                |
-| Supabase `nortbrand-prod`  | Done 8 November | Free (#102 trial)   |
+| Supabase `nortbrand-prod`  | Done 8 November | Free (#101 trial)   |
 
 Vercel project `nort-brand/nort-brand` builds a protected preview of every branch. CI
 still runs its checks against a production build of each pull request (#44) until the
@@ -110,7 +110,7 @@ Create **two** projects in the same EU region (Frankfurt `eu-central-1` or Irela
 `eu-west-1`), named `nortbrand-dev` and `nortbrand-prod`. Create `nortbrand-dev` now on the
 free tier; it pauses after a week without requests, and **Restore** in the dashboard wakes
 it. A paused production database would take the form offline, so `nortbrand-prod` runs on
-Free only with the keep-alive (#102); Pro is the fallback.
+Free only with the keep-alive ([below](#keep-alive-free-plan-trial-101)); Pro is the fallback.
 
 **`nortbrand-prod` (created 8 November 2026, #45):** ref `sobyanefxeexdwmqujcn`, region
 `eu-west-1` (Ireland), Free plan. Sign-ups off, Enforce SSL on. Migrations
@@ -140,6 +140,67 @@ pnpm exec supabase link --project-ref <dev-ref>  # asks for the dev database pas
 
 Migrations reach a project only through `pnpm exec supabase db push`, run deliberately:
 dev first, production after the pull request is merged. Nothing in CI pushes to a database.
+
+### Keep-alive (Free plan trial, #101)
+
+**Why.** Supabase pauses Free projects after about a week of low activity. While
+`nortbrand-prod` is paused, every consultation request shows _Send failed_ and every
+newsletter signup fails. Pro removes pausing contractually; the lead chose to try Free
+first (#45, review by **31 March 2027**) and accepted two risks for the trial: Supabase can
+still pause the project at its discretion (the keep-alive makes that unlikely, not
+impossible), and Free has **no automatic backups**. Both are in `docs/tech-debt.md`.
+
+**How it works at runtime.** Two schedulers call the same route every day, 12 hours
+apart, so one failing never leaves a week without activity:
+
+```
+06:00 UTC  Vercel Cron (vercel.json) ──┐   the Production deployment, whatever its domain
+                                       ├─► GET <site>/api/health/newsletter
+18:17 UTC  GitHub Actions ─────────────┘        │   KEEPALIVE_URL, else https://nortbrand.pt
+           (.github/workflows/keepalive.yml)    ▼
+                                    unsubscribe_newsletter RPC with a probe token
+                                    (healthcheck@nortbrand.invalid): a real query,
+                                    writes nothing, not rate-limited
+                                                │
+                                    200 {"status":"ok"}  or  503 {"status":"error",…}
+```
+
+The route already existed (#36) to check that `NEWSLETTER_TOKEN_SECRET` matches Vault, so
+the ping costs no new code and no migration, and doubles as a daily check of the secrets.
+
+**Alerting.** Vercel Cron only logs its result. The GitHub workflow is the alarm: anything
+but a 200 (after three retries 20 s apart, which cover a cold start) fails the run, and
+GitHub emails the repository owner. A failure means one of: the database is paused or down,
+the secrets no longer match, or the site is down. In each case look at the run's error
+line (it shows the response body: a status and a Postgres error code, never personal data),
+then the Supabase dashboard. A paused project is woken with **Restore**.
+
+**Files.**
+
+| File                              | Why                                                                                                                                                                                                                                 |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `vercel.json`                     | The `crons` entry. Vercel runs crons on Production deployments only, so previews never ping. Daily is also the Hobby limit, should the plan ever change.                                                                            |
+| `.github/workflows/keepalive.yml` | Daily at 18:17 UTC (off the hour: GitHub delays runs at :00) and on demand (**Actions → Supabase keep-alive → Run workflow**). No checkout and no secrets; `permissions: {}`. Private repo, so the schedule is never auto-disabled. |
+
+**Configuration, before and after launch.** The workflow calls `https://nortbrand.pt`
+(ADR-008) unless the repository variable `KEEPALIVE_URL` is set (Settings → Secrets and
+variables → Actions → Variables).
+
+- **Until launch:** `KEEPALIVE_URL=https://nort-brand-ruby.vercel.app`, the public
+  production alias (tech debt). It was merged on 10 November instead of on launch day, so
+  `nortbrand-prod`, created on 8 November, never reaches a week without activity before
+  30 November. It also lets both pings be verified before launch.
+- **At cut-over:** delete the variable, so the workflow calls `nortbrand.pt`, then run it
+  once by hand ([Go-live runbook](./go-live.md) § 4). The Vercel cron needs no change: it
+  always calls the Production deployment.
+
+**Supabase's own warning.** Supabase emails the organisation owner before it pauses a
+project. Make sure that address is an inbox someone reads; that email is the last chance
+to act if both pings have been failing.
+
+**Ending the trial.** By 31 March 2027, decide: stay on Free (keep all of this), or move
+`nortbrand-prod` to Pro in the dashboard. On Pro, delete the `crons` entry and the
+workflow, or keep the workflow purely as an uptime alarm, and remove the tech-debt entry.
 
 ## 3. Resend
 
