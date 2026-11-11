@@ -46,11 +46,12 @@ created on 16 October 2026 (#58); its steps are in § 9.
 
 - A password manager entry for each service (database passwords especially: Supabase shows
   them once).
-- Later (#45): access to the DNS for `nortbrand.pt` (Resend needs four records).
+- Access to the DNS for `nortbrand.pt` (Dynadot, `ns1.dyna-ns.net`): Resend's four records
+  were added there on 8 November (#45); the website's two records are a go-live step (#85).
 - Docker Desktop on your machine for the local database (`pnpm db:start`). It is free for
   small businesses.
 
-## 1. Vercel (ADR-005) · later, #45
+## 1. Vercel (ADR-005) · set up 8 November, #45
 
 1. Create a **Pro** team called NortBrand. Hobby is non-commercial only.
 2. **Add New → Project**, import `KennedyNvsf/NortBrand` from GitHub. Framework: Next.js.
@@ -186,13 +187,13 @@ then the Supabase dashboard. A paused project is woken with **Restore**.
 (ADR-008) unless the repository variable `KEEPALIVE_URL` is set (Settings → Secrets and
 variables → Actions → Variables).
 
-- **Until launch:** `KEEPALIVE_URL=https://nort-brand-ruby.vercel.app`, the public
-  production alias (tech debt). It was merged on 10 November instead of on launch day, so
-  `nortbrand-prod`, created on 8 November, never reaches a week without activity before
-  30 November. It also lets both pings be verified before launch.
-- **At cut-over:** delete the variable, so the workflow calls `nortbrand.pt`, then run it
-  once by hand ([Go-live runbook](./go-live.md) § 4). The Vercel cron needs no change: it
-  always calls the Production deployment.
+- **10–11 November:** `KEEPALIVE_URL=https://nort-brand-ruby.vercel.app` (the public
+  production alias) while the domain served nothing, so `nortbrand-prod`, created on
+  8 November, never went a week without activity.
+- **Since 11 November** the domain is live (#85), so the variable is deleted and the
+  workflow calls `nortbrand.pt`; a manual run returned `{"status":"ok"}`. The Vercel cron
+  needed no change: it always calls the Production deployment. Set the variable again only
+  to point the check somewhere else on purpose.
 
 **Supabase's own warning.** Supabase emails the organisation owner before it pauses a
 project. Make sure that address is an inbox someone reads; that email is the last chance
@@ -211,7 +212,7 @@ workflow, or keep the workflow purely as an uptime alarm, and remove the tech-de
 test visitor confirmations with that address too. Any other
 recipient is refused. The free tier allows 100 emails a day.
 
-**Later (#45).** Steps 1–3 and the `nortbrand-production` key, once the domain is bought.
+**Done 8 November (#45).** Steps 1–3 and the `nortbrand-production` key, after the domain was bought.
 
 1. **Domains → Add Domain:** `send.nortbrand.pt` (a sending subdomain keeps the main
    domain's reputation separate). Region: **EU (Ireland)**.
