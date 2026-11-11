@@ -153,8 +153,9 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md, accessibi
     `PhotoPanel`). Photos go in `src/assets/images/` at 1600 px wide with metadata
     stripped; they settle and drift like the mark did. Home's two are AI-generated
     (tech debt). Service collages take photos per slug from
-    `services/_components/service-photos.ts` (all five; sources partly unrecorded, see
-    tech debt).
+    `services/_components/service-photos.ts`. All stock media come from Pexels: the
+    register of every image, its source and licence, and how to add one is
+    docs/guides/images.md. Update it with any image change.
 - **Logo:** `LOGONORT` (`54:16`), exported as an optimized SVG. The wordmark is converted
   to paths, and the SVG uses `currentColor`.
 - **Navigation:** links to unbuilt pages show the designed 404 until those pages ship.
