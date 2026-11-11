@@ -60,6 +60,8 @@ export type ServiceDetailsProps = {
   title: ReactNode;
   details: string;
   included: string[];
+  /** Extra classes for the trigger (the grid stretches it over its card). */
+  triggerClassName?: string;
   labels: {
     trigger: string;
     /** Trigger name including the service, so five "More Details" buttons differ. */
@@ -107,7 +109,7 @@ export function ServiceDetails(props: ServiceDetailsProps) {
       variant="secondary"
       showIcon
       aria-label={labels.triggerAriaLabel}
-      className="w-full md:w-auto"
+      className={cn("w-full md:w-auto", props.triggerClassName)}
     >
       {labels.trigger}
     </Button>
