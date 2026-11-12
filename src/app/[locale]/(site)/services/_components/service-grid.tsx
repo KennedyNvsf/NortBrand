@@ -29,10 +29,11 @@ import { servicePhotos } from "./service-photos";
  *   the card (it is made `static`, so the after anchors to the card), so a click
  *   anywhere opens the details, while keyboard and screen-reader users meet a single,
  *   clearly named button ("More Details: Web Design").
- * - Nothing moves while the card is pressed. The button's usual press scale would
- *   shrink its ::after around the button's centre, so a press near the card's top
- *   ended with the mouseup on the content below and no click (found in e2e). Press
- *   feedback is the card's shadow flattening instead.
+ * - Nothing moves while the card is pressed, and the trigger's pressed scale is `none`.
+ *   Any `scale` value (even 100%) makes the button the containing block of its ::after,
+ *   so during the press the stretched area collapsed to the button and the mouseup
+ *   landed on the content below: no click (found in e2e). Press feedback is the card's
+ *   shadow flattening instead.
  * - Motion (Emil's practices on Motion Spec tokens): inside a RevealGroup the eyebrow
  *   and headline rise, the squiggle draws itself, and each card rises as it scrolls in;
  *   cards that arrive together are staggered. Hover (hover devices only) lifts the card
@@ -180,9 +181,10 @@ export async function ServiceGrid() {
                           t(`items.${key}.included.${item}`),
                         )}
                         // Stretched over the card: `static` so the ::after anchors to
-                        // the card, not the button; hugs its label at every width. No
-                        // press scale: it would shrink the ::after away from the pointer.
-                        triggerClassName="static w-auto after:absolute after:inset-0 after:content-[''] motion-safe:active:scale-100"
+                        // the card, not the button; hugs its label at every width. Press
+                        // scale is `none`, not 100%: any scale value makes the button the
+                        // ::after's containing block, collapsing it to the button mid-click.
+                        triggerClassName="static w-auto after:absolute after:inset-0 after:content-[''] motion-safe:active:scale-none"
                         labels={{
                           trigger: t("blocks.moreDetails"),
                           triggerAriaLabel: t("blocks.moreDetailsLabel", {

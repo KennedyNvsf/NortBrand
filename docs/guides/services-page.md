@@ -1,8 +1,9 @@
 # Services page
 
-**Covers:** #10. **Design source:** Figma 04 — Services (`129:2`): desktop `129:3`, tablet
+**Covers:** #10, #124 (card grid). **Design source:** Figma 04 — Services (`129:2`): desktop `129:3`, tablet
 `359:150`, mobile `359:438`, desktop modals `317:33`–`317:298`, tablet dialog `362:365`,
-mobile sheet `362:307`.
+mobile sheet `362:307`. Services grid: desktop `467:1148`, tablet `468:410`, mobile
+`468:679`.
 
 ## 1. What we built
 
@@ -10,8 +11,9 @@ mobile sheet `362:307`.
 
 ```
 Photo hero        transparent nav over a photo · H1 · lead · quote card
-Service blocks    5 × (collage | eyebrow · H2 · summary · More Details)
-                  More Details → Dialog (tablet, desktop) or Drawer (mobile)
+Services grid     header (eyebrow · H2 · squiggle) · 5 cards (photo · eyebrow · H3 · summary
+                  · More Details): 3 + 2 desktop, 2 + 2 + 1 tablet, 1 column mobile
+                  a card → Dialog (tablet, desktop) or Drawer (mobile)
 Our approach      tab list + panel (tablet, desktop) · accordion (mobile)
 CTA band          Services headline override
 ```
@@ -25,9 +27,8 @@ src/app/[locale]/(site)/services/
    page.tsx                          composes the sections, metadata
    _components/services-hero.tsx     server
    _components/hero-video.tsx        CLIENT: the looping hero video
-   _components/service-blocks.tsx    server: one <article id={slug}> per service
-   _components/service-collage.tsx   server: two photos, or the Figma placeholder
-   _components/service-photos.ts     each service's collage photos, by slug (#82)
+   _components/service-grid.tsx      server: the header and one card per service (#124)
+   _components/service-photos.ts     each card's photo and crop anchor, by slug (#82)
    _components/service-details.tsx   CLIENT: the Dialog / Drawer
    _components/services-approach.tsx server, composing client Tabs + Accordion
 src/content/services.ts              serviceSlugs, services, includedKeys
@@ -50,7 +51,7 @@ is resolved at build time for `en` and `pt`. The build output shows `○ /en/ser
 ### Opening a service
 
 ```
-ServiceBlocks (server)
+ServiceGrid (server)
   ├─ translates name, "01 / 05", rich title, details, 3 included items, labels
   └─ <ServiceDetails {...props}>               ← crosses into the client here
         useMediaQuery("(min-width: 48rem)")
@@ -144,60 +145,67 @@ mobile e2e test tabs six times and asserts focus never leaves.
 - The quote is a `<figure>` with `<blockquote>` and `<figcaption>`, the semantic markup
   for a quote with its source.
 
-### `service-blocks.tsx`
+### `service-grid.tsx` (#124)
 
-- Each block is `<article id={slug} aria-labelledby="<slug>-title">`, so the Home cards
-  and the footer links (`/services#content-writing`) land on it. `scroll-mt-24` stops the
-  fixed header covering the heading. An e2e test checks this.
-- The title message contains `<greenUnderline>`. The block renders it with `plainTags`
-  (no emphasis); the dialog renders the same message with `highlightTags`. One
-  translation, two presentations.
-- Odd blocks put the collage last from tablet up (`md:order-last`). DOM order stays
-  collage then text, which is the mobile order.
-- **The empty column on desktop:** `lg:pr-[calc(var(--gutter)+--spacing(19))]` keeps
-  76 px free on the right. Figma's dot navigation (`173:2`) sits there, and the Motion
-  ticket adds it with the pinned blocks. Until then, text and collage are exactly where
-  Figma puts them.
+It replaced the pinned "service blocks" (a collage beside text, a desktop scroll-through
+stage with dot navigation). One server component renders the section; the only client
+code is still `ServiceDetails`.
 
-### `service-collage.tsx` and `service-photos.ts`
+**Layout**
 
-Every position is a percentage of the Figma 555 × 449 frame (`aspect-555/449`), so one
-component scales to every breakpoint's collage width (350 / 312 / 556 px): a large panel,
-with a square overlapping its top-right corner.
+|                 | Desktop                                 | Tablet                              | Mobile   |
+| --------------- | --------------------------------------- | ----------------------------------- | -------- |
+| Section padding | `--section-y` (120)                     | 88                                  | 72       |
+| Header → grid   | 56                                      | 40                                  | 28       |
+| Headline        | 44 px, second line indented 53 px       | 32 px                               | 28 px    |
+| Grid            | 6 columns: cards span 2, then 3 (3 + 2) | 2 columns, the last card spans both | 1 column |
+| Card media      | 232                                     | 216                                 | 200      |
+| Card title      | 28 px                                   | 24 px                               | 24 px    |
 
-- **With photos (#82):** `servicePhotos[slug]` gives a `main` and a `detail` photo, each
-  with an optional object-position class to keep its subject in the crop. Both render
-  through `PhotoPanel`, the same component as the Home photos (blur placeholder,
-  hairline ring). The square keeps its surface-coloured border. It clips with
-  `overflow-hidden`, so the photo follows the border's inner radius.
-- **Without:** the Figma placeholder, with the glyphs in `public/images/placeholder/`
-  and `data-placeholder="image"`. All five services have photos (#82, 10 November), so
-  this branch is only a fallback for a service added later.
-- **Crop anchors per photo** (in `service-photos.ts`) are chosen by eye at 1440 / 768 / 390. A photo much wider than its panel (Website Maintenance's 1.86 : 1 code shot)
-  shows only about 60% of its width, so the anchor matters more there.
-- **Decorative either way.** The collage is `aria-hidden` and the photos have `alt=""`.
-  The text beside the collage carries the meaning.
-- **Why the photos live in `service-photos.ts`, not `src/content/services.ts`:** the
-  consultation form and analytics also import `services.ts`. Image imports there would
-  add the photos' data (including blur placeholders) to those client bundles.
-- **`sizes` is computed, not written by hand.** `object-cover` scales a 3:2 photo to the
-  height of the 1.1:1 main panel, so the photo is drawn about 1.36× wider than the panel.
-  With `sizes` describing only the panel, desktop browsers picked the 1080 px file for a
-  photo drawn about 1150 device pixels wide. `coverSizes()` multiplies each piece's
-  share of the collage by `max(1, photo aspect ÷ panel aspect)`, so a photo with a
-  different shape still gets the right file. A portrait photo (Web Development's detail)
-  is drawn at its panel's width, so its factor is 1, and the crop anchor picks which
-  band of it shows. If the collage widths in
-  `service-blocks.tsx` change, update the `COLLAGE_*` constants.
-- **No `settle`, unlike Home.** On Home the panel slides, so the photo's 1.6% zoom is
-  the only scale movement. Here the `pop` already scales each panel from 0.88 to 1, photo
-  included, so a settle would not be visible. As two more reveal items it would also
-  delay the square and the copy by 100–200 ms on every stage step, because the engine
-  staggers items by DOM order.
-- **Adding a service's photos:** export at 1600 px wide with metadata stripped, put the
-  files in `src/assets/images/service-<slug>.jpg` and `service-<slug>-detail.jpg`, add
-  an entry to `servicePhotos`, check the crop at 1440 / 768 / 390, and add it to the
-  register in [Images](./images.md).
+- The headline is `text-h2` (already 28 / 32) with `lg:text-[44px]`, the same override
+  the Blog headline uses; no token is 44 px. The 53 px indent is `indentTag` with
+  `lg:block lg:pl-13.25`: the message wraps the second line in `<indent>`, so the
+  sentence stays whole for translators.
+- Cards in a row share a height (grid stretch), and "More Details" sits at the bottom
+  (`mt-auto`). Figma's frames are a few pixels taller (fixed heights with slack); the
+  paddings and gaps are Figma's.
+- Each card keeps `id={slug}` and `scroll-mt-24`, so `/services#content-writing` from the
+  Home cards, the footer and the JSON-LD still lands on it, clear of the fixed header.
+- The title message contains `<greenUnderline>`: the card renders it with `plainTags`,
+  the dialog with `highlightTags`. One translation, two presentations.
+
+**One interactive element per card.** The "More Details" trigger is stretched over the
+card: `static` (so its `::after` anchors to the card, not the button) plus
+`after:absolute after:inset-0`. A click anywhere opens the details, while keyboard and
+screen-reader users meet one clearly named button ("More Details: Web Design"). The
+focus ring stays on the button.
+
+**The press bug.** The trigger's pressed scale must be `none`. Any `scale` value (the
+button's usual 0.98, or even 100%) makes it the containing block of its `::after`, so
+mid-press the stretched area collapsed to the button and the `pointerup` landed on the
+text below: no click. The card shows the press by flattening its shadow instead
+(`has-[button:active]:shadow-card-pressed`). The e2e test "a click anywhere on a card
+opens its details" clicks the summary text, which would fail if this regressed.
+
+**Photos** (`service-photos.ts`): one per service (the main collage photos; the detail
+photos were removed with the collages). Each has an optional object-position class,
+chosen at 1440 / 768 / 390. The media is wide (about 1.6 : 1, up to 3.3 : 1 for the
+full-width tablet card), so the anchor mostly picks the horizontal band. `sizes` is the
+card's width at each layout (`PHOTO_SIZES`): no photo is wider than its media, so
+`object-cover` fills by width. Photos are decorative (`alt=""`); the copy carries the
+meaning. They live here, not in `src/content/services.ts`, because client code (the
+consultation form, analytics) imports that file and would bundle the image data.
+
+**Motion** (Emil's practices on Motion Spec tokens; details in [Motion](./motion.md)):
+the header rises and the squiggle draws itself (`LogoMark draw="reveal"`); each card
+rises as it scrolls in, staggered when several arrive together. On hover the card lifts
+4 px, its shadow deepens and the icon chip tilts, as on the Home cards. Reduced motion:
+opacity only, and the squiggle is simply drawn.
+
+**Adding or swapping a card photo:** export at 1600 px with metadata stripped, save it as
+`src/assets/images/service-<slug>.jpg`, set its anchor in `servicePhotos`, check the
+crop on a production build (the dev server can serve stale CSS for new classes), and
+update the register in [Images](./images.md).
 
 ### `service-details.tsx`
 
@@ -309,7 +317,7 @@ That is why the first dialog render had an inset dark panel. Overrides like `p-0
   Renaming a slug also needs a database migration (consultation requests store it).
 - **Change dialog copy:** edit `messages/en.json`. Keep exactly one `<greenUnderline>`
   keyword in each title.
-- **Swap a photo:** collages in `service-photos.ts`, approach points in `points` in
+- **Swap a photo:** cards in `service-photos.ts`, approach points in `points` in
   `services-approach.tsx`. Export at 1600 px with metadata stripped, set a crop anchor,
   check 1440 / 768 / 390 on a production build, and update the register in
   [Images](./images.md).

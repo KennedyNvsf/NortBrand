@@ -146,13 +146,13 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md, accessibi
 - **Images:**
   - The sea photo is a launch asset. It needs optimized, responsive crops, and meaningful
     alt text wherever it isn't decorative.
-  - Logomark panels are Figma placeholders (the service collages and the "Our approach"
+  - Logomark panels are Figma placeholders (the service cards and the "Our approach"
     points have photos since #82). Placeholders live in `public/images/placeholder/`, use `alt=""`, and are logged in
     `docs/tech-debt.md`.
   - Replacing a panel with a photo (#82): pass `image` to `FeatureSplit` (or use
     `PhotoPanel`). Photos go in `src/assets/images/` at 1600 px wide with metadata
     stripped; they settle and drift like the mark did. Home's two are AI-generated
-    (tech debt). Service collages take photos per slug from
+    (tech debt). Service cards take one photo per slug from
     `services/_components/service-photos.ts`. All stock media come from Pexels: the
     register of every image, its source and licence, and how to add one is
     docs/guides/images.md. Update it with any image change.
@@ -175,7 +175,9 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md, accessibi
   values were raised after the #27 review; see src/lib/motion.ts.
 - Booking links use `<BookingButton>` (arrow → calendar on hover).
 - Every animation has a reduced-motion path: opacity only, 150 ms or less, no path drawing.
-- Below desktop, and with reduced motion, the service blocks are a plain vertical stack.
+- Services grid (#124): cards reveal as they scroll in and lift on hover. Each card's
+  "More Details" trigger is stretched over it; its pressed scale must stay `none`, since
+  any `scale` value collapses the stretched `::after` mid-click (docs/guides/services-page.md).
 
 ## Data model (Supabase, EU region)
 

@@ -20,25 +20,20 @@ author the original file's metadata named, recorded before the metadata was stri
 
 ### Stock (Pexels)
 
-| File                                                       | Used on                                         | Subject                                         | Credit in file                  | Notes                                                            |
-| ---------------------------------------------------------- | ----------------------------------------------- | ----------------------------------------------- | ------------------------------- | ---------------------------------------------------------------- |
-| `src/assets/images/services-hero.jpg`                      | Services hero (poster and reduced-motion photo) | —                                               | —                               | 2400 px; first exported from the Figma file                      |
-| `public/videos/services-hero.mp4`, `services-hero-720.mp4` | Services hero video (#68)                       | —                                               | —                               | H.264, 1080p and 720p                                            |
-| `src/assets/images/sea-coast.jpg`                          | CTA band, every page with one                   | Sea and coastline                               | —                               | 2400 px (CTA band rule, [Calls to action](./calls-to-action.md)) |
-| `service-web-design.jpg`                                   | Services › Web Design, main                     | Paper wireframes on a jute rug                  | —                               |                                                                  |
-| `service-web-design-detail.jpg`                            | Services › Web Design, detail                   | Photoshop on a monitor                          | —                               | Screen shows third-party design mockups                          |
-| `service-web-development.jpg`                              | Services › Web Development, main                | Laptop showing code                             | Daniil Komov                    |                                                                  |
-| `service-web-development-detail.jpg`                       | Services › Web Development, detail              | JSX code close-up (portrait)                    | —                               | Shows third-party code                                           |
-| `service-content-writing.jpg`                              | Services › Content Writing, main                | "SEO" notes on a notebook                       | —                               |                                                                  |
-| `service-content-writing-detail.jpg`                       | Services › Content Writing, detail              | Hands typing on a laptop                        | Karolina Grabowska (Kaboompics) |                                                                  |
-| `service-social-media-management.jpg`                      | Services › Social Media, main                   | Letter tiles: "Social Media"                    | —                               |                                                                  |
-| `service-social-media-management-detail.jpg`               | Services › Social Media, detail                 | Phone folder of social apps                     | Bastian Riccardi                | App logos, incl. Twitter's retired bird                          |
-| `service-website-maintenance.jpg`                          | Services › Website Maintenance, main            | Code editor close-up                            | —                               |                                                                  |
-| `service-website-maintenance-detail.jpg`                   | Services › Website Maintenance, detail          | Typing beside a coffee cup                      | —                               | Cup shows a café's partial logo                                  |
-| `approach-brand-identity.jpg`                              | Services › Our approach › Brand Identity        | "Brand personality & visual identity" lettering | —                               | English words, also on `/pt`                                     |
-| `approach-visual-design.jpg`                               | Services › Our approach › Visual Design         | Hands on colour swatches                        | —                               |                                                                  |
-| `approach-content-strategy.jpg`                            | Services › Our approach › Content Strategy      | Team planning around a table                    | —                               | Screen reads "Breakdown of Ad Spend" (English)                   |
-| `approach-growth.jpg`                                      | Services › Our approach › Growth                | "Market research" bar chart                     | —                               | English words, also on `/pt`                                     |
+| File                                                       | Used on                                         | Subject                                         | Credit in file | Notes                                                            |
+| ---------------------------------------------------------- | ----------------------------------------------- | ----------------------------------------------- | -------------- | ---------------------------------------------------------------- |
+| `src/assets/images/services-hero.jpg`                      | Services hero (poster and reduced-motion photo) | —                                               | —              | 2400 px; first exported from the Figma file                      |
+| `public/videos/services-hero.mp4`, `services-hero-720.mp4` | Services hero video (#68)                       | —                                               | —              | H.264, 1080p and 720p                                            |
+| `src/assets/images/sea-coast.jpg`                          | CTA band, every page with one                   | Sea and coastline                               | —              | 2400 px (CTA band rule, [Calls to action](./calls-to-action.md)) |
+| `service-web-design.jpg`                                   | Services › Web Design card                      | Paper wireframes on a jute rug                  | —              |                                                                  |
+| `service-web-development.jpg`                              | Services › Web Development card                 | Laptop showing code                             | Daniil Komov   |                                                                  |
+| `service-content-writing.jpg`                              | Services › Content Writing card                 | "SEO" notes on a notebook                       | —              |                                                                  |
+| `service-social-media-management.jpg`                      | Services › Social Media card                    | Letter tiles: "Social Media"                    | —              |                                                                  |
+| `service-website-maintenance.jpg`                          | Services › Website Maintenance card             | Code editor close-up                            | —              |                                                                  |
+| `approach-brand-identity.jpg`                              | Services › Our approach › Brand Identity        | "Brand personality & visual identity" lettering | —              | English words, also on `/pt`                                     |
+| `approach-visual-design.jpg`                               | Services › Our approach › Visual Design         | Hands on colour swatches                        | —              |                                                                  |
+| `approach-content-strategy.jpg`                            | Services › Our approach › Content Strategy      | Team planning around a table                    | —              | Screen reads "Breakdown of Ad Spend" (English)                   |
+| `approach-growth.jpg`                                      | Services › Our approach › Growth                | "Market research" bar chart                     | —              | English words, also on `/pt`                                     |
 
 Paths without a folder are in `src/assets/images/`.
 
@@ -69,7 +64,7 @@ Paths without a folder are in `src/assets/images/`.
    Before stripping, note any author in the file's metadata (`dc:creator`) for the
    register.
 
-2. **Name it** after where it goes: `service-<slug>.jpg` and `-detail.jpg` for collages
+2. **Name it** after where it goes: `service-<slug>.jpg` for the service cards
    (`services/_components/service-photos.ts`), `approach-<point>.jpg` for the approach
    points (`points` in `services-approach.tsx`). Never commit the raw original.
 3. **Set a crop anchor** (an `object-[x%_y%]` class) when the panel crops the subject,
@@ -78,9 +73,9 @@ Paths without a folder are in `src/assets/images/`.
    every crop looks centred there.
 4. **Check `sizes`** describes the width the photo is drawn at. `object-cover` draws a
    photo wider than its panel when the photo's shape is wider than the panel's
-   (`coverSizes()` in `service-collage.tsx` handles this for the collages).
+   (the service cards' `PHOTO_SIZES` in `service-grid.tsx` are their card widths).
 5. **Decorative or not:** photos beside copy that already carries the meaning get
-   `alt=""` (collages, approach points, Home panels). A photo that adds information of its
+   `alt=""` (service cards, approach points, Home panels). A photo that adds information of its
    own needs real alt text in both languages.
 6. **Update this register** (file, place, subject, source, credit, notes) and
    `docs/tech-debt.md` if the photo shows brands, logos, people or English text.
