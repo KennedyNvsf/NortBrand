@@ -36,7 +36,7 @@ import { MEDIA_MD, useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
 
 /*
- * "More Details" for one service (Handoff: "shadcn Dialog on md and up, Drawer (bottom
+ * "What's included" for one service (Handoff: "shadcn Dialog on md and up, Drawer (bottom
  * sheet, drag to dismiss) on mobile"). The only client component on the Services page:
  * the server block passes in translated strings and the rich title.
  * - Figma: desktop modal 317:57 (dark visual panel + content), tablet dialog 362:383,
@@ -60,9 +60,11 @@ export type ServiceDetailsProps = {
   title: ReactNode;
   details: string;
   included: string[];
+  /** Extra classes for the trigger (the grid stretches it over its card). */
+  triggerClassName?: string;
   labels: {
     trigger: string;
-    /** Trigger name including the service, so five "More Details" buttons differ. */
+    /** Trigger name including the service, so five "What's included" buttons differ. */
     triggerAriaLabel: string;
     included: string;
     book: string;
@@ -107,7 +109,7 @@ export function ServiceDetails(props: ServiceDetailsProps) {
       variant="secondary"
       showIcon
       aria-label={labels.triggerAriaLabel}
-      className="w-full md:w-auto"
+      className={cn("w-full md:w-auto", props.triggerClassName)}
     >
       {labels.trigger}
     </Button>

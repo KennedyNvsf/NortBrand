@@ -134,7 +134,7 @@ this.
   | -------------------------------- | -------------------------------------------- | ----------------------------------------- |
   | `consultation_request_submitted` | The consultation form shows "Request sent."  | `service`: the slug only                  |
   | `newsletter_subscribed`          | The newsletter form shows its success state  | none                                      |
-  | `service_details_opened`         | "More Details" opens (Dialog or Drawer)      | `service`: the slug                       |
+  | `service_details_opened`         | "What's included" opens (Dialog or Drawer)   | `service`: the slug                       |
   | `language_switched`              | The other language is picked in the switcher | `from`, `to`: locale codes                |
   | `blog_search`                    | Search results render on the blog            | `term_length`, `results`: never the words |
   - `service_details_opened` counts each opening once: swapping Dialog and Drawer on a

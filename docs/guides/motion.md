@@ -9,10 +9,10 @@ The spec's principles are **purposeful, quiet, respectful**. After the first rev
 asked for more presence ("way too subtle"), so reveal travel and stagger grew (§3), but the
 rules stayed:
 
-| Use                                              | For                                                           | Examples here                                                               |
-| ------------------------------------------------ | ------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| **CSS** (`--duration-*`, `--ease-*`, tw-animate) | hover, focus, press, first-paint entrances, simple enter/exit | button icon morphs, hero entrances, page fade, menu stagger, stage swap-out |
-| **Motion** (`motion/react`)                      | anything triggered by scroll position, springs, orchestration | reveals, journey line, Services stage, approach accent                      |
+| Use                                              | For                                                           | Examples here                                                                 |
+| ------------------------------------------------ | ------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| **CSS** (`--duration-*`, `--ease-*`, tw-animate) | hover, focus, press, first-paint entrances, simple enter/exit | button icon morphs, hero entrances, page fade, menu stagger, card hover/press |
+| **Motion** (`motion/react`)                      | anything triggered by scroll position, springs, orchestration | reveals, journey line, approach accent                                        |
 
 Every duration, easing and spring comes from `src/lib/motion.ts` (Motion) or the matching
 CSS variables in `globals.css`; components define none of their own. Where the review
@@ -23,7 +23,6 @@ easing drifts from `motion.ts`.
 | ---------------------------------------------------------- | ---------------------------------------------- |
 | `spring.accent` (420/32)                                   | nav underline, approach marker                 |
 | `spring.pop` (260/20)                                      | `pop` reveals                                  |
-| `spring.snappy` (300/30)                                   | stage dots                                     |
 | `ease.draw` / `--ease-draw`                                | mark stroke, journey line, keyword underlines  |
 | `revealSpec.lineDuration`, `.underlineLag`, `.swapStagger` | journey line, underline delay, approach panels |
 | `--enter-step` (110 ms)                                    | hero entrances                                 |
@@ -58,8 +57,8 @@ One vocabulary for every section, in these files under `src/components/motion/`:
 ProcessTrack, NavLinks, the table of contents) import only `reveal-dom.ts` up front.
 They hide items as before, call `loadRevealEngine()` from an effect, and play once it
 resolves. If it fails to load, they `unhide()` everything, so content never stays
-hidden. The Services components (ServiceStage, ApproachTabs) still import the engine
-directly: they place items inside layout effects, which can't wait for a chunk.
+hidden. ApproachTabs (Services) still imports the engine directly: it places items
+inside layout effects, which can't wait for a chunk.
 
 Markup stays server-rendered. A section opts in like this:
 
@@ -77,14 +76,14 @@ module that imports `motion/react` must not be evaluated on the server.
 
 **Kinds** (`motion.ts › revealSpec`), all 700 ms emphasized unless noted:
 
-| Kind             | Movement                                                         | Used for                            |
-| ---------------- | ---------------------------------------------------------------- | ----------------------------------- |
-| `up`             | rise 32 px + fade (spec: 24)                                     | text, cards                         |
-| `left` / `right` | slide 64 px from that side + fade                                | image panels, approach content      |
-| `pop`            | scale 0.88 → 1 on a spring with slight overshoot                 | collages, the CTA card              |
-| `draw`           | SVG stroke draws (1.2 s in-out; the path needs `pathLength={1}`) | the mark in image panels            |
-| `underline`      | a keyword underline draws left to right, 250 ms after its turn   | highlighted words (`highlight.tsx`) |
-| `settle`         | scale 1.016 → 1 over 1.6 s, no fade (its panel fades); see below | photos in panels (`PhotoPanel`)     |
+| Kind             | Movement                                                         | Used for                                                                |
+| ---------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `up`             | rise 32 px + fade (spec: 24)                                     | text, cards                                                             |
+| `left` / `right` | slide 64 px from that side + fade                                | image panels, approach content                                          |
+| `pop`            | scale 0.88 → 1 on a spring with slight overshoot                 | the CTA card                                                            |
+| `draw`           | SVG stroke draws (1.2 s in-out; the path needs `pathLength={1}`) | marks in panels, the Services title squiggle (`LogoMark draw="reveal"`) |
+| `underline`      | a keyword underline draws left to right, 250 ms after its turn   | highlighted words (`highlight.tsx`)                                     |
+| `settle`         | scale 1.016 → 1 over 1.6 s, no fade (its panel fades); see below | photos in panels (`PhotoPanel`)                                         |
 
 **Photo panels (#82).** When a section's placeholder becomes a photograph, `PhotoPanel`
 keeps the panel's arrival (`left`/`right`) and replaces the mark's `draw` with `settle`:
@@ -177,24 +176,21 @@ they never compete for one element's transform.
 ### Services
 
 - **Hero photo** settles from 108% to 100% scale over 1.6 s while the text enters.
-- **Pinning** needs a desktop screen at least 672 px tall (`stage:` variant in
-  `globals.css`, mirrored by `PINNED_QUERY`). A block is 546 px and the stage is the
-  screen minus 96 px, so shorter laptop windows would clip it; they get the plain stack
-  instead, like tablets.
-- **Arrival:** nothing in the stage shows before it pins. While you approach, the first
-  block (and the dots) wait hidden; the block plays as the stage locks under the header,
-  and scrolling back above the stage re-arms it. The hide runs in a passive effect
-  because it must come _after_ the blocks' own RevealGroups clean up. Those groups are
-  enabled for the first commit, until the media query resolves, and restore their items
-  when disabled.
-- **Service blocks** (`service-stage.tsx`): each time a block becomes active:
-  1. the pink panel pops;
-  2. the dark square pops a beat later;
-  3. the eyebrow, title, summary and _More Details_ rise in.
-
-  The outgoing block fades out in 150 ms. This runs in a layout effect, so items are
-  hidden before the swap is painted. Below desktop, or with reduced motion, each block
-  plays the same sequence as it scrolls in.
+- **Services grid** (`service-grid.tsx`, #124; it replaced the pinned blocks and their
+  dot navigation):
+  1. the eyebrow and headline rise (RevealGroup); the squiggle draws itself
+     (`LogoMark draw="reveal"`, reveal kind `draw`);
+  2. the cards have no entrance of their own: each illustration draws itself as its
+     card scrolls in (`IllustrationPlayer`). Strokes trim on one after another and
+     solid shapes pop from 60%, each at its Figma time within 0–1.9 s; the pencil rides
+     the line it writes. Uses the lazily loaded engine's `animate()`.
+  - **Hover** (hover devices only): the shadow deepens, the arrow nudges 4 px
+    (`--duration-base`, emphasized) and the illustration plays its one accent (cursor
+    press, brackets spread, pencil tilt, heart swell, ring turn), held while hovered and
+    sprung back on leave. No lift, no button tint.
+  - **Press:** the card's shadow flattens (`shadow-card-pressed`). Nothing moves, see the
+    bug below.
+  - **Reduced motion:** drawings show complete; hover keeps only the shadow change.
 
 - **Our approach** (`approach-tabs.tsx`):
   - **Left:** one red accent travels between the points. It springs to the selected one
@@ -205,7 +201,6 @@ they never compete for one element's transform.
   - **Before hydration:** each active point shows its own static accent until the
     travelling one has been measured.
   - **Mobile accordion:** the accent grows in from its centre.
-- **Dots:** a hairline behind them fills red with your progress through the five blocks.
 
 ### About and Contact
 
@@ -222,9 +217,13 @@ Links rise 12 px, 40 ms apart, unchanged from the first pass.
 - **Radix mounts a new panel late.** Radix Tabs render a newly selected panel's children
   one commit _after_ the value changes, so the slide-in effect found nothing to animate.
   The fix is `forceMount` on the panels; CSS already hides the inactive ones.
-- **The pinned stage drew a stray hairline.** `not-first:border-t` beat
-  `stage:border-t-0` on specificity. The override must use the same variant:
-  `stage:not-first:border-t-0`.
+- **A pressed card swallowed its own click (#124).** The card's "What's included" trigger
+  is stretched over the card with an absolute `::after`. Its press feedback set
+  `scale` (first 0.98, then even `100%`), and any `scale` other than `none` makes the
+  element the containing block of its absolute children. So mid-press the `::after`
+  collapsed to the button, the `pointerup` landed on the text below, and no click fired.
+  The trigger's pressed scale is now `none`, and the card shows the press with its
+  shadow. Found by an e2e test that clicks the summary text.
 - **The approach marker jumped instead of travelling.** Its ResizeObserver was recreated
   on every selection, and an observer always reports once when it starts observing; that
   report placed the marker instantly and cancelled the spring. Only real resizes re-place
@@ -244,21 +243,17 @@ Links rise 12 px, 40 ms apart, unchanged from the first pass.
 - **Quote card auto-advance** (every 6 s, crossfade, pause on hover/focus) needs more than
   one quote, and there is only one. It stays a static card until the client provides
   more.
-- **Card image zoom** belongs to `ArticleCard` (the blog), which already has it; service
-  cards have no images.
-- **Reduced-motion dot list:** with reduced motion the spec turns the dot navigation into
-  an anchor list. Here the dots are simply hidden: the stack is short, and the footer and
-  Home already link to each block.
+- **Card image zoom** belongs to `ArticleCard` (the blog). The Services cards have
+  illustrations instead of photos; their hover is the illustration's accent.
 
 ## 6. Tests
 
-- **`services.spec.ts`** (desktop):
-  - scrolling swaps blocks and the dots follow
-  - a dot jumps to its block
-  - an anchor lands on its step
-  - keyboard focus brings a hidden block into view
-  - reduced motion: no dots, no scroll track, all blocks visible
-  - mobile: a stack without dots
+- **`services.spec.ts`:**
+  - the grid is 3 + 2 on desktop and one column on mobile
+  - a click anywhere on a card (the summary text) opens its details
+  - hover deepens the shadow, tilts the pencil and nudges the arrow, without a lift
+  - an illustration waits hidden below the fold and ends fully drawn once scrolled in
+  - reduced motion: drawings complete, no accent, no movement
 - **`motion.spec.ts`:**
   - the hero fills the first screen, and its content ends visible
   - below-the-fold content starts hidden and settles (opacity 1, identity transform),
@@ -267,7 +262,6 @@ Links rise 12 px, 40 ms apart, unchanged from the first pass.
   - the booking button's calendar appears on hover
   - the approach accent travels to the clicked point, and the panel content settles
   - a red underline follows the hovered nav link
-- **`services.spec.ts`:** a block stays hidden until the stage pins, then plays in.
 - **Test-helper lesson:** `openDetails` blurs before focusing. Re-focusing an
-  already-focused element fires no focus event, so a retry would never move the stage.
+  already-focused element fires no focus event, so a retry would do nothing.
 - Every page stays static; the harness (axe, overflow, H1) runs unchanged.

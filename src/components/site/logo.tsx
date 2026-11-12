@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 
+import { revealItem } from "@/components/motion/reveal-item";
 import { cn } from "@/lib/utils";
 
 /*
@@ -61,13 +62,17 @@ export function Logo({
  * (900 ms, emphasized), "loop" on the splash (1.4 s, ease in-out). pathLength="1" makes
  * the dash maths independent of the path's real length. Reduced motion: no animation,
  * so the mark is simply drawn. Set `--mark-delay` on the mark (or an ancestor) to start
- * the drawing later, e.g. once a hero headline has entered.
+ * the drawing later, e.g. once a hero headline has entered. "reveal" leaves the timing
+ * to a surrounding RevealGroup: the stroke draws when it scrolls into view.
  */
 const MARK_VIEW_BOX = "68.36 141.12 45.5 43.24";
 
 const drawClassName = {
   once: "[stroke-dasharray:1] motion-safe:animate-mark-draw [animation-delay:var(--mark-delay,0ms)]",
   loop: "[stroke-dasharray:1] motion-safe:animate-mark-draw-loop",
+  // Drawn by the scroll-reveal engine (reveal kind "draw") once the mark scrolls in,
+  // inside a RevealGroup: the Services grid's title squiggle (#124).
+  reveal: "[stroke-dasharray:1]",
 } as const;
 
 export function LogoMark({
@@ -86,6 +91,7 @@ export function LogoMark({
       className={cn("shrink-0", className)}
     >
       <path
+        {...(draw === "reveal" && revealItem("draw"))}
         d={LOGO_MARK_PATH}
         pathLength={1}
         className={cn("stroke-action-primary", draw && drawClassName[draw])}

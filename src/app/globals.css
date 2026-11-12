@@ -19,8 +19,6 @@
  * the stage is the viewport minus 96 px under the header, so pinning needs 642 px;
  * 42rem (672 px) leaves a margin. Shorter screens get the plain stack.
  */
-@custom-variant stage (@media (width >= 64rem) and (height >= 42rem) and (prefers-reduced-motion: no-preference));
-
 @theme {
   /* Reset Tailwind defaults so nothing outside the design system is available. */
   --color-*: initial;

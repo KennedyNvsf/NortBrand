@@ -1,7 +1,7 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
 /*
- * Site-wide motion (ticket #27, revised after review). The Services stage has its own
+ * Site-wide motion (ticket #27, revised after review). The Services page has its own
  * tests in services.spec.ts. These check behaviour, not timing: what starts hidden,
  * that it ends visible, and that reduced motion and first-screen content are never
  * held back.

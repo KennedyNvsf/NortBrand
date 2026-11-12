@@ -4,7 +4,7 @@ import { motionTokens, reducedMotionDuration, revealSpec } from "@/lib/motion";
 
 import { hide, kindOf } from "./reveal-dom";
 
-// The DOM helpers live in reveal-dom.ts; re-exported for the Services components,
+// The DOM helpers live in reveal-dom.ts; re-exported for the components
 // which load this module up front. animate() is exported for loadRevealEngine().
 export {
   hide,
@@ -19,7 +19,7 @@ export { animate };
 /*
  * The reveal engine shared by every animated section. Markup stays server-rendered
  * and opts in with `{...revealItem("pop")}` (reveal-item.ts); a client component
- * (RevealGroup, ServiceStage, ProcessTrack, ApproachTabs) decides *when* its items
+ * (RevealGroup, ProcessTrack, ApproachTabs) decides *when* its items
  * play, and this module decides *how*.
  *
  * Reduced motion: opacity only, 150 ms, all at once; strokes are simply drawn.

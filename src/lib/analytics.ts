@@ -23,7 +23,7 @@ import type { Locale } from "@/i18n/routing";
 export type AnalyticsEvents = {
   consultation_request_submitted: { service: ServiceSlug };
   newsletter_subscribed: Record<string, never>;
-  /** "More Details" opened on the Services page. */
+  /** A service's "What's included" opened on the Services page. */
   service_details_opened: { service: ServiceSlug };
   /** The language switcher, from the current language to the one picked. */
   language_switched: { from: Locale; to: Locale };

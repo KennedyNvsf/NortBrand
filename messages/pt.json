@@ -140,10 +140,12 @@
     },
     "blocks": {
       "label": "Os nossos serviços",
-      "jump": "Ir para um serviço",
       "eyebrow": "{number} — {name}",
-      "moreDetails": "Ver detalhes",
-      "moreDetailsLabel": "Ver detalhes: {name}"
+      "moreDetails": "O que inclui",
+      "moreDetailsLabel": "O que inclui: {name}"
+    },
+    "grid": {
+      "title": "Abra qualquer <red>serviço</red> para <indent>ver o que está incluído.</indent>"
     },
     "details": {
       "position": "{current} / {total}",

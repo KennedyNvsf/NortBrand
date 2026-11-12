@@ -27,6 +27,9 @@ const SLUGS = [
   "website-maintenance",
 ];
 
+/** The Services grid section (#124). */
+const GRID = "section[aria-labelledby=services-grid-title]";
+
 const isMobile = (page: Page) => (page.viewportSize()?.width ?? 0) < 768;
 
 /*
@@ -40,14 +43,13 @@ async function untilHydrated(action: () => Promise<void>) {
 
 async function openDetails(page: Page, service: string, title: string) {
   const trigger = page.getByRole("button", {
-    name: `More Details: ${service}`,
+    name: `What’s included: ${service}`,
   });
   const details = page.getByRole("dialog", { name: title });
   await untilHydrated(async () => {
     if (!(await details.isVisible())) {
-      // On desktop the button may sit in a hidden stage step; focusing it (the
-      // keyboard path) brings its step into view first. Blur first: re-focusing an
-      // already focused element fires no focus event, so a retry would not move it.
+      // Focus first (the keyboard path), then click. Blur before refocusing: focusing
+      // an already focused element fires no focus event, so a retry would not move it.
       await trigger.evaluate((element) => {
         element.blur();
       });
@@ -57,23 +59,6 @@ async function openDetails(page: Page, service: string, title: string) {
     await expect(details).toBeVisible({ timeout: 1000 });
   });
   return { trigger, details };
-}
-
-function activeStep(page: Page) {
-  return page
-    .getByRole("navigation", { name: "Jump to a service" })
-    .locator('[aria-current="step"]');
-}
-
-async function enterStage(page: Page) {
-  const stage = page.getByRole("region", { name: "Our services" });
-  const top = await stage.evaluate(
-    (element) => element.getBoundingClientRect().top + window.scrollY,
-  );
-  await page.evaluate((y) => {
-    window.scrollTo(0, y - 96 + 10);
-  }, top);
-  return stage;
 }
 
 const heroTitle = copy("en", "Services.hero.title");
@@ -108,9 +93,9 @@ test.describe("services page", () => {
     await expect(hero.getByRole("button")).toHaveCount(0);
   });
 
-  test("has one block per service, anchored by slug", async ({ page }) => {
+  test("has one card per service, anchored by slug", async ({ page }) => {
     await page.goto("/pt/services");
-    const blocks = page.locator("main article");
+    const blocks = page.locator(GRID).locator("article");
 
     await expect(blocks).toHaveCount(SLUGS.length);
     for (const [index, slug] of SLUGS.entries()) {
@@ -118,11 +103,11 @@ test.describe("services page", () => {
     }
   });
 
-  test("a footer anchor lands on its block below the fixed header", async ({
+  test("a footer anchor lands on its card below the fixed header", async ({
     page,
   }) => {
     await page.goto("/en/services#content-writing");
-    const heading = page.locator("#content-writing h2");
+    const heading = page.locator("#content-writing h3");
     await expect(heading).toBeInViewport();
 
     const headerBottom = await page
@@ -134,7 +119,7 @@ test.describe("services page", () => {
     expect(headingTop).toBeGreaterThanOrEqual(headerBottom);
   });
 
-  test("More Details opens the service, traps focus, closes on Esc and returns focus", async ({
+  test("What’s included opens the service, traps focus, closes on Esc and returns focus", async ({
     page,
   }) => {
     await page.goto("/en/services");
@@ -294,134 +279,157 @@ test.describe("services page", () => {
     expect(ring).toEqual(["solid", "2px", "2px"]);
   });
 
-  test.describe("pinned blocks (desktop)", () => {
-    test.beforeEach(({ page }) => {
-      test.skip(isMobile(page), "the stage pins on desktop only");
-    });
-
-    test("scrolling swaps blocks and the dots follow", async ({ page }) => {
-      await page.goto("/en/services");
-      await untilHydrated(async () => {
-        await enterStage(page);
-        await expect(activeStep(page)).toHaveAttribute(
-          "aria-label",
-          "Web Design",
-          {
-            timeout: 1000,
-          },
-        );
-      });
-
-      await page.mouse.wheel(0, 1600);
-      await expect(activeStep(page)).not.toHaveAttribute(
-        "aria-label",
-        "Web Design",
+  test("the grid is 3 + 2 on desktop, 2 + 2 + 1 on tablet, one column on mobile (#124)", async ({
+    page,
+  }) => {
+    await page.goto("/en/services");
+    const cards = page.locator(GRID).locator("article");
+    await expect(cards).toHaveCount(5);
+    const boxes = await cards.evaluateAll((elements) =>
+      elements.map((element) => {
+        const { left, top, width } = element.getBoundingClientRect();
+        return {
+          left: Math.round(left),
+          top: Math.round(top + scrollY),
+          width,
+        };
+      }),
+    );
+    const rows = new Map<number, number>();
+    for (const { top } of boxes) rows.set(top, (rows.get(top) ?? 0) + 1);
+    const perRow = [...rows.values()];
+    if (isMobile(page)) {
+      expect(perRow).toEqual([1, 1, 1, 1, 1]);
+    } else {
+      // The desktop project runs at 1280 px: 3 cards, then 2 wider ones.
+      expect(perRow).toEqual([3, 2]);
+      expect(boxes[3]?.width ?? 0).toBeGreaterThan(
+        (boxes[0]?.width ?? 0) * 1.3,
       );
-    });
-
-    test("a block stays hidden until the stage pins, then plays in", async ({
-      page,
-    }) => {
-      await page.goto("/en/services");
-      const title = page.locator("#web-design h2");
-      const stage = page.getByRole("region", { name: "Our services" });
-      // Approaching: the stage is on screen but not pinned yet.
-      await untilHydrated(async () => {
-        await stage.evaluate((element) => {
-          const top = element.getBoundingClientRect().top + window.scrollY;
-          window.scrollTo(0, top - window.innerHeight / 2);
-        });
-        await expect(title).toHaveCSS("opacity", "0", { timeout: 1000 });
-      });
-      await enterStage(page);
-      await expect(title).toHaveCSS("opacity", "1");
-    });
-
-    test("a dot jumps to its block", async ({ page }) => {
-      await page.goto("/en/services");
-      const dot = page.getByRole("button", {
-        name: "Website Maintenance",
-        exact: true,
-      });
-      await untilHydrated(async () => {
-        await dot.click();
-        await expect(dot).toHaveAttribute("aria-current", "step", {
-          timeout: 1000,
-        });
-      });
-      await expect(page.locator("#website-maintenance h2")).toBeInViewport();
-    });
-
-    test("an anchor lands on its step", async ({ page }) => {
-      await page.goto("/en/services#content-writing");
-      await expect(activeStep(page)).toHaveAttribute(
-        "aria-label",
-        "Content Writing",
-      );
-      await expect(page.locator("#content-writing h2")).toBeInViewport();
-    });
-
-    test("keyboard focus brings a hidden block into view", async ({ page }) => {
-      await page.goto("/en/services");
-      const trigger = page.getByRole("button", {
-        name: "More Details: Social Media Management",
-      });
-      await untilHydrated(async () => {
-        await trigger.focus();
-        await expect(activeStep(page)).toHaveAttribute(
-          "aria-label",
-          "Social Media Management",
-          { timeout: 1000 },
-        );
-      });
-      await expect(trigger).toBeInViewport();
-    });
-
-    test.describe("with reduced motion", () => {
-      test.use({ reducedMotion: "reduce" });
-
-      test("the blocks are a plain stack without dots", async ({ page }) => {
-        await page.goto("/en/services");
-        await expect(
-          page.getByRole("navigation", { name: "Jump to a service" }),
-        ).toBeHidden();
-        const stage = page.getByRole("region", { name: "Our services" });
-        const height = await stage.evaluate(
-          (element) => element.getBoundingClientRect().height,
-        );
-        // Five stacked blocks, not five stage heights of scroll track.
-        expect(height).toBeLessThan(5 * 545 + 100);
-        await expect(page.locator("#website-maintenance")).toHaveCSS(
-          "opacity",
-          "1",
-        );
-      });
-    });
-
-    test("a screen too short for a block gets the plain stack", async ({
-      page,
-    }) => {
-      // 600 px tall: the stage would be 504 px, shorter than a block.
-      await page.setViewportSize({ width: 1280, height: 600 });
-      await page.goto("/en/services");
-      await expect(
-        page.getByRole("navigation", { name: "Jump to a service" }),
-      ).toBeHidden();
-      const stage = page.getByRole("region", { name: "Our services" });
-      const height = await stage.evaluate(
-        (element) => element.getBoundingClientRect().height,
-      );
-      expect(height).toBeLessThan(5 * 545 + 100);
-    });
+    }
   });
 
-  test("below desktop the blocks stack without dots", async ({ page }) => {
-    test.skip(!isMobile(page), "mobile only");
+  test("a click anywhere on a card opens its details (#124)", async ({
+    page,
+  }) => {
     await page.goto("/en/services");
-    await expect(
-      page.getByRole("navigation", { name: "Jump to a service" }),
-    ).toBeHidden();
-    await expect(page.locator("main article")).toHaveCount(5);
+    const card = page.locator("#website-maintenance");
+    const details = page.getByRole("dialog", {
+      name: copy("en", "Services.items.maintenance.title"),
+    });
+    await card.scrollIntoViewIfNeeded();
+    // The summary is plain text, not a control: the stretched trigger covers it, so a
+    // real mouse click on the text lands on the trigger (Playwright's element click
+    // would refuse, because the text is covered, which is the point).
+    const summary = card.getByText(copy("en", "ServiceSummaries.maintenance"));
+    await untilHydrated(async () => {
+      if (!(await details.isVisible())) {
+        await summary.scrollIntoViewIfNeeded();
+        const box = await summary.boundingBox();
+        if (box) await page.mouse.click(box.x + 20, box.y + box.height / 2);
+      }
+      await expect(details).toBeVisible({ timeout: 1000 });
+    });
+    // Still one control per card, named for its service.
+    await page.keyboard.press("Escape");
+    await expect(card.getByRole("button")).toHaveCount(1);
+    await expect(card.getByRole("button")).toHaveAccessibleName(
+      "What’s included: Website Maintenance",
+    );
+  });
+
+  test("hover deepens the shadow, plays the accent and nudges the arrow, without a lift (#124)", async ({
+    page,
+  }) => {
+    test.skip(isMobile(page), "hover only applies on devices that can hover");
+    await page.goto("/en/services");
+    const card = page.locator("#content-writing");
+    await card.scrollIntoViewIfNeeded();
+    await settleAnimations(page);
+    const shadowAtRest = await card.evaluate(
+      (element) => getComputedStyle(element).boxShadow,
+    );
+    await card.hover({ position: { x: 40, y: 40 } });
+    const pencil = card.locator('[data-draw="ride"]');
+    await expect
+      .poll(() =>
+        pencil.evaluate((element) => getComputedStyle(element).rotate),
+      )
+      .toBe("5deg");
+    await expect
+      .poll(() =>
+        card
+          .getByRole("button")
+          .locator("> span")
+          .evaluate((element) => getComputedStyle(element).translate),
+      )
+      .toBe("4px");
+    const state = await card.evaluate((element) => ({
+      shadow: getComputedStyle(element).boxShadow,
+      translate: getComputedStyle(element).translate,
+    }));
+    expect(state.translate).toBe("none");
+    expect(state.shadow).not.toBe(shadowAtRest);
+  });
+
+  test("an illustration draws itself as its card scrolls in (#124)", async ({
+    page,
+  }) => {
+    await page.goto("/en/services");
+    const parts = page.locator("#website-maintenance [data-draw]");
+    // Below the fold after hydration, the drawing waits hidden...
+    await expect
+      .poll(() =>
+        parts.evaluateAll((elements) =>
+          elements.every(
+            (element) => (element as SVGElement).style.opacity === "0",
+          ),
+        ),
+      )
+      .toBe(true);
+    // ...and ends complete once its card is in view.
+    await page.locator("#website-maintenance").scrollIntoViewIfNeeded();
+    await expect
+      .poll(
+        () =>
+          parts.evaluateAll((elements) =>
+            elements.every((element) => {
+              const style = getComputedStyle(element);
+              return (
+                style.opacity === "1" && /^0(px)?$/.test(style.strokeDashoffset)
+              );
+            }),
+          ),
+        { timeout: 6000 },
+      )
+      .toBe(true);
+  });
+});
+
+test.describe("service cards with reduced motion", () => {
+  test.use({ reducedMotion: "reduce" });
+
+  test("drawings show complete and hover plays no accent (#124)", async ({
+    page,
+  }) => {
+    await page.goto("/en/services");
+    const card = page.locator("#website-maintenance");
+    await card.scrollIntoViewIfNeeded();
+    const parts = card.locator("[data-draw]");
+    const hidden = await parts.evaluateAll((elements) =>
+      elements.filter((element) => getComputedStyle(element).opacity !== "1"),
+    );
+    expect(hidden).toHaveLength(0);
+    test.skip(isMobile(page), "hover only applies on devices that can hover");
+    await card.hover({ position: { x: 40, y: 40 } });
+    await page.waitForTimeout(700);
+    const ring = card.locator("g").last();
+    expect(
+      await ring.evaluate((element) => getComputedStyle(element).rotate),
+    ).toBe("none");
+    expect(
+      await card.evaluate((element) => getComputedStyle(element).translate),
+    ).toBe("none");
   });
 });
 

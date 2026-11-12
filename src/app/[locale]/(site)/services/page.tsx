@@ -9,16 +9,16 @@ import { localeAlternates } from "@/i18n/metadata";
 import { localizedPageMetadata } from "@/i18n/page-metadata";
 import { servicesJsonLd } from "@/lib/seo/structured-data";
 
-import { ServiceBlocks } from "./_components/service-blocks";
+import { ServiceGrid } from "./_components/service-grid";
 import { ServicesApproach } from "./_components/services-approach";
 import { ServicesHero } from "./_components/services-hero";
 
 /*
- * Services (Figma 04 — Services, 129:2): Photo hero · five service blocks with a
- * details Dialog/Drawer each · Our approach · CTA band. Nav (transparent over the
+ * Services (Figma 04 — Services, 129:2): Photo hero · the services grid (five cards,
+ * each opening a details Dialog/Drawer, #124) · Our approach · CTA band. Nav (transparent over the
  * hero), footer and the mobile sticky CTA come from the (site) layout. Static for both
  * locales; the only client code is ServiceDetails and the Tabs/Accordion primitives.
- * Service JSON-LD lists each offering, addressed at its block (#slug).
+ * Service JSON-LD lists each offering, addressed at its card (#slug).
  */
 
 export function generateMetadata(): Promise<Metadata> {
@@ -49,7 +49,7 @@ export default async function ServicesPage() {
         })}
       />
       <ServicesHero />
-      <ServiceBlocks />
+      <ServiceGrid />
       <ServicesApproach />
       <CtaBand headline={t("headline")} subtext={t("subtext")} />
     </main>
