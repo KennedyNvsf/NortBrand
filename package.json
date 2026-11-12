@@ -18,6 +18,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "a11y:audit": "playwright test --config playwright.audit.config.ts",
     "i18n:pseudo": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/i18n-pseudo.mts",
     "check:release": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-release.mts",
     "icons:generate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-icons.mts",
