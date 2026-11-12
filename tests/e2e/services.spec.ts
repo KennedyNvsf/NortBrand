@@ -43,7 +43,7 @@ async function untilHydrated(action: () => Promise<void>) {
 
 async function openDetails(page: Page, service: string, title: string) {
   const trigger = page.getByRole("button", {
-    name: `More Details: ${service}`,
+    name: `What’s included: ${service}`,
   });
   const details = page.getByRole("dialog", { name: title });
   await untilHydrated(async () => {
@@ -119,7 +119,7 @@ test.describe("services page", () => {
     expect(headingTop).toBeGreaterThanOrEqual(headerBottom);
   });
 
-  test("More Details opens the service, traps focus, closes on Esc and returns focus", async ({
+  test("What’s included opens the service, traps focus, closes on Esc and returns focus", async ({
     page,
   }) => {
     await page.goto("/en/services");
@@ -334,35 +334,99 @@ test.describe("services page", () => {
     await page.keyboard.press("Escape");
     await expect(card.getByRole("button")).toHaveCount(1);
     await expect(card.getByRole("button")).toHaveAccessibleName(
-      "More Details: Website Maintenance",
+      "What’s included: Website Maintenance",
     );
   });
 
-  test("a card lifts on hover (#124)", async ({ page }) => {
+  test("hover deepens the shadow, plays the accent and nudges the arrow, without a lift (#124)", async ({
+    page,
+  }) => {
     test.skip(isMobile(page), "hover only applies on devices that can hover");
     await page.goto("/en/services");
-    const card = page.locator("#web-design");
+    const card = page.locator("#content-writing");
     await card.scrollIntoViewIfNeeded();
     await settleAnimations(page);
-    await card.hover();
+    const shadowAtRest = await card.evaluate(
+      (element) => getComputedStyle(element).boxShadow,
+    );
+    await card.hover({ position: { x: 40, y: 40 } });
+    const pencil = card.locator('[data-draw="ride"]');
     await expect
       .poll(() =>
-        card.evaluate((element) => getComputedStyle(element).translate),
+        pencil.evaluate((element) => getComputedStyle(element).rotate),
       )
-      .toMatch(/^0px -4px$|^0px -0.25rem$/);
+      .toBe("5deg");
+    await expect
+      .poll(() =>
+        card
+          .getByRole("button")
+          .locator("> span")
+          .evaluate((element) => getComputedStyle(element).translate),
+      )
+      .toBe("4px");
+    const state = await card.evaluate((element) => ({
+      shadow: getComputedStyle(element).boxShadow,
+      translate: getComputedStyle(element).translate,
+    }));
+    expect(state.translate).toBe("none");
+    expect(state.shadow).not.toBe(shadowAtRest);
+  });
+
+  test("an illustration draws itself as its card scrolls in (#124)", async ({
+    page,
+  }) => {
+    await page.goto("/en/services");
+    const parts = page.locator("#website-maintenance [data-draw]");
+    // Below the fold after hydration, the drawing waits hidden...
+    await expect
+      .poll(() =>
+        parts.evaluateAll((elements) =>
+          elements.every(
+            (element) => (element as SVGElement).style.opacity === "0",
+          ),
+        ),
+      )
+      .toBe(true);
+    // ...and ends complete once its card is in view.
+    await page.locator("#website-maintenance").scrollIntoViewIfNeeded();
+    await expect
+      .poll(
+        () =>
+          parts.evaluateAll((elements) =>
+            elements.every((element) => {
+              const style = getComputedStyle(element);
+              return (
+                style.opacity === "1" && /^0(px)?$/.test(style.strokeDashoffset)
+              );
+            }),
+          ),
+        { timeout: 6000 },
+      )
+      .toBe(true);
   });
 });
 
 test.describe("service cards with reduced motion", () => {
   test.use({ reducedMotion: "reduce" });
 
-  test("a card does not move on hover (#124)", async ({ page }) => {
-    test.skip(isMobile(page), "hover only applies on devices that can hover");
+  test("drawings show complete and hover plays no accent (#124)", async ({
+    page,
+  }) => {
     await page.goto("/en/services");
-    const card = page.locator("#web-design");
+    const card = page.locator("#website-maintenance");
     await card.scrollIntoViewIfNeeded();
-    await card.hover();
-    await page.waitForTimeout(400);
+    const parts = card.locator("[data-draw]");
+    const hidden = await parts.evaluateAll((elements) =>
+      elements.filter((element) => getComputedStyle(element).opacity !== "1"),
+    );
+    expect(hidden).toHaveLength(0);
+    test.skip(isMobile(page), "hover only applies on devices that can hover");
+    await card.hover({ position: { x: 40, y: 40 } });
+    await page.waitForTimeout(700);
+    const ring = card.locator("g").last();
+    expect(
+      await ring.evaluate((element) => getComputedStyle(element).rotate),
+    ).toBe("none");
     expect(
       await card.evaluate((element) => getComputedStyle(element).translate),
     ).toBe("none");

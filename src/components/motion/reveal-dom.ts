@@ -29,6 +29,9 @@ export function revealItemsOf(root: Element): HTMLElement[] {
   ).filter((item) => item.parentElement?.closest(`[${REVEAL_GROUP}]`) === root);
 }
 
+/** Reveal once an item's top is 12% above the bottom of the viewport. */
+export const REVEAL_ROOT_MARGIN = "0px 0px -12% 0px";
+
 /** Read at the moment an animation starts (effects and event handlers only). */
 export function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;

@@ -233,7 +233,7 @@ test.describe("what reaches analytics", () => {
     // A click before React hydrates the trigger does nothing: retry until it opens.
     await expect(async () => {
       await page
-        .getByRole("button", { name: /More Details/ })
+        .getByRole("button", { name: /What’s included/ })
         .first()
         .click();
       await expect(details).toBeVisible({ timeout: 1000 });

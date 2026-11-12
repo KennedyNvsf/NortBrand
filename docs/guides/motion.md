@@ -177,17 +177,20 @@ they never compete for one element's transform.
 
 - **Hero photo** settles from 108% to 100% scale over 1.6 s while the text enters.
 - **Services grid** (`service-grid.tsx`, #124; it replaced the pinned blocks and their
-  dot navigation). One RevealGroup:
-  1. the eyebrow and headline rise; the squiggle draws itself (`LogoMark draw="reveal"`,
-     reveal kind `draw`);
-  2. each card rises as it scrolls in. Cards that arrive together (row 1 on desktop) are
-     staggered 100 ms apart; on mobile they reveal one by one.
-  - **Hover** (hover devices only): the card lifts 4 px (`--duration-base`, emphasized),
-    its shadow deepens and the icon chip scales 1.1 and tilts, the Home service cards'
-    language.
+  dot navigation):
+  1. the eyebrow and headline rise (RevealGroup); the squiggle draws itself
+     (`LogoMark draw="reveal"`, reveal kind `draw`);
+  2. the cards have no entrance of their own: each illustration draws itself as its
+     card scrolls in (`IllustrationPlayer`). Strokes trim on one after another and
+     solid shapes pop from 60%, each at its Figma time within 0–1.9 s; the pencil rides
+     the line it writes. Uses the lazily loaded engine's `animate()`.
+  - **Hover** (hover devices only): the shadow deepens, the arrow nudges 4 px
+    (`--duration-base`, emphasized) and the illustration plays its one accent (cursor
+    press, brackets spread, pencil tilt, heart swell, ring turn), held while hovered and
+    sprung back on leave. No lift, no button tint.
   - **Press:** the card's shadow flattens (`shadow-card-pressed`). Nothing moves, see the
     bug below.
-  - **Reduced motion:** opacity only; no lift, tilt or drawing.
+  - **Reduced motion:** drawings show complete; hover keeps only the shadow change.
 
 - **Our approach** (`approach-tabs.tsx`):
   - **Left:** one red accent travels between the points. It springs to the selected one
@@ -214,7 +217,7 @@ Links rise 12 px, 40 ms apart, unchanged from the first pass.
 - **Radix mounts a new panel late.** Radix Tabs render a newly selected panel's children
   one commit _after_ the value changes, so the slide-in effect found nothing to animate.
   The fix is `forceMount` on the panels; CSS already hides the inactive ones.
-- **A pressed card swallowed its own click (#124).** The card's "More Details" trigger
+- **A pressed card swallowed its own click (#124).** The card's "What's included" trigger
   is stretched over the card with an absolute `::after`. Its press feedback set
   `scale` (first 0.98, then even `100%`), and any `scale` other than `none` makes the
   element the containing block of its absolute children. So mid-press the `::after`
@@ -240,15 +243,17 @@ Links rise 12 px, 40 ms apart, unchanged from the first pass.
 - **Quote card auto-advance** (every 6 s, crossfade, pause on hover/focus) needs more than
   one quote, and there is only one. It stays a static card until the client provides
   more.
-- **Card image zoom** belongs to `ArticleCard` (the blog). The Services cards have photos
-  now, but hover keeps to the lift and icon tilt, the language the Home cards use.
+- **Card image zoom** belongs to `ArticleCard` (the blog). The Services cards have
+  illustrations instead of photos; their hover is the illustration's accent.
 
 ## 6. Tests
 
 - **`services.spec.ts`:**
   - the grid is 3 + 2 on desktop and one column on mobile
   - a click anywhere on a card (the summary text) opens its details
-  - a card lifts 4 px on hover, and doesn't move with reduced motion
+  - hover deepens the shadow, tilts the pencil and nudges the arrow, without a lift
+  - an illustration waits hidden below the fold and ends fully drawn once scrolled in
+  - reduced motion: drawings complete, no accent, no movement
 - **`motion.spec.ts`:**
   - the hero fills the first screen, and its content ends visible
   - below-the-fold content starts hidden and settles (opacity 1, identity transform),

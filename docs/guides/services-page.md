@@ -11,8 +11,8 @@ mobile sheet `362:307`. Services grid: desktop `467:1148`, tablet `468:410`, mob
 
 ```
 Photo hero        transparent nav over a photo · H1 · lead · quote card
-Services grid     header (eyebrow · H2 · squiggle) · 5 cards (photo · eyebrow · H3 · summary
-                  · More Details): 3 + 2 desktop, 2 + 2 + 1 tablet, 1 column mobile
+Services grid     header (eyebrow · H2 · squiggle) · 5 cards (illustration · eyebrow · H3 ·
+                  summary · What's included): 3 + 2 desktop, 2 + 2 + 1 tablet, 1 column mobile
                   a card → Dialog (tablet, desktop) or Drawer (mobile)
 Our approach      tab list + panel (tablet, desktop) · accordion (mobile)
 CTA band          Services headline override
@@ -28,7 +28,9 @@ src/app/[locale]/(site)/services/
    _components/services-hero.tsx     server
    _components/hero-video.tsx        CLIENT: the looping hero video
    _components/service-grid.tsx      server: the header and one card per service (#124)
-   _components/service-photos.ts     each card's photo and crop anchor, by slug (#82)
+   _components/service-illustrations.tsx  server: the five drawings, parts marked with timings
+   _components/illustration-parts.ts  the part kinds, drawPart(), PENCIL_RIDE (plain data)
+   _components/illustration-player.tsx  CLIENT: plays a card's drawing as it scrolls in
    _components/service-details.tsx   CLIENT: the Dialog / Drawer
    _components/services-approach.tsx server, composing client Tabs + Accordion
 src/content/services.ts              serviceSlugs, services, includedKeys
@@ -74,14 +76,14 @@ ServiceGrid (server)
 
 ### Accessibility behaviour (acceptance criteria)
 
-| Requirement                      | Who provides it                                                                                     |
-| -------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Trap focus                       | Radix Dialog `FocusScope` (vaul is built on Radix Dialog)                                           |
-| Close on Esc                     | Radix `DismissableLayer`                                                                            |
-| Return focus to the trigger      | Radix, because the trigger is a `DialogTrigger` / `DrawerTrigger`                                   |
-| Each trigger has a distinct name | `aria-label="More Details: Web Design"`: it contains the visible text, so voice control still works |
-| Title and description announced  | `DialogTitle` / `DrawerTitle` and `…Description`                                                    |
-| Sticky CTA hides while open      | Radix scroll lock sets `body[data-scroll-locked]` (rule in `globals.css`)                           |
+| Requirement                      | Who provides it                                                                                        |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Trap focus                       | Radix Dialog `FocusScope` (vaul is built on Radix Dialog)                                              |
+| Close on Esc                     | Radix `DismissableLayer`                                                                               |
+| Return focus to the trigger      | Radix, because the trigger is a `DialogTrigger` / `DrawerTrigger`                                      |
+| Each trigger has a distinct name | `aria-label="What’s included: Web Design"`: it contains the visible text, so voice control still works |
+| Title and description announced  | `DialogTitle` / `DrawerTitle` and `…Description`                                                       |
+| Sticky CTA hides while open      | Radix scroll lock sets `body[data-scroll-locked]` (rule in `globals.css`)                              |
 
 **Bug found and fixed: the drawer did not trap focus.** vaul's `autoFocus` defaults to
 `false`, which cancels Radix's "focus the first element on open". With nothing focused
@@ -153,20 +155,20 @@ code is still `ServiceDetails`.
 
 **Layout**
 
-|                 | Desktop                                 | Tablet                              | Mobile   |
-| --------------- | --------------------------------------- | ----------------------------------- | -------- |
-| Section padding | `--section-y` (120)                     | 88                                  | 72       |
-| Header → grid   | 56                                      | 40                                  | 28       |
-| Headline        | 44 px, second line indented 53 px       | 32 px                               | 28 px    |
-| Grid            | 6 columns: cards span 2, then 3 (3 + 2) | 2 columns, the last card spans both | 1 column |
-| Card media      | 232                                     | 216                                 | 200      |
-| Card title      | 28 px                                   | 24 px                               | 24 px    |
+|                 | Desktop                                 | Tablet                                 | Mobile   |
+| --------------- | --------------------------------------- | -------------------------------------- | -------- |
+| Section padding | `--section-y` (120)                     | 88                                     | 72       |
+| Header → grid   | 56                                      | 40                                     | 28       |
+| Headline        | 44 px, second line indented 53 px       | 32 px                                  | 28 px    |
+| Grid            | 6 columns: cards span 2, then 3 (3 + 2) | 2 columns, the last card spans both    | 1 column |
+| Card media      | 232 tall; the wide row 272 wide, left   | 216 tall; the last card 272 wide, left | 200 tall |
+| Card title      | 28 px (wide row 24)                     | 24 px                                  | 24 px    |
 
 - The headline is `text-h2` (already 28 / 32) with `lg:text-[44px]`, the same override
   the Blog headline uses; no token is 44 px. The 53 px indent is `indentTag` with
   `lg:block lg:pl-13.25`: the message wraps the second line in `<indent>`, so the
   sentence stays whole for translators.
-- Cards in a row share a height (grid stretch), and "More Details" sits at the bottom
+- Cards in a row share a height (grid stretch), and "What's included" sits at the bottom
   (`mt-auto`). Figma's frames are a few pixels taller (fixed heights with slack); the
   paddings and gaps are Figma's.
 - Each card keeps `id={slug}` and `scroll-mt-24`, so `/services#content-writing` from the
@@ -174,11 +176,13 @@ code is still `ServiceDetails`.
 - The title message contains `<greenUnderline>`: the card renders it with `plainTags`,
   the dialog with `highlightTags`. One translation, two presentations.
 
-**One interactive element per card.** The "More Details" trigger is stretched over the
+**One interactive element per card.** The "What's included" trigger is stretched over the
 card: `static` (so its `::after` anchors to the card, not the button) plus
 `after:absolute after:inset-0`. A click anywhere opens the details, while keyboard and
-screen-reader users meet one clearly named button ("More Details: Web Design"). The
-focus ring stays on the button.
+screen-reader users meet one clearly named button ("What’s included: Web Design"). The
+focus ring stays on the button. Because the `::after` belongs to the button, hovering
+anywhere on the card hovers the button: the grid cancels the secondary button's tint
+(`hover:bg-bg-surface`) and nudges its arrow 4 px instead of 2.
 
 **The press bug.** The trigger's pressed scale must be `none`. Any `scale` value (the
 button's usual 0.98, or even 100%) makes it the containing block of its `::after`, so
@@ -187,25 +191,60 @@ text below: no click. The card shows the press by flattening its shadow instead
 (`has-[button:active]:shadow-card-pressed`). The e2e test "a click anywhere on a card
 opens its details" clicks the summary text, which would fail if this regressed.
 
-**Photos** (`service-photos.ts`): one per service (the main collage photos; the detail
-photos were removed with the collages). Each has an optional object-position class,
-chosen at 1440 / 768 / 390. The media is wide (about 1.6 : 1, up to 3.3 : 1 for the
-full-width tablet card), so the anchor mostly picks the horizontal band. `sizes` is the
-card's width at each layout (`PHOTO_SIZES`): no photo is wider than its media, so
-`object-cover` fills by width. Photos are decorative (`alt=""`); the copy carries the
-meaning. They live here, not in `src/content/services.ts`, because client code (the
-consultation form, analytics) imports that file and would bundle the image data.
+**Two card shapes** (`cardLayout`). Vertical: the illustration panel on top (200 /
+216 / 232 px tall, hairline below). Horizontal: the panel on the left (272 px wide, full
+height, hairline on the right), with the eyebrow at 12 px / 0.04em and the title at
+24 px. The wide cards are horizontal: cards 4 and 5 on desktop, the full-width fifth on
+tablet. Mobile is all vertical.
 
-**Motion** (Emil's practices on Motion Spec tokens; details in [Motion](./motion.md)):
-the header rises and the squiggle draws itself (`LogoMark draw="reveal"`); each card
-rises as it scrolls in, staggered when several arrive together. On hover the card lifts
-4 px, its shadow deepens and the icon chip tilts, as on the Home cards. Reduced motion:
-opacity only, and the squiggle is simply drawn.
+**Illustrations** (`service-illustrations.tsx`, Figma `486:265`–`486:335`). They
+replaced the card photos (lead's design change, 12 November), so the five
+`service-<slug>.jpg` files and `service-photos.ts` are gone. Each drawing is inline SVG,
+240 × 160, exported from Figma with its paths unchanged: inline because its parts
+animate, which an `<img>` can't. Red is `text-action-primary` through `currentColor`;
+the white underlays are `fill-bg-surface`, the check `stroke-icon-on-accent`. They are
+decorative (`aria-hidden`); the copy carries the meaning.
 
-**Adding or swapping a card photo:** export at 1600 px with metadata stripped, save it as
-`src/assets/images/service-<slug>.jpg`, set its anchor in `servicePhotos`, check the
-crop on a production build (the dev server can serve stale CSS for new classes), and
-update the register in [Images](./images.md).
+**How a drawing plays** (Motion Spec › Service illustrations; timelines `494:476`,
+`494:547`, `494:595`, `494:652`, `494:715`):
+
+```
+server   <path {...drawPart("trace", 0.35, { duration: 0.3 })} />   data-draw, -at, -for
+client   IllustrationPlayer (the card's media panel)
+           mount: below the fold and motion allowed? → hide every part
+           IntersectionObserver (same margin as RevealGroup) → card in view
+           loadRevealEngine() → animate() each part at its own time:
+             trace   opacity on, stroke-dashoffset 1 → 0
+             pop     opacity on, scale 0.6 → 1
+             appear  opacity on
+             ride    the pencil follows PENCIL_RIDE while the line writes (linear)
+```
+
+- The cards have no entrance of their own: the drawing is the reveal. The whole drawing
+  runs 0–1.9 s; `service-illustrations.test.tsx` fails if a part ends later or a trimmed
+  stroke lacks `pathLength="1"`.
+- Same safety rules as RevealGroup: above the fold, before hydration, without
+  JavaScript, with reduced motion, or if the engine fails to load, the drawing is simply
+  complete.
+- The timings live on the parts themselves (one place to change), read off the Figma
+  timelines: a 4.6 s demo loop whose drawing occupies the first 1.9 s.
+
+**Hover accents** (CSS transitions on the card's hover, hover devices only,
+`motion-safe`): the cursor presses the button, the brackets spread 6 px, the pencil
+tilts 5°, the heart swells to 112%, the update ring turns half a revolution. Held while
+the pointer stays, sprung back when it leaves, so they can be interrupted at any point.
+They use the individual `translate` / `scale` / `rotate` properties, which combine
+with the `transform` the draw-on leaves on the same element.
+
+**Motion summary** (details in [Motion](./motion.md)): the header rises and the
+squiggle draws itself; each illustration draws as its card scrolls in; hover deepens the
+shadow, nudges the arrow and plays the accent. No lift and no button tint. Press
+flattens the shadow. Reduced motion: drawings complete, hover keeps only the shadow.
+
+**Adding a service's illustration:** export the Figma component's SVG, copy its paths
+into a component in `service-illustrations.tsx` (pen strokes through `<Trace>`), mark
+each part with its timeline values, add it to `serviceIllustrations`, and check it on a
+production build (the dev server can serve stale CSS for new classes).
 
 ### `service-details.tsx`
 
@@ -317,7 +356,7 @@ That is why the first dialog render had an inset dark panel. Overrides like `p-0
   Renaming a slug also needs a database migration (consultation requests store it).
 - **Change dialog copy:** edit `messages/en.json`. Keep exactly one `<greenUnderline>`
   keyword in each title.
-- **Swap a photo:** cards in `service-photos.ts`, approach points in `points` in
+- **Swap a photo:** approach points in `points` in
   `services-approach.tsx`. Export at 1600 px with metadata stripped, set a crop anchor,
   check 1440 / 768 / 390 on a production build, and update the register in
   [Images](./images.md).

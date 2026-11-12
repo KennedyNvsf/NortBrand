@@ -141,8 +141,8 @@
     "blocks": {
       "label": "Our services",
       "eyebrow": "{number} — {name}",
-      "moreDetails": "More Details",
-      "moreDetailsLabel": "More Details: {name}"
+      "moreDetails": "What’s included",
+      "moreDetailsLabel": "What’s included: {name}"
     },
     "grid": {
       "title": "Open any <red>service</red> to <indent>see what's included.</indent>"

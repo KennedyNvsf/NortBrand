@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 
 import { RevealGroup } from "@/components/motion/reveal-group";
@@ -10,63 +9,78 @@ import {
 } from "@/components/site/highlight";
 import { LogoMark } from "@/components/site/logo";
 import { includedKeys, services } from "@/content/services";
-import { ICON_STROKE, icons } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
+import { IllustrationPlayer } from "./illustration-player";
 import { ServiceDetails } from "./service-details";
-import { servicePhotos } from "./service-photos";
+import { serviceIllustrations } from "./service-illustrations";
 
 /*
  * Figma Services › Services Grid (desktop 467:1148, tablet 468:410, mobile 468:679):
- * a header and one vertical card per service, in `services` order (#124). It replaced
- * the pinned service blocks.
+ * a header and one card per service, in `services` order (#124). It replaced the
+ * pinned service blocks.
  * - Grid: desktop 3 + 2 (a 6-column grid, cards spanning 2 then 3); tablet 2 + 2 + 1,
  *   the last card spanning both columns; mobile one column. Cards in a row share a
- *   height and "More Details" sits at the bottom of each.
+ *   height and "What's included" sits at the bottom of each.
+ * - Two card shapes (cardLayout): vertical, with the illustration above the copy, and
+ *   horizontal, with it in a 272 px panel on the left. The wide cards are horizontal:
+ *   the last two on desktop, the full-width fifth on tablet. Mobile is all vertical.
  * - Each card's id is its slug, so /services#web-design (Home cards, footer links)
  *   lands on it; scroll-mt keeps it clear of the fixed header.
- * - One interactive element per card: the "More Details" trigger. Its ::after covers
- *   the card (it is made `static`, so the after anchors to the card), so a click
+ * - One interactive element per card: the "What's included" trigger. Its ::after
+ *   covers the card (it is made `static`, so the after anchors to the card), so a click
  *   anywhere opens the details, while keyboard and screen-reader users meet a single,
- *   clearly named button ("More Details: Web Design").
+ *   clearly named button ("What's included: Web Design").
  * - Nothing moves while the card is pressed, and the trigger's pressed scale is `none`.
  *   Any `scale` value (even 100%) makes the button the containing block of its ::after,
  *   so during the press the stretched area collapsed to the button and the mouseup
  *   landed on the content below: no click (found in e2e). Press feedback is the card's
- *   shadow flattening instead.
- * - Motion (Emil's practices on Motion Spec tokens): inside a RevealGroup the eyebrow
- *   and headline rise, the squiggle draws itself, and each card rises as it scrolls in;
- *   cards that arrive together are staggered. Hover (hover devices only) lifts the card
- *   4 px, deepens its shadow and tilts the icon chip, the Home service cards' language.
- *   Reduced motion: opacity only, no lift or tilt, and the squiggle is simply drawn.
+ *   shadow flattening (the Pressed state).
+ * - Motion (Motion Spec › Service cards, following Emil Kowalski): the cards have no
+ *   entrance of their own; the illustration drawing itself is the reveal
+ *   (IllustrationPlayer). Hover deepens the shadow, nudges the arrow 4 px and plays
+ *   the illustration's accent; no lift and no button tint. Reduced motion: drawings
+ *   show complete and hover keeps only the shadow change.
  */
+
+type CardLayout = {
+  item: string;
+  article: string;
+  media: string;
+  eyebrow: string;
+  title: string;
+};
 
 /*
- * The width each card's photo is drawn at: the card's width (photos are no wider than
- * the media, so object-cover fills it by width), at the 1440 / 768 / 390 layouts.
+ * Placement and shape by index. Vertical media: 200 / 216 / 232 px tall with a hairline
+ * below. Horizontal media: 272 px wide, full height, hairline on the right; its eyebrow
+ * tightens to 12 px / 0.04em and its title stays 24 px on desktop (Figma 499:335).
  */
-const PHOTO_SIZES = {
-  third:
-    "(min-width: 1024px) 362px, (min-width: 768px) 340px, calc(100vw - 40px)",
-  half: "(min-width: 1024px) 556px, (min-width: 768px) 340px, calc(100vw - 40px)",
-  halfThenFull:
-    "(min-width: 1024px) 556px, (min-width: 768px) 704px, calc(100vw - 40px)",
-} as const;
-
-/* Grid placement by index: 3 + 2 on desktop, the fifth card full width on tablet. */
-function cardPlacement(index: number, total: number) {
+function cardLayout(index: number, total: number): CardLayout {
   const isLast = index === total - 1;
+  const wideOnDesktop = index >= 3;
+  const horizontal = isLast ? "md" : wideOnDesktop ? "lg" : null;
+
   return {
-    className: cn(
-      index < 3 ? "lg:col-span-2" : "lg:col-span-3",
-      isLast && "md:col-span-2 lg:col-span-3",
+    item: cn(
+      wideOnDesktop ? "lg:col-span-3" : "lg:col-span-2",
+      isLast && "md:col-span-2",
     ),
-    sizes:
-      index < 3
-        ? PHOTO_SIZES.third
-        : isLast
-          ? PHOTO_SIZES.halfThenFull
-          : PHOTO_SIZES.half,
+    article: cn(
+      horizontal === "md" && "md:flex-row",
+      horizontal === "lg" && "lg:flex-row",
+    ),
+    media: cn(
+      "h-50 w-full border-b md:h-54 lg:h-58",
+      horizontal === "md" &&
+        "md:h-auto md:w-68 md:border-r md:border-b-0 lg:h-auto",
+      horizontal === "lg" && "lg:h-auto lg:w-68 lg:border-r lg:border-b-0",
+    ),
+    eyebrow: cn(
+      horizontal === "md" && "md:text-[12px] md:tracking-[0.04em]",
+      horizontal === "lg" && "lg:tracking-[0.04em]",
+    ),
+    title: horizontal ? "" : "lg:text-[28px] lg:leading-[1.12]",
   };
 }
 
@@ -110,56 +124,49 @@ export async function ServiceGrid() {
             const name = names(key);
             const number = String(index + 1).padStart(2, "0");
             const titleId = `${slug}-title`;
-            const Icon = icons[icon];
-            const photo = servicePhotos[slug];
-            const placement = cardPlacement(index, total);
+            const Illustration = serviceIllustrations[slug];
+            const layout = cardLayout(index, total);
 
             return (
-              <li
-                key={slug}
-                {...revealItem()}
-                className={cn("flex", placement.className)}
-              >
+              <li key={slug} className={cn("flex", layout.item)}>
                 <article
                   id={slug}
                   aria-labelledby={titleId}
                   className={cn(
                     "group/card relative flex w-full scroll-mt-24 flex-col overflow-hidden rounded-lg border border-border-default bg-bg-surface shadow-card",
-                    "transition-[translate,box-shadow] duration-(--duration-base) ease-emphasized hover:shadow-card-hover motion-safe:hover:-translate-y-1",
+                    // Hover: the shadow deepens (no lift, Motion Spec › Service cards).
+                    "transition-shadow duration-(--duration-base) ease-emphasized hover:shadow-card-hover",
                     // Press: the shadow flattens. No scale or shift while pressed: moving
                     // the card (or the button's stretched ::after) under the pointer
                     // would make the mouseup miss it, and the click never completes.
                     "has-[button:active]:shadow-card-pressed",
+                    layout.article,
                   )}
                 >
-                  <div className="relative h-50 shrink-0 overflow-hidden bg-action-primary-subtle md:h-54 lg:h-58">
-                    <Image
-                      src={photo.src}
-                      alt=""
-                      fill
-                      sizes={placement.sizes}
-                      placeholder="blur"
-                      className={cn(
-                        "object-cover",
-                        "position" in photo && photo.position,
-                      )}
-                    />
-                    <span className="absolute top-md left-md flex size-12 items-center justify-center rounded-md bg-bg-surface transition-transform duration-(--duration-base) ease-emphasized motion-safe:group-hover/card:scale-110 motion-safe:group-hover/card:-rotate-6">
-                      <Icon
-                        className="size-6 text-action-primary"
-                        strokeWidth={ICON_STROKE}
-                        aria-hidden
-                      />
-                    </span>
-                  </div>
+                  <IllustrationPlayer
+                    className={cn(
+                      "flex shrink-0 items-center justify-center overflow-hidden border-border-default",
+                      layout.media,
+                    )}
+                  >
+                    <Illustration />
+                  </IllustrationPlayer>
 
                   <div className="flex flex-1 flex-col items-start gap-3 p-5 md:p-lg">
-                    <p className="text-overline text-action-secondary">
+                    <p
+                      className={cn(
+                        "text-overline text-action-secondary",
+                        layout.eyebrow,
+                      )}
+                    >
                       {t("blocks.eyebrow", { number, name })}
                     </p>
                     <h3
                       id={titleId}
-                      className="text-[24px] leading-[1.15] font-bold tracking-[-0.01em] text-text-primary lg:text-[28px] lg:leading-[1.12]"
+                      className={cn(
+                        "text-[24px] leading-[1.15] font-bold tracking-[-0.01em] text-text-primary",
+                        layout.title,
+                      )}
                     >
                       {t.rich(`items.${key}.title`, plainTags)}
                     </h3>
@@ -184,7 +191,13 @@ export async function ServiceGrid() {
                         // the card, not the button; hugs its label at every width. Press
                         // scale is `none`, not 100%: any scale value makes the button the
                         // ::after's containing block, collapsing it to the button mid-click.
-                        triggerClassName="static w-auto after:absolute after:inset-0 after:content-[''] motion-safe:active:scale-none"
+                        // The ::after makes a hover anywhere on the card a hover of the
+                        // button: no tint (hover:bg-bg-surface), and the arrow nudges
+                        // 4 px instead of the button's usual 2.
+                        triggerClassName={cn(
+                          "static w-auto after:absolute after:inset-0 after:content-[''] motion-safe:active:scale-none",
+                          "hover:bg-bg-surface [&>span]:duration-(--duration-base) [&>span]:ease-emphasized motion-safe:hover:[&>span]:translate-x-1",
+                        )}
                         labels={{
                           trigger: t("blocks.moreDetails"),
                           triggerAriaLabel: t("blocks.moreDetailsLabel", {

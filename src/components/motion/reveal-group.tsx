@@ -15,6 +15,7 @@ import {
   hide,
   isBelowFold,
   prefersReducedMotion,
+  REVEAL_ROOT_MARGIN,
   revealItemsOf,
   stopAll,
   unhide,
@@ -33,14 +34,11 @@ import {
  * - The animating half of the engine loads after hydration (loadRevealEngine, #105).
  *   Items that arrive before it has loaded play as soon as it has; if it fails to
  *   load, every hidden item is shown.
- * - `disabled`: a parent that drives the items itself (ServiceStage on desktop).
+ * - `disabled`: a parent that drives the items itself.
  * - `contents`: the group adds no box (display: contents), for wrapping a flex child.
  */
 
 const noop = () => undefined;
-
-/** Reveal once the item's top is 12% above the bottom of the viewport. */
-const ROOT_MARGIN = "0px 0px -12% 0px";
 
 type RevealGroupProps = {
   children: ReactNode;
@@ -94,7 +92,7 @@ export function RevealGroup({
           if (active) controls.push(...play(arrived, { reduced }));
         }, noop);
       },
-      { rootMargin: ROOT_MARGIN },
+      { rootMargin: REVEAL_ROOT_MARGIN },
     );
     for (const item of pending) observer.observe(item);
 

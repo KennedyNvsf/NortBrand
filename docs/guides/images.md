@@ -25,11 +25,6 @@ author the original file's metadata named, recorded before the metadata was stri
 | `src/assets/images/services-hero.jpg`                      | Services hero (poster and reduced-motion photo) | —                                               | —              | 2400 px; first exported from the Figma file                      |
 | `public/videos/services-hero.mp4`, `services-hero-720.mp4` | Services hero video (#68)                       | —                                               | —              | H.264, 1080p and 720p                                            |
 | `src/assets/images/sea-coast.jpg`                          | CTA band, every page with one                   | Sea and coastline                               | —              | 2400 px (CTA band rule, [Calls to action](./calls-to-action.md)) |
-| `service-web-design.jpg`                                   | Services › Web Design card                      | Paper wireframes on a jute rug                  | —              |                                                                  |
-| `service-web-development.jpg`                              | Services › Web Development card                 | Laptop showing code                             | Daniil Komov   |                                                                  |
-| `service-content-writing.jpg`                              | Services › Content Writing card                 | "SEO" notes on a notebook                       | —              |                                                                  |
-| `service-social-media-management.jpg`                      | Services › Social Media card                    | Letter tiles: "Social Media"                    | —              |                                                                  |
-| `service-website-maintenance.jpg`                          | Services › Website Maintenance card             | Code editor close-up                            | —              |                                                                  |
 | `approach-brand-identity.jpg`                              | Services › Our approach › Brand Identity        | "Brand personality & visual identity" lettering | —              | English words, also on `/pt`                                     |
 | `approach-visual-design.jpg`                               | Services › Our approach › Visual Design         | Hands on colour swatches                        | —              |                                                                  |
 | `approach-content-strategy.jpg`                            | Services › Our approach › Content Strategy      | Team planning around a table                    | —              | Screen reads "Breakdown of Ad Spend" (English)                   |
@@ -64,18 +59,17 @@ Paths without a folder are in `src/assets/images/`.
    Before stripping, note any author in the file's metadata (`dc:creator`) for the
    register.
 
-2. **Name it** after where it goes: `service-<slug>.jpg` for the service cards
-   (`services/_components/service-photos.ts`), `approach-<point>.jpg` for the approach
-   points (`points` in `services-approach.tsx`). Never commit the raw original.
+2. **Name it** after where it goes: `approach-<point>.jpg` for the approach points
+   (`points` in `services-approach.tsx`), `home-<panel>.jpg` style names elsewhere. Never commit the raw original.
 3. **Set a crop anchor** (an `object-[x%_y%]` class) when the panel crops the subject,
    and check it at 1440, 768 and 390 **on a production build** (`pnpm build` then
    `pnpm start`). The dev server can serve stale CSS without a newly added class, so
    every crop looks centred there.
 4. **Check `sizes`** describes the width the photo is drawn at. `object-cover` draws a
    photo wider than its panel when the photo's shape is wider than the panel's
-   (the service cards' `PHOTO_SIZES` in `service-grid.tsx` are their card widths).
+   (describe the width the photo is drawn at, not its panel's).
 5. **Decorative or not:** photos beside copy that already carries the meaning get
-   `alt=""` (service cards, approach points, Home panels). A photo that adds information of its
+   `alt=""` (approach points, Home panels). A photo that adds information of its
    own needs real alt text in both languages.
 6. **Update this register** (file, place, subject, source, credit, notes) and
    `docs/tech-debt.md` if the photo shows brands, logos, people or English text.
