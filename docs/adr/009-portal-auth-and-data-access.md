@@ -63,9 +63,13 @@ The lead approved a Client and Team Portal on 2026-11-13 (Figma 12 Portal — Cl
    is unchanged. Portal routes are dynamic and per user: no shared caching of portal
    data, `noindex`, out of the sitemap, and disallowed in `robots.txt`. Marketing pages
    stay static.
-7. **Routes and languages.** The client portal is under `/[locale]/portal/…` in English
-   and Portuguese; the team portal is under `/team/…` in English only, outside the locale
-   middleware like `/studio`.
+7. **Routes, entry point and languages.** The client portal is under `/[locale]/portal/…`
+   in English and Portuguese. Its entry point is the **"Track Project"** item in the site
+   navigation (Figma Nav `514:399`, between Blog and Contact): signed out, it opens the
+   sign-in page inside the marketing site's nav and footer (CP-01); signed in, the
+   project overview. The team portal is under `/team/…` in English only, outside the
+   locale middleware like `/studio`. Its sign-in page (TM-14) has no site navigation and
+   links clients to Track Project.
 8. **Email.** Supabase sends the sign-in codes through custom SMTP on Resend
    (`send.nortbrand.pt`), because its built-in sender allows only a few messages an hour.
    Welcome, "Needs you" and digest emails use the app's existing Resend client.

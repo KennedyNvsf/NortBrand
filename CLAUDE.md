@@ -247,6 +247,13 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
 - **Routes:** client portal under `/[locale]/portal/…` (EN/PT); team portal under
   `/team/…` (English only, outside the locale middleware like `/studio`). All portal
   routes are dynamic, `noindex`, out of the sitemap and disallowed in `robots.txt`.
+- **Entry point:** the "Track Project" nav item (Figma Nav `514:399`, between Blog and
+  Contact) links to `/[locale]/portal`. Client sign-in (CP-01/CP-02) sits inside SiteNav
+  and SiteFooter with Track Project active; team sign-in (TM-14) is standalone.
+- **Auth components** (drawn on the portal pages, not on 02 Components): the split
+  sign-in card (form panel + dark brand panel with the mini stage tracker), the 6-box code
+  input (default, focus, error with one shake, filled), the resend countdown, and the
+  sign-in states in CP-08 (no match, wrong code, expired, signed out).
 - **Tenant:** the project. A client sees only their projects, and within them only
   client-visible tickets, shared files and live updates. RLS enforces it; server actions
   check again.
