@@ -169,7 +169,7 @@ signed-in user's own session. The migration is
 ```
 team_members ──┐ (lead, owner, author)
                ▼
-projects ──┬── project_team      who works on it ("Your team" on the client overview)
+projects ──┬── project_team      who works on it: members' access, and "Your team" for clients
            ├── project_clients   client people: email + Project ID sign-in, status
            ├── stages ── tickets ── ticket_checklist_items
            ├── updates ── update_tickets ── (tickets)
@@ -186,29 +186,35 @@ same project**: a ticket's `(project_id, stage_id)` must match a stage, a checkl
 
 ### Who sees what
 
-Three `SECURITY DEFINER` helpers in `private` answer "who is asking" without recursing
-through RLS: `is_team_member()`, `is_team_admin()` and `is_project_client(project)` (an
-active client of an _open_ project). `authenticated` may execute them; the schema stays
-unexposed by the API. Any active team member works on every project (a small studio);
-admins also create projects and manage client access, the team and settings.
+Four `SECURITY DEFINER` helpers in `private` answer "who is asking" without recursing
+through RLS: `is_team_member()`, `is_team_admin()`, `works_on_project(project)` (an admin,
+or an active member listed in `project_team`) and `is_project_client(project)` (an active
+client of an _open_ project). `authenticated` may execute them; the schema stays unexposed
+by the API. **A member works only on the projects they are assigned to** (lead's decision,
+2026-11-13); admins work on every project and alone create projects and manage client
+access, the team and settings.
 
-| Table                    | Client (active, open project) | Team member       | Admin            |
-| ------------------------ | ----------------------------- | ----------------- | ---------------- |
-| `projects`               | their projects                | all, edit         | + create, delete |
-| `stages`                 | their projects                | all, write        | same             |
-| `tickets`                | `client_visible` only         | all, write        | same             |
-| `ticket_checklist_items` | items of visible tickets      | all, write        | same             |
-| `updates`                | live posts (no `deleted_at`)  | all, post as self | + delete         |
-| `update_tickets`         | live update ↔ visible ticket  | all, write        | same             |
-| `project_files`          | `shared` only                 | all, write        | same             |
-| `project_team`           | their projects                | read              | write            |
-| `team_members`           | people on their projects      | read              | write            |
-| `project_clients`        | nothing                       | read              | write            |
-| `access_events`          | nothing                       | read              | read             |
-| `portal_settings`        | nothing                       | read              | edit             |
+| Table                    | Client (active, open project) | Member (assigned)  | Admin (all)      |
+| ------------------------ | ----------------------------- | ------------------ | ---------------- |
+| `projects`               | their projects                | read, edit         | + create, delete |
+| `stages`                 | their projects                | read, write        | same             |
+| `tickets`                | `client_visible` only         | read, write        | same             |
+| `ticket_checklist_items` | items of visible tickets      | read, write        | same             |
+| `updates`                | live posts (no `deleted_at`)  | read, post as self | + delete         |
+| `update_tickets`         | live update ↔ visible ticket  | read, write        | same             |
+| `project_files`          | `shared` only                 | read, write        | same             |
+| `project_team`           | their projects                | read               | write            |
+| `project_clients`        | nothing                       | read               | write            |
+| `access_events`          | nothing                       | read               | read             |
+| `team_members`           | people on their projects      | the whole team     | write            |
+| `portal_settings`        | nothing                       | read               | edit             |
+
+Every row above except the last two is limited to the member's assigned projects. A new
+project is invisible to members until an admin adds them to its team.
 
 `anon` has no privilege on any portal table. A removed client, a client of a closed
-project, a deactivated teammate and a signed-in stranger all see nothing.
+project, a deactivated teammate and a signed-in stranger all see nothing, and a member
+sees nothing of a project they aren't assigned to.
 
 ### Column privileges: grant, never revoke
 

@@ -4,9 +4,9 @@
 --   * A client (an auth user listed as an active client of an open project) reads only
 --     that project, and within it only client-visible tickets and their checklists,
 --     shared files, live updates, its stages and its team.
---   * Any active team member reads and works on every project (a small studio; the lead
---     decided team access is by invitation, 2026-11-13). Creating and deleting projects,
---     managing client access, the team and settings are admin-only.
+--   * A team member reads and works on the projects they are assigned to (project_team;
+--     lead's decision, 2026-11-13). Admins work on every project, and alone create and
+--     delete projects and manage client access, the team and settings.
 --   * anon gets nothing. Marketing tables keep ADR-002's model and are untouched.
 -- Composite foreign keys keep every child row inside its project, so a client- or
 -- team-supplied id can never join rows from two projects.
@@ -373,6 +373,28 @@ as $$
   );
 $$;
 
+-- An admin, or an active team member assigned to the project (project_team).
+create function private.works_on_project(p_project_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select exists (
+    select 1 from public.team_members m
+    where m.user_id = (select auth.uid())
+      and m.active
+      and (
+        m.role = 'admin'
+        or exists (
+          select 1 from public.project_team pt
+          where pt.project_id = p_project_id and pt.user_id = m.user_id
+        )
+      )
+  );
+$$;
+
 -- Whether the ticket exists and is visible to clients (for checklist and links policies).
 create function private.is_client_visible_ticket(p_ticket_id uuid)
 returns boolean
@@ -393,6 +415,7 @@ revoke all on function private.is_team_member() from public, anon, authenticated
 revoke all on function private.is_team_admin() from public, anon, authenticated;
 revoke all on function private.is_project_client(uuid) from public, anon, authenticated;
 revoke all on function private.is_client_visible_ticket(uuid) from public, anon, authenticated;
+revoke all on function private.works_on_project(uuid) from public, anon, authenticated;
 
 -- Policies run as the caller, so authenticated needs the schema and these helpers. The
 -- private schema is not exposed by the API, and its tables stay revoked.
@@ -401,6 +424,7 @@ grant execute on function private.is_team_member() to authenticated;
 grant execute on function private.is_team_admin() to authenticated;
 grant execute on function private.is_project_client(uuid) to authenticated;
 grant execute on function private.is_client_visible_ticket(uuid) to authenticated;
+grant execute on function private.works_on_project(uuid) to authenticated;
 grant execute on function private.generate_project_public_id() to authenticated;
 
 -- ---------------------------------------------------------------------------
@@ -512,26 +536,27 @@ create policy portal_settings_admin_update on public.portal_settings
 -- projects
 create policy projects_select on public.projects
   for select to authenticated
-  using ((select private.is_team_member()) or private.is_project_client(id));
+  using (private.works_on_project(id) or private.is_project_client(id));
 create policy projects_admin_insert on public.projects
   for insert to authenticated with check ((select private.is_team_admin()));
 create policy projects_team_update on public.projects
   for update to authenticated
-  using ((select private.is_team_member())) with check ((select private.is_team_member()));
+  using (private.works_on_project(id)) with check (private.works_on_project(id));
 create policy projects_admin_delete on public.projects
   for delete to authenticated using ((select private.is_team_admin()));
 
 -- project_team
 create policy project_team_select on public.project_team
   for select to authenticated
-  using ((select private.is_team_member()) or private.is_project_client(project_id));
+  using (private.works_on_project(project_id) or private.is_project_client(project_id));
 create policy project_team_admin_write on public.project_team
   for all to authenticated
   using ((select private.is_team_admin())) with check ((select private.is_team_admin()));
 
--- project_clients: the team reads; admins manage access (TM-06). Clients never see the list.
+-- project_clients: the project's team reads; admins manage access (TM-06). Clients never
+-- see the list.
 create policy project_clients_team_select on public.project_clients
-  for select to authenticated using ((select private.is_team_member()));
+  for select to authenticated using (private.works_on_project(project_id));
 create policy project_clients_admin_write on public.project_clients
   for all to authenticated
   using ((select private.is_team_admin())) with check ((select private.is_team_admin()));
@@ -539,27 +564,27 @@ create policy project_clients_admin_write on public.project_clients
 -- stages
 create policy stages_select on public.stages
   for select to authenticated
-  using ((select private.is_team_member()) or private.is_project_client(project_id));
+  using (private.works_on_project(project_id) or private.is_project_client(project_id));
 create policy stages_team_write on public.stages
   for all to authenticated
-  using ((select private.is_team_member())) with check ((select private.is_team_member()));
+  using (private.works_on_project(project_id)) with check (private.works_on_project(project_id));
 
 -- tickets: clients see client-visible tickets only.
 create policy tickets_select on public.tickets
   for select to authenticated
   using (
-    (select private.is_team_member())
+    private.works_on_project(project_id)
     or (client_visible and private.is_project_client(project_id))
   );
 create policy tickets_team_write on public.tickets
   for all to authenticated
-  using ((select private.is_team_member())) with check ((select private.is_team_member()));
+  using (private.works_on_project(project_id)) with check (private.works_on_project(project_id));
 
 -- ticket_checklist_items: follow their ticket's visibility.
 create policy ticket_checklist_items_select on public.ticket_checklist_items
   for select to authenticated
   using (
-    (select private.is_team_member())
+    private.works_on_project(project_id)
     or (
       private.is_project_client(project_id)
       and private.is_client_visible_ticket(ticket_id)
@@ -567,21 +592,21 @@ create policy ticket_checklist_items_select on public.ticket_checklist_items
   );
 create policy ticket_checklist_items_team_write on public.ticket_checklist_items
   for all to authenticated
-  using ((select private.is_team_member())) with check ((select private.is_team_member()));
+  using (private.works_on_project(project_id)) with check (private.works_on_project(project_id));
 
 -- updates: clients see live posts; the team posts as itself.
 create policy updates_select on public.updates
   for select to authenticated
   using (
-    (select private.is_team_member())
+    private.works_on_project(project_id)
     or (deleted_at is null and private.is_project_client(project_id))
   );
 create policy updates_team_insert on public.updates
   for insert to authenticated
-  with check ((select private.is_team_member()) and author_id = (select auth.uid()));
+  with check (private.works_on_project(project_id) and author_id = (select auth.uid()));
 create policy updates_team_update on public.updates
   for update to authenticated
-  using ((select private.is_team_member())) with check ((select private.is_team_member()));
+  using (private.works_on_project(project_id)) with check (private.works_on_project(project_id));
 create policy updates_admin_delete on public.updates
   for delete to authenticated using ((select private.is_team_admin()));
 
@@ -589,7 +614,7 @@ create policy updates_admin_delete on public.updates
 create policy update_tickets_select on public.update_tickets
   for select to authenticated
   using (
-    (select private.is_team_member())
+    private.works_on_project(project_id)
     or (
       private.is_project_client(project_id)
       and private.is_client_visible_ticket(ticket_id)
@@ -601,22 +626,22 @@ create policy update_tickets_select on public.update_tickets
   );
 create policy update_tickets_team_write on public.update_tickets
   for all to authenticated
-  using ((select private.is_team_member())) with check ((select private.is_team_member()));
+  using (private.works_on_project(project_id)) with check (private.works_on_project(project_id));
 
 -- project_files: clients see shared files only.
 create policy project_files_select on public.project_files
   for select to authenticated
   using (
-    (select private.is_team_member())
+    private.works_on_project(project_id)
     or (shared and private.is_project_client(project_id))
   );
 create policy project_files_team_write on public.project_files
   for all to authenticated
-  using ((select private.is_team_member())) with check ((select private.is_team_member()));
+  using (private.works_on_project(project_id)) with check (private.works_on_project(project_id));
 
--- access_events: team only, read only.
+-- access_events: the project's team only, read only.
 create policy access_events_team_select on public.access_events
-  for select to authenticated using ((select private.is_team_member()));
+  for select to authenticated using (private.works_on_project(project_id));
 
 -- ---------------------------------------------------------------------------
 -- Realtime: the client feed and Overview show new updates live (Figma 14 Portal —

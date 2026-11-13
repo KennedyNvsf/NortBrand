@@ -277,9 +277,9 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
 - **Schema (#130, docs/guides/database.md § 7):** the project is the tenant; RLS policies
   through `private.is_team_member()`, `is_team_admin()` and `is_project_client(project)`;
   composite foreign keys keep child rows in their project; `update` is granted per column
-  only (a column `REVOKE` can't narrow a table-wide grant). Any active team member works
-  on every project; admins create projects and manage client access, the team and
-  settings.
+  only (a column `REVOKE` can't narrow a table-wide grant). Members work only on projects
+  they're assigned to (`project_team`, `private.works_on_project`); admins work on every
+  project and alone create projects and manage client access, the team and settings.
 - **Realtime:** only `updates` is published, for the live client feed.
 - **Motion:** Figma **14 Portal — Motion** (`566:127`): each moment plays once a session
   (a per-view flag in sessionStorage), on every interaction, or never. Tokens as in

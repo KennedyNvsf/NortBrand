@@ -4,7 +4,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(59);
+select plan(62);
 
 -- Start from no portal projects (seed included); the rollback restores them.
 truncate public.projects cascade;
@@ -32,8 +32,10 @@ insert into public.projects (id, public_id, name, client_name, starts_on, launch
   ('10000000-0000-4000-b000-000000000002', 'NB-9002', 'Project two', 'Client two', '2026-11-01', '2027-01-31', 'active', '10000000-0000-4000-a000-000000000001'),
   ('10000000-0000-4000-b000-000000000003', 'NB-9003', 'Closed project', 'Client one', '2026-01-01', '2026-06-30', 'closed', '10000000-0000-4000-a000-000000000001');
 
+-- The member works on project one only; the admin is listed for "Your team".
 insert into public.project_team (project_id, user_id, role_label) values
-  ('10000000-0000-4000-b000-000000000001', '10000000-0000-4000-a000-000000000001', 'Project lead');
+  ('10000000-0000-4000-b000-000000000001', '10000000-0000-4000-a000-000000000001', 'Project lead'),
+  ('10000000-0000-4000-b000-000000000001', '10000000-0000-4000-a000-000000000002', 'Development');
 
 insert into public.project_clients (project_id, email, user_id, status, removed_at) values
   ('10000000-0000-4000-b000-000000000001', 'client1@test.example', '10000000-0000-4000-a000-000000000011', 'active', null),
@@ -137,7 +139,7 @@ select is((select count(*)::int from public.project_files), 1, 'client sees shar
 select is((select count(*)::int from public.stages), 1, 'client sees the stages of their open project only');
 select is((select count(*)::int from public.project_clients), 0, 'client cannot list client access');
 select is((select count(*)::int from public.access_events), 0, 'client cannot read the activity log');
-select is((select count(*)::int from public.team_members), 1, 'client sees only the people on their project');
+select is((select count(*)::int from public.team_members), 2, 'client sees only the people on their project');
 select is((select count(*)::int from public.portal_settings), 0, 'client cannot read settings');
 select throws_ok(
   $$insert into public.tickets (project_id, stage_id, title) values ('10000000-0000-4000-b000-000000000001', '10000000-0000-4000-c000-000000000001', 'Sneaky')$$,
@@ -167,15 +169,20 @@ select is((select count(*)::int from public.team_members), 0, 'a stranger sees n
 reset role;
 
 -- ---------------------------------------------------------------------------
--- A team member (38–48)
+-- A team member assigned to project one (38–50)
 -- ---------------------------------------------------------------------------
 
 select set_config('request.jwt.claims', '{"sub":"10000000-0000-4000-a000-000000000002","role":"authenticated"}', true);
 set local role authenticated;
 
-select is((select count(*)::int from public.projects), 3, 'a member sees every project');
-select is((select count(*)::int from public.tickets), 3, 'a member sees team-only tickets too');
-select is((select count(*)::int from public.project_clients), 4, 'a member can read client access');
+select is((select count(*)::int from public.projects), 1, 'a member sees only the projects they are assigned to');
+select is((select count(*)::int from public.tickets), 2, 'a member sees team-only tickets on their project, none elsewhere');
+select is((select count(*)::int from public.project_clients), 2, 'a member reads client access for their project only');
+select is((select count(*)::int from public.updates where project_id = '10000000-0000-4000-b000-000000000002'), 0, 'a member sees no update of an unassigned project');
+select throws_ok(
+  $$insert into public.tickets (project_id, stage_id, title) values ('10000000-0000-4000-b000-000000000002', '10000000-0000-4000-c000-000000000002', 'Not mine')$$,
+  '42501', null, 'a member cannot create a ticket in an unassigned project'
+);
 select lives_ok(
   $$insert into public.tickets (project_id, stage_id, title) values ('10000000-0000-4000-b000-000000000001', '10000000-0000-4000-c000-000000000001', 'New ticket')$$,
   'a member can create a ticket'
@@ -212,7 +219,7 @@ select lives_ok(
 reset role;
 
 -- ---------------------------------------------------------------------------
--- A deactivated teammate (49)
+-- A deactivated teammate (51)
 -- ---------------------------------------------------------------------------
 
 select set_config('request.jwt.claims', '{"sub":"10000000-0000-4000-a000-000000000003","role":"authenticated"}', true);
@@ -221,11 +228,12 @@ select is((select count(*)::int from public.projects), 0, 'a removed teammate se
 reset role;
 
 -- ---------------------------------------------------------------------------
--- An admin (50–53)
+-- An admin (52–56)
 -- ---------------------------------------------------------------------------
 
 select set_config('request.jwt.claims', '{"sub":"10000000-0000-4000-a000-000000000001","role":"authenticated"}', true);
 set local role authenticated;
+select is((select count(*)::int from public.projects), 3, 'an admin sees every project');
 select lives_ok(
   $$insert into public.projects (name, client_name, starts_on, launches_on, lead_id) values ('Admin project', 'Client', '2026-11-01', '2026-12-01', '10000000-0000-4000-a000-000000000001')$$,
   'an admin can create a project'
@@ -243,7 +251,7 @@ reset role;
 select ok(not (select daily_digest from public.portal_settings), 'an admin can change settings');
 
 -- ---------------------------------------------------------------------------
--- Integrity: nothing joins rows from two projects (54–59)
+-- Integrity: nothing joins rows from two projects (57–62)
 -- ---------------------------------------------------------------------------
 
 select throws_ok(

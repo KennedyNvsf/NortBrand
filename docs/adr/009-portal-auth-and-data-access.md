@@ -38,7 +38,9 @@ The lead approved a Client and Team Portal on 2026-11-13 (Figma 12 Portal — Cl
    The code lifetime (10 min) and session length (30 days) are Supabase Auth settings
    (environments guide § 2).
 3. **Team sign-in is invite-only.** An admin invites a teammate by any email (lead's
-   decision, 2026-11-13). An optional allowed-domain setting, off by default, can restrict
+   decision, 2026-11-13). A member works only on the projects they are assigned to;
+   admins work on every project (lead's decision, 2026-11-13). An optional allowed-domain
+   setting, off by default, can restrict
    invites once NortBrand has mailboxes on `nortbrand.pt` (`nortbrand.com` is not ours,
    ADR-008). Roles (`admin`, `member`) live in a `team_members` table and are enforced in
    RLS and SQL functions, and checked again in every server action.
