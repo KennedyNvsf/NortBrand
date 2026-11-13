@@ -248,12 +248,20 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   `/team/…` (English only, outside the locale middleware like `/studio`). All portal
   routes are dynamic, `noindex`, out of the sitemap and disallowed in `robots.txt`.
 - **Entry point:** the "Track Project" nav item (Figma Nav `514:399`, between Blog and
-  Contact) links to `/[locale]/portal`. Client sign-in (CP-01/CP-02) sits inside SiteNav
+  Contact) links to `/[locale]/portal`. It is also in the tablet/mobile menu in the same
+  order (lead's decision, 2026-11-13; not yet drawn in the menu frames), and not in the
+  footer. Client sign-in (CP-01/CP-02) sits inside SiteNav
   and SiteFooter with Track Project active; team sign-in (TM-14) is standalone.
 - **Auth components** (drawn on the portal pages, not on 02 Components): the split
   sign-in card (form panel + dark brand panel with the mini stage tracker), the 6-box code
   input (default, focus, error with one shake, filled), the resend countdown, and the
   sign-in states in CP-08 (no match, wrong code, expired, signed out).
+- **Responsive:** frames at 1440, 768 (`CP-T…`, `TM-T…`) and 390 (`CP-M…`, `TM-M…`), and
+  the rules in "Portal · Responsive rules" (`560:2243`): sidebar → tabs → bottom tab bar;
+  detail panel → 440 px right sheet → bottom sheet (team: full-screen editor); tables
+  drop secondary columns, then become cards; the mobile board shows one status at a time
+  with no drag; modals become bottom sheets on mobile. Screens without small-screen
+  frames follow the rules.
 - **Tenant:** the project. A client sees only their projects, and within them only
   client-visible tickets, shared files and live updates. RLS enforces it; server actions
   check again.

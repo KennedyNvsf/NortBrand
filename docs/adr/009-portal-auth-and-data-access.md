@@ -69,7 +69,8 @@ The lead approved a Client and Team Portal on 2026-11-13 (Figma 12 Portal — Cl
    sign-in page inside the marketing site's nav and footer (CP-01); signed in, the
    project overview. The team portal is under `/team/…` in English only, outside the
    locale middleware like `/studio`. Its sign-in page (TM-14) has no site navigation and
-   links clients to Track Project.
+   links clients to Track Project. Track Project is also in the tablet/mobile menu, in
+   the same order, but not in the footer (lead's decision, 2026-11-13).
 8. **Email.** Supabase sends the sign-in codes through custom SMTP on Resend
    (`send.nortbrand.pt`), because its built-in sender allows only a few messages an hour.
    Welcome, "Needs you" and digest emails use the app's existing Resend client.
