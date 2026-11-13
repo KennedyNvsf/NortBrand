@@ -12,10 +12,11 @@ If anything here conflicts with a later instruction from the developer, ask befo
 - **Booking** means a _consultation request form_. Visitors submit a request, and the team
   replies within one business day with call times. There is no self-service scheduling
   in this release (ADR-001).
-- **Launch:** Monday 30 November 2026 (moved from 10 November on 13 October 2026). Week 1
-  started 5 October 2026. Paid services (Vercel Pro, the domain, DNS) are bought by
-  9 November (#45); until then development runs on free tiers. Milestones: M3 due
-  31 October, M5 due 27 November.
+- **Launch:** Thursday 10 December 2026 (moved from 30 November on 13 November 2026, to
+  include the portal; earlier, from 10 November on 13 October). Week 1 started 5 October 2026. Paid services (Vercel Pro, the domain, DNS) were bought by 9 November (#45).
+  Milestones: M3 due 31 October; M5 (launch) and M6 (Client portal) due by 10 December.
+- **Portal (M6, ADR-009):** a Client Portal and a Team Portal behind sign-in. See the
+  Portal section below.
 - **Platforms:** web only, responsive. Breakpoints: desktop ≥ 1024, tablet 768–1023,
   mobile < 768.
 
@@ -85,8 +86,11 @@ React Email · Sanity (blog only) · Sentry · Vitest · Playwright · pnpm · N
   Both languages live under it; `www` redirects to the apex in Vercel, and the app has no
   host redirects. Email sends from `send.nortbrand.pt`.
 - **ADR-007, GA4 loads only after analytics consent.** Declining means no Google request at all.
-- No auth in the MVP. No global state library, no client data-fetching library, no date
-  library.
+- **ADR-009, portal sign-in with Supabase Auth** (amends ADR-002 for portal tables).
+  Email one-time codes, sign-ups off, RLS policies scoped to project membership, and a
+  server-only service-role key used only for auth administration.
+- Auth exists only in the portal. No global state library, no client data-fetching
+  library, no date library.
 
 ### Rendering
 
@@ -98,6 +102,8 @@ React Email · Sanity (blog only) · Sentry · Vitest · Playwright · pnpm · N
   on its first request (`ensureStatic = "navigation"`), then is cached.
 - Check the build output to confirm marketing pages are static. A page that becomes dynamic
   unexpectedly is a bug.
+- Exception: portal pages (`/[locale]/portal/…`, `/team/…`) are dynamic and per user by
+  design (ADR-009). Never cache portal data across users.
 - **What loads before the first paint** (docs/guides/performance.md, #105): no `@/env` or
   zod in client components (pass values as props); widgets go in the layout only if every
   page uses them; dialogs, drawers and menus load with `next/dynamic`, prefetched when
@@ -234,6 +240,26 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
 - `/api/newsletter/resend-webhook` (signed `contact.updated`) brings unsubscribes made in
   Resend back to the database through the same `unsubscribe_newsletter` path (#86).
 
+## Portal (M6, ADR-009)
+
+- **Design:** Figma 12 Portal — Client (`516:2`, CP-01 to CP-08) and 13 Portal — Team
+  (`528:188`, TM-01 to TM-14). Tickets #129–#143.
+- **Routes:** client portal under `/[locale]/portal/…` (EN/PT); team portal under
+  `/team/…` (English only, outside the locale middleware like `/studio`). All portal
+  routes are dynamic, `noindex`, out of the sitemap and disallowed in `robots.txt`.
+- **Tenant:** the project. A client sees only their projects, and within them only
+  client-visible tickets, shared files and live updates. RLS enforces it; server actions
+  check again.
+- **Client sign-in:** email + Project ID (`NB-xxxx`), checked in SQL with one generic error,
+  then a 6-digit code: 10 minutes, 3 tries, then a 15-minute pause. Sessions last 30 days.
+- **Team sign-in:** invite-only by any email (lead's decision, 2026-11-13), with an
+  optional allowed-domain setting, off until NortBrand has mailboxes on `nortbrand.pt`.
+  Roles: `admin`, `member`, enforced in SQL and in every server action.
+- **Service-role key:** only in `src/lib/supabase/admin.ts` (`server-only`), only for auth
+  administration. Never for table reads or writes.
+- **Email:** Supabase sends codes through custom SMTP on Resend; app emails use the
+  existing Resend client.
+
 ## Limited offer (promo)
 
 - Code: `src/features/promo/`, offer config in `src/content/promo.ts` (guide:
@@ -277,7 +303,8 @@ Public: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABAS
 `NEXT_PUBLIC_SENTRY_DSN` (optional; Sentry is off when empty).
 
 Server-only: `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`, `RESEND_API_KEY`,
-`RESEND_SEGMENT_ID`, `RESEND_WEBHOOK_SECRET`, `EMAIL_FROM`, `NOTIFY_TO_EMAIL`, `IP_HASH_SALT`, `NEWSLETTER_TOKEN_SECRET`.
+`RESEND_SEGMENT_ID`, `RESEND_WEBHOOK_SECRET`, `EMAIL_FROM`, `NOTIFY_TO_EMAIL`, `IP_HASH_SALT`, `NEWSLETTER_TOKEN_SECRET`,
+and from #132 `SUPABASE_SERVICE_ROLE_KEY` (portal auth administration only, ADR-009).
 
 Build only (Vercel, optional): `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`.
 Account setup and the per-environment matrix: `docs/guides/environments.md`.

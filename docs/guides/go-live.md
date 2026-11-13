@@ -3,7 +3,8 @@
 **Covers:** #85, #98. **Depends on:** #45 (accounts, domain, Vercel Pro). **Decisions:**
 ADR-005 (Vercel), ADR-006 (locales), ADR-008 (`nortbrand.pt` is the only domain).
 
-How the site goes live on **Monday 30 November 2026**: what must be true beforehand, the
+How the site goes live on **Thursday 10 December 2026** (moved from 30 November on
+13 November, to include the portal): what must be true beforehand, the
 cut-over in order, the checks that prove it worked, and how to roll back. Account setup
 itself is in [Environments](./environments.md); this guide links to its sections instead
 of repeating them.

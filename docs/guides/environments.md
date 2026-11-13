@@ -9,8 +9,8 @@ This guide is the runbook for creating them, and the reference for which value g
 
 ## Now and later
 
-Paid services wait until November (launch is 30 November 2026). Development runs on free
-tiers and a local database until then; #45 tracks the paid steps.
+Paid services were bought in November (#45); launch is Thursday 10 December 2026.
+Development runs on free tiers and a local database where it can.
 
 | Step                       | When            | Cost                |
 | -------------------------- | --------------- | ------------------- |
@@ -127,8 +127,9 @@ For each project:
    site has no logins, so this closes the auth API to the public.
 3. **Database → Settings:** turn on **Enforce SSL**.
 4. **Project Settings → API Keys:** copy the **project URL** and the **publishable key**
-   (`sb_publishable_…`, or the legacy `anon` key; both act as the `anon` role). Never copy the
-   secret or `service_role` key anywhere: the app does not use it.
+   (`sb_publishable_…`, or the legacy `anon` key; both act as the `anon` role). The secret
+   (`service_role`) key goes only into `SUPABASE_SERVICE_ROLE_KEY`, server-side, for the
+   portal's auth administration (ADR-009, from #132). Never anywhere else.
 5. Note the **project ref** (the subdomain of the project URL). It is not secret.
 
 Link the CLI once, from the repository root, in a normal terminal. Both commands are
@@ -141,6 +142,25 @@ pnpm exec supabase link --project-ref <dev-ref>  # asks for the dev database pas
 
 Migrations reach a project only through `pnpm exec supabase db push`, run deliberately:
 dev first, production after the pull request is merged. Nothing in CI pushes to a database.
+
+### Auth for the portal (ADR-009, #129)
+
+The portal (M6) signs people in with Supabase Auth. Set this in **each** project before the
+portal's sign-in tickets (#131, #132) are tested against it, and in `nortbrand-prod` before
+launch:
+
+1. **Authentication → Sign In / Providers:** keep "Allow new users to sign up" **off**
+   (users exist only by invitation). Under **Email**, keep the provider on, and set the
+   **email OTP length** to 6 and the **OTP expiry** to 600 seconds (10 minutes).
+2. **Authentication → Sessions:** sessions last **30 days** (inactivity timeout 30 days).
+3. **Authentication → Emails → SMTP settings:** enable custom SMTP with Resend
+   (host `smtp.resend.com`, port 465, user `resend`, password: a Resend API key with
+   sending access; sender `NortBrand <hello@send.nortbrand.pt>`). Supabase's built-in
+   sender allows only a few emails an hour and is not meant for production.
+4. **Authentication → URL Configuration:** set the site URL to the environment's
+   `NEXT_PUBLIC_SITE_URL`.
+
+The code email's design comes with #131. Nothing here costs money on the current plans.
 
 ### Keep-alive (Free plan trial, #101)
 
@@ -367,6 +387,7 @@ column by hand.
 | `NOTIFY_TO_EMAIL`               | team inbox                            | your own inbox                      | your own inbox                      |
 | `IP_HASH_SALT`                  | generated                             | generated (different)               | any 32+ characters                  |
 | `NEWSLETTER_TOKEN_SECRET`       | generated                             | same as Development⁴                | generated, also in dev Vault        |
+| `SUPABASE_SERVICE_ROLE_KEY`     | prod secret key (from #132)           | dev secret key                      | dev secret key, or local²           |
 | `NEXT_PUBLIC_SENTRY_DSN`        | DSN                                   | DSN                                 | empty (off)                         |
 | `SENTRY_AUTH_TOKEN`             | token                                 | token                               | not set                             |
 | `SENTRY_ORG`, `SENTRY_PROJECT`  | slugs                                 | slugs                               | not set                             |

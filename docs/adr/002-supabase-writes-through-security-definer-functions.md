@@ -3,6 +3,7 @@
 - Status: Accepted
 - Date: 2026-10-05
 - Source: Technical Architecture Brief, "Backend and data", "Architecture decisions"
+- Amended by: [ADR-009](./009-portal-auth-and-data-access.md) (the portal, 2026-11-13)
 
 ## Context
 
@@ -34,6 +35,21 @@ dashboard to read requests without an admin UI. Auth, Storage and Realtime are n
 - The public functions are `submit_consultation_request`, `mark_consultation_notified`,
   `subscribe_newsletter`, `confirm_newsletter` and `unsubscribe_newsletter`. Helpers and the
   rate-limit log live in a `private` schema that the API does not expose.
+
+### Amendment, 2026-11-13 (#129): the portal
+
+The Client and Team Portal (M6) adds authenticated users. [ADR-009](./009-portal-auth-and-data-access.md)
+records how; in short:
+
+- This ADR still governs the marketing tables (consultation requests, newsletter
+  subscribers): RLS with no policies and writes through the five functions above.
+- Portal tables use RLS **with** policies scoped to project membership and team role.
+- A service-role key now exists in the app, for one purpose: Supabase Auth administration
+  (inviting, deactivating and signing out users), in a single server-only module. It is
+  never used to read or write tables. The "never used by the website" rule above applies
+  to everything else.
+- "Auth, Storage and Realtime are not needed" no longer holds: the portal uses Auth and
+  Storage. Realtime is still not needed.
 
 ## Alternatives considered
 
