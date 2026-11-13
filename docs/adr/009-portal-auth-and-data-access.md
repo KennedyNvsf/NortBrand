@@ -74,8 +74,11 @@ The lead approved a Client and Team Portal on 2026-11-13 (Figma 12 Portal — Cl
 8. **Email.** Supabase sends the sign-in codes through custom SMTP on Resend
    (`send.nortbrand.pt`), because its built-in sender allows only a few messages an hour.
    Welcome, "Needs you" and digest emails use the app's existing Resend client.
-9. **Files.** A private Storage bucket with one folder per project, Storage policies by
-   membership, content-type checks on upload, and short-lived signed URLs for downloads.
+9. **Realtime (added 2026-11-13, #130).** Only the `updates` table is published to
+   Supabase Realtime, so the client feed and Overview show new posts live (Figma 14
+   Portal — Motion). Realtime applies the same RLS select policies.
+10. **Files.** A private Storage bucket with one folder per project, Storage policies by
+    membership, content-type checks on upload, and short-lived signed URLs for downloads.
 
 ## Alternatives considered
 

@@ -1,6 +1,7 @@
 # Database
 
-**Covers:** #36. **Source:** ADR-002 (and its 2026-10-15 amendment), CLAUDE.md › Data model.
+**Covers:** #36 (marketing tables, § 1–6) and #130 (portal schema, § 7). **Source:**
+ADR-002 (and its amendments), ADR-009, CLAUDE.md › Data model.
 
 ## 1. What we built
 
@@ -121,12 +122,13 @@ email), so the answer leaks nothing.
 runs in a transaction that starts by truncating the tables and ends in a rollback, so tests
 are independent of the seed and of each other.
 
-| File                       | Proves                                                                                           |
-| -------------------------- | ------------------------------------------------------------------------------------------------ |
-| `01_access.test.sql`       | RLS on, no policies; `anon`/`authenticated` cannot select, insert, update or delete; grants      |
-| `02_consultation.test.sql` | Valid insert; every `CHECK` violation; defaults; `mark_consultation_notified` rules              |
-| `03_newsletter.test.sql`   | Fixed token vectors; subscribe/refresh/no-op; wrong, missing, expired, future, superseded tokens |
-| `04_rate_limit.test.sql`   | 6th write per `ip_hash` rejected; other hashes unaffected; hourly expiry; 101st global write     |
+| File                        | Proves                                                                                                              |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `01_access.test.sql`        | RLS on, no policies; `anon`/`authenticated` cannot select, insert, update or delete; grants                         |
+| `02_consultation.test.sql`  | Valid insert; every `CHECK` violation; defaults; `mark_consultation_notified` rules                                 |
+| `03_newsletter.test.sql`    | Fixed token vectors; subscribe/refresh/no-op; wrong, missing, expired, future, superseded tokens                    |
+| `04_rate_limit.test.sql`    | 6th write per `ip_hash` rejected; other hashes unaffected; hourly expiry; 101st global write                        |
+| `05_portal_access.test.sql` | Portal (§ 7): RLS on every table; what each role sees and changes; Realtime publication; cross-project foreign keys |
 
 The token vectors in `03_newsletter.test.sql` were generated with Node's `crypto`. The
 TypeScript signer (BACKEND ticket) must test against the same vectors, so both sides stay in
@@ -150,6 +152,104 @@ run `pnpm db:test` before pushing a migration: it is faster than waiting for the
   failed_. **Never log or forward `error.details`**: Postgres puts the submitted row in it,
   personal data included.
 - **Reading data:** the team uses the Supabase dashboard (Table Editor), signed in to
-  Supabase. The website never reads these tables.
+  Supabase. The website never reads the marketing tables; portal tables are read by
+  signed-in users through RLS (§ 7).
 - **Seed data** (`supabase/seed.sql`) is for the local stack only, with `example.com`
   addresses.
+
+## 7. Portal schema (#130, ADR-009)
+
+The Client and Team Portal adds signed-in users. The marketing tables above are untouched.
+The portal tables use the opposite model: **RLS with policies**, read and written by the
+signed-in user's own session. The migration is
+`supabase/migrations/20261113120000_portal_schema.sql`.
+
+### The tenant is the project
+
+```
+team_members ──┐ (lead, owner, author)
+               ▼
+projects ──┬── project_team      who works on it ("Your team" on the client overview)
+           ├── project_clients   client people: email + Project ID sign-in, status
+           ├── stages ── tickets ── ticket_checklist_items
+           ├── updates ── update_tickets ── (tickets)
+           ├── project_files     private Storage objects (#140)
+           └── access_events     team-only activity log (TM-06)
+portal_settings (one row) · private.portal_sign_in_attempts (#131)
+```
+
+Every child row carries `project_id`, and composite foreign keys tie it to a parent **in the
+same project**: a ticket's `(project_id, stage_id)` must match a stage, a checklist item's
+`(project_id, ticket_id)` a ticket, and so on. An id copied from another project fails with
+`23503`, whatever the caller sends. File paths must be `projects/<project id>/<file id>`
+(a `CHECK`).
+
+### Who sees what
+
+Three `SECURITY DEFINER` helpers in `private` answer "who is asking" without recursing
+through RLS: `is_team_member()`, `is_team_admin()` and `is_project_client(project)` (an
+active client of an _open_ project). `authenticated` may execute them; the schema stays
+unexposed by the API. Any active team member works on every project (a small studio);
+admins also create projects and manage client access, the team and settings.
+
+| Table                    | Client (active, open project) | Team member       | Admin            |
+| ------------------------ | ----------------------------- | ----------------- | ---------------- |
+| `projects`               | their projects                | all, edit         | + create, delete |
+| `stages`                 | their projects                | all, write        | same             |
+| `tickets`                | `client_visible` only         | all, write        | same             |
+| `ticket_checklist_items` | items of visible tickets      | all, write        | same             |
+| `updates`                | live posts (no `deleted_at`)  | all, post as self | + delete         |
+| `update_tickets`         | live update ↔ visible ticket  | all, write        | same             |
+| `project_files`          | `shared` only                 | all, write        | same             |
+| `project_team`           | their projects                | read              | write            |
+| `team_members`           | people on their projects      | read              | write            |
+| `project_clients`        | nothing                       | read              | write            |
+| `access_events`          | nothing                       | read              | read             |
+| `portal_settings`        | nothing                       | read              | edit             |
+
+`anon` has no privilege on any portal table. A removed client, a client of a closed
+project, a deactivated teammate and a signed-in stranger all see nothing.
+
+### Column privileges: grant, never revoke
+
+`authenticated` has `select`, `insert` and `delete` on the portal tables, but `update` only
+on the columns people edit. **A table-wide `UPDATE` grant covers every column, and a
+column-level `REVOKE` cannot narrow it.** The pgTAP suite caught exactly this: a member
+could change a Project ID until the grants became per column. So ids, `public_id`,
+`project_id`, ticket `number`, `author_id`, `storage_path` and creation stamps are simply
+never granted. The Project ID changes only through its rotation function (#141).
+
+### Defaults, triggers and versions
+
+- `projects.public_id` defaults to `private.generate_project_public_id()`: a free `NB-0000`
+  (9,000 values), never typed by anyone (TM-04).
+- `tickets.number` is set per project by a trigger, serialised with an advisory lock, so two
+  new tickets never share a number.
+- `projects.updated_at` and `tickets.updated_at` are set by triggers. A ticket's
+  `updated_at` is its version for edit conflicts (#137): a save sends the value it read.
+
+### Realtime
+
+Only `public.updates` is in the `supabase_realtime` publication (Figma 14 Portal — Motion,
+"New update arrives"; lead's decision, 2026-11-13). Realtime applies the same select
+policies, so a client only receives live posts from their own projects. The local stack
+does not run the Realtime service (`supabase/config.toml`); the publication is still
+created and tested.
+
+### Seed
+
+`supabase/seed.sql` adds the Figma demo for the local stack: the Atlântico Café project
+(`NB-4821`), three teammates (Ana Costa as admin, Tiago Sousa, Rui Matos), one active
+client (João), six stages, six tickets (one team-only), a checklist, four updates and two
+files (one shared). The auth users are inserted directly, with `example.com` addresses.
+
+### Rules for portal work
+
+- Read and write portal tables with the signed-in user's Supabase client, never the
+  service-role key (ADR-009 § 5).
+- A new portal table: RLS on, policies through the helpers, `revoke all from anon`,
+  `update` granted per column, composite foreign keys to its project, and pgTAP tests for
+  each role, including cross-project denial.
+- A new client-facing column on a team table: decide whether clients may see it, then test
+  it.
+- Run `pnpm db:types` after every migration and commit the result.
