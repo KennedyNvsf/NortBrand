@@ -6,6 +6,7 @@ import homeWhy from "@/assets/images/home-why.jpg";
 import { CtaBand } from "@/components/site/cta-band";
 import { FeatureSplit } from "@/components/site/feature-split";
 import { highlightTags } from "@/components/site/highlight";
+import { HomePromo } from "@/features/promo/components/home-promo";
 import { localizedPageMetadata } from "@/i18n/page-metadata";
 
 import { HomeHero } from "./_components/home-hero";
@@ -15,7 +16,8 @@ import { HomeServices } from "./_components/home-services";
 /*
  * Home (Figma 03 — Home, 49:2): Hero · Why it matters · What we do · Our philosophy ·
  * How it works · CTA band. Nav, footer and the mobile sticky CTA come from the (site)
- * layout. Static for both locales.
+ * layout. The limited-offer modal (#126) mounts after the cookie choice. Static for
+ * both locales.
  */
 
 export function generateMetadata(): Promise<Metadata> {
@@ -78,6 +80,7 @@ export default async function HomePage() {
       />
       <HomeProcess />
       <CtaBand />
+      <HomePromo />
     </main>
   );
 }

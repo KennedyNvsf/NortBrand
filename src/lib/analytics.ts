@@ -1,3 +1,4 @@
+import type { PromoPlacement } from "@/content/promo";
 import type { ServiceSlug } from "@/content/services";
 import type { Locale } from "@/i18n/routing";
 
@@ -29,6 +30,10 @@ export type AnalyticsEvents = {
   language_switched: { from: Locale; to: Locale };
   /** The search's length and result count only: never the words typed. */
   blog_search: { term_length: number; results: number };
+  /** The limited offer (#126): where it showed, and what the visitor did with it. */
+  promo_view: { placement: PromoPlacement };
+  promo_click: { placement: PromoPlacement };
+  promo_dismiss: { placement: PromoPlacement };
 };
 
 type Gtag = (...args: unknown[]) => void;

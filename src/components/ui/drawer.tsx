@@ -53,11 +53,16 @@ function DrawerOverlay({
 function DrawerContent({
   className,
   children,
+  overlayProps,
   ...props
-}: React.ComponentProps<typeof DrawerPrimitive.Content>) {
+}: React.ComponentProps<typeof DrawerPrimitive.Content> & {
+  /** For a sheet whose backdrop needs its own timing (the promo, #126). */
+  overlayProps?: React.ComponentProps<typeof DrawerPrimitive.Overlay> &
+    Partial<Record<`data-${string}`, string>>;
+}) {
   return (
     <DrawerPortal data-slot="drawer-portal">
-      <DrawerOverlay />
+      <DrawerOverlay {...overlayProps} />
       <DrawerPrimitive.Content
         data-slot="drawer-content"
         className={cn(

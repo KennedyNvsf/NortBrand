@@ -18,7 +18,7 @@ export const onPreview = previewURL !== undefined && previewURL !== "";
  * - consultation-form, newsletter: they submit forms, which on a preview would write to
  *   the dev database and send email;
  * - blog, blog-post: they assert the fixture posts (src/features/blog/e2e-backend.ts);
- * - analytics, consent, i18n: they replace the browser state or open fresh contexts,
+ * - analytics, consent, i18n, promo: they replace the browser state or open fresh contexts,
  *   which would drop the preview's bypass cookie. What they test (GA4 after consent,
  *   the banner, the locale redirect) does not depend on the host.
  */
@@ -30,6 +30,7 @@ export const PREVIEW_IGNORED = [
   "analytics.spec.ts",
   "consent.spec.ts",
   "i18n.spec.ts",
+  "promo.spec.ts",
 ];
 
 /**

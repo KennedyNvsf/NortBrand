@@ -187,6 +187,7 @@
   --duration-instant: 100ms; /* press feedback */
   --duration-fast: 150ms; /* hover, focus, small fades, exits */
   --duration-base: 250ms; /* modals, accordions, route changes, card lift */
+  --duration-base-exit: 190ms; /* a base enter's exit: Tokens › exit, 75% */
   --duration-slow: 400ms; /* crossfades, keyword underlines */
   --duration-reveal: 700ms; /* scroll reveals, hero entrances */
   --enter-step: 110ms; /* between hero entrance elements */
@@ -633,6 +634,56 @@ body[data-scroll-locked] [data-slot="sticky-cta"] {
   :focus-visible {
     outline: 2px solid var(--color-focus-ring);
     outline-offset: 2px;
+  }
+}
+
+/*
+ * Promo motion (Motion Spec › PROMO, 550:2; #126). Marked with data-motion="promo".
+ * - Modal (tablet and desktop): a centred scale-and-fade from 0.95, with no slide
+ *   (the shared dialog also rises 12 px). Durations are classes in promo-dialog.tsx:
+ *   in 250 ms, out 190 ms.
+ * - Sheet (mobile): vaul's slide up, at 350 ms in (vaul's own curve, a critically
+ *   damped spring) and 250 ms out on the exit curve. Vaul injects its rules at runtime,
+ *   so these selectors are one attribute more specific than its own.
+ * - Reduced motion: the global rule below zeroes the modal's scale; the sheet's slide
+ *   is a keyframe, so it is swapped for a fade here. Never !important, so the global
+ *   150 ms cap still applies.
+ */
+[data-motion="promo"][data-slot="dialog-content"] {
+  --tw-enter-scale: 0.95;
+  --tw-exit-scale: 0.95;
+  --tw-enter-translate-y: 0;
+}
+
+[data-motion="promo"][data-vaul-drawer],
+[data-motion="promo"][data-vaul-overlay][data-vaul-snap-points="false"] {
+  animation-duration: 350ms;
+}
+
+[data-motion="promo"][data-vaul-drawer][data-state="closed"],
+[data-motion="promo"][data-vaul-overlay][data-state="closed"] {
+  animation-duration: 250ms;
+  animation-timing-function: var(--ease-exit);
+}
+
+@keyframes promo-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes promo-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-motion="promo"][data-vaul-drawer][data-vaul-snap-points="false"][data-vaul-drawer-direction="bottom"][data-state="open"] {
+    animation-name: promo-fade-in;
+  }
+  [data-motion="promo"][data-vaul-drawer][data-vaul-snap-points="false"][data-vaul-drawer-direction="bottom"][data-state="closed"] {
+    animation-name: promo-fade-out;
   }
 }
 
