@@ -128,7 +128,8 @@ this.
   clean `page_location` for any later hit. The newsletter link pages carry the
   visitor's email in their query string, which must never reach Google.
 - **`trackEvent(name, params)`.** Typed against `AnalyticsEvents`, which is the whole
-  vocabulary: exactly the five events in Brief › GA4 configuration (#72).
+  vocabulary: the five events in Brief › GA4 configuration (#72), plus the three promo
+  events (#126).
 
   | Event                            | Sent when                                    | Parameters                                |
   | -------------------------------- | -------------------------------------------- | ----------------------------------------- |
@@ -137,6 +138,9 @@ this.
   | `service_details_opened`         | "What's included" opens (Dialog or Drawer)   | `service`: the slug                       |
   | `language_switched`              | The other language is picked in the switcher | `from`, `to`: locale codes                |
   | `blog_search`                    | Search results render on the blog            | `term_length`, `results`: never the words |
+  | `promo_view`                     | The limited offer opens (#126)               | `placement`: `home`, `about`, `services`  |
+  | `promo_click`                    | "Book a Consultation" in the offer           | `placement`                               |
+  | `promo_dismiss`                  | The offer closes any other way               | `placement`                               |
   - `service_details_opened` counts each opening once: swapping Dialog and Drawer on a
     resize keeps the panel open and sends nothing.
   - `language_switched` is sent on the click, before the navigation. The current
@@ -168,6 +172,11 @@ consent.
   could be read on the server later, if that is ever needed.
 - **Value without a timestamp.** The browser enforces the 6 months through `Max-Age`. The
   value records nothing personal.
+- **Other storage.** The promo (#126) keeps one localStorage entry,
+  `nb_promo_dismissed`, holding the id of the offer the visitor closed. It records a
+  preference, is never sent anywhere and identifies no one, so it is functional storage
+  outside the consent categories. The promo also waits for a cookie choice before it
+  appears ([Limited offer](./promo.md)).
 - **"Cookie settings" in the footer is not in Figma.** It is required by ADR-007 and the
   ticket, and logged in tech debt for design.
 

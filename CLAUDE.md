@@ -114,7 +114,7 @@ src/app/api/revalidate/  signed Sanity webhook
 src/app/api/newsletter/  one-click unsubscribe (RFC 8058), Resend webhook; api/health/newsletter checks the Vault secret
 src/components/ui/       shadcn primitives restyled to tokens
 src/components/site/     SiteNav, SiteFooter, CtaBand, StickyCta, Logo, shared primitives
-src/features/            consultation/, newsletter/, blog/, consent/
+src/features/            consultation/, newsletter/, blog/, consent/, promo/
 src/content/             typed services, FAQ, site config (contact details live ONLY here)
 src/i18n/                next-intl routing + request config
 src/lib/                 supabase, sanity, resend, analytics clients
@@ -233,6 +233,17 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   one-click endpoint; `/api/health/newsletter` checks that the app and Vault secrets match.
 - `/api/newsletter/resend-webhook` (signed `contact.updated`) brings unsubscribes made in
   Resend back to the database through the same `unsubscribe_newsletter` path (#86).
+
+## Limited offer (promo)
+
+- Code: `src/features/promo/`, offer config in `src/content/promo.ts` (guide:
+  docs/guides/promo.md). Figma Promo Modal `510:732` (Home, #126) and Promo Card `510:794`
+  (About and Services, #127); motion in Motion Spec › PROMO (`550:2`).
+- Shows 8 s after the cookie choice, once per visitor (localStorage `nb_promo_dismissed`
+  = offer id, fails closed), never after `endsAt` (checked in the browser), never over
+  another open dialog. The launcher renders nothing until due, so pages stay static.
+- Mount it per page, never in the layout. Playwright specs start with the offer
+  dismissed (`tests/e2e/promo-state.ts`); `promo.spec.ts` does not.
 
 ## Cookie consent
 

@@ -75,6 +75,17 @@
     "meta": "30 minutes · No pressure",
     "action": "Book now"
   },
+  "Promo": {
+    "label": "Limited offer",
+    "until": "Ends 31 Dec",
+    "offer": "20%",
+    "offerLabel": "Off your first project",
+    "title": "Get <red>20% off</red><br></br>your first project.",
+    "body": "Book a free consultation before 31 December and the discount comes off your first project. No commitment, just a conversation about what you need.",
+    "terms": "Offer ends 31 December 2026. New projects only.",
+    "dismiss": "Not now",
+    "close": "Close the offer"
+  },
   "Home": {
     "hero": {
       "eyebrow": "A Digital Branding Experience",

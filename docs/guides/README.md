@@ -33,6 +33,7 @@ the guides always match the code.
 | [Editing the blog](./editing-the-blog.md)           | For editors: writing, images and alt text, translating, publishing, what happens after Publish                                                    |
 | [Accessibility](./accessibility.md)                 | 44 px touch targets: the `touch-target` utility and the harness hit-test check                                                                    |
 | [Performance](./performance.md)                     | What loads before first paint, simulated vs observed LCP, lazy chunks, client messages, rules for new code                                        |
+| [Limited offer (promo)](./promo.md)                 | Home promo modal and sheet: trigger after consent, once per visitor, end date, dismissal flag, motion, analytics                                  |
 | [Blog](./blog.md)                                   | The listing (URL state, streamed results, search, filters, paging) and the post page (TOC, language switch, related); blog SEO (JSON-LD, sitemap) |
 
 Each guide follows the same shape: what we built, how it works at runtime, the files one

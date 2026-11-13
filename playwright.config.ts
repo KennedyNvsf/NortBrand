@@ -6,6 +6,7 @@ import {
   PREVIEW_STATE_PATH,
   previewURL,
 } from "./tests/e2e/target";
+import { promoDismissedOrigin } from "./tests/e2e/promo-state";
 
 // E2E_PORT lets the suite run on its own production server while `pnpm dev` keeps 3000.
 const PORT = Number(process.env.E2E_PORT ?? 3000);
@@ -36,7 +37,8 @@ export default defineConfig({
     trace: "on-first-retry",
     // A cookie choice is already made, so the consent banner (#42) never covers what a
     // spec clicks. consent.spec.ts starts without it. On a preview, the setup file adds
-    // the same cookie next to Vercel's bypass cookie.
+    // the same cookie next to Vercel's bypass cookie. The Home promo is marked as
+    // dismissed for the same reason (tests/e2e/promo-state.ts).
     storageState: onPreview
       ? PREVIEW_STATE_PATH
       : {
@@ -52,7 +54,7 @@ export default defineConfig({
               sameSite: "Lax",
             },
           ],
-          origins: [],
+          origins: [promoDismissedOrigin(localURL)],
         },
   },
   projects: [

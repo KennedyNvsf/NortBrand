@@ -51,13 +51,17 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  overlayProps,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean;
+  /** For a dialog whose backdrop needs its own timing (the promo, #126). */
+  overlayProps?: React.ComponentProps<typeof DialogPrimitive.Overlay> &
+    Partial<Record<`data-${string}`, string>>;
 }) {
   return (
     <DialogPortal>
-      <DialogOverlay />
+      <DialogOverlay {...overlayProps} />
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(

@@ -3,6 +3,7 @@ import { dirname } from "node:path";
 
 import { request } from "@playwright/test";
 
+import { promoDismissedOrigin } from "./promo-state";
 import { PREVIEW_STATE_PATH, previewURL } from "./target";
 
 /**
@@ -56,6 +57,8 @@ export default async function previewSetup() {
     secure: true,
     sameSite: "Lax",
   });
+
+  state.origins.push(promoDismissedOrigin(previewURL));
 
   await mkdir(dirname(PREVIEW_STATE_PATH), { recursive: true });
   await writeFile(PREVIEW_STATE_PATH, JSON.stringify(state));

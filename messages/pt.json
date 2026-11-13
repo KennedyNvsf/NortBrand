@@ -75,6 +75,17 @@
     "meta": "30 minutos · Sem pressão",
     "action": "Marcar agora"
   },
+  "Promo": {
+    "label": "Oferta limitada",
+    "until": "Termina a 31 dez",
+    "offer": "20%",
+    "offerLabel": "No seu primeiro projeto",
+    "title": "<red>20% de desconto</red><br></br>no primeiro projeto.",
+    "body": "Marque uma conversa gratuita até 31 de dezembro e o desconto é aplicado ao seu primeiro projeto. Sem compromisso, apenas uma conversa sobre o que precisa.",
+    "terms": "Oferta válida até 31 de dezembro de 2026. Apenas para novos projetos.",
+    "dismiss": "Agora não",
+    "close": "Fechar a oferta"
+  },
   "Home": {
     "hero": {
       "eyebrow": "Branding digital, feito à medida",
