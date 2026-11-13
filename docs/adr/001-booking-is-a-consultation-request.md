@@ -14,6 +14,9 @@ states. It does not show a calendar or availability picker.
 > **Amendment (16 October 2026).** Launch moved to Monday 30 November 2026, decided on
 > 13 October: the paid services (Vercel Pro, the domain) can only be bought in November.
 > The decision below is unchanged; the line above stays as written on 2026-10-05.
+>
+> **Amendment (13 November 2026).** Launch moved again, to Thursday 10 December 2026, to
+> include the Client and Team Portal (ADR-009). Booking is still a consultation request.
 
 ## Decision
 

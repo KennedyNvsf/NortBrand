@@ -3,6 +3,8 @@
 - Status: Accepted
 - Date: 2026-10-05
 - Source: Technical Architecture Brief, "Frontend" (Locale behaviour)
+- Extended by: [ADR-009](./009-portal-auth-and-data-access.md): the proxy will also
+  refresh Supabase sessions on portal paths. Locale detection stays root-only.
 
 ## Context
 

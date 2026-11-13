@@ -265,7 +265,7 @@ what stops English text from shipping on the Portuguese site.
 ### Translation changes until launch (#76)
 
 The first full translation is in, but copy can still change on either side until
-30 November. Each change takes one of three routes:
+launch (10 December). Each change takes one of three routes:
 
 | What changed                    | What you do                                                                                              | What protects it                                     |
 | ------------------------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
