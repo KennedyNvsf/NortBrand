@@ -298,6 +298,12 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   `PortalNav` draws sidebar / rail / tablet tabs / mobile bottom bar from one list.
   Reusable states in `src/features/portal/states/` (live at `/team/states`). Portal
   titles use `text-h3`, card titles `text-h4`; strings reach client components as props.
+- **Overview and tasks (#134, docs/guides/portal.md § 9):** `src/features/portal/overview/`.
+  `getProjectView` (RLS, cached per request); rules in `domain.ts` (progress counts
+  client-visible tickets only) and dates in `format.ts` (fixed EN/PT names, Lisbon time).
+  Filters and the open task are URL state (`?status=`, `?task=N`).
+- **The repository is public until launch** (Actions minutes, 2026-11-14): never commit
+  secrets or personal data; making it private again is on the launch checklist.
 - **Email:** Supabase sends codes through custom SMTP on Resend; app emails use the
   existing Resend client.
 - **Schema (#130, docs/guides/database.md § 7):** the project is the tenant; RLS policies
