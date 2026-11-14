@@ -1,7 +1,8 @@
 # Client portal
 
 **Covers:** #131 (client sign-in), #132 (team sign-in and roles), #133 (shells and
-states), #134 (overview and tasks). Later portal tickets extend this guide. **Source:**
+states), #134 (overview and tasks), #135 (timeline, files and updates). Later portal tickets
+extend this guide. **Source:**
 ADR-009, Figma 12 Portal — Client (`516:2`), 14 Portal — Motion (`566:127`). The data model
 is in the [Database guide](./database.md) § 7.
 
@@ -314,3 +315,51 @@ no tasks at all, a filter with no matches, an unknown task.
   sessionStorage flag inside its deferred callback, and says no with reduced motion.
 - **Detail panel**: slides 24 px in with a fade (250 ms); sheets slide from their edge.
 - **Never**: counting on every visit, page transitions, hover lifts on rows.
+
+## 10. Client timeline, files and updates (#135)
+
+**What.** The client's Timeline (CP-05), Files (CP-06) and Updates (CP-07), at 1440 / 768
+/ 390, EN and PT. Server components under RLS; only the Gantt's once-a-session motion
+runs in the browser.
+
+### Database (`20261116120000_portal_milestones_and_files_storage.sql`)
+
+- **`project_milestones`** (title, body, due date, done): clients read their projects'
+  milestones; the team on a project writes them (the stages editor, #138, manages them).
+- **Storage bucket `portal-files`** (private; the allowed types and 50 MB match
+  `project_files`). Read rule `portal_files_read`: an object is readable exactly when its
+  `project_files` row is readable, so clients get shared files of their own projects and
+  the team the files of projects they work on. Uploads and team write rules are #140.
+- The storage part runs only where the storage schema exists (every hosted project,
+  `supabase start`). Local Storage is now on in `config.toml`, and CI's database job
+  starts Storage and resets, so the Storage tests run for real.
+- pgTAP `08_portal_milestones_files.test.sql` (16): private bucket; milestones by role;
+  shared vs unshared vs another project's file; admin; member not on the project; another
+  client; anon; unsharing closes a file.
+
+### Downloads
+
+`/api/portal/files/<id>` (route handler): validates the id, requires a portal session (30-day
+marker included), reads the `project_files` row with the reader's own session (RLS), and
+redirects to a **60-second signed URL** created with that same session (so Storage's rule
+applies too). Anything not readable is a plain 404, the same for "missing" and "not
+yours"; no session is a 401. `Cache-Control: private, no-store`, no Referer.
+
+### Pages
+
+| Route       | What                                                                                                                                                               |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `/timeline` | Month grid from 1024 px (stage column, bars by date, the current stage's done share, Today line); a stage list with range bars below; milestones (Done / Upcoming) |
+| `/files`    | Shared files grouped Design (images, archives) / Documents (PDFs), with type, size, who and when; tablet drops "added by"; mobile stacks                           |
+| `/updates`  | Newest first in Today / Yesterday / This week / Earlier (Lisbon days); "Needs you" (red border + tag), milestone posts (green), "edited", linked tasks as chips    |
+
+Rules in `content.ts` (unit-tested): `timelineSpan`, `spanPosition`, `stageProgress`,
+`fileKind`, `fileGroup`, `formatSize`, `updateDayGroup`, `groupUpdatesByDay`.
+
+### Motion (14 Portal — Motion)
+
+- **Gantt bars** (once a session): bars grow from their start date (scaleX, origin left),
+  50 ms apart, 300 ms each (`motionTokens.duration.bar`); the Today line draws down last.
+  Reduced motion: final state.
+- **New update arrives** (live feed) comes with the updates ticket (#139), which adds the
+  Realtime subscription.

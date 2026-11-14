@@ -223,6 +223,7 @@
   --duration-base-exit: 190ms; /* a base enter's exit: Tokens › exit, 75% */
   --duration-slow: 400ms; /* crossfades, keyword underlines */
   --duration-reveal: 700ms; /* scroll reveals, hero entrances */
+  --duration-bar: 300ms; /* portal Gantt bars, each (#135) */
   --duration-draw: 900ms; /* portal draw-ons: stage track, progress ring (#134) */
   --enter-step: 110ms; /* between hero entrance elements */
 

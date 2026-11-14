@@ -107,6 +107,7 @@ export function formatRange(
   fromLabel: string,
 ): string {
   if (!end) return `${fromLabel} ${formatDay(start, locale)}`;
+  if (end === start) return formatDay(start, locale);
   return `${formatDay(start, locale)} – ${formatDay(end, locale)}`;
 }
 

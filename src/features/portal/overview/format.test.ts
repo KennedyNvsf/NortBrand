@@ -28,6 +28,9 @@ describe("portal dates", () => {
       "3 Nov – 15 Dec",
     );
     expect(formatRange("2027-02-15", null, "en", "From")).toBe("From 15 Feb");
+    expect(formatRange("2027-02-12", "2027-02-12", "en", "From")).toBe(
+      "12 Feb",
+    );
   });
 
   it("writes update times relative to today, in Lisbon time", () => {

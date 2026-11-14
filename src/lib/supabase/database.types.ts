@@ -260,6 +260,44 @@ export type Database = {
           },
         ];
       };
+      project_milestones: {
+        Row: {
+          body: string;
+          created_at: string;
+          done_at: string | null;
+          due_on: string;
+          id: string;
+          project_id: string;
+          title: string;
+        };
+        Insert: {
+          body?: string;
+          created_at?: string;
+          done_at?: string | null;
+          due_on: string;
+          id?: string;
+          project_id: string;
+          title: string;
+        };
+        Update: {
+          body?: string;
+          created_at?: string;
+          done_at?: string | null;
+          due_on?: string;
+          id?: string;
+          project_id?: string;
+          title?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "project_milestones_project_id_fkey";
+            columns: ["project_id"];
+            isOneToOne: false;
+            referencedRelation: "projects";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       project_team: {
         Row: {
           position: number;

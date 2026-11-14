@@ -304,8 +304,13 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Start Postgres with all migrations
-        run: pnpm exec supabase db start
+      # Postgres plus Storage (#135: the portal-files bucket and its read rule need the
+      # storage schema). Services the tests don't use are skipped. The reset re-applies
+      # every migration once Storage has created its schema, whatever order start used.
+      - name: Start Postgres and Storage with all migrations
+        run: |
+          pnpm exec supabase start -x studio,imgproxy,edge-runtime,logflare,vector,mailpit,realtime,supavisor
+          pnpm exec supabase db reset --local
 
       - name: Run the pgTAP suite
         run: pnpm db:test

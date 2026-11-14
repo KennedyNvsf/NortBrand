@@ -22,6 +22,11 @@ export type PortalUpdate = {
   createdAt: string;
   authorName: string | null;
   ticketIds: string[];
+  /** A milestone post: shown in green (CP-07). */
+  highlight: boolean;
+  /** Asks the client for something: the "Needs you" tag. */
+  needsClient: boolean;
+  editedAt: string | null;
 };
 
 export type ProjectView = {
@@ -37,6 +42,23 @@ export type ProjectView = {
 };
 
 export type ChecklistItem = { id: string; label: string; done: boolean };
+
+export type Milestone = {
+  id: string;
+  title: string;
+  body: string;
+  dueOn: string;
+  done: boolean;
+};
+
+export type PortalFile = {
+  id: string;
+  name: string;
+  sizeBytes: number;
+  contentType: string;
+  createdAt: string;
+  uploaderName: string | null;
+};
 
 const HEALTH: readonly ProjectHealth[] = [
   "on_track",
@@ -79,7 +101,9 @@ export const getProjectView = cache(async function getProjectView(
       .order("number"),
     supabase
       .from("updates")
-      .select("id, body, created_at, author_id, update_tickets(ticket_id)")
+      .select(
+        "id, body, created_at, edited_at, highlight, needs_client, author_id, update_tickets(ticket_id)",
+      )
       .eq("project_id", project.id)
       .is("deleted_at", null)
       .order("created_at", { ascending: false })
@@ -137,6 +161,9 @@ export const getProjectView = cache(async function getProjectView(
       createdAt: row.created_at,
       authorName: names.get(row.author_id) ?? null,
       ticketIds: row.update_tickets.map((link) => link.ticket_id),
+      highlight: row.highlight,
+      needsClient: row.needs_client,
+      editedAt: row.edited_at,
     })),
   };
 });
@@ -155,4 +182,56 @@ export async function getChecklist(ticketId: string): Promise<ChecklistItem[]> {
     .order("position");
   if (error) throw new Error(`Checklist read failed (${error.code})`);
   return data;
+}
+
+/** The project's milestones, by date. */
+export async function getMilestones(projectId: string): Promise<Milestone[]> {
+  if (isFakeBackendEnabled()) return E2E_PROJECT_VIEW.milestones;
+  const { data, error } = await (
+    await getPortalSupabase()
+  )
+    .from("project_milestones")
+    .select("id, title, body, due_on, done_at")
+    .eq("project_id", projectId)
+    .order("due_on");
+  if (error) throw new Error(`Milestones read failed (${error.code})`);
+  return data.map((row) => ({
+    id: row.id,
+    title: row.title,
+    body: row.body,
+    dueOn: row.due_on,
+    done: row.done_at !== null,
+  }));
+}
+
+/**
+ * The project's files the reader may see, newest first: for a client, only shared files
+ * (project_files RLS). Downloads go through /api/portal/files/<id> (a signed URL).
+ */
+export async function getProjectFiles(
+  projectId: string,
+): Promise<PortalFile[]> {
+  if (isFakeBackendEnabled()) return E2E_PROJECT_VIEW.files;
+  const supabase = await getPortalSupabase();
+  const [files, people] = await Promise.all([
+    supabase
+      .from("project_files")
+      .select("id, name, size_bytes, content_type, created_at, uploaded_by")
+      .eq("project_id", projectId)
+      .order("created_at", { ascending: false })
+      .limit(200),
+    supabase.from("team_members").select("user_id, name"),
+  ]);
+  if (files.error) throw new Error(`Files read failed (${files.error.code})`);
+  const names = new Map(
+    (people.data ?? []).map((row) => [row.user_id, row.name]),
+  );
+  return files.data.map((row) => ({
+    id: row.id,
+    name: row.name,
+    sizeBytes: row.size_bytes,
+    contentType: row.content_type,
+    createdAt: row.created_at,
+    uploaderName: row.uploaded_by ? (names.get(row.uploaded_by) ?? null) : null,
+  }));
 }

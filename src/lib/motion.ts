@@ -12,6 +12,8 @@ export const motionTokens = {
     base: 0.25,
     slow: 0.4,
     reveal: 0.7,
+    /** Portal Gantt bars, each (14 Portal — Motion, "Gantt bars"). */
+    bar: 0.3,
     /** Portal draw-ons: the stage track and the progress ring (14 Portal — Motion). */
     draw: 0.9,
   },

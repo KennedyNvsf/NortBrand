@@ -163,13 +163,8 @@ test.describe("Client portal shell", () => {
       .getByRole("link", { name: copy("pt", "Portal.shell.nav.updates") })
       .click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      copy("pt", "Portal.shell.nav.updates"),
+      copy("pt", "Portal.updates.title"),
     );
-    await expect(
-      page.getByRole("heading", {
-        name: copy("pt", "Portal.states.setupTitle"),
-      }),
-    ).toBeVisible();
   });
 
   test("an unknown project shows the not-found page", async ({ page }) => {
