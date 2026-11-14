@@ -39,9 +39,12 @@ email + Project ID ─────────────► requestClientCode
 ◄──── signed_in → boxes turn green, form fades (150 ms) → /portal/NB-4821
 ```
 
-On every portal request, `src/proxy.ts` refreshes the Supabase session cookies. The page
-reads the session inside a Suspense boundary: `getPortalViewer()` needs a Supabase user
-**and** a valid marker; RLS decides which projects that user sees.
+On every portal request, `src/proxy.ts` refreshes the Supabase session cookies. The
+sign-in form is part of the page's static shell; beside it, `SessionGate` reads the
+session inside a Suspense boundary and only ever redirects (signed in → the project;
+ended session → `?reason=signed-out`, which the form shows as "You've been signed out").
+`getPortalViewer()` needs a Supabase user **and** a valid marker; RLS decides which
+projects that user sees.
 
 ## 3. Files, one by one
 
@@ -58,7 +61,6 @@ reads the session inside a Suspense boundary: `getPortalViewer()` needs a Supaba
 | `components/auth-card.tsx`, `brand-panel.tsx`                  | The split card: 520 + 520 on desktop with the mini stage tracker, a stacked card on tablet, a full-width dark header on mobile. Shared with team sign-in (#132).                                                                                                                                                                                        |
 | `components/client-sign-in.tsx`                                | The step machine (details → code → signed in; expired; signed out). Strings arrive as props; templates are filled in the browser (`copy.ts`). Quick validation uses `client-validation.ts`, which has no zod (no zod in client bundles, #105).                                                                                                          |
 | `components/code-input.tsx`                                    | Radix's one-time-password field: paste, Backspace, arrows, `autocomplete="one-time-code"`. It submits the form natively on the sixth digit; the form reads the code from its hidden input and ignores a second submit while one is in flight.                                                                                                           |
-| `components/sign-in-skeleton.tsx`                              | The fallback while the session is checked: static, no inputs, visible only after 300 ms.                                                                                                                                                                                                                                                                |
 | `components/sign-out-button.tsx`                               | Clears the session, then loads the sign-in page in full, so the router can't restore the signed-in page.                                                                                                                                                                                                                                                |
 | `emails/portal-code.tsx`, `emails/render-template.tsx`         | The code email in React Email, rendered with Supabase's `{{ .Token }}` into `supabase/templates/portal-code.html`, with EN and PT branches on `user_metadata.locale`. The file is a vitest file snapshot.                                                                                                                                               |
 | `e2e-backend.ts`                                               | Playwright's fake backend: NB-1234, emails `client…@e2e.example`, code 123456.                                                                                                                                                                                                                                                                          |
@@ -76,9 +78,12 @@ reads the session inside a Suspense boundary: `getPortalViewer()` needs a Supaba
   rest).
 - **Sessions end after 30 days in the app,** with the signed marker, because the Free plan
   can't time-box them.
-- **The form's fallback is a skeleton, not the form.** While the session streams in,
-  React keeps the resolved content hidden until it swaps; a form fallback would put two
-  forms in the page for a moment.
+- **The form never sits inside Suspense.** First the form was the boundary's fallback
+  (two forms in the page while the session streamed in), then a skeleton was. In CI the
+  boundary sometimes switched to client rendering before its content arrived (something
+  above it updated first), and the server's copy of the form stayed in the page, hidden,
+  next to the browser's. Now the form is static and the boundary renders nothing: a
+  signed-out visitor sees the form for a moment before "You've been signed out".
 - **Wrong code:** the boxes clear and turn red, shake once, and focus returns to the
   first box, so the next code can be typed straight away.
 - **Motion** (14 Portal — Motion): digits pop 0.96 → 1 in 100 ms; a wrong code shakes the

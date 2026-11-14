@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 
 import { getServerEnv } from "@/env";
 import { isFakeBackendEnabled } from "@/lib/e2e-backend";
@@ -29,6 +30,9 @@ export type PortalViewer =
 const SUPABASE_AUTH_COOKIE = /^sb-.+-auth-token/;
 
 export async function getPortalViewer(): Promise<PortalViewer> {
+  // Always per request: the marker check reads the clock, which Next refuses to do
+  // while prerendering (even a runtime prerender that has the cookies).
+  await connection();
   const cookieStore = await cookies();
   const marker = cookieStore.get(PORTAL_SESSION_COOKIE)?.value;
   const secret = getServerEnv().NEWSLETTER_TOKEN_SECRET;

@@ -7,7 +7,6 @@ import { Suspense } from "react";
 import { AuthCard } from "@/features/portal/auth/components/auth-card";
 import { BrandPanel } from "@/features/portal/auth/components/brand-panel";
 import { ClientSignIn } from "@/features/portal/auth/components/client-sign-in";
-import { SignInSkeleton } from "@/features/portal/auth/components/sign-in-skeleton";
 import type { SignInCopy } from "@/features/portal/auth/components/copy";
 import {
   getClientProjects,
@@ -58,10 +57,7 @@ export default async function PortalSignInPage({
     ? requested
     : routing.defaultLocale;
 
-  const [t, tCommon] = await Promise.all([
-    getTranslations("Portal.signIn"),
-    getTranslations("Common"),
-  ]);
+  const t = await getTranslations("Portal.signIn");
 
   const copy: SignInCopy = {
     eyebrow: t("eyebrow"),
@@ -114,16 +110,16 @@ export default async function PortalSignInPage({
     >
       <AuthCard
         form={
-          // The session and ?reason are request data (Cache Components): a skeleton
-          // holds the space (shown only after 300 ms), then the gate redirects a
-          // signed-in client or renders the form, or the signed-out screen.
-          <Suspense fallback={<SignInSkeleton label={tCommon("loading")} />}>
-            <SignInGate
-              copy={copy}
-              locale={locale}
-              searchParams={searchParams}
-            />
-          </Suspense>
+          <>
+            {/* Static: the form renders and hydrates with the page, never waiting
+                for the session. */}
+            <ClientSignIn copy={copy} locale={locale} />
+            {/* The session is request data (Cache Components): it streams in beside
+                the form and only ever redirects. */}
+            <Suspense fallback={null}>
+              <SessionGate locale={locale} searchParams={searchParams} />
+            </Suspense>
+          </>
         }
         brand={
           <BrandPanel
@@ -139,12 +135,15 @@ export default async function PortalSignInPage({
   );
 }
 
-async function SignInGate({
-  copy,
+/*
+ * Renders nothing. A signed-in client goes straight to their project; a session that
+ * has ended (30 days, or signed out elsewhere) gets ?reason=signed-out, which the form
+ * turns into "You've been signed out".
+ */
+async function SessionGate({
   locale,
   searchParams,
 }: {
-  copy: SignInCopy;
   locale: Locale;
   searchParams: PageProps<"/[locale]/portal">["searchParams"];
 }) {
@@ -153,15 +152,11 @@ async function SignInGate({
     const [project] = await getClientProjects();
     if (project) redirect({ href: `/portal/${project.publicId}`, locale });
   }
-  const { reason } = await searchParams;
-
-  return (
-    <ClientSignIn
-      copy={copy}
-      locale={locale}
-      initiallySignedOut={
-        reason === "signed-out" || viewer.status === "signed_out"
-      }
-    />
-  );
+  if (viewer.status === "signed_out") {
+    const { reason } = await searchParams;
+    if (reason !== "signed-out") {
+      redirect({ href: "/portal?reason=signed-out", locale });
+    }
+  }
+  return null;
 }

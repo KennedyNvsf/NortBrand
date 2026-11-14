@@ -5,6 +5,7 @@ import {
   useId,
   useRef,
   useState,
+  useSyncExternalStore,
   useTransition,
   type ReactNode,
 } from "react";
@@ -57,27 +58,43 @@ type Step =
   | { name: "signedOut" }
   | { name: "signedIn" };
 
+const subscribeToNothing = () => () => {};
+
+const readSignedOutReason = () =>
+  new URLSearchParams(window.location.search).get("reason") === "signed-out";
+
 export function ClientSignIn({
   copy,
   locale,
-  initiallySignedOut,
 }: {
   copy: SignInCopy;
   locale: Locale;
-  initiallySignedOut: boolean;
 }) {
   const id = useId();
   const router = useRouter();
   const heading = useRef<HTMLHeadingElement>(null);
-  const [step, setStep] = useState<Step>(
-    initiallySignedOut ? { name: "signedOut" } : { name: "details" },
-  );
+  const [stepState, setStep] = useState<Step>({ name: "details" });
   const [pending, startTransition] = useTransition();
   const firstRender = useRef(true);
 
-  // Focus follows the step, but not on page load.
+  // The form is part of the page's static shell (it never waits for the session), so
+  // "You've been signed out" (CP-08) comes from the URL, read after hydration (the
+  // server snapshot is false). The page's SessionGate sends an ended session here with
+  // ?reason=signed-out. "Sign in again" dismisses it.
+  const signedOutInUrl = useSyncExternalStore(
+    subscribeToNothing,
+    readSignedOutReason,
+    () => false,
+  );
+  const [signedOutDismissed, setSignedOutDismissed] = useState(false);
+  const showSignedOut =
+    signedOutInUrl && !signedOutDismissed && stepState.name === "details";
+  const step: Step = showSignedOut ? { name: "signedOut" } : stepState;
+
+  // Focus follows the step, but not on page load (the signed-out screen only ever
+  // appears on page load).
   useEffect(() => {
-    if (firstRender.current) {
+    if (firstRender.current || step.name === "signedOut") {
       firstRender.current = false;
       return;
     }
@@ -153,7 +170,7 @@ export function ClientSignIn({
             showIcon
             className="w-full"
             onClick={() => {
-              setStep({ name: "details" });
+              setSignedOutDismissed(true);
             }}
           >
             {copy.signedOutAction}
