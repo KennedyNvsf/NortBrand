@@ -29,6 +29,9 @@ async function signIn(page: Page, email: string) {
   await page.getByRole("textbox", { name: "6-digit code 1/6" }).click();
   await page.keyboard.type("123456");
   await expect(page).toHaveURL(/\/team$/);
+  // The workspace opens on Projects (#133); the team list is /team/team.
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Projects");
+  await page.goto("/team/team");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Team");
 }
 

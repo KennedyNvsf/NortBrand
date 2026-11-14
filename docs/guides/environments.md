@@ -184,6 +184,8 @@ created through Resend's API, stored only in Supabase), sender
 `NortBrand <hello@send.nortbrand.pt>`, the Magic Link template and subject, 30 emails an
 hour.
 
+**Team migration and first admins (2026-11-14, lead's approval):** `20261115120000_portal_team_access` pushed to `nortbrand-dev` and `nortbrand-prod` (history 5/5 on both). The lead (Kennedy Freitas) is the first admin in both projects, created with `pnpm portal:bootstrap-admin` and the bootstrap SQL run through the Management API; prod's secret key was held only in memory for that run.
+
 **Team portal (#132):** set `SUPABASE_SERVICE_ROLE_KEY` (the project's secret key) in
 Vercel for Production (prod key) and Preview (dev key), marked Sensitive, and in your
 `.env.local` for local work. Without it the site builds and runs, but inviting and

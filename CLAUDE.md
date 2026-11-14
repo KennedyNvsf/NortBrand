@@ -293,6 +293,11 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   action and in SQL; the allowed domain is a trigger on `team_members`. First admin:
   `pnpm portal:bootstrap-admin`, then one SQL line in the editor. Fake backend:
   `admin@e2e.example`, `member@e2e.example`, code 123456 (`team-sign-in.spec.ts`).
+- **Shells and states (#133, docs/guides/portal.md § 8):** client layout
+  `src/app/[locale]/portal/[projectId]/layout.tsx`, team `src/app/team/(workspace)/`.
+  `PortalNav` draws sidebar / rail / tablet tabs / mobile bottom bar from one list.
+  Reusable states in `src/features/portal/states/` (live at `/team/states`). Portal
+  titles use `text-h3`, card titles `text-h4`; strings reach client components as props.
 - **Email:** Supabase sends codes through custom SMTP on Resend; app emails use the
   existing Resend client.
 - **Schema (#130, docs/guides/database.md § 7):** the project is the tenant; RLS policies
