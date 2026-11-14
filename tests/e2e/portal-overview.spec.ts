@@ -52,7 +52,9 @@ test.describe("Client overview", () => {
       main(page).getByRole("img", { name: "57% of tasks done" }),
     ).toBeVisible();
     await expect(
-      main(page).getByText("8 of 14 tasks done", { exact: true }),
+      main(page)
+        .getByText("8 of 14 tasks done", { exact: true })
+        .filter({ visible: true }),
     ).toBeVisible();
 
     // The most urgent open task first: the one waiting on the client.
@@ -137,7 +139,9 @@ test.describe("Client tasks", () => {
       page.getByText("3 of 5").filter({ visible: true }),
     ).toBeVisible();
     await expect(
-      page.getByText("Hero and menu highlights are on staging."),
+      page
+        .getByText("Hero and menu highlights are on staging.")
+        .filter({ visible: true }),
     ).toBeVisible();
 
     const { violations } = await new AxeBuilder({ page })
@@ -159,7 +163,9 @@ test.describe("Client tasks", () => {
     await page.goto(`/en/portal/${PROJECT}/tasks?task=10`);
     const sheet = page.getByRole("dialog", { name: "Home page build" });
     await expect(sheet).toBeVisible();
-    await expect(sheet.getByText("3 of 5")).toBeVisible();
+    await expect(
+      sheet.getByText("3 of 5").filter({ visible: true }),
+    ).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(page).toHaveURL(new RegExp(`/tasks$`));
     await expect(sheet).toBeHidden();
