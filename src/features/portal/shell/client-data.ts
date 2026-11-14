@@ -52,7 +52,7 @@ const E2E_SHELL: Omit<ClientShellData, "viewer"> = {
     { publicId: E2E_PORTAL_PROJECT_ID, name: E2E_PORTAL_PROJECT_NAME },
     { publicId: "NB-1235", name: "E2E Café brand refresh" },
   ],
-  counts: { tasks: 32, files: 8 },
+  counts: { tasks: 14, files: 8 },
   messageTo: "ana@e2e.example",
   team: [
     { name: "Ana Costa", roleLabel: "Project lead", initials: "AC" },

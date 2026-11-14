@@ -80,7 +80,7 @@ test.describe("Client portal shell", () => {
       "aria-current",
       "page",
     );
-    await expect(nav.getByRole("link", { name: /Tasks/ })).toContainText("32");
+    await expect(nav.getByRole("link", { name: /Tasks/ })).toContainText("14");
     await expect(
       page.getByRole("heading", { name: copy("en", "Portal.shell.yourTeam") }),
     ).toBeVisible();
@@ -92,7 +92,9 @@ test.describe("Client portal shell", () => {
 
     await nav.getByRole("link", { name: /Tasks/ }).click();
     await expect(page).toHaveURL(new RegExp(`/en/portal/${PROJECT}/tasks$`));
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Tasks");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      copy("en", "Portal.tasks.title"),
+    );
     await expect(nav.getByRole("link", { name: /Tasks/ })).toHaveAttribute(
       "aria-current",
       "page",

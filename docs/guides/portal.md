@@ -1,7 +1,7 @@
 # Client portal
 
 **Covers:** #131 (client sign-in), #132 (team sign-in and roles), #133 (shells and
-states). Later portal tickets extend this guide. **Source:**
+states), #134 (overview and tasks). Later portal tickets extend this guide. **Source:**
 ADR-009, Figma 12 Portal — Client (`516:2`), 14 Portal — Motion (`566:127`). The data model
 is in the [Database guide](./database.md) § 7.
 
@@ -264,3 +264,53 @@ Toasts use the existing Sonner `Toaster`, mounted in the team shell.
 - A new client section: add it to `clientNavItems` and its copy under `Portal.shell.nav`
   (EN and PT), then a page that renders inside the layout.
 - A team board page: render `TeamShell` with `nav="rail"` from that page's own layout.
+
+## 9. Client overview and tasks (#134)
+
+**What.** The client's Overview (CP-03) and Tasks with the detail panel (CP-04), at 1440 /
+768 / 390, EN and PT. Everything is a server component reading under RLS; the only client
+components are the progress ring, the stage track (their motion) and the detail frame.
+
+### Data and rules
+
+- `src/features/portal/overview/data.ts`: `getProjectView(publicId)` (React `cache`)
+  reads the project, stages, tickets (client-visible only, by RLS), the latest 20
+  undeleted updates with their linked tickets, and the names of the teammates the client
+  may see (anyone hidden reads as "NortBrand team"). `getChecklist(ticketId)` for the
+  open task. The fake backend returns `e2e-fixture.ts`.
+- `domain.ts` (unit-tested): `progress` (counts **client-visible tickets only**, the
+  acceptance criterion), `currentStage`, `stageState`, `weekSummary`, `daysUntil`,
+  `lisbonToday`, `stageElapsed`, `workingOn` (open tasks in the current stage, most urgent
+  first: waiting on the client, blocked, then by due date), status filters and
+  `groupByStage`.
+- `format.ts` (unit-tested): calendar days with fixed EN/PT month and weekday names (ICU
+  builds disagree on Portuguese short months), update times in Lisbon ("Today 10:20",
+  "Yesterday 17:45", "Mon 09:12", "3 Nov"). No date library.
+
+### Pages
+
+| Route                         | What                                                                                                                                                                                                                                                              |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/[locale]/portal/[id]`       | Date eyebrow, name + health badge, summary, staging link; KPIs 4 across → 2 × 2 → progress + "We're waiting on you" card on mobile; the stage track (horizontal → vertical stepper); "What we're working on" (rows open the task); latest updates (one on mobile) |
+| `/[locale]/portal/[id]/tasks` | `?status=` filter (tabs / chip row), groups per stage as native `<details>` (current stage open, finished stages "Done"); `?task=N` opens the detail                                                                                                              |
+
+The filter and the open task live in the URL, so they're shareable, survive a refresh and
+need no client state. The detail (status, due, stage, owner, start, description,
+checklist, linked updates) is server-rendered; `TaskDetailFrame` shows it as a right
+column from 1280 px, a 440 px right sheet from 768 px and a bottom sheet below. Closing
+replaces the URL without `task`.
+
+**Error state:** a failed read is reported to Sentry (error code only) and the page renders
+`LoadFailed` inside the shell. **Empty states:** no open tasks in the stage, no updates,
+no tasks at all, a filter with no matches, an unknown task.
+
+### Motion (14 Portal — Motion)
+
+- **Stage track draw-on** (once a session): the line draws to the current stage in 900 ms
+  (`motionTokens.duration.draw`), each node pops 0.6 → 1 as the line reaches it.
+- **Progress ring** (with the track): fills and counts up; on a later visit it starts from
+  the last value this browser saw (localStorage), so the change itself is visible.
+- `useSessionMoment(key)` decides after mount (null on the server), writes the
+  sessionStorage flag inside its deferred callback, and says no with reduced motion.
+- **Detail panel**: slides 24 px in with a fade (250 ms); sheets slide from their edge.
+- **Never**: counting on every visit, page transitions, hover lifts on rows.

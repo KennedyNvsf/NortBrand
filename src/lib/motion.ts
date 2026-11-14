@@ -6,7 +6,15 @@
  * step.
  */
 export const motionTokens = {
-  duration: { instant: 0.1, fast: 0.15, base: 0.25, slow: 0.4, reveal: 0.7 },
+  duration: {
+    instant: 0.1,
+    fast: 0.15,
+    base: 0.25,
+    slow: 0.4,
+    reveal: 0.7,
+    /** Portal draw-ons: the stage track and the progress ring (14 Portal — Motion). */
+    draw: 0.9,
+  },
   ease: {
     standard: [0.2, 0, 0, 1],
     exit: [0.4, 0, 1, 1],
