@@ -6,16 +6,16 @@ What runs on every pull request to `main`, and how to read a failure (#44).
 
 `.github/workflows/ci.yml` runs seven jobs in parallel on GitHub's Ubuntu runners.
 
-| Check                               | Required | What it proves                                                                 |
-| ----------------------------------- | -------- | ------------------------------------------------------------------------------ |
-| **Typecheck, lint, test, build**    | yes      | Types, ESLint, Prettier, Vitest and a production build                         |
-| **e2e (desktop)**                   | yes      | Every Playwright spec in Chromium at 1280 × 720, on this PR's production build |
-| **e2e (mobile)**                    | yes      | The same specs at iPhone 14 size (390 px, touch, mobile UA) in Chromium        |
-| **Database (pgTAP)**                | yes      | Every migration applies to a fresh Postgres, and `supabase/tests` passes       |
-| **e2e (webkit 1/2, informational)** | no       | The mobile specs in real WebKit, in two shards                                 |
-| **e2e (webkit 2/2, informational)** | no       | The other half                                                                 |
-| **Lighthouse (mobile)**             | yes¹     | 5 pages × EN/PT meet the Lighthouse budgets (§ 4)                              |
-| **e2e (preview)**                   | no²      | The host-independent specs against this PR's own Vercel preview (§ 2.1)        |
+| Check                               | Required | What it proves                                                                                                              |
+| ----------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **Typecheck, lint, test, build**    | yes      | Types, ESLint, Prettier, Vitest, a production build, and no service-role key in client bundles (`pnpm check:bundles`, #132) |
+| **e2e (desktop)**                   | yes      | Every Playwright spec in Chromium at 1280 × 720, on this PR's production build                                              |
+| **e2e (mobile)**                    | yes      | The same specs at iPhone 14 size (390 px, touch, mobile UA) in Chromium                                                     |
+| **Database (pgTAP)**                | yes      | Every migration applies to a fresh Postgres, and `supabase/tests` passes                                                    |
+| **e2e (webkit 1/2, informational)** | no       | The mobile specs in real WebKit, in two shards                                                                              |
+| **e2e (webkit 2/2, informational)** | no       | The other half                                                                                                              |
+| **Lighthouse (mobile)**             | yes¹     | 5 pages × EN/PT meet the Lighthouse budgets (§ 4)                                                                           |
+| **e2e (preview)**                   | no²      | The host-independent specs against this PR's own Vercel preview (§ 2.1)                                                     |
 
 ¹ Once the lead adds it to the branch protection rule (a repository setting).
 ² Informational at first (#45). The lead makes it required after a run of green PRs.

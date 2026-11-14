@@ -11,13 +11,16 @@ import { isFakeBackendEnabled } from "./lib/e2e-backend";
  * - The bare `/`: locale negotiation only (ADR-006): NEXT_LOCALE cookie, then
  *   Accept-Language, then `pt`. Every other marketing URL stays out of the proxy, so
  *   prefixed URLs are never redirected.
- * - Portal paths (`/en/portal…`, `/pt/portal…`): refresh the Supabase session cookies
- *   before the page renders (ADR-009). Server components can read cookies but not
+ * - Portal paths (`/en/portal…`, `/pt/portal…`, and the English-only team portal
+ *   `/team…`, #132): refresh the Supabase session cookies before the page renders
+ *   (ADR-009). Server components can read cookies but not
  *   write them, so an expiring access token is renewed here.
  */
 const localeProxy = createMiddleware(routing);
 
-const PORTAL_PATH = new RegExp(`^/(${routing.locales.join("|")})/portal(/|$)`);
+const PORTAL_PATH = new RegExp(
+  `^/((${routing.locales.join("|")})/portal|team)(/|$)`,
+);
 
 async function refreshPortalSession(
   request: NextRequest,
@@ -56,5 +59,11 @@ export default function proxy(
 }
 
 export const config = {
-  matcher: ["/", "/(en|pt)/portal", "/(en|pt)/portal/:path*"],
+  matcher: [
+    "/",
+    "/(en|pt)/portal",
+    "/(en|pt)/portal/:path*",
+    "/team",
+    "/team/:path*",
+  ],
 };

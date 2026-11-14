@@ -17,7 +17,7 @@ export const onPreview = previewURL !== undefined && previewURL !== "";
  * Specs that run only against the local build:
  * - consultation-form, newsletter: they submit forms, which on a preview would write to
  *   the dev database and send email;
- * - portal-sign-in: it signs in with the fake backend's fixtures;
+ * - portal-sign-in, team-sign-in: they sign in with the fake backend's fixtures;
  * - blog, blog-post: they assert the fixture posts (src/features/blog/e2e-backend.ts);
  * - analytics, consent, i18n, promo: they replace the browser state or open fresh contexts,
  *   which would drop the preview's bypass cookie. What they test (GA4 after consent,
@@ -27,6 +27,7 @@ export const PREVIEW_IGNORED = [
   "consultation-form.spec.ts",
   "newsletter.spec.ts",
   "portal-sign-in.spec.ts",
+  "team-sign-in.spec.ts",
   "blog.spec.ts",
   "blog-post.spec.ts",
   "analytics.spec.ts",

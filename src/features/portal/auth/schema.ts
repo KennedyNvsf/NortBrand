@@ -42,6 +42,16 @@ export const verifyCodeSchema = requestCodeSchema.extend({
     .regex(/^\d{6}$/, "codeInvalid"),
 });
 
+/** Team sign-in (TM-14, #132): the email alone; the team portal is English only. */
+export const teamRequestCodeSchema = z.object({ email });
+
+export const teamVerifyCodeSchema = teamRequestCodeSchema.extend({
+  code: verifyCodeSchema.shape.code,
+});
+
+export type TeamRequestCode = z.output<typeof teamRequestCodeSchema>;
+export type TeamVerifyCode = z.output<typeof teamVerifyCodeSchema>;
+
 export type RequestCodeInput = z.input<typeof requestCodeSchema>;
 export type RequestCode = z.output<typeof requestCodeSchema>;
 export type VerifyCodeInput = z.input<typeof verifyCodeSchema>;

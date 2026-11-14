@@ -1,9 +1,8 @@
 "use server";
 
-import * as Sentry from "@sentry/nextjs";
 import { cookies, headers } from "next/headers";
 
-import { getServerEnv, publicEnv } from "@/env";
+import { getServerEnv } from "@/env";
 import { routing } from "@/i18n/routing";
 import { isFakeBackendEnabled } from "@/lib/e2e-backend";
 import { clientIp, hashIp } from "@/lib/ip-hash";
@@ -19,10 +18,14 @@ import {
   fakeVerify,
 } from "./e2e-backend";
 import {
-  createSessionMarker,
-  PORTAL_SESSION_COOKIE,
-  PORTAL_SESSION_MAX_AGE_SECONDS,
-} from "./session-marker";
+  BEGIN_ANSWERS,
+  CODE_STATES,
+  oneOf,
+  reportPortalFailure,
+  setSessionMarker,
+  sleep,
+} from "./server";
+import { PORTAL_SESSION_COOKIE } from "./session-marker";
 import {
   requestCode,
   verifyCode,
@@ -36,48 +39,7 @@ import {
  * `error.message`, which can echo what was submitted (CLAUDE.md, Data model).
  */
 
-const sleep = (ms: number) =>
-  new Promise<void>((resolve) => setTimeout(resolve, ms));
-
-function reportFailure(where: string, code: string | undefined) {
-  Sentry.captureMessage("Portal sign-in step failed", {
-    level: "error",
-    tags: { feature: "portal-sign-in", step: where, code: code ?? "none" },
-  });
-}
-
-const BEGIN_ANSWERS = ["ok", "no_match", "locked"] as const;
-const CODE_STATES = ["active", "expired", "locked"] as const;
-
-function oneOf<T extends string>(
-  allowed: readonly T[],
-  value: unknown,
-): value is T {
-  return (
-    typeof value === "string" && (allowed as readonly string[]).includes(value)
-  );
-}
-
-async function setSessionMarker(userId: string) {
-  const cookieStore = await cookies();
-  cookieStore.set(
-    PORTAL_SESSION_COOKIE,
-    createSessionMarker(
-      getServerEnv().NEWSLETTER_TOKEN_SECRET,
-      userId,
-      Date.now(),
-    ),
-    {
-      httpOnly: true,
-      // https in every deployed environment; plain http only on a local machine, where
-      // WebKit would otherwise drop the cookie.
-      secure: publicEnv.NEXT_PUBLIC_SITE_URL.startsWith("https://"),
-      sameSite: "lax",
-      path: "/",
-      maxAge: PORTAL_SESSION_MAX_AGE_SECONDS,
-    },
-  );
-}
+const reportFailure = reportPortalFailure("portal-sign-in");
 
 export async function requestClientCode(
   input: unknown,

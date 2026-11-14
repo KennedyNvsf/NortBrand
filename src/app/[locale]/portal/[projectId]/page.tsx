@@ -6,6 +6,7 @@ import { locale as rootLocale } from "next/root-params";
 import { Suspense } from "react";
 
 import { Logo } from "@/components/site/logo";
+import { signOutClient } from "@/features/portal/auth/actions";
 import { SignOutButton } from "@/features/portal/auth/components/sign-out-button";
 import {
   getClientProject,
@@ -85,7 +86,10 @@ async function ProjectContent({
         <h1 className="text-h1 text-text-primary">{project.name}</h1>
         <p className="text-body text-text-muted">{t("comingSoon")}</p>
       </div>
-      <SignOutButton label={t("signOut")} locale={locale} />
+      <SignOutButton
+        label={t("signOut")}
+        signOut={signOutClient.bind(null, locale)}
+      />
     </>
   );
 }

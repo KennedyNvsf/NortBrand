@@ -19,6 +19,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "i18n:pseudo": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/i18n-pseudo.mts",
+    "check:bundles": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-client-bundles.mts",
+    "portal:bootstrap-admin": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/portal-bootstrap-admin.mts",
     "check:release": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-release.mts",
     "icons:generate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-icons.mts",
     "lhci": "pnpm dlx @lhci/cli@0.15.1",

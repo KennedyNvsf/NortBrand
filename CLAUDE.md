@@ -149,6 +149,8 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md, accessibi
 - **Release guard:** any remaining `[[ ]]` string fails the build when
   `VERCEL_ENV=production` or `RELEASE_BUILD=1`. Other builds only print a warning. Run
   `pnpm check:release` before launch.
+  pnpm check:bundles # after a build: no service-role key in client bundles (CI runs it)
+  pnpm portal:bootstrap-admin --email … --name "…" # first team admin (docs/guides/portal.md § 7)
   - There are no `release/*` branches; work is squash-merged to `main`.
 - **Images:**
   - The sea photo is a launch asset. It needs optimized, responsive crops, and meaningful
@@ -285,6 +287,12 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
 - **Playwright:** `portal-sign-in.spec.ts` uses the fake backend (NB-1234, emails
   `client…@e2e.example`, code 123456). Find headings by role: Next keeps the previous page
   in the DOM, hidden, after a navigation.
+- **Team sign-in (#132, docs/guides/portal.md § 7):** `src/app/team/` (own root layout,
+  English, no marketing chrome) and `src/features/portal/team/`. Both sign-ins share
+  `SignInFlow` and the generic rules in `sign-in.ts`. Invite/remove check the role in the
+  action and in SQL; the allowed domain is a trigger on `team_members`. First admin:
+  `pnpm portal:bootstrap-admin`, then one SQL line in the editor. Fake backend:
+  `admin@e2e.example`, `member@e2e.example`, code 123456 (`team-sign-in.spec.ts`).
 - **Email:** Supabase sends codes through custom SMTP on Resend; app emails use the
   existing Resend client.
 - **Schema (#130, docs/guides/database.md § 7):** the project is the tenant; RLS policies

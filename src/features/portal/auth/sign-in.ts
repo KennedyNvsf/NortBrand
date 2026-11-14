@@ -1,10 +1,16 @@
+import type { z } from "zod";
+
 import {
   maskEmail,
   requestCodeSchema,
   signInErrorKeys,
+  teamRequestCodeSchema,
+  teamVerifyCodeSchema,
   verifyCodeSchema,
   type RequestCode,
   type SignInErrorKey,
+  type TeamRequestCode,
+  type TeamVerifyCode,
   type VerifyCode,
 } from "./schema";
 
@@ -19,6 +25,9 @@ import {
  * Step 2 (CP-02): the code → the database says whether a code is live; Supabase checks
  * it; a miss is counted (3 tries, then a pause); a match completes the sign-in as the
  * new user, which only succeeds for that user's own client row.
+ *
+ * Team sign-in (TM-14, #132) runs the same rules with the email alone: requestTeamCode
+ * and verifyTeamCode. Completion then succeeds only for an active teammate.
  */
 
 export const MIN_RESPONSE_MS = 1200;
@@ -31,7 +40,8 @@ export type RequestCodeResult =
   | {
       status: "code_sent";
       email: string;
-      projectId: string;
+      /** null for team sign-in, which has no Project ID. */
+      projectId: string | null;
       maskedEmail: string;
     }
   | { status: "invalid"; fieldErrors: FieldErrors }
@@ -41,7 +51,7 @@ export type RequestCodeResult =
   | { status: "failed" };
 
 export type VerifyCodeResult =
-  | { status: "signed_in"; projectId: string }
+  | { status: "signed_in"; projectId: string | null }
   | { status: "invalid"; fieldErrors: FieldErrors }
   | { status: "wrong_code"; triesLeft: number }
   | { status: "locked" }
@@ -51,32 +61,36 @@ export type VerifyCodeResult =
 
 type DbError = { error: { code: string | undefined } };
 
-export type RequestCodeDeps = {
-  begin: (
-    request: RequestCode,
-  ) => Promise<"ok" | "no_match" | "locked" | DbError>;
+type Identity = { email: string; projectId?: string };
+
+export type RequestCodeDeps<R extends Identity = RequestCode> = {
+  begin: (request: R) => Promise<"ok" | "no_match" | "locked" | DbError>;
   sendCode: (
-    request: RequestCode,
+    request: R,
   ) => Promise<{ ok: true } | { ok: false; rateLimited: boolean }>;
   sleep: (ms: number) => Promise<void>;
   now: () => number;
   reportFailure: (where: string, code: string | undefined) => void;
 };
 
-export type VerifyCodeDeps = {
-  codeState: (
-    request: VerifyCode,
-  ) => Promise<"active" | "expired" | "locked" | DbError>;
-  verify: (request: VerifyCode) => Promise<"ok" | "mismatch" | "error">;
-  registerWrongCode: (request: VerifyCode) => Promise<number | DbError>;
-  /** Run with the new session; null when the user isn't this project's client. */
-  complete: (request: VerifyCode) => Promise<string | null | DbError>;
-  /** Called when verification succeeded but completion didn't: drop the session. */
-  signOut: () => Promise<void>;
-  /** Start the 30-day session marker (session-marker.ts). */
-  startSession: () => Promise<void>;
-  reportFailure: (where: string, code: string | undefined) => void;
-};
+export type VerifyCodeDeps<V extends Identity & { code: string } = VerifyCode> =
+  {
+    codeState: (
+      request: V,
+    ) => Promise<"active" | "expired" | "locked" | DbError>;
+    verify: (request: V) => Promise<"ok" | "mismatch" | "error">;
+    registerWrongCode: (request: V) => Promise<number | DbError>;
+    /**
+     * Run with the new session; null when the user isn't this project's client (or,
+     * for the team, not an active teammate).
+     */
+    complete: (request: V) => Promise<string | null | DbError>;
+    /** Called when verification succeeded but completion didn't: drop the session. */
+    signOut: () => Promise<void>;
+    /** Start the 30-day session marker (session-marker.ts). */
+    startSession: () => Promise<void>;
+    reportFailure: (where: string, code: string | undefined) => void;
+  };
 
 function isDbError(value: unknown): value is DbError {
   return typeof value === "object" && value !== null && "error" in value;
@@ -101,11 +115,28 @@ function fieldErrors(
   return errors;
 }
 
-export async function requestCode(
+/** Client sign-in, step 1: email + Project ID. */
+export function requestCode(
   input: unknown,
   deps: RequestCodeDeps,
 ): Promise<RequestCodeResult> {
-  const parsed = requestCodeSchema.safeParse(input);
+  return requestWith(requestCodeSchema, input, deps);
+}
+
+/** Team sign-in, step 1: email only. */
+export function requestTeamCode(
+  input: unknown,
+  deps: RequestCodeDeps<TeamRequestCode>,
+): Promise<RequestCodeResult> {
+  return requestWith(teamRequestCodeSchema, input, deps);
+}
+
+async function requestWith<R extends Identity>(
+  schema: z.ZodType<R>,
+  input: unknown,
+  deps: RequestCodeDeps<R>,
+): Promise<RequestCodeResult> {
+  const parsed = schema.safeParse(input);
   if (!parsed.success) {
     return { status: "invalid", fieldErrors: fieldErrors(parsed.error.issues) };
   }
@@ -117,9 +148,9 @@ export async function requestCode(
   return result;
 }
 
-async function runRequestCode(
-  request: RequestCode,
-  deps: RequestCodeDeps,
+async function runRequestCode<R extends Identity>(
+  request: R,
+  deps: RequestCodeDeps<R>,
 ): Promise<RequestCodeResult> {
   const answer = await deps.begin(request);
   if (isDbError(answer)) {
@@ -139,16 +170,33 @@ async function runRequestCode(
   return {
     status: "code_sent",
     email: request.email,
-    projectId: request.projectId,
+    projectId: request.projectId ?? null,
     maskedEmail: maskEmail(request.email),
   };
 }
 
-export async function verifyCode(
+/** Client sign-in, step 2. */
+export function verifyCode(
   input: unknown,
   deps: VerifyCodeDeps,
 ): Promise<VerifyCodeResult> {
-  const parsed = verifyCodeSchema.safeParse(input);
+  return verifyWith(verifyCodeSchema, input, deps);
+}
+
+/** Team sign-in, step 2. */
+export function verifyTeamCode(
+  input: unknown,
+  deps: VerifyCodeDeps<TeamVerifyCode>,
+): Promise<VerifyCodeResult> {
+  return verifyWith(teamVerifyCodeSchema, input, deps);
+}
+
+async function verifyWith<V extends Identity & { code: string }>(
+  schema: z.ZodType<V>,
+  input: unknown,
+  deps: VerifyCodeDeps<V>,
+): Promise<VerifyCodeResult> {
+  const parsed = schema.safeParse(input);
   if (!parsed.success) {
     return { status: "invalid", fieldErrors: fieldErrors(parsed.error.issues) };
   }
@@ -188,5 +236,5 @@ export async function verifyCode(
   }
 
   await deps.startSession();
-  return { status: "signed_in", projectId: request.projectId };
+  return { status: "signed_in", projectId: request.projectId ?? null };
 }

@@ -613,9 +613,24 @@ export type Database = {
         Returns: boolean;
       };
       mark_consultation_notified: { Args: { p_id: string }; Returns: boolean };
+      portal_add_team_member: {
+        Args: { p_name: string; p_role: string; p_user_id: string };
+        Returns: undefined;
+      };
       portal_begin_client_sign_in: {
         Args: { p_email: string; p_ip_hash: string; p_public_id: string };
         Returns: string;
+      };
+      portal_begin_team_sign_in: {
+        Args: { p_email: string; p_ip_hash: string };
+        Returns: string;
+      };
+      portal_check_team_invite: {
+        Args: { p_email: string };
+        Returns: {
+          status: string;
+          user_id: string;
+        }[];
       };
       portal_code_state: {
         Args: { p_email: string; p_public_id: string };
@@ -625,10 +640,23 @@ export type Database = {
         Args: { p_public_id: string };
         Returns: string;
       };
+      portal_complete_team_sign_in: {
+        Args: Record<PropertyKey, never>;
+        Returns: string;
+      };
+      portal_register_team_wrong_code: {
+        Args: { p_email: string };
+        Returns: number;
+      };
       portal_register_wrong_code: {
         Args: { p_email: string; p_public_id: string };
         Returns: number;
       };
+      portal_remove_team_member: {
+        Args: { p_user_id: string };
+        Returns: undefined;
+      };
+      portal_team_code_state: { Args: { p_email: string }; Returns: string };
       submit_consultation_request: {
         Args: {
           p_email: string;

@@ -174,8 +174,20 @@ launch:
 
 **Applied (2026-11-14, #131):** `nortbrand-dev`, through the Management API, sender
 `NortBrand <onboarding@resend.dev>` (dev's Resend test sender, which only delivers to the
-Resend account's own address). `nortbrand-prod` still needs the same settings with the
-`send.nortbrand.pt` sender before launch.
+Resend account's own address).
+
+**`nortbrand-prod` (2026-11-14, lead's approval):** migration `20261114120000` pushed
+(history 4/4); sign-ups off, OTP 6 digits / 600 s, 60 s between emails, 10 verifications
+per 5 minutes, site URL `https://nortbrand.pt`. **Still to do before launch:** custom
+SMTP with a production Resend key (sender `NortBrand <hello@send.nortbrand.pt>`), then
+the Magic Link template and subject and 30 emails an hour. The Free plan refuses template
+changes until custom SMTP is on.
+
+**Team portal (#132):** set `SUPABASE_SERVICE_ROLE_KEY` (the project's secret key) in
+Vercel for Production (prod key) and Preview (dev key), marked Sensitive, and in your
+`.env.local` for local work. Without it the site builds and runs, but inviting and
+removing teammates refuse to run. Then create each project's first admin
+(docs/guides/portal.md § 7).
 
 The local stack gets the same settings from `supabase/config.toml`. Nothing here costs
 money on the current plans.

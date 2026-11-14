@@ -75,6 +75,10 @@ jobs:
         env:
           E2E_FAKE_BACKEND: "1"
 
+      # ADR-009, #132: the service-role key must never reach a browser.
+      - name: Client bundles hold no service-role key
+        run: pnpm check:bundles
+
   # Playwright against this PR's own production build (playwright.config.ts starts
   # `pnpm build && pnpm start` with E2E_FAKE_BACKEND=1, so nothing reaches Supabase,
   # Resend or Google). One job per project, so each browser is its own check. The
