@@ -6,6 +6,7 @@ import { getPortalSupabase } from "@/lib/supabase/auth";
 
 import { getTeamViewer } from "./access";
 import { E2E_TEAM_COOKIE } from "./e2e-backend";
+import { fakeProjects } from "./projects/e2e-store";
 import type { TeamRole } from "./team-admin";
 
 /*
@@ -32,7 +33,12 @@ export const getTeamShell = cache(
           role: viewer.role,
           email: (await cookies()).get(E2E_TEAM_COOKIE)?.value ?? "",
         },
-        counts: { projects: 0, myTickets: 0 },
+        counts: {
+          projects: fakeProjects().filter(
+            (project) => project.status === "active",
+          ).length,
+          myTickets: 0,
+        },
       };
     }
 

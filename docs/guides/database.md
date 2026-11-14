@@ -259,6 +259,13 @@ functions `portal_check_team_invite`, `portal_add_team_member` and
 of an active project; PT422 outside the allowed domain). `private.portal_bootstrap_first_admin`
 has no grants: the SQL editor only. Tests: `supabase/tests/07_portal_team_access.test.sql`.
 
+### Creating a project (#136)
+
+`20261117120000_portal_create_project.sql`: `portal_create_project` (one transaction:
+project, lead, stages, clients; admins only; each client's account must match its email;
+teammates refused), `portal_find_client_users`, `portal_next_project_id`,
+`portal_log_invite_sent`. Tests: `supabase/tests/09_portal_create_project.test.sql`.
+
 ### Milestones and file storage (#135)
 
 `20261116120000_portal_milestones_and_files_storage.sql` adds `project_milestones` (clients

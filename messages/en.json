@@ -521,6 +521,17 @@
       "expiry": "It works for 10 minutes. After 3 wrong tries, ask for a new one.",
       "ignore": "Didn't ask to sign in? You can ignore this email; nobody can open your project without the code.",
       "footer": "{site} · Client portal"
+    },
+    "portalWelcome": {
+      "subject": "Your project portal for {project}",
+      "preview": "Sign in with this email and Project ID {projectId}.",
+      "heading": "Follow {project} as it happens",
+      "intro": "{lead} has set up a project portal for {client} at {studio}. Stages, tasks, files and updates are all in one place.",
+      "idLabel": "Your Project ID",
+      "howTo": "Sign in with this email address ({email}) and your Project ID. Each time, we'll send you a 6-digit code; there's no password to remember.",
+      "button": "Open the portal",
+      "fallback": "If the button doesn't work, copy this link into your browser:",
+      "footer": "You're receiving this because {studio} invited {email} to a project. Questions? Reply to this email."
     }
   },
   "Newsletter": {

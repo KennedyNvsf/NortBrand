@@ -306,6 +306,11 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   the private `portal-files` bucket (read rule follows `project_files` RLS). Downloads
   only via `/api/portal/files/<id>` (60-second signed URL with the reader's session).
   Local Supabase now runs Storage.
+- **Team projects and new project (#136, docs/guides/portal.md § 11):**
+  `src/features/portal/team/projects/`. One SQL transaction (`portal_create_project`)
+  creates project, lead, stages and clients; stages come from a template on the server
+  (`templates.ts`); client auth users are created first and deleted if it fails; a failed
+  welcome email keeps the project. Tabs are URL state (`?view=`).
 - **The repository is public until launch** (Actions minutes, 2026-11-14): never commit
   secrets or personal data; making it private again is on the launch checklist.
 - **Email:** Supabase sends codes through custom SMTP on Resend; app emails use the

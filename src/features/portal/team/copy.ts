@@ -137,7 +137,108 @@ export const teamPagesCopy = {
       "Create a project to give a client their Project ID and their own portal.",
     emptyMemberBody: "When an admin adds you to a project, it shows up here.",
     newProject: "New project",
-    listNote: "The full projects table arrives with the projects ticket.",
+    summary:
+      "{active} active · {waiting} waiting on a client · {soon} launching before {month}",
+    tabsLabel: "Filter projects",
+    tabs: {
+      active: "Active",
+      waiting: "Waiting on client",
+      launched: "Launched",
+      archived: "Archived",
+    },
+    viewEmpty: {
+      active: "No active projects.",
+      waiting: "No project is waiting on a client.",
+      launched: "No launched projects yet.",
+      archived: "Nothing archived.",
+    },
+    columns: {
+      project: "Project",
+      stage: "Stage",
+      progress: "Progress",
+      health: "Health",
+      launch: "Launch",
+      lead: "Lead",
+      lastUpdate: "Last update",
+    },
+    health: {
+      on_track: "On track",
+      at_risk: "At risk",
+      waiting_on_client: "Waiting on client",
+    },
+    stageOf: "{stage} · {position} of {total}",
+    noStages: "No stages yet",
+    launchOn: "Launch {date}",
+    leadLabel: "Lead: {name}",
+    age: {
+      today: "Today",
+      yesterday: "Yesterday",
+      days: "{days} days ago",
+      none: "No updates",
+    },
+    loadFailed: "We couldn't load the projects. Refresh the page to try again.",
+  },
+  newProject: {
+    eyebrow: "New project",
+    title: "Start a project and invite the client",
+    close: "Close",
+    projectSection: "Project",
+    name: "Project name",
+    namePlaceholder: "Client · Website",
+    lead: "Project lead",
+    clientSection: "Client",
+    company: "Company",
+    language: "Email language",
+    languages: { pt: "Portuguese", en: "English" },
+    emails: "Who can sign in",
+    emailsPlaceholder: "Add another email",
+    emailsEmptyPlaceholder: "name@company.com",
+    removeEmail: "Remove {email}",
+    emailsHint:
+      "Each person signs in with their own email and the Project ID. Remove an email to revoke access.",
+    planSection: "Plan",
+    start: "Start",
+    launch: "Launch target",
+    stages: "Stages",
+    stagePreview: "Stage dates",
+    from: "From",
+    planHint:
+      "Dates are spread from the start and launch. You can adjust each stage after creating the project.",
+    projectId: "Project ID",
+    projectIdHint:
+      "Generated and unique. It goes out in the welcome email; you never type it.",
+    projectIdLater: "Generated when you create the project.",
+    copy: "Copy",
+    copied: "Copied",
+    sendWelcome: "Send the welcome email now",
+    sendWelcomeHint:
+      "Includes the sign-in link and the Project ID. You can resend it from Client access.",
+    cancel: "Cancel",
+    create: "Create project",
+    creating: "Creating…",
+    created: "{project} is ready · {id}",
+    createdSent: "Welcome email sent to {count}.",
+    createdNotSent: "No welcome email was sent. Send it from Client access.",
+    emailFailed:
+      "The project is ready, but the welcome email to {emails} didn't go out. Resend it from Client access.",
+    errors: {
+      nameInvalid: "Enter a project name (up to 120 characters).",
+      clientNameInvalid: "Enter the client's company (up to 120 characters).",
+      leadInvalid: "Choose a project lead.",
+      dateInvalid: "Enter a date.",
+      launchBeforeStart: "The launch can't be before the start.",
+      launchTooSoon:
+        "Leave at least {days} days between the start and the launch.",
+      templateInvalid: "Choose a stage template.",
+      emailInvalid: "Check the email addresses: one isn't valid.",
+      emailsRequired: "Add at least one email.",
+      emailsTooMany: "Up to 10 people per project.",
+      localeInvalid: "Choose a language.",
+      emailNotValid: "That isn't a valid email address.",
+      teammate: "{emails} belongs to a teammate. Clients need their own email.",
+      forbidden: "Only admins can create projects.",
+      failed: "Something went wrong and nothing was created. Please try again.",
+    },
   },
   myTickets: {
     title: "My tickets",
@@ -153,6 +254,8 @@ export const teamPagesCopy = {
       "Workspace settings (allowed email domain, code limits, notifications) arrive with the Settings ticket.",
   },
 } as const;
+
+export type TeamPagesCopy = typeof teamPagesCopy;
 
 /** The states page (#133): TM-09 and CP-08, live. Team only. */
 export const teamStatesCopy = {
