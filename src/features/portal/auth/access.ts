@@ -29,7 +29,13 @@ export type PortalViewer =
 
 const SUPABASE_AUTH_COOKIE = /^sb-.+-auth-token/;
 
-export async function getPortalViewer(): Promise<PortalViewer> {
+/**
+ * `e2eCookie`: the fake backend's session cookie. Client and team sessions use different
+ * ones, so a fake team session never counts as a client session (and vice versa).
+ */
+export async function getPortalViewer(
+  e2eCookie: string = E2E_PORTAL_COOKIE,
+): Promise<PortalViewer> {
   // Always per request: the marker check reads the clock, which Next refuses to do
   // while prerendering (even a runtime prerender that has the cookies).
   await connection();
@@ -38,7 +44,7 @@ export async function getPortalViewer(): Promise<PortalViewer> {
   const secret = getServerEnv().NEWSLETTER_TOKEN_SECRET;
 
   if (isFakeBackendEnabled()) {
-    const email = cookieStore.get(E2E_PORTAL_COOKIE)?.value;
+    const email = cookieStore.get(e2eCookie)?.value;
     if (!email) return { status: marker ? "signed_out" : "anonymous" };
     return isValidSessionMarker(marker, secret, e2eUserId(email), Date.now())
       ? { status: "signed_in", userId: e2eUserId(email) }

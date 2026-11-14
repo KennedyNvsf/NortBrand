@@ -249,6 +249,16 @@ created and tested.
 client (João), six stages, six tickets (one team-only), a checklist, four updates and two
 files (one shared). The auth users are inserted directly, with `example.com` addresses.
 
+### Team access (#132)
+
+`20261115120000_portal_team_access.sql` adds team sign-in (its own attempts table,
+sharing the client code-request rate limit), the allowed-domain trigger on
+`team_members` (also checks the row's email is the auth user's), and the admin-only
+functions `portal_check_team_invite`, `portal_add_team_member` and
+`portal_remove_team_member` (42501 for non-admins; PT403 removing yourself; PT409 the lead
+of an active project; PT422 outside the allowed domain). `private.portal_bootstrap_first_admin`
+has no grants: the SQL editor only. Tests: `supabase/tests/07_portal_team_access.test.sql`.
+
 ### Rules for portal work
 
 - Read and write portal tables with the signed-in user's Supabase client, never the

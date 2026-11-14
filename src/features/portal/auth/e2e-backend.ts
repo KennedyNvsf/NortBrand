@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 import type { RequestCode, VerifyCode } from "./schema";
 
 /**
@@ -28,9 +30,13 @@ function isFixtureClient(request: RequestCode): boolean {
   );
 }
 
-/** The fake user id the session marker is bound to. */
+/**
+ * The fake user id the session marker is bound to: a UUID derived from the email, so it
+ * passes the same validation as a real Supabase user id (team actions take UUIDs).
+ */
 export function e2eUserId(email: string): string {
-  return `e2e:${email}`;
+  const hex = createHash("sha256").update(`e2e:${email}`).digest("hex");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-a${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
 }
 
 export function fakeBegin(

@@ -50,6 +50,12 @@ export const serverSchema = z.object({
   IP_HASH_SALT: z.string().min(32, "Use at least 32 characters"),
   /** Signs newsletter confirm and unsubscribe links (HMAC-SHA256). */
   NEWSLETTER_TOKEN_SECRET: z.string().min(32, "Use at least 32 characters"),
+  /**
+   * Portal auth administration only (ADR-009, #132), read only by
+   * src/lib/supabase/admin.ts. Optional so a build without it still works; inviting and
+   * removing teammates refuse to run until it is set.
+   */
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(20).optional(),
 });
 
 export type PublicEnv = z.infer<typeof publicSchema>;

@@ -6,20 +6,24 @@ import type { SignInErrorKey } from "../schema";
  * (CLIENT_MESSAGE_PATHS). Strings with a `{placeholder}` are raw templates, filled with
  * `fill()` once the value is known in the browser.
  */
-export type SignInCopy = {
+export type SignInCopy = FlowCopy & {
+  projectId: string;
+  projectIdPlaceholder: string;
+  projectIdHint: string;
+  lostId: string;
+  contactUs: string;
+};
+
+/** The strings the shared flow uses (sign-in-flow.tsx); team sign-in supplies these. */
+export type FlowCopy = {
   eyebrow: string;
   title: string;
   intro: string;
   email: string;
   emailPlaceholder: string;
-  projectId: string;
-  projectIdPlaceholder: string;
-  projectIdHint: string;
   send: string;
   sending: string;
   sendNote: string;
-  lostId: string;
-  contactUs: string;
   noMatch: string;
   locked: string;
   rateLimited: string;

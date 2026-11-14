@@ -61,7 +61,7 @@ describe("buildRobots", () => {
       rules: {
         userAgent: "*",
         allow: "/",
-        disallow: ["/studio", "/api/", "/en/portal", "/pt/portal"],
+        disallow: ["/studio", "/api/", "/en/portal", "/pt/portal", "/team"],
       },
       sitemap: "https://nortbrand.pt/sitemap.xml",
     });

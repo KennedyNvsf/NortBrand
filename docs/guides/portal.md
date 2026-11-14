@@ -1,6 +1,7 @@
 # Client portal
 
-**Covers:** #131 (client sign-in). Later portal tickets extend this guide. **Source:**
+**Covers:** #131 (client sign-in), #132 (team sign-in and roles). Later portal tickets
+extend this guide. **Source:**
 ADR-009, Figma 12 Portal — Client (`516:2`), 14 Portal — Motion (`566:127`). The data model
 is in the [Database guide](./database.md) § 7.
 
@@ -114,3 +115,83 @@ projects that user sees.
   `NB-4821`. Codes arrive in Mailpit at <http://127.0.0.1:54324>.
 - **Never** read portal data with `getSupabase()` or the service-role key; use
   `getPortalSupabase()` so RLS sees the user.
+
+## 7. Team sign-in and roles (#132)
+
+**What.** `/team/sign-in` (TM-14) and a guarded `/team` page with the team list, invite
+and remove. English only, outside the locale routes (its own root layout, like
+`/studio`), noindex, disallowed in robots.txt. The portal shell (#133) and the full Team
+page (TM-12, the My tickets / Team / Settings ticket) build on it.
+
+**Access model (lead's decision, 2026-11-13).** Invite-only by any email. An optional
+allowed domain (`portal_settings.allowed_team_domain`, off) limits invites; a trigger on
+`team_members` enforces it on every write, so neither a function nor a direct RLS write
+can skip it. Roles: `admin` (projects, client access, team, settings) and `member`
+(their projects only).
+
+### How it works at runtime
+
+```
+/team/sign-in   email ──► requestTeamCode ──► portal_begin_team_sign_in (rate limit shared
+                                              with clients; ok / no_match / locked)
+                code  ──► verifyTeamCode  ──► portal_team_code_state → verifyOtp →
+                                              portal_register_team_wrong_code (3 tries) →
+                                              portal_complete_team_sign_in (role or null)
+                                              → 30-day marker → /team
+/team           getTeamViewer(): valid session + marker + an *active* team_members row
+                (read under RLS). A removed teammate is refused on the next request.
+Invite (admin)  inviteTeammateAction → viewer is admin? → portal_check_team_invite (admin,
+                domain, duplicate; returns an existing auth user) → createAuthUser (service
+                role, auth admin only) or unblock → portal_add_team_member (admin's
+                session; trigger checks email + domain). A failed add deletes the user it
+                created.
+Remove (admin)  removeTeammateAction → viewer is admin? not yourself? →
+                portal_remove_team_member (PT403 yourself, PT409 lead of an active
+                project; reassigns tickets and updates to each project's lead; leaves the
+                project teams; active = false) → ban the auth user (blocks sign-in).
+```
+
+### Files
+
+| File                                                        | What and why                                                                                                                                                                    |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `supabase/migrations/20261115120000_portal_team_access.sql` | Team attempts table, the domain trigger, sign-in functions, invite/add/remove (admins only, 42501 otherwise), and `private.portal_bootstrap_first_admin` (no grants).           |
+| `src/features/portal/auth/sign-in.ts`                       | The rules are generic over the identity: `requestCode`/`verifyCode` (email + Project ID) and `requestTeamCode`/`verifyTeamCode` (email).                                        |
+| `src/features/portal/auth/components/sign-in-flow.tsx`      | The shared flow (steps, code input, CP-08 states). `client-sign-in.tsx` and `team/components/team-sign-in.tsx` are thin wrappers: actions, router, help line, Project ID field. |
+| `src/features/portal/auth/server.ts`                        | Helpers both sign-ins share (Sentry with error codes only, the marker cookie).                                                                                                  |
+| `src/features/portal/team/team-admin.ts`                    | Invite and remove rules with injected dependencies; the role check comes first. Unit-tested.                                                                                    |
+| `src/features/portal/team/actions.ts`                       | Server actions: team sign-in, sign-out, invite, remove.                                                                                                                         |
+| `src/features/portal/team/access.ts`                        | `getTeamViewer()`, `listTeammates()` (RLS).                                                                                                                                     |
+| `src/features/portal/team/copy.ts`                          | English-only strings (typed here, not in `messages/`, which must match in EN and PT).                                                                                           |
+| `src/lib/supabase/admin.ts`                                 | The only holder of the service-role key: create, delete and ban auth users. Never table access.                                                                                 |
+| `scripts/check-client-bundles.mts`                          | `pnpm check:bundles`, after every CI build: fails if the key's name (or value, when set) is in `.next/static`.                                                                  |
+| `scripts/portal-bootstrap-admin.mts`                        | `pnpm portal:bootstrap-admin`: the first admin (below).                                                                                                                         |
+| `src/app/team/`                                             | Root layout (no marketing chrome), `sign-in/page.tsx`, `page.tsx`.                                                                                                              |
+
+### The first admin (once per Supabase project)
+
+1. Put that project's URL and secret key in the environment (or `.env.local`):
+   `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`.
+2. `pnpm portal:bootstrap-admin --email ana@example.com --name "Ana Costa"`. It creates
+   (or finds) the auth user and prints one SQL line.
+3. Run that line in the project's SQL editor. The function has no grants, so nothing else
+   can call it, and it refuses once an active admin exists.
+4. Sign in at `/team/sign-in`. Invite everyone else from `/team`.
+
+### Decisions and trade-offs
+
+- **Roles twice.** Every action checks the viewer first; every SQL function checks again
+  (42501). The pgTAP and unit tests both prove a member is refused.
+- **The domain rule is a trigger,** because admins may also write `team_members` directly
+  under RLS. It also requires the row's email to be the auth user's.
+- **Removing a project lead is refused** until an admin picks a new lead, so no active
+  project is left without one. (A direct `active = false` update by an admin skips the
+  reassignment; use the action.)
+- **Blocking sign-in is best effort** after the database change: the database is the
+  source of truth, and every team page checks the active row.
+- **The key stays on the server three ways:** `import "server-only"` in `admin.ts` (the
+  build fails if client code imports it), `getServerEnv()` throws in a browser, and CI
+  scans the client bundles (`pnpm check:bundles`).
+- **Fake backend:** `admin@e2e.example` (admin), `member@e2e.example`, code 123456;
+  invites to `…@outside.example` fall outside the allowed domain. Fake user ids are UUIDs
+  derived from the email, so they pass the same validation as real ones.

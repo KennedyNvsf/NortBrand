@@ -29,6 +29,8 @@ describe("locale proxy (ADR-006)", () => {
       "/",
       "/(en|pt)/portal",
       "/(en|pt)/portal/:path*",
+      "/team",
+      "/team/:path*",
     ]);
   });
 
@@ -74,6 +76,16 @@ describe("portal session proxy (ADR-009)", () => {
       }),
     );
     expect(redirectTarget(response)).toBeNull();
+  });
+
+  it("refreshes the team portal's session without a locale redirect (#132)", async () => {
+    vi.stubEnv("E2E_FAKE_BACKEND", "1");
+    for (const path of ["/team", "/team/sign-in"]) {
+      const response = await proxy(
+        new NextRequest(`https://nortbrand.test${path}`),
+      );
+      expect(redirectTarget(response)).toBeNull();
+    }
   });
 
   it("covers nested portal pages", async () => {
