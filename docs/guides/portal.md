@@ -189,9 +189,9 @@ Remove (admin)  removeTeammateAction → viewer is admin? not yourself? →
   reassignment; use the action.)
 - **Blocking sign-in is best effort** after the database change: the database is the
   source of truth, and every team page checks the active row.
-- **No `server-only` package:** `admin.ts` reads the key through `getServerEnv()`, which
-  throws in a browser, and CI scans the client bundles. Adding the package is a small
-  follow-up (tech debt).
+- **The key stays on the server three ways:** `import "server-only"` in `admin.ts` (the
+  build fails if client code imports it), `getServerEnv()` throws in a browser, and CI
+  scans the client bundles (`pnpm check:bundles`).
 - **Fake backend:** `admin@e2e.example` (admin), `member@e2e.example`, code 123456;
   invites to `…@outside.example` fall outside the allowed domain. Fake user ids are UUIDs
   derived from the email, so they pass the same validation as real ones.

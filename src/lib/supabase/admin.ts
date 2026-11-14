@@ -1,3 +1,5 @@
+import "server-only";
+
 import { createClient } from "@supabase/supabase-js";
 
 import { getServerEnv, publicEnv } from "@/env";
@@ -8,8 +10,9 @@ import { getServerEnv, publicEnv } from "@/env";
  * sign-in. Never use it for table reads or writes; those go through the signed-in
  * admin's session, so RLS and the SQL role checks apply.
  *
- * Server-only: getServerEnv() refuses to run in the browser, and CI scans the client
- * bundles for the key's name after every build (scripts/check-client-bundles.mjs).
+ * Server-only three ways: `server-only` makes the build fail if client code imports this
+ * module, getServerEnv() refuses to run in a browser, and CI scans the client bundles for
+ * the key after every build (scripts/check-client-bundles.mts).
  */
 
 function authAdmin() {
