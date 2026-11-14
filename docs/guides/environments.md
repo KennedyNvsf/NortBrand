@@ -155,7 +155,9 @@ launch:
    minimum interval between emails to 60 seconds (the form's resend countdown).
 2. **Authentication → Rate Limits:** token verifications **10** per 5 minutes per IP. The
    app allows 3 tries per code; this caps anyone calling Supabase's verify endpoint
-   directly (tech debt).
+   directly (tech debt). Emails sent: **30** per hour (the default of 2 is for Supabase's
+   built-in sender; the app already limits code requests to 10 per IP per hour and 200
+   in total).
 3. **Sessions: nothing to set.** Time-boxed sessions are a Pro feature. The app ends
    portal sessions after 30 days itself, with a signed marker cookie
    (`src/features/portal/auth/session-marker.ts`).
@@ -169,6 +171,11 @@ launch:
    sender allows only a few emails an hour and is not meant for production.
 6. **Authentication → URL Configuration:** set the site URL to the environment's
    `NEXT_PUBLIC_SITE_URL`.
+
+**Applied (2026-11-14, #131):** `nortbrand-dev`, through the Management API, sender
+`NortBrand <onboarding@resend.dev>` (dev's Resend test sender, which only delivers to the
+Resend account's own address). `nortbrand-prod` still needs the same settings with the
+`send.nortbrand.pt` sender before launch.
 
 The local stack gets the same settings from `supabase/config.toml`. Nothing here costs
 money on the current plans.
