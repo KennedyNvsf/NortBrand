@@ -179,11 +179,13 @@ test.describe("Client portal shell", () => {
 });
 
 test.describe("Team workspace shell", () => {
-  test("admin: sections, first run, settings and the states page", async ({
+  test("admin: sections, projects, settings and the states page", async ({
     page,
   }) => {
     await teamSignIn(page, "admin@e2e.example");
-    await expect(page.getByText("No projects yet")).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "Projects",
+    );
 
     await page.goto("/team/settings");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(

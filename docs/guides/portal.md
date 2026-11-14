@@ -1,7 +1,7 @@
 # Client portal
 
 **Covers:** #131 (client sign-in), #132 (team sign-in and roles), #133 (shells and
-states), #134 (overview and tasks), #135 (timeline, files and updates). Later portal tickets
+states), #134 (overview and tasks), #135 (timeline, files and updates), #136 (team projects and new project). Later portal tickets
 extend this guide. **Source:**
 ADR-009, Figma 12 Portal — Client (`516:2`), 14 Portal — Motion (`566:127`). The data model
 is in the [Database guide](./database.md) § 7.
@@ -363,3 +363,68 @@ Rules in `content.ts` (unit-tested): `timelineSpan`, `spanPosition`, `stageProgr
   Reduced motion: final state.
 - **New update arrives** (live feed) comes with the updates ticket (#139), which adds the
   Realtime subscription.
+
+## 11. Team projects and new project with client invite (#136)
+
+**What.** The team's landing page lists projects (Figma TM-01, TM-T01, TM-M01), and admins
+start a project and invite its client from one modal (TM-04). Code:
+`src/features/portal/team/projects/`, page `src/app/team/(workspace)/page.tsx`.
+
+### How a project is created (request flow)
+
+```
+New project (client form, lazy chunk)
+  → createProjectAction (server action, actions.ts)
+  → createProject (create-project.ts: rules, testable with fakes)
+      1. viewer is an active admin?                 else forbidden
+      2. zod: names, lead, dates, template, 1–10 emails (normalised, de-duplicated)
+      3. stages = spreadStages(template, start, launch)   never from the browser
+      4. portal_find_client_users(emails)           teammates refused
+      5. create the missing auth users              service role, auth administration only
+      6. portal_create_project(...)                 ONE transaction: project, lead, stages, clients
+         fails → delete the auth users made in step 5; a Project ID collision (23505) retries once
+      7. welcome email per client (their language)  a failure keeps the project
+         sent → portal_log_invite_sent              Client access log (#141)
+  → result: created (Project ID, sent, failed addresses) | invalid | teammate_email | forbidden | failed
+```
+
+The SQL function checks everything again: admins only (42501), the lead is an active
+teammate (P0002), each client's `user_id` is the auth user **of that same email** (22023, so
+a forged call can't attach someone else's account), teammates can't be clients (PT409),
+stages in order and inside the project's dates. The Project ID in the modal comes from
+`portal_next_project_id()`; it's a suggestion, and if it was taken meanwhile the function
+generates a fresh one and returns it.
+
+### Stage templates (`templates.ts`)
+
+One template today, **Standard**: Discovery, Design, Development, Review (weights 2, 3,
+8, 3), then Launch (the launch day) and Care (from launch, open-ended). The working
+stages share the days up to the day before launch, back to back. The same function draws
+the modal's preview and builds the rows on the server. At least 8 days between start
+and launch (two per working stage). The team adjusts stages afterwards (#138).
+
+### Welcome email
+
+`src/features/portal/emails/` (React Email): the Project ID, the sign-in link for the
+client's language (`/<locale>/portal`), and how sign-in works (email + Project ID, a code
+each time). Copy in `Emails.portalWelcome` (EN/PT). The modal's switch can skip it;
+resending is on Client access (#141).
+
+### The list (`list.ts`, `data.ts`)
+
+- One query under the teammate's session (RLS: members see only their projects): stages,
+  ticket statuses and the newest live update per project.
+- Tabs (URL state `?view=`): **Active** (open, launch ahead), **Waiting on client**,
+  **Launched** (launch date passed), **Archived** (closed).
+- Summary: "N launching before <Month>": launches before the first of the month after
+  90 days from today.
+- Progress counts every ticket (the team sees team-only tickets too); the client portal's
+  counts only client-visible ones.
+- Desktop: every column; tablet drops progress, lead and last update; mobile: cards and
+  pill tabs. The modal is centred from tablet up and a bottom sheet on mobile.
+
+### Fake backend (e2e)
+
+`projects/e2e-store.ts`: NB-1234 exists; `admin@` / `member@e2e.example` are teammates
+(refused as clients); a welcome email to `bounce@e2e.example` fails. Spec:
+`tests/e2e/team-projects.spec.ts`.

@@ -521,6 +521,17 @@
       "expiry": "É válido durante 10 minutos. Depois de 3 tentativas erradas, peça um novo.",
       "ignore": "Não pediu para entrar? Pode ignorar este email; ninguém abre o seu projeto sem o código.",
       "footer": "{site} · Portal do cliente"
+    },
+    "portalWelcome": {
+      "subject": "O portal do projeto {project}",
+      "preview": "Entre com este email e o ID do projeto {projectId}.",
+      "heading": "Acompanhe o projeto {project} em tempo real",
+      "intro": "{lead} criou um portal de projeto para {client} na {studio}. Etapas, tarefas, ficheiros e novidades, tudo num só lugar.",
+      "idLabel": "O seu ID do projeto",
+      "howTo": "Entre com este endereço de email ({email}) e o ID do projeto. Enviamos-lhe sempre um código de 6 dígitos; não há palavra-passe para memorizar.",
+      "button": "Abrir o portal",
+      "fallback": "Se o botão não funcionar, copie esta ligação para o seu navegador:",
+      "footer": "Recebe este email porque a {studio} convidou {email} para um projeto. Dúvidas? Responda a este email."
     }
   },
   "Newsletter": {

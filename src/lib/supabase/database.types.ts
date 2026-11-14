@@ -682,6 +682,38 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: string;
       };
+      portal_create_project: {
+        Args: {
+          p_client_name: string;
+          p_clients: Json;
+          p_launches_on: string;
+          p_lead_id: string;
+          p_name: string;
+          p_public_id: string;
+          p_stages: Json;
+          p_starts_on: string;
+        };
+        Returns: {
+          project_id: string;
+          public_id: string;
+        }[];
+      };
+      portal_find_client_users: {
+        Args: { p_emails: string[] };
+        Returns: {
+          email: string;
+          is_teammate: boolean;
+          user_id: string;
+        }[];
+      };
+      portal_log_invite_sent: {
+        Args: { p_email: string; p_project_id: string };
+        Returns: undefined;
+      };
+      portal_next_project_id: {
+        Args: Record<PropertyKey, never>;
+        Returns: string;
+      };
       portal_register_team_wrong_code: {
         Args: { p_email: string };
         Returns: number;
