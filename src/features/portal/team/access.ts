@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 import { isFakeBackendEnabled } from "@/lib/e2e-backend";
 import { getPortalSupabase } from "@/lib/supabase/auth";
 
@@ -26,40 +28,43 @@ export type Teammate = {
 const isRole = (value: unknown): value is TeamRole =>
   value === "admin" || value === "member";
 
-export async function getTeamViewer(): Promise<TeamViewer> {
-  const viewer = await getPortalViewer(E2E_TEAM_COOKIE);
-  if (viewer.status !== "signed_in") return viewer;
+/** Cached per request: the workspace layout and its pages share one read. */
+export const getTeamViewer = cache(
+  async function getTeamViewer(): Promise<TeamViewer> {
+    const viewer = await getPortalViewer(E2E_TEAM_COOKIE);
+    if (viewer.status !== "signed_in") return viewer;
 
-  if (isFakeBackendEnabled()) {
-    const member = fakeTeamMemberById(viewer.userId);
-    return member
-      ? {
-          status: "signed_in",
-          userId: viewer.userId,
-          name: member.name,
-          role: member.role,
-        }
-      : { status: "signed_out" };
-  }
+    if (isFakeBackendEnabled()) {
+      const member = fakeTeamMemberById(viewer.userId);
+      return member
+        ? {
+            status: "signed_in",
+            userId: viewer.userId,
+            name: member.name,
+            role: member.role,
+          }
+        : { status: "signed_out" };
+    }
 
-  const { data } = await (
-    await getPortalSupabase()
-  )
-    .from("team_members")
-    .select("name, role")
-    .eq("user_id", viewer.userId)
-    .eq("active", true)
-    .maybeSingle();
+    const { data } = await (
+      await getPortalSupabase()
+    )
+      .from("team_members")
+      .select("name, role")
+      .eq("user_id", viewer.userId)
+      .eq("active", true)
+      .maybeSingle();
 
-  // Signed in, but not (or no longer) a teammate: a client, or someone removed.
-  if (!data || !isRole(data.role)) return { status: "signed_out" };
-  return {
-    status: "signed_in",
-    userId: viewer.userId,
-    name: data.name,
-    role: data.role,
-  };
-}
+    // Signed in, but not (or no longer) a teammate: a client, or someone removed.
+    if (!data || !isRole(data.role)) return { status: "signed_out" };
+    return {
+      status: "signed_in",
+      userId: viewer.userId,
+      name: data.name,
+      role: data.role,
+    };
+  },
+);
 
 /** Active teammates, admins first, then by name. RLS: teammates only. */
 export async function listTeammates(): Promise<Teammate[]> {

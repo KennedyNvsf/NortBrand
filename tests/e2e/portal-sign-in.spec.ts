@@ -20,12 +20,27 @@ async function requestCode(page: Page, email: string, projectId = PROJECT) {
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Project ID").fill(projectId);
   // A click before React hydrates the form does nothing: retry until the step changes
-  // or a message appears.
+  // (the button goes) or a notice appears (no match, locked, rate limited: the button
+  // stays on the details step).
+  const send = page.getByRole("button", { name: "Send me a code" });
+  const notice = page.getByText(
+    new RegExp(
+      [
+        copy("en", "Portal.signIn.noMatch"),
+        copy("en", "Portal.signIn.locked"),
+        copy("en", "Portal.signIn.rateLimited"),
+      ]
+        .map((text) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+        .join("|"),
+    ),
+  );
   await expect(async () => {
-    await page.getByRole("button", { name: "Send me a code" }).click();
-    await expect(
-      page.getByRole("button", { name: "Send me a code" }),
-    ).toBeHidden({ timeout: 2000 });
+    await send.click();
+    await expect
+      .poll(async () => (await send.isHidden()) || (await notice.count()) > 0, {
+        timeout: 2000,
+      })
+      .toBe(true);
   }).toPass();
 }
 
@@ -98,11 +113,15 @@ test.describe("Track Project", () => {
       "E2E Café website",
     );
 
-    // A click before React hydrates the button does nothing: retry until it acts.
+    // Sign out lives in the account menu (#133). Retry the first click until the menu
+    // has hydrated.
     await expect(async () => {
       await page
-        .getByRole("button", { name: copy("en", "Portal.project.signOut") })
+        .getByRole("button", { name: copy("en", "Portal.shell.account") })
         .click();
+      await page
+        .getByRole("menuitem", { name: copy("en", "Portal.shell.signOut") })
+        .click({ timeout: 2000 });
       await expect(page).toHaveURL(/\/en\/portal$/, { timeout: 3000 });
     }).toPass();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(

@@ -24,6 +24,11 @@ export const motionTokens = {
     accent: { type: "spring", stiffness: 420, damping: 32 },
     /** "pop": a small overshoot, so images land rather than fade. */
     pop: { type: "spring", stiffness: 260, damping: 20 },
+    /**
+     * Portal tab change (Figma 14 Portal — Motion, "Tab change", #133): only the active
+     * marker moves; content swaps instantly.
+     */
+    portalTab: { type: "spring", stiffness: 400, damping: 30 },
   },
 } as const;
 

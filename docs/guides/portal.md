@@ -1,7 +1,7 @@
 # Client portal
 
-**Covers:** #131 (client sign-in), #132 (team sign-in and roles). Later portal tickets
-extend this guide. **Source:**
+**Covers:** #131 (client sign-in), #132 (team sign-in and roles), #133 (shells and
+states). Later portal tickets extend this guide. **Source:**
 ADR-009, Figma 12 Portal — Client (`516:2`), 14 Portal — Motion (`566:127`). The data model
 is in the [Database guide](./database.md) § 7.
 
@@ -195,3 +195,72 @@ Remove (admin)  removeTeammateAction → viewer is admin? not yourself? →
 - **Fake backend:** `admin@e2e.example` (admin), `member@e2e.example`, code 123456;
   invites to `…@outside.example` fall outside the allowed domain. Fake user ids are UUIDs
   derived from the email, so they pass the same validation as real ones.
+
+## 8. The portal shells and states (#133)
+
+**What.** The frame every portal screen sits in, for clients (`/[locale]/portal/[projectId]/…`,
+EN/PT) and the team (`/team/…`, EN), and the states every screen can be in. Page content
+comes with #134 onwards; until then each section shows the designed day-one state.
+
+### Layout at each width (Figma CP-03, CP-T03, CP-M03, TM-01, TM-T01, TM-M01; rules 560:2243)
+
+|            | Desktop ≥ 1024                                                                                                   | Tablet 768–1023        | Mobile < 768                    |
+| ---------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------- | ------------------------------- |
+| Top bar    | 64 px: logo, project switcher, Project ID, "Message your team", account (team: TEAM, search)                     | 64 px, "Message"       | 56 px: logo, mail icon, account |
+| Navigation | 232 px sidebar with counts ("Your team" at the bottom for clients); team boards use the icon rail (`nav="rail"`) | tabs under the top bar | bottom tab bar                  |
+
+`PortalNav` (`src/features/portal/shell/portal-nav.tsx`) draws all four variants from one
+list; the shell renders the one each breakpoint needs (the others are `display: none`, so
+one nav is in the accessibility tree). The active item comes from the URL.
+
+### Runtime
+
+```
+/[locale]/portal/NB-4821/tasks
+  layout.tsx  Suspense(fallback: ShellSkeleton after 300 ms)
+    ShellGate  getPortalViewer() → signed out? → /portal?reason=signed-out
+               getClientShell(id) (React cache, RLS) → null? → notFound()
+               → ClientShell (top bar, nav, "Your team")
+  tasks/page.tsx  Suspense(fallback: PageSkeleton) → H1 + day-one EmptyState
+/team/settings
+  (workspace)/layout.tsx  getTeamShell() (viewer + counts) → null? → /team/sign-in
+  settings/page.tsx  member → ReadOnlyNotice; admin → the settings (#142)
+```
+
+- `getClientShell` reads the project, the client's other projects (switcher), the counts
+  (client-visible tickets, shared files), the project team and its lead (the
+  `mailto:` for "Message your team"; the studio address if the lead is hidden), all under
+  RLS with the client's session. It is wrapped in React `cache()`, so the layout and the
+  page share one read per request.
+- A Project ID the client can't read renders the not-found page. Inside a streamed layout
+  Next answers 200 (the response has started); the page still looks missing.
+
+### States (`src/features/portal/states/`; live at `/team/states`, team only)
+
+| Component                                  | Figma                              | Behaviour                                                        |
+| ------------------------------------------ | ---------------------------------- | ---------------------------------------------------------------- |
+| `Delayed`, `PageSkeleton`, `ShellSkeleton` | CP-08 loading                      | Final layout, only after 300 ms (CSS), no shimmer, no spinner    |
+| `EmptyState`                               | CP-08 new project, TM-09 first run | One sentence on what happens next, at most one action            |
+| `SaveFailedNotice`                         | TM-09 save failed                  | Keeps the typed values; Retry repeats the save; `role="alert"`   |
+| `EditConflictNotice`                       | TM-09 edited by someone else       | "See their change" / "Keep mine"; nothing silently overwritten   |
+| `ConfirmDialog`                            | TM-09 delete                       | Says what's lost; focus starts on Cancel; bottom sheet on mobile |
+| `NoResults`                                | TM-09 search                       | Says what search covers                                          |
+| `ReadOnlyNotice`                           | TM-09 settings · members           | The page exists; changing it doesn't (the server agrees)         |
+| Session ended                              | CP-08                              | The sign-in pages (`?reason=signed-out`)                         |
+
+Toasts use the existing Sonner `Toaster`, mounted in the team shell.
+
+### Motion (14 Portal — Motion)
+
+- **Tab change:** one marker element moves on `motionTokens.spring.portalTab` (400/30,
+  Figma's value); content swaps instantly. Measured from the active link, so it needs
+  only `domAnimation` (no shared-layout bundle). Reduced motion: it jumps.
+- **Loading:** static skeleton after 300 ms, then the content.
+- **Modals:** the dialog's scale and fade (250 ms in, 150 ms out); bottom sheet on mobile.
+- **Never:** page transitions, counting numbers, hover lifts on rows.
+
+### Extending it
+
+- A new client section: add it to `clientNavItems` and its copy under `Portal.shell.nav`
+  (EN and PT), then a page that renders inside the layout.
+- A team board page: render `TeamShell` with `nav="rail"` from that page's own layout.

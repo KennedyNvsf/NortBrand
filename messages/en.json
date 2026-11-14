@@ -696,10 +696,28 @@
         "codeInvalid": "Enter the 6-digit code from the email."
       }
     },
-    "project": {
-      "eyebrow": "Client portal",
-      "comingSoon": "Your project overview is on its way. You're signed in, and this page will show your stages, tasks and updates.",
-      "signOut": "Sign out"
+    "shell": {
+      "projectLabel": "Project",
+      "navLabel": "Project sections",
+      "nav": {
+        "overview": "Overview",
+        "tasks": "Tasks",
+        "timeline": "Timeline",
+        "files": "Files",
+        "updates": "Updates"
+      },
+      "yourTeam": "Your team",
+      "messageTeam": "Message your team",
+      "messageShort": "Message",
+      "account": "Account",
+      "signOut": "Sign out",
+      "switchProject": "Switch project",
+      "loading": "Loading your project"
+    },
+    "states": {
+      "setupTitle": "We're setting up your project.",
+      "setupBody": "Your team will post the first update here within one working day. Until then, your welcome email has everything you need.",
+      "setupAction": "Message your team"
     }
   }
 }

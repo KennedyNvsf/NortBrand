@@ -109,3 +109,117 @@ export const teamPageCopy = {
 } as const;
 
 export type TeamPageCopy = typeof teamPageCopy;
+
+/** The team shell (#133; TM-01 528:189, TM-T01 560:957, TM-M01 559:646). */
+export const teamShellCopy = {
+  badge: "Team",
+  workspace: "Workspace",
+  navLabel: "Workspace sections",
+  nav: {
+    projects: "Projects",
+    myTickets: "My tickets",
+    team: "Team",
+    settings: "Settings",
+  },
+  search: "Search projects and tickets",
+  searchSoon: "Search arrives with the My tickets / Team / Settings ticket.",
+  account: "Account",
+  signOut: "Sign out",
+  loading: "Loading the workspace",
+} as const;
+
+/** Team workspace pages until their content ships (#133; TM-09 states). */
+export const teamPagesCopy = {
+  projects: {
+    title: "Projects",
+    emptyTitle: "No projects yet",
+    emptyBody:
+      "Create a project to give a client their Project ID and their own portal.",
+    emptyMemberBody: "When an admin adds you to a project, it shows up here.",
+    newProject: "New project",
+    listNote: "The full projects table arrives with the projects ticket.",
+  },
+  myTickets: {
+    title: "My tickets",
+    emptyTitle: "Nothing assigned to you",
+    emptyBody: "Tickets you own show up here, most urgent first.",
+  },
+  settings: {
+    title: "Settings",
+    readOnlyTitle: "Only admins can change settings",
+    readOnlyBody: "Ask {admin} if something here needs to change.",
+    back: "Back to projects",
+    adminBody:
+      "Workspace settings (allowed email domain, code limits, notifications) arrive with the Settings ticket.",
+  },
+} as const;
+
+/** The states page (#133): TM-09 and CP-08, live. Team only. */
+export const teamStatesCopy = {
+  metaTitle: "States",
+  eyebrow: "States",
+  title: "Off the happy path",
+  intro:
+    "Every state the portal can be in, as real components. Design reviews them here; pages use the same parts.",
+  loading: {
+    label: "Loading",
+    note: "Only after 300 ms; the final layout, no shimmer.",
+  },
+  empty: {
+    label: "Client · new project",
+    title: "We're setting up your project.",
+    body: "Your team will post the first update here within one working day. Until then, your welcome email has everything you need.",
+    action: "Message your team",
+  },
+  firstRun: {
+    label: "Projects · first run",
+    title: "No projects yet",
+    body: "Create a project to give a client their Project ID and their own portal.",
+    action: "New project",
+  },
+  saveFailed: {
+    label: "Ticket · save failed",
+    field: "Title",
+    value: "Home page build",
+    message:
+      "We couldn't save your changes. Check your connection; your edits are still here.",
+    retry: "Retry",
+    cancel: "Cancel",
+    saved: "Saved",
+  },
+  conflict: {
+    label: "Ticket · edited by someone else",
+    message: "Rui Matos changed the due date to 22 Nov while you were editing.",
+    seeTheirs: "See their change",
+    keepMine: "Keep mine",
+    keptMine: "Kept your version",
+    showingTheirs: "Showing their change",
+  },
+  remove: {
+    label: "Ticket · delete",
+    open: "Delete ticket",
+    title: "Delete “Home page build”?",
+    body: "Atlântico Café will no longer see this task, its checklist or the updates linked to it. This can't be undone.",
+    confirm: "Delete ticket",
+    cancel: "Cancel",
+    deleted: "Ticket deleted",
+  },
+  search: {
+    label: "Search · no results",
+    field: "Search",
+    title: "No results for “{query}”",
+    body: "Search covers project names, Project IDs like NB-4821, and ticket titles.",
+  },
+  readOnly: {
+    label: "Settings · members",
+    title: "Only admins can change settings",
+    body: "Ask Ana Costa if something here needs to change.",
+    action: "Back to projects",
+  },
+  signedOut: {
+    label: "Session ended",
+    title: "You've been signed out.",
+    body: "For your security, sessions end after 30 days. Sign in again with a new code; it takes a minute.",
+    action: "Sign in again",
+  },
+} as const;

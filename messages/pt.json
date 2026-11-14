@@ -696,10 +696,28 @@
         "codeInvalid": "Introduza o código de 6 dígitos do email."
       }
     },
-    "project": {
-      "eyebrow": "Portal do cliente",
-      "comingSoon": "A vista geral do seu projeto está a caminho. Já entrou, e esta página vai mostrar as fases, as tarefas e as novidades.",
-      "signOut": "Sair"
+    "shell": {
+      "projectLabel": "Projeto",
+      "navLabel": "Secções do projeto",
+      "nav": {
+        "overview": "Resumo",
+        "tasks": "Tarefas",
+        "timeline": "Cronograma",
+        "files": "Ficheiros",
+        "updates": "Novidades"
+      },
+      "yourTeam": "A sua equipa",
+      "messageTeam": "Falar com a equipa",
+      "messageShort": "Mensagem",
+      "account": "Conta",
+      "signOut": "Terminar sessão",
+      "switchProject": "Mudar de projeto",
+      "loading": "A carregar o seu projeto"
+    },
+    "states": {
+      "setupTitle": "Estamos a preparar o seu projeto.",
+      "setupBody": "A sua equipa vai publicar a primeira novidade aqui dentro de um dia útil. Até lá, o email de boas-vindas tem tudo o que precisa.",
+      "setupAction": "Falar com a equipa"
     }
   }
 }
