@@ -806,6 +806,65 @@
       "noOwner": "NortBrand team",
       "notFound": "That task isn't available. It may have been moved or made private.",
       "dueToday": "Due today"
+    },
+    "timeline": {
+      "eyebrow": "Timeline",
+      "title": "From first call to launch",
+      "summary": "{stages} stages · started {start} · launch planned for {launch} · {health}",
+      "stage": "Stage",
+      "today": "Today · {day}",
+      "done": "{percent}% done",
+      "from": "From",
+      "stateDone": "Done",
+      "stateCurrent": "In progress",
+      "stateUpcoming": "Upcoming",
+      "chartLabel": "Project timeline, {start} to {end}",
+      "milestonesTitle": "Milestones",
+      "milestonesIntro": "The moments where we check in with you.",
+      "milestoneDone": "Done",
+      "milestoneUpcoming": "Upcoming",
+      "milestonesEmpty": "Your team will add milestones here as the plan takes shape.",
+      "empty": "Your team is planning the stages. They'll appear here soon."
+    },
+    "files": {
+      "eyebrow": "Files",
+      "title": "Files and links",
+      "summary": "{count, plural, one {# item} other {# items}} · the latest was added {day}",
+      "summaryEmpty": "Shared files will appear here.",
+      "groups": {
+        "design": "Design",
+        "documents": "Documents"
+      },
+      "groupIntro": {
+        "design": "Approved designs and brand material.",
+        "documents": "Everything we agreed."
+      },
+      "kinds": {
+        "pdf": "PDF",
+        "zip": "ZIP",
+        "image": "Image"
+      },
+      "download": "Download",
+      "downloadLabel": "Download {name}",
+      "by": "{name} · {day}",
+      "today": "today",
+      "empty": "No files yet. Your team will share designs and documents here."
+    },
+    "updates": {
+      "eyebrow": "Updates",
+      "title": "What's new",
+      "intro": "Posts from your team, newest first. We post every few days.",
+      "groups": {
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "thisWeek": "This week",
+        "earlier": "Earlier"
+      },
+      "needsYou": "Needs you",
+      "milestone": "Milestone",
+      "edited": "edited",
+      "linkedTask": "Task: {title}",
+      "empty": "Your team will post the first update here within one working day."
     }
   }
 }

@@ -259,6 +259,13 @@ functions `portal_check_team_invite`, `portal_add_team_member` and
 of an active project; PT422 outside the allowed domain). `private.portal_bootstrap_first_admin`
 has no grants: the SQL editor only. Tests: `supabase/tests/07_portal_team_access.test.sql`.
 
+### Milestones and file storage (#135)
+
+`20261116120000_portal_milestones_and_files_storage.sql` adds `project_milestones` (clients
+read, the project's team writes) and the private `portal-files` bucket, whose read rule
+follows `project_files` RLS. Local Storage is on; CI's database job starts Storage and
+resets. Tests: `supabase/tests/08_portal_milestones_files.test.sql`.
+
 ### Rules for portal work
 
 - Read and write portal tables with the signed-in user's Supabase client, never the

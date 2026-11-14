@@ -1,5 +1,5 @@
 import type { PortalTicket } from "./domain";
-import type { ChecklistItem, ProjectView } from "./data";
+import type { ChecklistItem, Milestone, PortalFile, ProjectView } from "./data";
 
 /*
  * The fake backend's project (#134), modelled on Figma CP-03/CP-04: NB-1234 "E2E Café
@@ -170,6 +170,8 @@ const CHECKLISTS: Record<string, ChecklistItem[]> = {
 
 export const E2E_PROJECT_VIEW: ProjectView & {
   checklists: Record<string, ChecklistItem[]>;
+  milestones: Milestone[];
+  files: PortalFile[];
 } = {
   id: "00000000-0000-4000-b000-00000000e2e0",
   publicId: "NB-1234",
@@ -186,6 +188,9 @@ export const E2E_PROJECT_VIEW: ProjectView & {
       createdAt: "2026-11-14T10:20:00Z",
       authorName: "Tiago Sousa",
       ticketIds: [],
+      highlight: false,
+      needsClient: false,
+      editedAt: null,
     },
     {
       id: "u2",
@@ -193,6 +198,9 @@ export const E2E_PROJECT_VIEW: ProjectView & {
       createdAt: "2026-11-13T17:45:00Z",
       authorName: "Rui Matos",
       ticketIds: ["e2e-t10"],
+      highlight: false,
+      needsClient: false,
+      editedAt: "2026-11-13T18:05:00Z",
     },
     {
       id: "u3",
@@ -200,6 +208,9 @@ export const E2E_PROJECT_VIEW: ProjectView & {
       createdAt: "2026-11-09T09:12:00Z",
       authorName: "Ana Costa",
       ticketIds: ["e2e-t9"],
+      highlight: false,
+      needsClient: true,
+      editedAt: null,
     },
     {
       id: "u4",
@@ -207,7 +218,92 @@ export const E2E_PROJECT_VIEW: ProjectView & {
       createdAt: "2026-11-03T09:00:00Z",
       authorName: "Ana Costa",
       ticketIds: [],
+      highlight: false,
+      needsClient: false,
+      editedAt: null,
+    },
+    {
+      id: "u5",
+      body: "Design stage complete. Thank you for the quick, clear feedback.",
+      createdAt: "2026-10-31T16:00:00Z",
+      authorName: "Ana Costa",
+      ticketIds: [],
+      highlight: true,
+      needsClient: false,
+      editedAt: null,
     },
   ],
   checklists: CHECKLISTS,
+  milestones: [
+    {
+      id: "m1",
+      title: "Kick-off call",
+      body: "We agreed goals, pages and the launch date.",
+      dueOn: "2026-10-01",
+      done: true,
+    },
+    {
+      id: "m2",
+      title: "Design sign-off",
+      body: "You approved the designs for every page.",
+      dueOn: "2026-10-31",
+      done: true,
+    },
+    {
+      id: "m3",
+      title: "Staging walkthrough",
+      body: "We'll take you through the working site and collect your feedback.",
+      dueOn: "2026-12-16",
+      done: false,
+    },
+    {
+      id: "m4",
+      title: "Launch",
+      body: "The site goes live.",
+      dueOn: "2027-02-12",
+      done: false,
+    },
+  ],
+  files: [
+    {
+      id: "00000000-0000-4000-a000-00000000f2e1",
+      name: "Home page design",
+      sizeBytes: 4_200_000,
+      contentType: "application/pdf",
+      createdAt: "2026-10-31T15:00:00Z",
+      uploaderName: "Tiago Sousa",
+    },
+    {
+      id: "00000000-0000-4000-a000-00000000f2e2",
+      name: "Brand assets",
+      sizeBytes: 18_000_000,
+      contentType: "application/zip",
+      createdAt: "2026-10-20T15:00:00Z",
+      uploaderName: "Tiago Sousa",
+    },
+    {
+      id: "00000000-0000-4000-a000-00000000f2e3",
+      name: "Proposal",
+      sizeBytes: 1_100_000,
+      contentType: "application/pdf",
+      createdAt: "2026-09-24T10:00:00Z",
+      uploaderName: "Ana Costa",
+    },
+    {
+      id: "00000000-0000-4000-a000-00000000f2e4",
+      name: "Signed agreement",
+      sizeBytes: 320_000,
+      contentType: "application/pdf",
+      createdAt: "2026-09-29T10:00:00Z",
+      uploaderName: "Ana Costa",
+    },
+    {
+      id: "00000000-0000-4000-a000-00000000f2e5",
+      name: "Moodboard",
+      sizeBytes: 2_400_000,
+      contentType: "image/png",
+      createdAt: "2026-10-11T10:00:00Z",
+      uploaderName: "Tiago Sousa",
+    },
+  ],
 };

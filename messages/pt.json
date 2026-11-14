@@ -806,6 +806,65 @@
       "noOwner": "Equipa NortBrand",
       "notFound": "Esta tarefa não está disponível. Pode ter sido movida ou tornada privada.",
       "dueToday": "Prazo hoje"
+    },
+    "timeline": {
+      "eyebrow": "Cronograma",
+      "title": "Da primeira chamada ao lançamento",
+      "summary": "{stages} etapas · início a {start} · lançamento previsto para {launch} · {health}",
+      "stage": "Etapa",
+      "today": "Hoje · {day}",
+      "done": "{percent}% concluída",
+      "from": "A partir de",
+      "stateDone": "Concluída",
+      "stateCurrent": "Em curso",
+      "stateUpcoming": "Por começar",
+      "chartLabel": "Cronograma do projeto, de {start} a {end}",
+      "milestonesTitle": "Marcos",
+      "milestonesIntro": "Os momentos em que falamos consigo.",
+      "milestoneDone": "Concluído",
+      "milestoneUpcoming": "Por vir",
+      "milestonesEmpty": "A equipa vai adicionar os marcos aqui à medida que o plano ganha forma.",
+      "empty": "A equipa está a planear as etapas. Vão aparecer aqui em breve."
+    },
+    "files": {
+      "eyebrow": "Ficheiros",
+      "title": "Ficheiros e ligações",
+      "summary": "{count, plural, one {# item} other {# itens}} · o mais recente foi adicionado {day}",
+      "summaryEmpty": "Os ficheiros partilhados vão aparecer aqui.",
+      "groups": {
+        "design": "Design",
+        "documents": "Documentos"
+      },
+      "groupIntro": {
+        "design": "Designs aprovados e materiais da marca.",
+        "documents": "Tudo o que combinámos."
+      },
+      "kinds": {
+        "pdf": "PDF",
+        "zip": "ZIP",
+        "image": "Imagem"
+      },
+      "download": "Descarregar",
+      "downloadLabel": "Descarregar {name}",
+      "by": "{name} · {day}",
+      "today": "hoje",
+      "empty": "Ainda não há ficheiros. A equipa vai partilhar aqui designs e documentos."
+    },
+    "updates": {
+      "eyebrow": "Novidades",
+      "title": "O que há de novo",
+      "intro": "Publicações da sua equipa, as mais recentes primeiro. Publicamos de poucos em poucos dias.",
+      "groups": {
+        "today": "Hoje",
+        "yesterday": "Ontem",
+        "thisWeek": "Esta semana",
+        "earlier": "Anteriores"
+      },
+      "needsYou": "Precisa de si",
+      "milestone": "Marco",
+      "edited": "editado",
+      "linkedTask": "Tarefa: {title}",
+      "empty": "A sua equipa vai publicar aqui a primeira novidade dentro de um dia útil."
     }
   }
 }
