@@ -60,7 +60,10 @@ test.describe("site nav", () => {
     test.skip(!isDesktop(page), "desktop only");
 
     const nav = page.getByRole("navigation", { name: "Main" });
-    await expect(nav.getByRole("link")).toHaveCount(4);
+    await expect(nav.getByRole("link")).toHaveCount(5);
+    await expect(
+      nav.getByRole("link", { name: "Track Project" }),
+    ).toHaveAttribute("href", "/en/portal");
     await expect(nav.locator('[aria-current="page"]')).toHaveCount(0);
   });
 
@@ -73,6 +76,10 @@ test.describe("site nav", () => {
     const trigger = page.getByRole("button", { name: "Open menu" });
     const dialog = await openMenu(page);
     await expect(dialog.getByRole("link", { name: "Services" })).toBeVisible();
+    // The portal entry point is in the menu too (lead's decision, 2026-11-13).
+    await expect(
+      dialog.getByRole("link", { name: "Track Project" }),
+    ).toBeVisible();
 
     for (let i = 0; i < 12; i += 1) await page.keyboard.press("Tab");
     expect(

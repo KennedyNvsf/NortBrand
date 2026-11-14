@@ -207,7 +207,8 @@ token_refresh = 150
 # Number of sign up and sign-in requests that can be made in a 5 minute interval per IP address (excludes anonymous users).
 sign_in_sign_ups = 30
 # Number of OTP / Magic link verifications that can be made in a 5 minute interval per IP address.
-token_verifications = 30
+# Portal (#131): the app allows 3 tries per code; this caps direct calls to Supabase.
+token_verifications = 10
 # Number of Web3 logins that can be made in a 5 minute interval per IP address.
 web3 = 30
 
@@ -228,11 +229,13 @@ enable_confirmations = false
 # If enabled, users will need to reauthenticate or have logged in recently to change their password.
 secure_password_change = false
 # Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
-max_frequency = "1s"
+# Portal (#131): one code a minute, matching the sign-in form's resend countdown.
+max_frequency = "60s"
 # Number of characters used in the email OTP.
 otp_length = 6
 # Number of seconds before the email OTP expires (defaults to 1 hour).
-otp_expiry = 3600
+# Portal (#131): codes last 10 minutes (private.portal_code_lifetime() matches).
+otp_expiry = 600
 
 # Use a production-ready SMTP server
 # [auth.email.smtp]
@@ -243,6 +246,11 @@ otp_expiry = 3600
 # pass = "env(SENDGRID_API_KEY)"
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
+
+# The portal's sign-in code (#131): generated from React Email, EN/PT by user_metadata.locale.
+[auth.email.template.magic_link]
+subject = "NortBrand: your sign-in code / o seu código de acesso"
+content_path = "./supabase/templates/portal-code.html"
 
 # Uncomment to customize email template
 # [auth.email.template.invite]

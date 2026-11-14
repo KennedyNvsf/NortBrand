@@ -19,7 +19,9 @@
     "newsletterUnsubscribeTitle": "Cancelar subscrição",
     "newsletterUnsubscribeDescription": "Deixe de receber a newsletter da NortBrand.",
     "blogTitle": "Blog",
-    "blogDescription": "Ideias sobre design, marca e sites que funcionam, escritas pelo estúdio NortBrand."
+    "blogDescription": "Ideias sobre design, marca e sites que funcionam, escritas pelo estúdio NortBrand.",
+    "portalTitle": "Acompanhe o seu projeto",
+    "portalDescription": "Entre para acompanhar o seu projeto NortBrand: fases, tarefas, ficheiros e novidades."
   },
   "Common": {
     "skipToContent": "Saltar para o conteúdo",
@@ -34,6 +36,7 @@
     "services": "Serviços",
     "about": "Sobre nós",
     "blog": "Blog",
+    "trackProject": "Acompanhar projeto",
     "contact": "Contactos",
     "openMenu": "Abrir menu",
     "closeMenu": "Fechar menu",
@@ -509,6 +512,15 @@
       "fallback": "Se o botão não funcionar, copie esta ligação para o seu navegador:",
       "ignore": "Não fez este pedido? Ignore este email e não voltará a receber notícias nossas.",
       "footer": "Recebeu este email porque este endereço foi introduzido no formulário da newsletter em {site}."
+    },
+    "portalCode": {
+      "preview": "O seu código de 6 dígitos para abrir o projeto.",
+      "heading": "O seu código de acesso",
+      "intro": "Use este código para abrir o seu projeto no portal do cliente {studio}.",
+      "codeLabel": "O seu código",
+      "expiry": "É válido durante 10 minutos. Depois de 3 tentativas erradas, peça um novo.",
+      "ignore": "Não pediu para entrar? Pode ignorar este email; ninguém abre o seu projeto sem o código.",
+      "footer": "{site} · Portal do cliente"
     }
   },
   "Newsletter": {
@@ -628,5 +640,66 @@
     "moreArticles": "Mais artigos",
     "keepReading": "Continue a ler",
     "relatedTitle": "Mais do <indent><greenUnderline>estúdio</greenUnderline></indent>"
+  },
+  "Portal": {
+    "signIn": {
+      "eyebrow": "Acompanhe o seu projeto",
+      "title": "Entre no seu projeto.",
+      "intro": "Use o email que temos registado e o ID do projeto que está no seu email de boas-vindas.",
+      "email": "Email",
+      "emailPlaceholder": "nome@empresa.pt",
+      "projectId": "ID do projeto",
+      "projectIdPlaceholder": "NB-0000",
+      "projectIdHint": "Está no seu email de boas-vindas da NortBrand.",
+      "send": "Enviar código",
+      "sending": "A enviar…",
+      "sendNote": "Enviamos-lhe um código de 6 dígitos por email. Sem palavras-passe.",
+      "lostId": "Perdeu o ID do projeto?",
+      "contactUs": "Contacte-nos",
+      "noMatch": "Não encontrámos um projeto para esse email e ID. Verifique o seu email de boas-vindas ou contacte-nos.",
+      "locked": "Demasiados códigos errados. Por segurança, a entrada fica em pausa durante 15 minutos.",
+      "rateLimited": "Demasiados pedidos. Aguarde alguns minutos e tente novamente.",
+      "failed": "Algo correu mal do nosso lado. Tente novamente dentro de momentos.",
+      "codeTitle": "Verifique o seu email.",
+      "codeIntro": "Enviámos um código de 6 dígitos para {email}. É válido durante 10 minutos.",
+      "codeLabel": "Código de 6 dígitos",
+      "codeSubmit": "Abrir o meu projeto",
+      "codeChecking": "A verificar…",
+      "codeWrongOne": "Esse código não corresponde. Tem mais 1 tentativa.",
+      "codeWrongOther": "Esse código não corresponde. Tem mais {tries} tentativas.",
+      "resendWait": "Não recebeu? Pode reenviar dentro de",
+      "resendPrompt": "Não recebeu?",
+      "resendAction": "Enviar novo código",
+      "codeSentAgain": "Enviámos um novo código.",
+      "wrongAddress": "Email errado?",
+      "useDifferentEmail": "Usar outro email",
+      "expiredTitle": "Esse código expirou.",
+      "expiredBody": "Por segurança, os códigos só funcionam durante 10 minutos. Enviamos um novo para {email}.",
+      "expiredAction": "Enviar novo código",
+      "signedOutTitle": "A sua sessão terminou.",
+      "signedOutBody": "Por segurança, as sessões terminam ao fim de 30 dias. Entre novamente com um novo código; demora um minuto.",
+      "signedOutAction": "Entrar novamente",
+      "brandEyebrow": "Portal do cliente",
+      "brandTitle": "O seu projeto,<br></br>à vista.",
+      "brandBody": "Veja no que estamos a trabalhar, o que já está pronto e o que vem a seguir. A qualquer hora, em qualquer dispositivo.",
+      "stages": {
+        "discovery": "Descoberta",
+        "design": "Design",
+        "development": "Desenvolvimento",
+        "review": "Revisão",
+        "launch": "Lançamento",
+        "care": "Acompanhamento"
+      },
+      "errors": {
+        "emailInvalid": "Introduza um email válido.",
+        "projectIdInvalid": "Introduza o ID do projeto, por exemplo NB-4821.",
+        "codeInvalid": "Introduza o código de 6 dígitos do email."
+      }
+    },
+    "project": {
+      "eyebrow": "Portal do cliente",
+      "comingSoon": "A vista geral do seu projeto está a caminho. Já entrou, e esta página vai mostrar as fases, as tarefas e as novidades.",
+      "signOut": "Sair"
+    }
   }
 }

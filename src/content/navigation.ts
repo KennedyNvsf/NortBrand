@@ -10,6 +10,9 @@ export const navItems = [
   { key: "services", href: "/services" },
   { key: "about", href: "/about" },
   { key: "blog", href: "/blog" },
+  // The client portal's entry point (Figma Nav 514:399, ADR-009). Desktop nav and the
+  // tablet/mobile menu; not the footer (lead's decision, 2026-11-13).
+  { key: "trackProject", href: "/portal" },
   { key: "contact", href: "/contact" },
 ] as const satisfies readonly { key: string; href: `/${string}` }[];
 

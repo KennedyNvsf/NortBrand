@@ -62,7 +62,10 @@ export async function SiteFooter() {
   const nav = await getTranslations("Nav");
   const serviceNames = await getTranslations("ServiceNames");
   const year = await getCopyrightYear();
-  const companyLinks = navItems.filter(({ key }) => key !== "services");
+  // Services has its own column; Track Project is nav-only (lead's decision, 2026-11-13).
+  const companyLinks = navItems.filter(
+    ({ key }) => key !== "services" && key !== "trackProject",
+  );
 
   return (
     <footer className="bg-bg-surface">

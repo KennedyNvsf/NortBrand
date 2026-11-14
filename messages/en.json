@@ -19,7 +19,9 @@
     "newsletterUnsubscribeTitle": "Unsubscribe",
     "newsletterUnsubscribeDescription": "Stop receiving the NortBrand newsletter.",
     "blogTitle": "Blog",
-    "blogDescription": "Ideas on design, branding and building websites that work, from the NortBrand studio."
+    "blogDescription": "Ideas on design, branding and building websites that work, from the NortBrand studio.",
+    "portalTitle": "Track your project",
+    "portalDescription": "Sign in to follow your NortBrand project: stages, tasks, files and updates."
   },
   "Common": {
     "skipToContent": "Skip to content",
@@ -34,6 +36,7 @@
     "services": "Services",
     "about": "About",
     "blog": "Blog",
+    "trackProject": "Track Project",
     "contact": "Contact",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
@@ -509,6 +512,15 @@
       "fallback": "If the button doesn’t work, copy this link into your browser:",
       "ignore": "Didn’t ask for this? Ignore this email and you won’t hear from us.",
       "footer": "You’re receiving this because this address was entered in the newsletter form on {site}."
+    },
+    "portalCode": {
+      "preview": "Your 6-digit code to open your project.",
+      "heading": "Your sign-in code",
+      "intro": "Use this code to open your project in the {studio} client portal.",
+      "codeLabel": "Your code",
+      "expiry": "It works for 10 minutes. After 3 wrong tries, ask for a new one.",
+      "ignore": "Didn't ask to sign in? You can ignore this email; nobody can open your project without the code.",
+      "footer": "{site} · Client portal"
     }
   },
   "Newsletter": {
@@ -628,5 +640,66 @@
     "moreArticles": "More articles",
     "keepReading": "Keep reading",
     "relatedTitle": "More from <indent>the <greenUnderline>studio</greenUnderline></indent>"
+  },
+  "Portal": {
+    "signIn": {
+      "eyebrow": "Track your project",
+      "title": "Sign in to your project.",
+      "intro": "Use the email we have on file and the Project ID from your welcome email.",
+      "email": "Email",
+      "emailPlaceholder": "you@company.com",
+      "projectId": "Project ID",
+      "projectIdPlaceholder": "NB-0000",
+      "projectIdHint": "It's in your welcome email from NortBrand.",
+      "send": "Send me a code",
+      "sending": "Sending…",
+      "sendNote": "We'll email you a 6-digit code. No password to remember.",
+      "lostId": "Lost your Project ID?",
+      "contactUs": "Contact us",
+      "noMatch": "We couldn't find a project for that email and Project ID. Check your welcome email, or contact us.",
+      "locked": "Too many wrong codes. For your security, sign-in is paused for 15 minutes.",
+      "rateLimited": "Too many requests. Please wait a few minutes and try again.",
+      "failed": "Something went wrong on our side. Please try again in a moment.",
+      "codeTitle": "Check your email.",
+      "codeIntro": "We sent a 6-digit code to {email}. It expires in 10 minutes.",
+      "codeLabel": "6-digit code",
+      "codeSubmit": "Open my project",
+      "codeChecking": "Checking…",
+      "codeWrongOne": "That code didn't match. You have 1 try left.",
+      "codeWrongOther": "That code didn't match. You have {tries} tries left.",
+      "resendWait": "Didn't get it? You can resend in",
+      "resendPrompt": "Didn't get it?",
+      "resendAction": "Send a new code",
+      "codeSentAgain": "We sent a new code.",
+      "wrongAddress": "Wrong address?",
+      "useDifferentEmail": "Use a different email",
+      "expiredTitle": "That code has expired.",
+      "expiredBody": "For your security, codes only work for 10 minutes. We'll send a fresh one to {email}.",
+      "expiredAction": "Send a new code",
+      "signedOutTitle": "You've been signed out.",
+      "signedOutBody": "For your security, sessions end after 30 days. Sign in again with a new code; it takes a minute.",
+      "signedOutAction": "Sign in again",
+      "brandEyebrow": "Client portal",
+      "brandTitle": "Your project,<br></br>in the open.",
+      "brandBody": "See what we're working on, what's finished and what comes next. Any time, from any device.",
+      "stages": {
+        "discovery": "Discovery",
+        "design": "Design",
+        "development": "Development",
+        "review": "Review",
+        "launch": "Launch",
+        "care": "Care"
+      },
+      "errors": {
+        "emailInvalid": "Enter a valid email address.",
+        "projectIdInvalid": "Enter your Project ID, like NB-4821.",
+        "codeInvalid": "Enter the 6-digit code from the email."
+      }
+    },
+    "project": {
+      "eyebrow": "Client portal",
+      "comingSoon": "Your project overview is on its way. You're signed in, and this page will show your stages, tasks and updates.",
+      "signOut": "Sign out"
+    }
   }
 }

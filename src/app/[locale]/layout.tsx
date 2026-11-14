@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { locale as rootLocale } from "next/root-params";
+import { Suspense } from "react";
 
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { JsonLd } from "@/components/site/json-ld";
@@ -72,10 +73,14 @@ export default async function LocaleLayout({
             {children}
             {/* Cookie banner and preferences on every page (ADR-007, #42). */}
             <ConsentManager />
-            {/* GA4, only after analytics consent (#43). */}
-            <GoogleAnalytics
-              measurementId={publicEnv.NEXT_PUBLIC_GA_MEASUREMENT_ID}
-            />
+            {/* GA4, only after analytics consent (#43). It reads the pathname for page
+                views, which is request data on routes with unknown params (the portal,
+                #131), so it sits in its own Suspense boundary. It renders nothing. */}
+            <Suspense fallback={null}>
+              <GoogleAnalytics
+                measurementId={publicEnv.NEXT_PUBLIC_GA_MEASUREMENT_ID}
+              />
+            </Suspense>
           </MotionProvider>
         </NextIntlClientProvider>
         {/* Organization on every page (brief, "SEO"). */}
