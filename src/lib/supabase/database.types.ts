@@ -613,6 +613,22 @@ export type Database = {
         Returns: boolean;
       };
       mark_consultation_notified: { Args: { p_id: string }; Returns: boolean };
+      portal_begin_client_sign_in: {
+        Args: { p_email: string; p_ip_hash: string; p_public_id: string };
+        Returns: string;
+      };
+      portal_code_state: {
+        Args: { p_email: string; p_public_id: string };
+        Returns: string;
+      };
+      portal_complete_client_sign_in: {
+        Args: { p_public_id: string };
+        Returns: string;
+      };
+      portal_register_wrong_code: {
+        Args: { p_email: string; p_public_id: string };
+        Returns: number;
+      };
       submit_consultation_request: {
         Args: {
           p_email: string;

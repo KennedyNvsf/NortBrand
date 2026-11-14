@@ -22,6 +22,8 @@ export const routes = [
     noindex: true,
   },
   { name: "Blog", path: "/blog" },
+  // Track Project (#131): the client portal's sign-in, private by design (ADR-009).
+  { name: "Track Project", path: "/portal", noindex: true },
   { name: "404 (unknown page)", path: "/no-such-page", notFound: true },
   // Posts have a slug per language, so blog-post.spec.ts checks them; the harness
   // checks that an unknown slug is the designed 404 in both languages.

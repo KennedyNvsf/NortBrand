@@ -79,9 +79,10 @@ React Email · Sanity (blog only) · Sentry · Vitest · Playwright · pnpm · N
   `unsubscribe_newsletter`. They are rate-limited and transactional, and each is safe to call
   directly with the public anon key (tokens are verified in SQL). RLS is enabled with no
   policies.
-- **ADR-006, i18n.** Routes live under `/[locale]` (`en`, `pt`). Middleware handles only the
-  bare `/`, in this order: preference cookie, then `Accept-Language`, then `pt`. Prefixed URLs
-  are never redirected. Emit `hreflang` for `en`, `pt` and `x-default`.
+- **ADR-006, i18n.** Routes live under `/[locale]` (`en`, `pt`). Middleware (`src/proxy.ts`)
+  negotiates the locale only on the bare `/`, in this order: preference cookie, then
+  `Accept-Language`, then `pt`. Prefixed URLs are never redirected. On portal paths it only
+  refreshes the Supabase session (ADR-009). Emit `hreflang` for `en`, `pt` and `x-default`.
 - **ADR-008, `nortbrand.pt` is the only domain** (`nortbrand.com` belongs to someone else).
   Both languages live under it; `www` redirects to the apex in Vercel, and the app has no
   host redirects. Email sends from `send.nortbrand.pt`.
@@ -120,7 +121,7 @@ src/app/api/revalidate/  signed Sanity webhook
 src/app/api/newsletter/  one-click unsubscribe (RFC 8058), Resend webhook; api/health/newsletter checks the Vault secret
 src/components/ui/       shadcn primitives restyled to tokens
 src/components/site/     SiteNav, SiteFooter, CtaBand, StickyCta, Logo, shared primitives
-src/features/            consultation/, newsletter/, blog/, consent/, promo/
+src/features/            consultation/, newsletter/, blog/, consent/, promo/, portal/
 src/content/             typed services, FAQ, site config (contact details live ONLY here)
 src/i18n/                next-intl routing + request config
 src/lib/                 supabase, sanity, resend, analytics clients
@@ -272,6 +273,18 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   Roles: `admin`, `member`, enforced in SQL and in every server action.
 - **Service-role key:** only in `src/lib/supabase/admin.ts` (`server-only`), only for auth
   administration. Never for table reads or writes.
+- **Client sign-in (#131, docs/guides/portal.md):** `src/features/portal/auth/`. Pages
+  `/[locale]/portal` (sign-in, inside the site chrome) and `/[locale]/portal/[projectId]`
+  (placeholder until #133/#134). Portal pages read the session inside Suspense (Cache
+  Components) and render per request; marketing pages stay static. The session client is
+  `getPortalSupabase()` (`src/lib/supabase/auth.ts`); `getSupabase()` stays session-less.
+  Sessions end after 30 days through a signed marker cookie (Supabase's time-boxed
+  sessions need Pro). Sign-in strings reach the client as props, not through
+  `CLIENT_MESSAGE_PATHS`. The code email is generated: `supabase/templates/portal-code.html`
+  is a file snapshot (`pnpm test -- -u`), pasted into each hosted project.
+- **Playwright:** `portal-sign-in.spec.ts` uses the fake backend (NB-1234, emails
+  `client…@e2e.example`, code 123456). Find headings by role: Next keeps the previous page
+  in the DOM, hidden, after a navigation.
 - **Email:** Supabase sends codes through custom SMTP on Resend; app emails use the
   existing Resend client.
 - **Schema (#130, docs/guides/database.md § 7):** the project is the tenant; RLS policies

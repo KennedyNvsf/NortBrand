@@ -151,16 +151,44 @@ launch:
 
 1. **Authentication → Sign In / Providers:** keep "Allow new users to sign up" **off**
    (users exist only by invitation). Under **Email**, keep the provider on, and set the
-   **email OTP length** to 6 and the **OTP expiry** to 600 seconds (10 minutes).
-2. **Authentication → Sessions:** sessions last **30 days** (inactivity timeout 30 days).
-3. **Authentication → Emails → SMTP settings:** enable custom SMTP with Resend
+   **email OTP length** to 6, the **OTP expiry** to 600 seconds (10 minutes) and the
+   minimum interval between emails to 60 seconds (the form's resend countdown).
+2. **Authentication → Rate Limits:** token verifications **10** per 5 minutes per IP. The
+   app allows 3 tries per code; this caps anyone calling Supabase's verify endpoint
+   directly (tech debt). Emails sent: **30** per hour (the default of 2 is for Supabase's
+   built-in sender; the app already limits code requests to 10 per IP per hour and 200
+   in total).
+3. **Sessions: nothing to set.** Time-boxed sessions are a Pro feature. The app ends
+   portal sessions after 30 days itself, with a signed marker cookie
+   (`src/features/portal/auth/session-marker.ts`).
+4. **Authentication → Emails → Templates → Magic Link:** subject
+   `NortBrand: your sign-in code / o seu código de acesso`, body: the whole of
+   `supabase/templates/portal-code.html` (generated from React Email; EN or PT by the
+   user's `locale` metadata). Paste it again whenever that file changes.
+5. **Authentication → Emails → SMTP settings:** enable custom SMTP with Resend
    (host `smtp.resend.com`, port 465, user `resend`, password: a Resend API key with
    sending access; sender `NortBrand <hello@send.nortbrand.pt>`). Supabase's built-in
    sender allows only a few emails an hour and is not meant for production.
-4. **Authentication → URL Configuration:** set the site URL to the environment's
+6. **Authentication → URL Configuration:** set the site URL to the environment's
    `NEXT_PUBLIC_SITE_URL`.
 
-The code email's design comes with #131. Nothing here costs money on the current plans.
+**Applied (2026-11-14, #131):** `nortbrand-dev`, through the Management API, sender
+`NortBrand <onboarding@resend.dev>` (dev's Resend test sender, which only delivers to the
+Resend account's own address). `nortbrand-prod` still needs the same settings with the
+`send.nortbrand.pt` sender before launch.
+
+The local stack gets the same settings from `supabase/config.toml`. Nothing here costs
+money on the current plans.
+
+**Portal migrations pushed (2026-11-13, lead's approval):** `20261113120000_portal_schema`
+to `nortbrand-dev`, checked, then to `nortbrand-prod`. Both histories match the repository
+(3/3), and the public key is refused on every portal table (401 / `42501`). The CLI is
+linked back to `nortbrand-dev`.
+
+**If `supabase db push` fails with "Failed to create login role … connection timeout"
+(status 544)** while the dashboard says healthy: the project's database has stopped
+answering Supabase's own API. Restart the project (**Project Settings → General → Restart
+project**); it keeps all data. This happened to `nortbrand-dev` on 2026-11-13.
 
 ### Keep-alive (Free plan trial, #101)
 

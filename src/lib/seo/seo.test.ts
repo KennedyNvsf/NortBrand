@@ -56,9 +56,13 @@ describe("buildSitemap", () => {
 });
 
 describe("buildRobots", () => {
-  it("allows crawling in production except the Studio and API, with the sitemap", () => {
+  it("allows crawling in production except the Studio, API and portal, with the sitemap", () => {
     expect(buildRobots(SITE, { preview: false })).toEqual({
-      rules: { userAgent: "*", allow: "/", disallow: ["/studio", "/api/"] },
+      rules: {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/studio", "/api/", "/en/portal", "/pt/portal"],
+      },
       sitemap: "https://nortbrand.pt/sitemap.xml",
     });
   });

@@ -63,8 +63,9 @@ export function buildSitemap(
 }
 
 /**
- * Production: crawl everything except the Sanity Studio and API routes, and point to
- * the sitemap. Preview deployments: disallow everything (pages are noindex as well).
+ * Production: crawl everything except the Sanity Studio, API routes and the client portal
+ * (ADR-009: signed-in pages, also noindex), and point to the sitemap. Preview
+ * deployments: disallow everything (pages are noindex as well).
  */
 export function buildRobots(
   siteUrl: string,
@@ -74,7 +75,15 @@ export function buildRobots(
     return { rules: { userAgent: "*", disallow: "/" } };
   }
   return {
-    rules: { userAgent: "*", allow: "/", disallow: ["/studio", "/api/"] },
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      disallow: [
+        "/studio",
+        "/api/",
+        ...routing.locales.map((locale) => `/${locale}/portal`),
+      ],
+    },
     sitemap: absolute(siteUrl, "/sitemap.xml"),
   };
 }
