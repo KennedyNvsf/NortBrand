@@ -8,6 +8,8 @@ import { findSmallTouchTargets } from "./touch-targets";
  * Client overview and tasks (#134) on the fake backend's project (src/features/portal/
  * overview/e2e-fixture.ts): NB-1234 in Development, 14 client-visible tasks, 8 done (57%),
  * "Menu photos for the menu page" waiting on the client, launch 12 Feb 2027.
+ * Text assertions match visible elements only: Next can keep a hidden copy of streamed
+ * content in the DOM (seen on CI), and getByText also matches hidden elements.
  */
 
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
@@ -131,7 +133,9 @@ test.describe("Client tasks", () => {
     await expect(detail).toBeVisible();
 
     await page.goto(`/en/portal/${PROJECT}/tasks?task=10`);
-    await expect(page.getByText("3 of 5")).toBeVisible();
+    await expect(
+      page.getByText("3 of 5").filter({ visible: true }),
+    ).toBeVisible();
     await expect(
       page.getByText("Hero and menu highlights are on staging."),
     ).toBeVisible();
@@ -174,7 +178,9 @@ test.describe("Client tasks", () => {
     await signIn(page);
     await page.goto(`/en/portal/${PROJECT}/tasks?task=999`);
     await expect(
-      page.getByText(copy("en", "Portal.tasks.notFound")),
+      page
+        .getByText(copy("en", "Portal.tasks.notFound"))
+        .filter({ visible: true }),
     ).toBeVisible();
   });
 });
