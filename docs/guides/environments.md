@@ -197,6 +197,8 @@ money on the current plans.
 
 **Stage management (2026-11-15, lead's approval):** `20261119120000_portal_stage_management` pushed to `nortbrand-dev` and `nortbrand-prod` after #138 merged (history 9/9 on both; the five functions are SECURITY INVOKER and `anon` cannot execute them, checked by query). The CLI is linked back to `nortbrand-dev`.
 
+**Updates and digest (2026-11-15, lead's approval):** `20261120120000_portal_updates_digest` pushed to `nortbrand-dev` (second attempt; the first hit a pooler auth timeout and changed nothing) and `nortbrand-prod` after #139 merged (history 10/10 on both). Prod's Vault `portal_cron_secret` was set by the lead (checked for presence and length only); `https://nortbrand.pt/api/portal/digest` answers 401 without the secret. Dev has no cron secret, so its digest doesn't run.
+
 **Client digest (#139):** set `CRON_SECRET` (32+ characters, e.g. `openssl rand -base64 48`) in Vercel for Production and Preview, and put the same value in each Supabase project's Vault: `select vault.create_secret('<CRON_SECRET>', 'portal_cron_secret');`. Vercel Cron calls `/api/portal/digest` at 17:00 and 18:00 UTC with `Authorization: Bearer <CRON_SECRET>`; without the variable the route answers 503 and sends nothing.
 
 **Ticket editing (2026-11-15, lead's approval):** `20261118120000_portal_ticket_editing` pushed to `nortbrand-dev` and `nortbrand-prod` after #137 merged (history 8/8 on both; `tickets.updated_by` and its trigger exist, `portal_save_ticket` is SECURITY INVOKER and `anon` cannot execute it, checked by query). The CLI is linked back to `nortbrand-dev`.

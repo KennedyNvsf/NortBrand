@@ -1,7 +1,7 @@
 # Client portal
 
 **Covers:** #131 (client sign-in), #132 (team sign-in and roles), #133 (shells and
-states), #134 (overview and tasks), #135 (timeline, files and updates), #136 (team projects and new project), #137 (team board and ticket editor), #138 (stage management and the team overview), #139 (updates, Needs you emails and the digest). Later portal tickets
+states), #134 (overview and tasks), #135 (timeline, files and updates), #136 (team projects and new project), #137 (team board and ticket editor), #138 (stage management and the team overview), #139 (updates, Needs you emails and the digest), #140 (files with private storage). Later portal tickets
 extend this guide. **Source:**
 ADR-009, Figma 12 Portal — Client (`516:2`), 14 Portal — Motion (`566:127`). The data model
 is in the [Database guide](./database.md) § 7.
@@ -622,3 +622,53 @@ session token exposed to page scripts. Logged as a decision for the lead.
 `CRON_SECRET` (32+ characters) in Vercel, and the same value in that Supabase project's
 Vault: `select vault.create_secret('<CRON_SECRET>', 'portal_cron_secret');`
 (docs/guides/environments.md).
+
+## 15. Portal files with private storage (#140)
+
+**What.** The team uploads, shares, renames and deletes a project's files on its Files tab
+(Figma TM-08); clients see shared files on theirs (#135). Code: `src/features/portal/team/files/`,
+page `src/app/team/(workspace)/projects/[projectId]/files/`.
+
+### Upload (request flow)
+
+```
+browser: Upload file / drop
+  → prepareUploadAction   name, declared size (≤ 50 MB) and type checked → new file id
+                          → signed upload URL for projects/<project>/<file id>
+                            (team session; Storage refuses any other folder)
+  → PUT the bytes straight to Storage   (Vercel functions take at most 4.5 MB)
+  → finishUploadAction    read the object's first 16 bytes and true size (signed URL +
+                          Range); not really PDF/PNG/JPEG/WebP/GIF/ZIP, or over 50 MB
+                          → delete it, refuse; else portal_register_file → team-only
+```
+
+The upload's name and declared type are never trusted: `magic.ts` decides from the bytes.
+SVG is not accepted (it can't be checked by its first bytes and can carry script); it is
+also removed from the bucket's allowed types. The bucket's own 50 MB limit backs this up.
+
+### Database and Storage (`20261121120000_portal_files_upload.sql`)
+
+- Storage rules by path (`private.portal_file_project(name)`): the team working on a
+  project may read, upload and delete under `projects/<that project>/`. The read rule is
+  what lets the server check an upload before it has a row. Clients still read only
+  through `portal_files_read` (#135): shared files of their own projects.
+- `portal_register_file` (SECURITY INVOKER): registers an existing, checked object as a
+  team-only file by the signed-in teammate.
+- pgTAP `13_portal_files_upload.test.sql` (18): team upload only into its own projects'
+  folders and only in the exact path shape, reading unregistered uploads, registration
+  needs the object, SVG refused, clients can't upload, list, read or delete team-only or
+  other projects' files, delete only by the project's team.
+
+### Manage
+
+The file menu shares or makes team-only, renames, and deletes after saying what the
+client loses. Delete removes the row first (the client loses access at once), then the
+object; a stuck object is reported as an orphan. Downloads go through
+`/api/portal/files/<id>` (60-second signed URL, #135) for the team as for clients.
+
+### Fake backend (e2e)
+
+`files/e2e-store.ts` keeps each "upload"'s first bytes and size; the browser PUTs to
+`/api/portal/files/fake-upload` (404 outside the fake backend). Spec:
+`tests/e2e/team-files.spec.ts` (real PDF uploaded team-only, shared, renamed, deleted; a
+text file named .pdf refused; a client refused a team-only file).

@@ -770,6 +770,16 @@ export type Database = {
         };
         Returns: string;
       };
+      portal_register_file: {
+        Args: {
+          p_content_type: string;
+          p_file_id: string;
+          p_name: string;
+          p_project_id: string;
+          p_size_bytes: number;
+        };
+        Returns: undefined;
+      };
       portal_register_team_wrong_code: {
         Args: { p_email: string };
         Returns: number;
