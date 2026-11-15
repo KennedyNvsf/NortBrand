@@ -31,8 +31,9 @@ async function teamSignIn(page: Page) {
 }
 
 function row(page: Page, name: string) {
+  // Sonner toasts are list items too ("Uploaded <name>…"), so skip them.
   return page
-    .getByRole("listitem")
+    .locator("li:not([data-sonner-toast])")
     .filter({ hasText: name })
     .filter({ visible: true });
 }
@@ -72,7 +73,9 @@ test.describe("Team files", () => {
     await expect(
       page.getByText(`Uploaded ${name}. It's team only until you share it.`),
     ).toBeVisible();
-    await expect(row(page, name).getByText("Team only")).toBeVisible();
+    await expect(
+      row(page, name).getByText("Team only", { exact: true }),
+    ).toBeVisible();
 
     await row(page, name)
       .getByRole("button", { name: `Actions for ${name}` })
@@ -81,7 +84,9 @@ test.describe("Team files", () => {
     await expect(
       page.getByText(`${name} is visible to the client.`),
     ).toBeVisible();
-    await expect(row(page, name).getByText("Visible to client")).toBeVisible();
+    await expect(
+      row(page, name).getByText("Visible to client", { exact: true }),
+    ).toBeVisible();
 
     await row(page, name)
       .getByRole("button", { name: `Actions for ${name}` })
@@ -135,7 +140,7 @@ test.describe("Team files", () => {
       "E2E Café website",
     );
     await expect(
-      row(page, "Internal estimate").getByText("Team only"),
+      row(page, "Internal estimate").getByText("Team only", { exact: true }),
     ).toBeVisible();
     const { violations } = await new AxeBuilder({ page })
       .withTags(WCAG_TAGS)
