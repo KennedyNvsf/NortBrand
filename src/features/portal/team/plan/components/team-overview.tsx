@@ -1,7 +1,6 @@
-import { ChevronRight, Plus } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
 import { ICON_STROKE } from "@/lib/icons";
 
 import { fill } from "../../../auth/components/copy";
@@ -68,11 +67,13 @@ export function TeamOverview({
   plan,
   copy,
   headerCopy,
+  actions,
   now,
 }: {
   plan: TeamPlan;
   copy: TeamOverviewCopy;
   headerCopy: TeamProjectCopy;
+  actions: React.ReactNode;
   now: Date;
 }) {
   const today = lisbonToday(now);
@@ -117,14 +118,7 @@ export function TeamOverview({
         board={plan}
         current="overview"
         copy={headerCopy}
-        actions={
-          <Button asChild>
-            <Link href={`${boardHref}?ticket=new`}>
-              <Plus aria-hidden strokeWidth={ICON_STROKE} className="size-4" />
-              {copy.newTicket}
-            </Link>
-          </Button>
-        }
+        actions={actions}
       />
 
       {attention.length > 0 ? (

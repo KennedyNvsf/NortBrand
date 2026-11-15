@@ -25,6 +25,7 @@ import {
   ticketEditorCopy,
 } from "@/features/portal/team/copy";
 import { PageSkeleton } from "@/features/portal/states/skeletons";
+import { ProjectActions } from "@/features/portal/team/updates/components/project-actions";
 import { ICON_STROKE } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
@@ -147,7 +148,7 @@ async function BoardContent({ params, searchParams }: Props) {
           board={board}
           current="board"
           copy={teamProjectCopy}
-          actions={newTicket}
+          actions={<ProjectActions board={board} />}
         />
         {missing ? (
           <p role="status" className="text-small text-text-muted">

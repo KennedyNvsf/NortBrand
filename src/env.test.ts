@@ -84,6 +84,10 @@ describe("parseServerEnv", () => {
     expect(() =>
       parseServerEnv({ ...validServer, NEWSLETTER_TOKEN_SECRET: "short" }),
     ).toThrow(/NEWSLETTER_TOKEN_SECRET/);
+    expect(() =>
+      parseServerEnv({ ...validServer, CRON_SECRET: "short" }),
+    ).toThrow(/CRON_SECRET/);
+    expect(parseServerEnv(validServer).CRON_SECRET).toBeUndefined();
   });
 
   it("rejects a Resend webhook secret without the whsec_ prefix", () => {

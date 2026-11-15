@@ -1,7 +1,7 @@
 # Client portal
 
 **Covers:** #131 (client sign-in), #132 (team sign-in and roles), #133 (shells and
-states), #134 (overview and tasks), #135 (timeline, files and updates), #136 (team projects and new project), #137 (team board and ticket editor), #138 (stage management and the team overview). Later portal tickets
+states), #134 (overview and tasks), #135 (timeline, files and updates), #136 (team projects and new project), #137 (team board and ticket editor), #138 (stage management and the team overview), #139 (updates, Needs you emails and the digest). Later portal tickets
 extend this guide. **Source:**
 ADR-009, Figma 12 Portal — Client (`516:2`), 14 Portal — Motion (`566:127`). The data model
 is in the [Database guide](./database.md) § 7.
@@ -560,3 +560,65 @@ the result says so ("Saved, but the email didn't go out").
 The board's fake store holds a mutable plan (`fakePlan`); `plan/e2e-store.ts` applies the
 actions. Spec: `tests/e2e/team-plan.spec.ts`; tests that change the plan run on desktop
 only and put it back.
+
+## 14. Project updates, "Needs you" emails and the daily digest (#139)
+
+**What.** The team posts updates (Figma TM-03, TM-M04), manages them on the project's
+Updates tab (TM-10), and clients hear about them: straight away for "Needs you" posts, and
+once a day in a digest (TM-13 "Client digest · Daily at 18:00"). Code:
+`src/features/portal/team/updates/`, `src/features/portal/digest/`,
+`src/app/api/portal/digest/route.ts`.
+
+### Database (`20261120120000_portal_updates_digest.sql`)
+
+- `portal_post_update`, `portal_edit_update` (sets `edited_at`, replaces links),
+  `portal_delete_update` (sets `deleted_at`: gone from the client feed, kept as a record).
+  SECURITY INVOKER: RLS decides; linked tickets must be on the same project (composite FK).
+- `private.portal_digest_log` (client, Lisbon day) and `portal_claim_digests(secret)`:
+  SECURITY DEFINER, granted to `anon`, safe because it checks the cron secret in SQL (Vault
+  `portal_cron_secret`). It **claims** each due client's digest for today before returning
+  it, so the unique (client, day) key makes the digest at-most-once per client per day.
+- pgTAP `12_portal_updates_digest.test.sql` (22).
+
+### Posting (request flow)
+
+```
+Post update dialog → postUpdateAction → postUpdate (updates-edit.ts)
+  → portal_post_update (post + links, one transaction)
+  → "Needs you"? → notifyClients (team/notify.ts): one email per client, their language,
+    subject "<project>: <author> needs something from you"
+  → toast: posted / posted and emailed / posted but the email didn't go out
+```
+
+An edit emails only if it newly asks the client for something. Every other post reaches
+the client in the evening digest. The dialog previews the post exactly as the client sees
+it (Needs you red, milestone green, linked tasks).
+
+### The daily digest
+
+```
+Vercel Cron  0 17,18 * * *  (vercel.json)  →  GET /api/portal/digest
+  Authorization: Bearer <CRON_SECRET>      → 401 / 503 otherwise (constant-time compare)
+  before 18:00 Lisbon                      → not_due (the winter 17:00 UTC run)
+  portal_claim_digests(CRON_SECRET)        → SQL checks the secret again, claims, returns
+  one email per claimed client (renderPortalDigest, Lisbon times)  → counts only
+```
+
+Two cron times cover 18:00 Lisbon in winter (UTC+0) and summer (UTC+1); the claim makes
+the second run harmless. A failed send is counted and reported by code, not retried that
+day. The Settings toggle (`portal_settings.daily_digest`) switches it off; the Settings
+page itself is #142. Requests never wait for the digest: it runs on its own.
+
+### New update arrives (client feed)
+
+`overview/components/feed-refresher.tsx` refreshes the client's feed every 30 s while the
+tab is visible, and at once when the client returns to the tab (lead's decision, 2026-11-15:
+keep refreshing for launch, revisit Realtime after launch); new posts fade up 8 px (250 ms) and are announced. Not Supabase Realtime:
+the session is in httpOnly cookies, and a Realtime socket in the browser would need the
+session token exposed to page scripts. Logged as a decision for the lead.
+
+### Setup per environment
+
+`CRON_SECRET` (32+ characters) in Vercel, and the same value in that Supabase project's
+Vault: `select vault.create_secret('<CRON_SECRET>', 'portal_cron_secret');`
+(docs/guides/environments.md).

@@ -56,6 +56,12 @@ export const serverSchema = z.object({
    * removing teammates refuse to run until it is set.
    */
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(20).optional(),
+  /**
+   * Vercel Cron sends it as `Authorization: Bearer …` (#139, the client digest). Must equal
+   * the Vault secret `portal_cron_secret` in that Supabase project. Optional so a build
+   * without it works; the digest route refuses to run until it is set.
+   */
+  CRON_SECRET: z.string().min(32, "Use at least 32 characters").optional(),
 });
 
 export type PublicEnv = z.infer<typeof publicSchema>;

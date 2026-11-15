@@ -12,6 +12,7 @@ import {
 import { TeamOverview } from "@/features/portal/team/plan/components/team-overview";
 import { getTeamPlan, type TeamPlan } from "@/features/portal/team/plan/data";
 import { PageSkeleton } from "@/features/portal/states/skeletons";
+import { ProjectActions } from "@/features/portal/team/updates/components/project-actions";
 
 /*
  * A project's overview for the team (#138; Figma TM-07). Dynamic and per user (ADR-009):
@@ -53,6 +54,7 @@ async function OverviewContent({ params }: Pick<Props, "params">) {
       plan={plan}
       copy={teamOverviewCopy}
       headerCopy={teamProjectCopy}
+      actions={<ProjectActions board={plan} />}
       now={new Date()}
     />
   );

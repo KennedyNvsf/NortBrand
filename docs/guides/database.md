@@ -259,6 +259,14 @@ functions `portal_check_team_invite`, `portal_add_team_member` and
 of an active project; PT422 outside the allowed domain). `private.portal_bootstrap_first_admin`
 has no grants: the SQL editor only. Tests: `supabase/tests/07_portal_team_access.test.sql`.
 
+### Updates and the daily digest (#139)
+
+`20261120120000_portal_updates_digest.sql`: `portal_post_update`, `portal_edit_update`,
+`portal_delete_update` (SECURITY INVOKER), `private.portal_digest_log` and
+`portal_claim_digests(secret)` (SECURITY DEFINER, granted to anon, checks the Vault
+secret `portal_cron_secret`; claims before returning, so at most once per client per
+day). Tests: `supabase/tests/12_portal_updates_digest.test.sql`.
+
 ### Stage management (#138)
 
 `20261119120000_portal_stage_management.sql`: `portal_set_stage_dates` (finished stages

@@ -3,9 +3,8 @@ import { cache } from "react";
 import { isFakeBackendEnabled } from "@/lib/e2e-backend";
 import { getPortalSupabase } from "@/lib/supabase/auth";
 
-import { E2E_PROJECT_VIEW } from "../../overview/e2e-fixture";
 import { getTeamBoard, type TeamBoard } from "../board/data";
-import { fakeUpdates } from "./e2e-store";
+import { fakeLiveUpdates } from "../updates/e2e-store";
 import type { PlanClient } from "./plan";
 
 /*
@@ -59,15 +58,14 @@ export const getTeamPlan = cache(async function getTeamPlan(
           lastSignInAt: null,
         },
       ],
-      updates: [
-        ...fakeUpdates(),
-        ...E2E_PROJECT_VIEW.updates.map((update) => ({
-          id: update.id,
-          body: update.body,
-          authorName: update.authorName,
-          createdAt: update.createdAt,
+      updates: fakeLiveUpdates()
+        .slice(0, 4)
+        .map(({ id, body, authorName, createdAt }) => ({
+          id,
+          body,
+          authorName,
+          createdAt,
         })),
-      ].slice(0, 4),
     };
   }
 

@@ -17,6 +17,11 @@ const PROJECT_ID = "00000000-0000-4000-b000-00000000e2e0";
 const uuid = (kind: string, n: number) =>
   `00000000-0000-4000-a000-${kind}${String(n).padStart(12 - kind.length, "0")}`;
 
+/** The board's id for a client-fixture ticket id ("e2e-t10" → ticket 10). */
+export function fakeTicketId(fixtureId: string): string {
+  return uuid("d", Number(fixtureId.replace(/\D/g, "")));
+}
+
 const TEAM = [
   { id: uuid("f1", 1), name: "Ana Costa", roleLabel: "Project lead" },
   { id: uuid("f1", 2), name: "Tiago Sousa", roleLabel: "Design" },
