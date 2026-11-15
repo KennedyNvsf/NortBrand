@@ -540,7 +540,21 @@
       "byline": "{author} · {studio}",
       "button": "Abrir o portal",
       "fallback": "Se o botão não funcionar, copie esta ligação para o seu navegador:",
-      "footer": "Recebe este email porque acompanha {project} no portal de projetos da {studio}. Dúvidas? Responda a este email."
+      "footer": "Recebe este email porque acompanha {project} no portal de projetos da {studio}. Dúvidas? Responda a este email.",
+      "subjectNeedsYou": "{project}: {author} precisa de algo de si",
+      "headingNeedsYou": "A sua equipa precisa de algo de si"
+    },
+    "portalDigest": {
+      "subject": "{project}: as novidades de hoje",
+      "preview": "{count, plural, one {# nova novidade} other {# novas novidades}} da sua equipa.",
+      "heading": "Hoje em {project}",
+      "needsYou": "Precisa de si",
+      "milestone": "Marco",
+      "meta": "{author} · {time}",
+      "team": "A sua equipa",
+      "button": "Abrir o portal",
+      "fallback": "Se o botão não funcionar, copie esta ligação para o seu navegador:",
+      "footer": "Recebe este email uma vez por dia, só quando há novidades em {project}. Dúvidas? Responda a este email."
     }
   },
   "Newsletter": {
@@ -884,7 +898,9 @@
       "milestone": "Marco",
       "edited": "editado",
       "linkedTask": "Tarefa: {title}",
-      "empty": "A sua equipa vai publicar aqui a primeira novidade dentro de um dia útil."
+      "empty": "A sua equipa vai publicar aqui a primeira novidade dentro de um dia útil.",
+      "arrivedOne": "1 nova novidade",
+      "arrivedMany": "{count} novas novidades"
     }
   }
 }

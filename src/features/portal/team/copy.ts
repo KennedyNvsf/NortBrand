@@ -554,6 +554,77 @@ export const timelineCopy = {
   },
 } as const;
 
+/** Posting and managing project updates (#139; Figma TM-03, TM-M04, TM-10). */
+export const teamUpdatesCopy = {
+  metaTitle: "Updates",
+  postUpdate: "Post update",
+  composer: "Share an update with {client}…",
+  feedNote:
+    "Clients see every post here. Edits show “edited”; deleted posts disappear from their feed.",
+  groups: {
+    today: "Today",
+    yesterday: "Yesterday",
+    thisWeek: "This week",
+    earlier: "Earlier",
+  },
+  edit: "Edit",
+  editLabel: "Edit the update from {time}",
+  delete: "Delete",
+  deleteLabel: "Delete the update from {time}",
+  edited: "edited",
+  needsYou: "Needs you",
+  milestone: "Milestone",
+  empty:
+    "No updates yet. Post the first one; the client gets it in tonight's digest.",
+  linkedTask: "Task: {title}",
+  deleteTitle: "Delete this update?",
+  deleteBody: "It disappears from {client}'s feed. This can't be undone.",
+  deleteConfirm: "Delete update",
+  cancel: "Cancel",
+  deleted: "Update deleted.",
+  loadFailed: "We couldn't load the updates. Refresh the page to try again.",
+  dialog: {
+    eyebrow: "Post an update · {client}",
+    editEyebrow: "Edit update · {client}",
+    title: "What's new on the project?",
+    editTitle: "Edit the update",
+    close: "Close",
+    body: "Update",
+    linked: "Linked to",
+    linkTask: "+ Link a task",
+    linkTaskLabel: "Link a task",
+    removeLink: "Remove the link to {title}",
+    milestone: "Mark as a milestone",
+    milestoneHint: "Shows with a green highlight in the client's feed.",
+    needsClient: "Ask the client for something",
+    needsClientHint:
+      "Adds a “Needs you” tag and emails the client straight away.",
+    previewTitle: "How {client} will see it",
+    previewEmpty: "Your update appears here as the client will see it.",
+    justNow: "Just now",
+    footnote: "Clients get one email a day with new updates.",
+    cancel: "Cancel",
+    post: "Post update",
+    save: "Save changes",
+    posting: "Posting…",
+    posted: "Update posted.",
+    postedEmailed: "Update posted and emailed to the client.",
+    postedEmailFailed:
+      "Update posted, but the email didn't go out. It's in their feed and tonight's digest.",
+    saved: "Update saved.",
+    errors: {
+      bodyRequired: "Write the update first.",
+      bodyTooLong: "Keep the update under 4,000 characters.",
+      tooManyLinks: "Link up to 10 tasks.",
+      linkInvalid: "One of the linked tasks isn't on this project.",
+      not_found: "That update was deleted.",
+      forbidden: "You can't post on this project.",
+      failed: "Something went wrong and nothing was posted. Please try again.",
+    },
+  },
+} as const;
+
+export type TeamUpdatesCopy = typeof teamUpdatesCopy;
 export type TeamOverviewCopy = typeof teamOverviewCopy;
 export type TimelineCopy = typeof timelineCopy;
 export type TeamProjectCopy = typeof teamProjectCopy;

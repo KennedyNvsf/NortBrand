@@ -540,7 +540,21 @@
       "byline": "{author} · {studio}",
       "button": "Open the portal",
       "fallback": "If the button doesn't work, copy this link into your browser:",
-      "footer": "You're receiving this because you follow {project} on the {studio} project portal. Questions? Reply to this email."
+      "footer": "You're receiving this because you follow {project} on the {studio} project portal. Questions? Reply to this email.",
+      "subjectNeedsYou": "{project}: {author} needs something from you",
+      "headingNeedsYou": "Your team needs something from you"
+    },
+    "portalDigest": {
+      "subject": "{project}: today's updates",
+      "preview": "{count, plural, one {# new update} other {# new updates}} from your team.",
+      "heading": "Today on {project}",
+      "needsYou": "Needs you",
+      "milestone": "Milestone",
+      "meta": "{author} · {time}",
+      "team": "Your team",
+      "button": "Open the portal",
+      "fallback": "If the button doesn't work, copy this link into your browser:",
+      "footer": "You get this email once a day, only when there's news on {project}. Questions? Reply to this email."
     }
   },
   "Newsletter": {
@@ -884,7 +898,9 @@
       "milestone": "Milestone",
       "edited": "edited",
       "linkedTask": "Task: {title}",
-      "empty": "Your team will post the first update here within one working day."
+      "empty": "Your team will post the first update here within one working day.",
+      "arrivedOne": "1 new update",
+      "arrivedMany": "{count} new updates"
     }
   }
 }

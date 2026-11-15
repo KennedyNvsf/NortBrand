@@ -4,6 +4,7 @@ import { site } from "@/content/site";
 import type { Locale } from "@/i18n/routing";
 import { emailMessages, toEmail, type RenderedEmail } from "@/lib/email/render";
 
+import { PortalDigestEmail } from "./portal-digest";
 import { PortalUpdateEmail } from "./portal-update";
 import { PortalWelcomeEmail } from "./portal-welcome";
 
@@ -62,6 +63,8 @@ export type PortalUpdateNotice = {
   body: string;
   /** The site's origin, e.g. https://nortbrand.pt. */
   siteUrl: string;
+  /** A "Needs you" post: its own subject and heading, sent straight away (#139). */
+  needsClient?: boolean;
 };
 
 /** A team update, in the client's language, linking that project's portal. */
@@ -81,7 +84,7 @@ export function renderPortalUpdate(
   };
 
   return toEmail(
-    t("subject", values),
+    t(notice.needsClient ? "subjectNeedsYou" : "subject", values),
     <PortalUpdateEmail
       locale={notice.locale}
       studio={site.name}
@@ -89,8 +92,72 @@ export function renderPortalUpdate(
       portalUrl={portalUrl}
       copy={{
         preview: t("preview", values),
-        heading: t("heading", values),
+        heading: notice.needsClient
+          ? t("headingNeedsYou")
+          : t("heading", values),
         byline: t("byline", values),
+        button: t("button"),
+        fallback: t("fallback"),
+        footer: t("footer", values),
+      }}
+    />,
+  );
+}
+
+export type PortalDigest = {
+  locale: Locale;
+  projectName: string;
+  publicId: string;
+  updates: {
+    author: string | null;
+    body: string;
+    createdAt: string;
+    highlight: boolean;
+    needsClient: boolean;
+  }[];
+  siteUrl: string;
+};
+
+const lisbonTime = (iso: string) =>
+  new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Lisbon",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(new Date(iso));
+
+/** The daily digest for one client and project, in their language, times in Lisbon. */
+export function renderPortalDigest(
+  digest: PortalDigest,
+): Promise<RenderedEmail> {
+  const t = createTranslator({
+    locale: digest.locale,
+    messages: emailMessages[digest.locale],
+    namespace: "Emails.portalDigest",
+  });
+  const portalUrl = `${digest.siteUrl.replace(/\/$/, "")}/${digest.locale}/portal/${digest.publicId}`;
+  const values = { project: digest.projectName };
+
+  return toEmail(
+    t("subject", values),
+    <PortalDigestEmail
+      locale={digest.locale}
+      studio={site.name}
+      portalUrl={portalUrl}
+      entries={digest.updates.map((update) => ({
+        meta: t("meta", {
+          author: update.author ?? t("team"),
+          time: lisbonTime(update.createdAt),
+        }),
+        body: update.body,
+        needsYou: update.needsClient,
+        milestone: update.highlight,
+      }))}
+      copy={{
+        preview: t("preview", { count: digest.updates.length }),
+        heading: t("heading", values),
+        needsYou: t("needsYou"),
+        milestone: t("milestone"),
         button: t("button"),
         fallback: t("fallback"),
         footer: t("footer", values),

@@ -323,6 +323,11 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   Completing a stage is one SQL transaction (`portal_complete_stage`); health, launch
   and milestones post an update and email the client after saving (a failed email never
   undoes the change). Rules in `plan.ts` (progress, health suggestion, attention).
+- **Updates and digest (#139, docs/guides/portal.md § 14):** team Updates tab and the
+  Post update dialog (`team/updates/`); "Needs you" posts email the client at once
+  (`team/notify.ts`). Daily digest: Vercel Cron → `/api/portal/digest` (Bearer
+  `CRON_SECRET`) → `portal_claim_digests` (Vault `portal_cron_secret`, at most once per
+  client per day). The client feed refreshes every 30 s (no Realtime: httpOnly session).
 - **The repository is public until launch** (Actions minutes, 2026-11-14): never commit
   secrets or personal data; making it private again is on the launch checklist.
 - **Email:** Supabase sends codes through custom SMTP on Resend; app emails use the
@@ -382,7 +387,9 @@ Public: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABAS
 
 Server-only: `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`, `RESEND_API_KEY`,
 `RESEND_SEGMENT_ID`, `RESEND_WEBHOOK_SECRET`, `EMAIL_FROM`, `NOTIFY_TO_EMAIL`, `IP_HASH_SALT`, `NEWSLETTER_TOKEN_SECRET`,
-and from #132 `SUPABASE_SERVICE_ROLE_KEY` (portal auth administration only, ADR-009).
+and from #132 `SUPABASE_SERVICE_ROLE_KEY` (portal auth administration only, ADR-009),
+from #139 `CRON_SECRET` (Vercel Cron bearer for the client digest; equals Vault
+`portal_cron_secret`).
 
 Build only (Vercel, optional): `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`.
 Account setup and the per-environment matrix: `docs/guides/environments.md`.

@@ -2,15 +2,12 @@
 
 import { z } from "zod";
 
-import { publicEnv } from "@/env";
 import { isFakeBackendEnabled } from "@/lib/e2e-backend";
-import { sendEmail } from "@/lib/resend";
 import { getPortalSupabase } from "@/lib/supabase/auth";
 
 import { reportPortalFailure } from "../../auth/server";
-import { renderPortalUpdate } from "../../emails/render";
 import { getTeamViewer } from "../access";
-import { getClientRecipients } from "./data";
+import { notifyClients } from "../notify";
 import {
   fakeCompleteStage,
   fakeReopenStage,
@@ -42,43 +39,10 @@ async function viewerName(): Promise<string> {
   return viewer.status === "signed_in" ? viewer.name : "NortBrand";
 }
 
-/** Emails every invited or active client the update, in their language. */
-function notifier(projectId: string): PlanDeps["notify"] {
-  return async (update) => {
-    if (isFakeBackendEnabled()) return 1;
-    const supabase = await getPortalSupabase();
-    const { data: project, error } = await supabase
-      .from("projects")
-      .select("name, public_id")
-      .eq("id", projectId)
-      .maybeSingle();
-    if (error || !project) throw new Error("project");
-    const [recipients, author] = await Promise.all([
-      getClientRecipients(projectId),
-      viewerName(),
-    ]);
-    let sent = 0;
-    for (const recipient of recipients) {
-      const email = await renderPortalUpdate({
-        locale: recipient.locale,
-        projectName: project.name,
-        publicId: project.public_id,
-        authorName: author,
-        body: update,
-        siteUrl: publicEnv.NEXT_PUBLIC_SITE_URL,
-      });
-      const result = await sendEmail({ to: recipient.email, ...email });
-      if (!result.ok) throw new Error(result.code);
-      sent += 1;
-    }
-    return sent;
-  };
-}
-
 function base(projectId: string): PlanDeps {
   return {
     viewer: getTeamViewer,
-    notify: notifier(projectId),
+    notify: (update) => notifyClients(projectId, update),
     reportFailure: report,
   };
 }

@@ -680,6 +680,16 @@ export type Database = {
           user_id: string;
         }[];
       };
+      portal_claim_digests: {
+        Args: { p_secret: string };
+        Returns: {
+          client_email: string;
+          locale: string;
+          project_name: string;
+          public_id: string;
+          updates: Json;
+        }[];
+      };
       portal_code_state: {
         Args: { p_email: string; p_public_id: string };
         Returns: string;
@@ -720,6 +730,20 @@ export type Database = {
           public_id: string;
         }[];
       };
+      portal_delete_update: {
+        Args: { p_update_id: string };
+        Returns: undefined;
+      };
+      portal_edit_update: {
+        Args: {
+          p_body: string;
+          p_highlight: boolean;
+          p_needs_client: boolean;
+          p_ticket_ids?: string[];
+          p_update_id: string;
+        };
+        Returns: undefined;
+      };
       portal_find_client_users: {
         Args: { p_emails: string[] };
         Returns: {
@@ -734,6 +758,16 @@ export type Database = {
       };
       portal_next_project_id: {
         Args: Record<PropertyKey, never>;
+        Returns: string;
+      };
+      portal_post_update: {
+        Args: {
+          p_body: string;
+          p_highlight: boolean;
+          p_needs_client: boolean;
+          p_project_id: string;
+          p_ticket_ids?: string[];
+        };
         Returns: string;
       };
       portal_register_team_wrong_code: {

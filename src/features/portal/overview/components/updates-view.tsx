@@ -11,6 +11,7 @@ import { initials } from "../../shell/initials";
 import { groupUpdatesByDay } from "../content";
 import { getProjectView, type ProjectView } from "../data";
 import { formatUpdateTime, type PortalLocale } from "../format";
+import { FeedRefresher } from "./feed-refresher";
 import { LoadFailed } from "./load-failed";
 import { Avatar } from "./status";
 
@@ -19,8 +20,8 @@ import { Avatar } from "./status";
  * newest first, grouped Today / Yesterday / This week / Earlier (Lisbon days). A post
  * that asks something of the client has a red border and "Needs you"; a milestone post is
  * green; an edited post says so. Deleted posts never reach the client (RLS). Linked tasks
- * are chips that open the task. Live arrival of new posts comes with the updates ticket
- * (#139).
+ * are chips that open the task. New posts arrive while the page is open
+ * (feed-refresher.tsx, #139).
  */
 
 export async function UpdatesView({
@@ -58,6 +59,10 @@ export async function UpdatesView({
         <h1 className="text-h3 text-text-primary">{t("title")}</h1>
         <p className="text-[15px] text-text-muted">{t("intro")}</p>
       </header>
+      <FeedRefresher
+        ids={view.updates.map((update) => update.id)}
+        announce={{ one: t("arrivedOne"), many: String(t.raw("arrivedMany")) }}
+      />
 
       {groups.length === 0 ? (
         <p className="text-body text-text-muted">{t("empty")}</p>
@@ -82,7 +87,7 @@ export async function UpdatesView({
                   return ticket ? [ticket] : [];
                 });
                 return (
-                  <li key={update.id}>
+                  <li key={update.id} data-update-id={update.id}>
                     <article
                       className={cn(
                         "flex flex-col gap-3 rounded-lg border p-lg",

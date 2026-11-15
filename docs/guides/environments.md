@@ -195,6 +195,10 @@ removing teammates refuse to run. Then create each project's first admin
 The local stack gets the same settings from `supabase/config.toml`. Nothing here costs
 money on the current plans.
 
+**Stage management (2026-11-15, lead's approval):** `20261119120000_portal_stage_management` pushed to `nortbrand-dev` and `nortbrand-prod` after #138 merged (history 9/9 on both; the five functions are SECURITY INVOKER and `anon` cannot execute them, checked by query). The CLI is linked back to `nortbrand-dev`.
+
+**Client digest (#139):** set `CRON_SECRET` (32+ characters, e.g. `openssl rand -base64 48`) in Vercel for Production and Preview, and put the same value in each Supabase project's Vault: `select vault.create_secret('<CRON_SECRET>', 'portal_cron_secret');`. Vercel Cron calls `/api/portal/digest` at 17:00 and 18:00 UTC with `Authorization: Bearer <CRON_SECRET>`; without the variable the route answers 503 and sends nothing.
+
 **Ticket editing (2026-11-15, lead's approval):** `20261118120000_portal_ticket_editing` pushed to `nortbrand-dev` and `nortbrand-prod` after #137 merged (history 8/8 on both; `tickets.updated_by` and its trigger exist, `portal_save_ticket` is SECURITY INVOKER and `anon` cannot execute it, checked by query). The CLI is linked back to `nortbrand-dev`.
 
 **Create project (2026-11-14, lead's approval):** `20261117120000_portal_create_project` pushed to `nortbrand-dev` and `nortbrand-prod` after #136 merged (history 7/7 on both; the four functions exist and `anon` cannot execute `portal_create_project`, checked by query). The CLI is linked back to `nortbrand-dev`.

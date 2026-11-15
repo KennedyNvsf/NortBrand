@@ -1,12 +1,9 @@
 import * as Sentry from "@sentry/nextjs";
-import { Plus } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
-import { Button } from "@/components/ui/button";
 import { fill } from "@/features/portal/auth/components/copy";
 import {
   currentStage,
@@ -36,7 +33,7 @@ import {
   type HealthSuggestion,
 } from "@/features/portal/team/plan/plan";
 import { PageSkeleton } from "@/features/portal/states/skeletons";
-import { ICON_STROKE } from "@/lib/icons";
+import { ProjectActions } from "@/features/portal/team/updates/components/project-actions";
 
 /*
  * Timeline · manage stages for the team (#138; Figma TM-05, TM-05b). Health with a
@@ -107,16 +104,7 @@ async function TimelineContent({ params }: Pick<Props, "params">) {
         board={plan}
         current="timeline"
         copy={teamProjectCopy}
-        actions={
-          <Button asChild>
-            <Link
-              href={`/team/projects/${plan.project.publicId}/board?ticket=new`}
-            >
-              <Plus aria-hidden strokeWidth={ICON_STROKE} className="size-4" />
-              {boardCopy.newTicket}
-            </Link>
-          </Button>
-        }
+        actions={<ProjectActions board={plan} />}
       />
       <div className="grid gap-md lg:grid-cols-[minmax(0,1fr)_360px]">
         <HealthControl

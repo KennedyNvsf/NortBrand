@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest";
 
 import pt from "../../../../messages/pt.json";
 
-import { renderPortalUpdate, renderPortalWelcome } from "./render";
+import {
+  renderPortalDigest,
+  renderPortalUpdate,
+  renderPortalWelcome,
+} from "./render";
 
 const welcome = {
   email: "ines@tascadolargo.pt",
@@ -70,5 +74,82 @@ describe("renderPortalUpdate", () => {
     expect(email.html).toContain(
       'href="https://nortbrand.pt/pt/portal/NB-4821"',
     );
+  });
+});
+
+describe("renderPortalUpdate · Needs you", () => {
+  it("says the team needs something, in the subject and the heading", async () => {
+    const email = await renderPortalUpdate({
+      locale: "en",
+      projectName: "Café website",
+      publicId: "NB-9901",
+      authorName: "Ana Costa",
+      body: "We need the menu photos.",
+      siteUrl: "https://nortbrand.pt",
+      needsClient: true,
+    });
+    expect(email.subject).toBe(
+      "Café website: Ana Costa needs something from you",
+    );
+    expect(email.html).toContain("Your team needs something from you");
+  });
+});
+
+describe("renderPortalDigest", () => {
+  const digest = {
+    projectName: "Café website",
+    publicId: "NB-9901",
+    siteUrl: "https://nortbrand.pt",
+    updates: [
+      {
+        author: "Rui Matos",
+        body: "Hero is in.",
+        createdAt: "2026-11-15T10:20:00Z",
+        highlight: false,
+        needsClient: false,
+      },
+      {
+        author: null,
+        body: "Design stage complete.",
+        createdAt: "2026-11-15T16:05:00Z",
+        highlight: true,
+        needsClient: false,
+      },
+      {
+        author: "Ana Costa",
+        body: "We need the menu photos.",
+        createdAt: "2026-11-15T17:45:00Z",
+        highlight: false,
+        needsClient: true,
+      },
+    ],
+  } as const;
+
+  it("lists the day's posts with Lisbon times, tags as text and the portal link", async () => {
+    const email = await renderPortalDigest({
+      ...digest,
+      updates: [...digest.updates],
+      locale: "en",
+    });
+    expect(email.subject).toBe("Café website: today's updates");
+    expect(email.text).toContain("Rui Matos · 10:20");
+    expect(email.text).toContain("Your team · 16:05");
+    expect(email.html).toContain("Needs you");
+    expect(email.html).toContain("Milestone");
+    expect(email.html).toContain(
+      'href="https://nortbrand.pt/en/portal/NB-9901"',
+    );
+    expect(email.html).not.toMatch(/<img|src=|<script/i);
+  });
+
+  it("writes Portuguese to a Portuguese client", async () => {
+    const email = await renderPortalDigest({
+      ...digest,
+      updates: [...digest.updates],
+      locale: "pt",
+    });
+    expect(email.html).toContain('lang="pt"');
+    expect(email.html).toContain("Precisa de si");
+    expect(email.subject).toBe("Café website: as novidades de hoje");
   });
 });

@@ -157,6 +157,8 @@ test.describe("Team board", () => {
     page,
     browser,
   }) => {
+    // Two people sign in and edit: give it the time that takes on a phone-sized run.
+    test.slow();
     await teamSignIn(page);
     const title = unique("Two editors");
     await createTicket(page, title);

@@ -1,5 +1,6 @@
 import type { ProjectHealth } from "../../overview/data";
 import { fakeMoveOpenTickets, fakePlan } from "../board/e2e-store";
+import { fakePostUpdate } from "../updates/e2e-store";
 
 /**
  * The fake backend's plan actions for Playwright (#138), used only when
@@ -7,27 +8,15 @@ import { fakeMoveOpenTickets, fakePlan } from "../board/e2e-store";
  * functions change a real one; the rules in plan.ts and plan-edit.ts run for real.
  */
 
-const posted: {
-  id: string;
-  body: string;
-  authorName: string;
-  createdAt: string;
-}[] = [];
-
-export function fakeUpdates() {
-  return [...posted].reverse();
-}
-
 function post(body: string | null, author: string): string | null {
   if (!body?.trim()) return null;
-  const id = crypto.randomUUID();
-  posted.push({
-    id,
-    body: body.trim(),
+  return fakePostUpdate({
+    body,
     authorName: author,
-    createdAt: new Date().toISOString(),
+    highlight: false,
+    needsClient: false,
+    ticketIds: [],
   });
-  return id;
 }
 
 const today = () =>
