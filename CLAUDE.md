@@ -311,6 +311,13 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   creates project, lead, stages and clients; stages come from a template on the server
   (`templates.ts`); client auth users are created first and deleted if it fails; a failed
   welcome email keeps the project. Tabs are URL state (`?view=`).
+- **Team board and ticket editor (#137, docs/guides/portal.md § 12):**
+  `/team/projects/<NB-xxxx>/board`, `src/features/portal/team/board/`. Saves are
+  versioned (`portal_save_ticket`, SECURITY INVOKER): a stale save answers `conflict`
+  and the editor names who changed what (`conflict.ts`, zod-free for the browser).
+  Moves: mouse drag on desktop, the card's status menu everywhere. Layout animations
+  load `domMax` in a nested `LazyMotion` (board only). Client components import
+  `shell/initials.ts`, never `shell/client-data.ts` (server; caught by check:bundles).
 - **The repository is public until launch** (Actions minutes, 2026-11-14): never commit
   secrets or personal data; making it private again is on the launch checklist.
 - **Email:** Supabase sends codes through custom SMTP on Resend; app emails use the

@@ -501,6 +501,7 @@ export type Database = {
           status: string;
           title: string;
           updated_at: string;
+          updated_by: string | null;
           waiting_on_client: boolean;
         };
         Insert: {
@@ -516,6 +517,7 @@ export type Database = {
           status?: string;
           title: string;
           updated_at?: string;
+          updated_by?: string | null;
           waiting_on_client?: boolean;
         };
         Update: {
@@ -531,6 +533,7 @@ export type Database = {
           status?: string;
           title?: string;
           updated_at?: string;
+          updated_by?: string | null;
           waiting_on_client?: boolean;
         };
         Relationships: [
@@ -554,6 +557,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "stages";
             referencedColumns: ["project_id", "id"];
+          },
+          {
+            foreignKeyName: "tickets_updated_by_fkey";
+            columns: ["updated_by"];
+            isOneToOne: false;
+            referencedRelation: "team_members";
+            referencedColumns: ["user_id"];
           },
         ];
       };
@@ -725,6 +735,27 @@ export type Database = {
       portal_remove_team_member: {
         Args: { p_user_id: string };
         Returns: undefined;
+      };
+      portal_save_ticket: {
+        Args: {
+          p_checklist: Json;
+          p_client_visible: boolean;
+          p_description: string;
+          p_due_on?: string;
+          p_owner_id?: string;
+          p_project_id: string;
+          p_stage_id: string;
+          p_status: string;
+          p_ticket_id?: string;
+          p_title: string;
+          p_version?: string;
+        };
+        Returns: {
+          outcome: string;
+          ticket_id: string;
+          ticket_number: number;
+          version: string;
+        }[];
       };
       portal_team_code_state: { Args: { p_email: string }; Returns: string };
       submit_consultation_request: {

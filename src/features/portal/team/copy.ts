@@ -257,6 +257,153 @@ export const teamPagesCopy = {
 
 export type TeamPagesCopy = typeof teamPagesCopy;
 
+/** The team project pages and the board (#137; Figma TM-02, TM-T02, TM-M02, TM-M03). */
+export const teamProjectCopy = {
+  breadcrumb: "Projects",
+  back: "Projects",
+  tabsLabel: "Project sections",
+  tabs: {
+    overview: "Overview",
+    board: "Board",
+    timeline: "Timeline",
+    files: "Files",
+    updates: "Updates",
+    access: "Client access",
+  },
+  summary:
+    "{stage} · {position} of {total} · {done} of {all} done · launch {launch}",
+  summaryClient: " · client {email}",
+  noStages: "No stages yet",
+  health: {
+    on_track: "On track",
+    at_risk: "At risk",
+    waiting_on_client: "Waiting on client",
+  },
+} as const;
+
+export const boardCopy = {
+  metaTitle: "Board",
+  newTicket: "New ticket",
+  filtersLabel: "Filter tickets",
+  stage: "Stage",
+  allStages: "All stages",
+  owner: "Owner",
+  everyone: "Everyone",
+  unassigned: "Unassigned",
+  dragHint:
+    "Drag a card to change its status. The client sees changes when you save.",
+  mobileHint: "Tap a status to move a ticket.",
+  columns: {
+    todo: "To do",
+    in_progress: "In progress",
+    in_review: "In review",
+    done: "Done",
+  },
+  statusLabel: "Status",
+  statuses: {
+    todo: "To do",
+    in_progress: "In progress",
+    in_review: "In review",
+    done: "Done",
+    blocked: "Blocked",
+  },
+  more: "+{count} more",
+  showMore: "Show {count} more in {column}",
+  fewer: "Show fewer",
+  teamOnly: "Team only",
+  waitingOnClient: "Waiting on client",
+  blocked: "Blocked",
+  due: "Due",
+  owner_: "Owner: {name}",
+  noOwner: "No owner",
+  moveMenu: "Move “{title}”",
+  moveTo: "Move to",
+  moved: "Moved “{title}” to {column}.",
+  moveFailed: "Couldn't move “{title}”. It's back where it was.",
+  columnEmpty: "Nothing here.",
+  empty: "No tickets match these filters.",
+  loadFailed: "We couldn't load the board. Refresh the page to try again.",
+  notFound: "We couldn't find that ticket. It may have been deleted.",
+} as const;
+
+export const ticketEditorCopy = {
+  editEyebrow: "Edit ticket · {ref}",
+  newEyebrow: "New ticket · {project}",
+  mobileEditTitle: "Edit ticket",
+  mobileNewTitle: "New ticket",
+  newTitle: "New ticket",
+  close: "Close",
+  title: "Title",
+  status: "Status",
+  due: "Due",
+  stage: "Stage",
+  owner: "Owner",
+  noOwner: "No owner",
+  description: "Description",
+  checklist: "Checklist",
+  checklistCount: "{done} of {total}",
+  addItem: "+ Add item",
+  newItem: "New checklist item",
+  removeItem: "Remove “{label}”",
+  visible: "Visible to the client",
+  visibleHint:
+    "{client} sees the title, status, due date, description and checklist. Turn off for internal work.",
+  delete: "Delete ticket",
+  cancel: "Cancel",
+  save: "Save changes",
+  /** The full-screen editor's top bar (TM-M03). */
+  mobileSave: "Save",
+  create: "Create ticket",
+  saving: "Saving…",
+  saved: "Saved “{title}”.",
+  created: "Created “{title}”.",
+  deleted: "Deleted “{title}”.",
+  deleteTitle: "Delete “{title}”?",
+  deleteVisible:
+    "{client} will no longer see this task, its checklist or the updates linked to it. This can't be undone.",
+  deleteHidden:
+    "This ticket and its checklist will be deleted. The client never saw it. This can't be undone.",
+  deleteConfirm: "Delete ticket",
+  saveFailed:
+    "We couldn't save your changes. Check your connection; your edits are still here.",
+  retry: "Retry",
+  conflictOne: "{name} changed {change} while you were editing.",
+  conflictMany: "{name} changed {changes} while you were editing.",
+  conflictSomeone: "Someone",
+  conflictNothing: "{name} saved this ticket while you were editing.",
+  seeTheirs: "See their change",
+  keepMine: "Keep mine",
+  changes: {
+    title: "the title to “{value}”",
+    status: "the status to {value}",
+    dueOn: "the due date to {value}",
+    dueCleared: "the due date (removed it)",
+    stageId: "the stage to {value}",
+    ownerId: "the owner to {value}",
+    ownerCleared: "the owner (none now)",
+    description: "the description",
+    clientVisible: "client visibility ({value})",
+    checklist: "the checklist",
+  },
+  visibilityOn: "visible",
+  visibilityOff: "team only",
+  forbidden: "You can't edit tickets on this project.",
+  notFound: "This ticket was deleted while you were editing.",
+  errors: {
+    titleInvalid: "Enter a title (up to 160 characters).",
+    descriptionInvalid: "Keep the description under 5,000 characters.",
+    statusInvalid: "Choose a status.",
+    stageInvalid: "Choose a stage.",
+    ownerInvalid: "Choose someone on this project.",
+    dueInvalid: "Enter a valid date.",
+    checklistInvalid: "Checklist items need text (up to 200 characters).",
+  },
+} as const;
+
+export type TeamProjectCopy = typeof teamProjectCopy;
+export type BoardCopy = typeof boardCopy;
+export type TicketEditorCopy = typeof ticketEditorCopy;
+
 /** The states page (#133): TM-09 and CP-08, live. Team only. */
 export const teamStatesCopy = {
   metaTitle: "States",

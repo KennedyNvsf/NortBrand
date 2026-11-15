@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ICON_STROKE } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
-import { initials } from "../../shell/client-data";
+import { initials } from "../../shell/initials";
 import { getProjectView, type ProjectView } from "../data";
 import {
   currentStage,

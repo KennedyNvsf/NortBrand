@@ -259,6 +259,13 @@ functions `portal_check_team_invite`, `portal_add_team_member` and
 of an active project; PT422 outside the allowed domain). `private.portal_bootstrap_first_admin`
 has no grants: the SQL editor only. Tests: `supabase/tests/07_portal_team_access.test.sql`.
 
+### Editing tickets (#137)
+
+`20261118120000_portal_ticket_editing.sql`: `tickets.updated_by` (trigger), wall-clock
+ticket versions, and `portal_save_ticket` (SECURITY INVOKER, versioned: a stale save
+answers `conflict` and changes nothing; ticket and checklist in one transaction).
+Tests: `supabase/tests/10_portal_ticket_editing.test.sql`.
+
 ### Creating a project (#136)
 
 `20261117120000_portal_create_project.sql`: `portal_create_project` (one transaction:
