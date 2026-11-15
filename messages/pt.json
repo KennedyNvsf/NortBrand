@@ -532,6 +532,15 @@
       "button": "Abrir o portal",
       "fallback": "Se o botão não funcionar, copie esta ligação para o seu navegador:",
       "footer": "Recebe este email porque a {studio} convidou {email} para um projeto. Dúvidas? Responda a este email."
+    },
+    "portalUpdate": {
+      "subject": "{project}: novidades de {author}",
+      "preview": "{author} publicou uma novidade sobre {project}.",
+      "heading": "Novidades sobre {project}",
+      "byline": "{author} · {studio}",
+      "button": "Abrir o portal",
+      "fallback": "Se o botão não funcionar, copie esta ligação para o seu navegador:",
+      "footer": "Recebe este email porque acompanha {project} no portal de projetos da {studio}. Dúvidas? Responda a este email."
     }
   },
   "Newsletter": {

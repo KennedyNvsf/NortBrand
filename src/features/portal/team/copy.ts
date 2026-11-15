@@ -400,6 +400,162 @@ export const ticketEditorCopy = {
   },
 } as const;
 
+/** Team project overview (#138; Figma TM-07). */
+export const teamOverviewCopy = {
+  metaTitle: "Overview",
+  newTicket: "New ticket",
+  attentionTitle: "Needs attention",
+  attention: {
+    blockedOne: "{title}: blocked on the client for 1 day.",
+    blockedMany: "{title}: blocked on the client for {days} days.",
+    blockedToday: "{title}: blocked on the client since today.",
+    notSignedIn: "{name} hasn't signed in since the invite on {date}.",
+    inReview: "{title} has been in review for {days} days.",
+  },
+  openTicket: "Open ticket",
+  overallProgress: "Overall progress",
+  progressDone: "{done} of {total} tasks done",
+  progressLabel: "{percent}% of tasks done",
+  clientSees: "The client sees {done} of {total} · {percent}%",
+  currentStage: "Current stage",
+  stageOf: "Stage {position} of {total} · since {date}",
+  noStages: "No stages yet",
+  thisWeek: "This week",
+  weekOne: "1 task",
+  weekMany: "{count} tasks",
+  launch: "Launch",
+  daysToGoOne: "1 day to go",
+  daysToGoMany: "{days} days to go",
+  launched: "Launched",
+  stagesTitle: "Project stages",
+  viewTimeline: "View timeline",
+  stageLabels: {
+    now: "Now",
+    done: "Done",
+    upcoming: "Upcoming",
+    current: "In progress",
+  },
+  from: "From",
+  workingTitle: "What we're working on",
+  workingIntro: "Open tasks in the current stage, most urgent first.",
+  workingEmpty: "Nothing open in this stage.",
+  viewBoard: "View board",
+  due: "Due {date}",
+  updatesTitle: "Latest updates",
+  updatesEmpty: "No updates yet.",
+  team: "NortBrand",
+  statuses: {
+    todo: "To do",
+    in_progress: "In progress",
+    in_review: "In review",
+    done: "Done",
+    blocked: "Blocked",
+  },
+  loadFailed: "We couldn't load this project. Refresh the page to try again.",
+} as const;
+
+/** Team timeline · manage stages (#138; Figma TM-05, TM-05b). */
+export const timelineCopy = {
+  metaTitle: "Timeline",
+  healthTitle: "Project health",
+  healthLabel: "Project health",
+  suggested: {
+    blocked_on_client_one:
+      "Suggested: Waiting on client, because 1 ticket is blocked on them. The client sees this on their overview.",
+    blocked_on_client_many:
+      "Suggested: Waiting on client, because {count} tickets are blocked on them. The client sees this on their overview.",
+    overdue_one:
+      "Suggested: At risk, because 1 ticket is past due. The client sees this on their overview.",
+    overdue_many:
+      "Suggested: At risk, because {count} tickets are past due. The client sees this on their overview.",
+    stage_late:
+      "Suggested: At risk, because {stage} was planned to end on {date}. The client sees this on their overview.",
+    on_track: "Suggested: On track. The client sees this on their overview.",
+  },
+  healthUpdate: {
+    on_track: "Good news: the project is back on track.",
+    at_risk:
+      "A heads-up: the project is at risk of slipping. We'll share the plan to get back on track.",
+    waiting_on_client:
+      "We're waiting on you to keep going. See the tasks marked Needs you.",
+  },
+  launchTitle: "Launch target",
+  launchLabel: "Launch target",
+  launchHint:
+    "Changing it posts an update and emails the client, so they always hear it from us first.",
+  launchUpdate: "The launch date has moved to {date}.",
+  postUpdate: "Post an update",
+  updateText: "Update for the client",
+  emailClient: "Email the client",
+  emailClientHint: "Sends the update to everyone who can sign in.",
+  save: "Save",
+  cancel: "Cancel",
+  saved: "Saved.",
+  savedEmailed: "Saved and emailed the client.",
+  savedEmailFailed:
+    "Saved, but the email didn't go out. The update is on their portal.",
+  stagesTitle: "Stages",
+  stagesIntro:
+    "Progress comes from tickets. Team-only tickets don't count towards what the client sees.",
+  columns: { stage: "Stage", dates: "Dates", tickets: "Tickets" },
+  start: "Start of {stage}",
+  end: "End of {stage}",
+  ongoing: "Ongoing",
+  now: "Now",
+  ticketsDone: "{done} of {total} done",
+  noTickets: "No tickets yet",
+  reopen: "Reopen",
+  reopenLabel: "Reopen {stage}",
+  reopened: "{stage} is open again.",
+  locked:
+    "{stage} is finished, so its dates are locked. Reopen it to change them.",
+  complete: "Complete stage",
+  footer:
+    "Client sees: {done} of {total} tasks done · {percent}%. Dates of finished stages are locked; reopen a stage to change them.",
+  datesSaved: "Dates saved.",
+  errors: {
+    dateInvalid: "Check the dates: the launch can't be before the start.",
+    endBeforeStart: "The end can't be before the start.",
+    bodyInvalid: "Keep the update under 4,000 characters.",
+    locked: "That stage is finished; reopen it to change its dates.",
+    not_current: "Only the current stage can be completed.",
+    forbidden: "You can't change this project's plan.",
+    failed: "Something went wrong and nothing changed. Please try again.",
+  },
+  completeDialog: {
+    eyebrow: "Complete {stage} · {client}",
+    titleOpen: "{stage} isn't finished yet",
+    titleDone: "Complete {stage}",
+    bodyOpen:
+      "{open} of its {total} tickets are still open, and the stage is planned until {date}. Completing it now starts {next} today and moves the client's timeline forward.",
+    bodyOpenNoNext:
+      "{open} of its {total} tickets are still open. Completing it now marks the last stage done.",
+    bodyDone:
+      "All its tickets are done. Completing it starts {next} and moves the client's timeline forward.",
+    bodyDoneNoNext: "All its tickets are done. This is the last stage.",
+    openQuestionOne: "What happens to the open ticket?",
+    openQuestionMany: "What happens to the {count} open tickets?",
+    keep: "Keep them in {stage}",
+    keepHint: "They stay open and still count towards the client's progress.",
+    move: "Move them to {next}",
+    moveHint: "They become {next} tickets and keep their status.",
+    postMilestone: "Post a milestone update",
+    milestoneText: "Milestone update",
+    milestoneHint: "You can edit it after.",
+    milestone: "{stage} is complete. We're now working on {next}.",
+    milestoneLast: "{stage} is complete.",
+    email: "Email the client",
+    emailHint: "Sends the milestone to {email}.",
+    emailHintAll: "Sends the milestone to everyone who can sign in.",
+    cancel: "Cancel",
+    confirm: "Complete stage",
+    confirmAnyway: "Complete anyway",
+    completed: "{stage} is complete.",
+  },
+} as const;
+
+export type TeamOverviewCopy = typeof teamOverviewCopy;
+export type TimelineCopy = typeof timelineCopy;
 export type TeamProjectCopy = typeof teamProjectCopy;
 export type BoardCopy = typeof boardCopy;
 export type TicketEditorCopy = typeof ticketEditorCopy;

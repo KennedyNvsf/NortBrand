@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import pt from "../../../../messages/pt.json";
 
-import { renderPortalWelcome } from "./render";
+import { renderPortalUpdate, renderPortalWelcome } from "./render";
 
 const welcome = {
   email: "ines@tascadolargo.pt",
@@ -37,6 +37,38 @@ describe("renderPortalWelcome", () => {
     expect(email.html).toContain('href="https://nortbrand.pt/pt/portal"');
     expect(email.subject).toBe(
       pt.Emails.portalWelcome.subject.replace("{project}", welcome.projectName),
+    );
+  });
+});
+
+describe("renderPortalUpdate", () => {
+  const notice = {
+    projectName: "Atlântico Café website",
+    publicId: "NB-4821",
+    authorName: "Ana Costa",
+    body: "Development is complete.\nWe're now reviewing <everything> before launch.",
+    siteUrl: "https://nortbrand.pt",
+  } as const;
+
+  it("carries the team's words, escaped, and links the project's portal", async () => {
+    const email = await renderPortalUpdate({ ...notice, locale: "en" });
+    expect(email.subject).toBe(
+      "Atlântico Café website: an update from Ana Costa",
+    );
+    expect(email.html).toContain("&lt;everything&gt;");
+    expect(email.html).not.toContain("<everything>");
+    expect(email.html).toContain(
+      'href="https://nortbrand.pt/en/portal/NB-4821"',
+    );
+    expect(email.text).toContain("Development is complete.");
+    expect(email.html).not.toMatch(/<img|src=|<script/i);
+  });
+
+  it("writes Portuguese to a Portuguese client", async () => {
+    const email = await renderPortalUpdate({ ...notice, locale: "pt" });
+    expect(email.html).toContain('lang="pt"');
+    expect(email.html).toContain(
+      'href="https://nortbrand.pt/pt/portal/NB-4821"',
     );
   });
 });

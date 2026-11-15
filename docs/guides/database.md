@@ -259,6 +259,14 @@ functions `portal_check_team_invite`, `portal_add_team_member` and
 of an active project; PT422 outside the allowed domain). `private.portal_bootstrap_first_admin`
 has no grants: the SQL editor only. Tests: `supabase/tests/07_portal_team_access.test.sql`.
 
+### Stage management (#138)
+
+`20261119120000_portal_stage_management.sql`: `portal_set_stage_dates` (finished stages
+locked), `portal_reopen_stage`, `portal_complete_stage` (one transaction: stage, next
+stage, open tickets, milestone update), `portal_set_project_health` and
+`portal_set_launch_date` (each with an optional update). SECURITY INVOKER throughout.
+Tests: `supabase/tests/11_portal_stage_management.test.sql`.
+
 ### Editing tickets (#137)
 
 `20261118120000_portal_ticket_editing.sql`: `tickets.updated_by` (trigger), wall-clock

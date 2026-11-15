@@ -688,6 +688,18 @@ export type Database = {
         Args: { p_public_id: string };
         Returns: string;
       };
+      portal_complete_stage: {
+        Args: {
+          p_move_open: boolean;
+          p_stage_id: string;
+          p_update_body?: string;
+        };
+        Returns: {
+          moved_tickets: number;
+          next_stage_id: string;
+          update_id: string;
+        }[];
+      };
       portal_complete_team_sign_in: {
         Args: Record<PropertyKey, never>;
         Returns: string;
@@ -736,6 +748,7 @@ export type Database = {
         Args: { p_user_id: string };
         Returns: undefined;
       };
+      portal_reopen_stage: { Args: { p_stage_id: string }; Returns: undefined };
       portal_save_ticket: {
         Args: {
           p_checklist: Json;
@@ -756,6 +769,26 @@ export type Database = {
           ticket_number: number;
           version: string;
         }[];
+      };
+      portal_set_launch_date: {
+        Args: {
+          p_launches_on: string;
+          p_project_id: string;
+          p_update_body?: string;
+        };
+        Returns: string;
+      };
+      portal_set_project_health: {
+        Args: {
+          p_health: string;
+          p_project_id: string;
+          p_update_body?: string;
+        };
+        Returns: string;
+      };
+      portal_set_stage_dates: {
+        Args: { p_ends_on?: string; p_stage_id: string; p_starts_on: string };
+        Returns: undefined;
       };
       portal_team_code_state: { Args: { p_email: string }; Returns: string };
       submit_consultation_request: {
