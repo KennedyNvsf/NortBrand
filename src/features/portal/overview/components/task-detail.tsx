@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { ICON_STROKE } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
-import { initials } from "../../shell/client-data";
+import { initials } from "../../shell/initials";
 import { getChecklist, type ProjectView } from "../data";
 import { daysUntil, type PortalTicket } from "../domain";
 import { formatDay, formatUpdateTime, type PortalLocale } from "../format";

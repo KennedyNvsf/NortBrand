@@ -5,6 +5,8 @@ import { site } from "@/content/site";
 import { isFakeBackendEnabled } from "@/lib/e2e-backend";
 import { getPortalSupabase } from "@/lib/supabase/auth";
 
+import { initials } from "./initials";
+
 import {
   E2E_PORTAL_COOKIE,
   E2E_PORTAL_PROJECT_ID,
@@ -34,13 +36,6 @@ export type ClientShellData = {
   team: ShellPerson[];
   viewer: { email: string; name: string | null };
 };
-
-export function initials(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  const first = parts.at(0)?.[0] ?? "";
-  const last = parts.length > 1 ? (parts.at(-1)?.[0] ?? "") : "";
-  return (first + last).toUpperCase() || "•";
-}
 
 const E2E_SHELL: Omit<ClientShellData, "viewer"> = {
   project: {

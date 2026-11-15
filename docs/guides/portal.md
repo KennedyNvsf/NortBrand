@@ -1,7 +1,7 @@
 # Client portal
 
 **Covers:** #131 (client sign-in), #132 (team sign-in and roles), #133 (shells and
-states), #134 (overview and tasks), #135 (timeline, files and updates), #136 (team projects and new project). Later portal tickets
+states), #134 (overview and tasks), #135 (timeline, files and updates), #136 (team projects and new project), #137 (team board and ticket editor). Later portal tickets
 extend this guide. **Source:**
 ADR-009, Figma 12 Portal — Client (`516:2`), 14 Portal — Motion (`566:127`). The data model
 is in the [Database guide](./database.md) § 7.
@@ -428,3 +428,76 @@ resending is on Client access (#141).
 `projects/e2e-store.ts`: NB-1234 exists; `admin@` / `member@e2e.example` are teammates
 (refused as clients); a welcome email to `bounce@e2e.example` fails. Spec:
 `tests/e2e/team-projects.spec.ts`.
+
+## 12. Team board and ticket editor (#137)
+
+**What.** A project's board (Figma TM-02, TM-T02, TM-M02) and the ticket editor (TM-02
+panel, TM-T02 sheet, TM-M03 full screen), at `/team/projects/<NB-xxxx>/board`. Code:
+`src/features/portal/team/board/`. The projects list links each project to its board; the
+project's other tabs (Overview, Timeline, Files, Updates, Client access) arrive with
+#138–#141 and show the designed 404 until then.
+
+### Database (`20261118120000_portal_ticket_editing.sql`)
+
+- `tickets.updated_by`: who saved last (trigger), so a refused save can name them.
+- Ticket versions use the wall clock (`clock_timestamp()`), so the version changes on
+  every save, even two in one transaction.
+- `portal_save_ticket(...)`: creates a ticket, or saves one **only if `updated_at` still
+  equals the version the editor loaded**; otherwise it changes nothing and answers
+  `conflict`. Ticket and checklist are saved in one transaction. SECURITY INVOKER, so RLS
+  decides (`works_on_project`); the owner must work on the project (22023). Optional
+  parameters (ticket, version, owner, due) default to null and come last, so the
+  generated types make them optional.
+- pgTAP `10_portal_ticket_editing.test.sql` (23): create, stale save refused and nothing
+  changed, "keep mine", checklist replaced, owner/teammate/client refusals, and hidden
+  tickets (and their checklists) never reaching the client, including after hiding one.
+
+### Edit conflicts (request flow)
+
+```
+editor loads ticket (version v1) ──► Save ──► saveTicketAction ──► portal_save_ticket(v1)
+                                                        │
+             someone saved meanwhile (v2) ◄── 'conflict'┘
+                │ read the ticket as saved now + who saved it (getEditableTicket)
+                ▼
+  editor: describeConflict(loaded v1, current v2)  → "Ana Costa changed the due date to
+          22 Nov while you were editing."   [See their change]  [Keep mine]
+          · See their change: load v2 into the form
+          · Keep mine: save this person's values with version v2
+```
+
+The form never loses what was typed. A failed save shows "Ticket · save failed" with
+Retry. `describeConflict` lives in `conflict.ts` (no zod) because the browser runs it.
+
+### Board
+
+- Columns: To do, In progress, In review, Done. A **blocked** ticket stays in In progress
+  with a "Blocked" marker (its status is still Blocked).
+- Filters are URL state: `?stage=`, `?owner=` (`none` = unassigned), `?status=` (mobile:
+  one status at a time), and the open ticket `?ticket=18` or `?ticket=new`.
+- Columns show their first cards and "+N more" (a button that expands the column).
+- **Moving a ticket:** drag with a mouse on desktop (native HTML drag and drop), or the
+  card's status menu (Radix DropdownMenu: arrow keys, Esc, focus return) everywhere; on
+  mobile the card's status pill opens that menu. A move shows at once (optimistic), is
+  undone if the server refuses, and is announced in a live region. A move is one field
+  and last-write-wins, but it bumps the version, so an open editor sees it before
+  overwriting. No drag library: keyboard and touch never need drag.
+- Motion ("Board drag"): the dragged card lifts (1.02 + shadow, 150 ms); neighbours make
+  room with a layout spring (400/30). Layout animations need Motion's `domMax`, which the
+  board loads in its own nested `LazyMotion` (`motion-features-max.ts`), so no other page
+  pays for it. Reduced motion: no lift, instant reorder.
+
+### Editor
+
+Title, status, due, stage, owner, description, checklist (add, tick, remove), "Visible to
+the client", delete. Delete is guarded and says what the client loses (or that they never
+saw it). Below 1024 px the column is hidden before hydration, so phones never see it flash
+before the full-screen editor. Esc while adding a checklist item cancels that item, not
+the editor.
+
+### Fake backend (e2e)
+
+`board/e2e-store.ts`: NB-1234 built from the client fixture with real UUIDs and a version
+per ticket (a stale save is refused there too). Spec: `tests/e2e/team-board.spec.ts`; each
+test creates its own ticket because the store is shared per server. The concurrency test
+uses two browser contexts (admin and member).

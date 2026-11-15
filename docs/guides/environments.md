@@ -195,6 +195,8 @@ removing teammates refuse to run. Then create each project's first admin
 The local stack gets the same settings from `supabase/config.toml`. Nothing here costs
 money on the current plans.
 
+**Create project (2026-11-14, lead's approval):** `20261117120000_portal_create_project` pushed to `nortbrand-dev` and `nortbrand-prod` after #136 merged (history 7/7 on both; the four functions exist and `anon` cannot execute `portal_create_project`, checked by query). The CLI is linked back to `nortbrand-dev`.
+
 **Milestones and files storage (2026-11-14, lead's approval):** `20261116120000_portal_milestones_and_files_storage` pushed to `nortbrand-dev` and `nortbrand-prod` after #135 merged (history 6/6 on both; private `portal-files` bucket, 50 MB, read rule `portal_files_read`, RLS on `project_milestones`, checked by query). The CLI is linked back to `nortbrand-dev`.
 
 **Portal migrations pushed (2026-11-13, lead's approval):** `20261113120000_portal_schema`

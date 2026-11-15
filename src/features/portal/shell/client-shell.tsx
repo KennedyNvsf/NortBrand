@@ -8,7 +8,8 @@ import { ICON_STROKE } from "@/lib/icons";
 
 import { signOutClient } from "../auth/actions";
 import { AccountMenu } from "./account-menu";
-import { initials, type ClientShellData } from "./client-data";
+import type { ClientShellData } from "./client-data";
+import { initials } from "./initials";
 import { PortalNav, type PortalNavItem } from "./portal-nav";
 import { ProjectSwitcher } from "./project-switcher";
 

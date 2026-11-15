@@ -3,7 +3,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 import { fill } from "../../../auth/components/copy";
-import { initials } from "../../../shell/client-data";
+import { initials } from "../../../shell/initials";
 import { Avatar, HealthBadge } from "../../../overview/components/status";
 import type { StageState } from "../../../overview/domain";
 import { lisbonToday } from "../../../overview/domain";
@@ -247,9 +247,12 @@ export function ProjectsView({
                         className="py-3.5 pr-4 text-left font-normal"
                       >
                         <span className="flex flex-col gap-0.5">
-                          <span className="text-[14px] font-semibold text-text-primary">
+                          <Link
+                            href={`/team/projects/${project.publicId}/board`}
+                            className="text-[14px] font-semibold text-text-primary hover:underline"
+                          >
                             {project.clientName}
-                          </span>
+                          </Link>
                           <span className="text-[12px] text-text-muted">
                             {project.name} · {project.publicId}
                           </span>
@@ -311,11 +314,17 @@ export function ProjectsView({
               );
               return (
                 <li key={project.id}>
-                  <article className="flex flex-col gap-3 rounded-lg border border-border-default bg-bg-surface p-4">
+                  <article className="relative flex flex-col gap-3 rounded-lg border border-border-default bg-bg-surface p-4">
                     <header className="flex items-start justify-between gap-3">
                       <div className="flex min-w-0 flex-col gap-0.5">
                         <h2 className="text-[17px] font-semibold text-text-primary">
-                          {project.clientName}
+                          {/* The whole card opens the project's board. */}
+                          <Link
+                            href={`/team/projects/${project.publicId}/board`}
+                            className="after:absolute after:inset-0 after:rounded-lg"
+                          >
+                            {project.clientName}
+                          </Link>
                         </h2>
                         <p className="text-[13px] text-text-muted">
                           {project.name} · {project.publicId}

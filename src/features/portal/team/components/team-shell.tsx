@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ICON_STROKE } from "@/lib/icons";
 
 import { AccountMenu } from "../../shell/account-menu";
-import { initials } from "../../shell/client-data";
+import { initials } from "../../shell/initials";
 import { PortalNav, type PortalNavItem } from "../../shell/portal-nav";
 import { signOutTeam } from "../actions";
 import { teamShellCopy } from "../copy";
