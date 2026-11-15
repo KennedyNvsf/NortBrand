@@ -78,6 +78,18 @@ const tickets: StoredTicket[] = E2E_PROJECT_VIEW.tickets.map(
   },
 );
 
+/** The project's plan, mutable so the timeline's actions (#138) change it. */
+const plan = {
+  health: E2E_PROJECT_VIEW.health,
+  launchesOn: E2E_PROJECT_VIEW.launchesOn,
+  stages: E2E_PROJECT_VIEW.stages.map((stage) => ({
+    ...stage,
+    id: stageIds.get(stage.id) ?? stage.id,
+  })),
+};
+
+export const fakePlan = plan;
+
 export function fakeBoard(publicId: string): TeamBoard | null {
   if (publicId !== E2E_PROJECT_VIEW.publicId) return null;
   return {
@@ -86,14 +98,11 @@ export function fakeBoard(publicId: string): TeamBoard | null {
       publicId,
       name: E2E_PROJECT_VIEW.name,
       clientName: "E2E Café",
-      health: E2E_PROJECT_VIEW.health,
-      launchesOn: E2E_PROJECT_VIEW.launchesOn,
+      health: plan.health,
+      launchesOn: plan.launchesOn,
       clientEmail: "joao@e2e.example",
     },
-    stages: E2E_PROJECT_VIEW.stages.map((stage) => ({
-      ...stage,
-      id: stageIds.get(stage.id) ?? stage.id,
-    })),
+    stages: plan.stages.map((stage) => ({ ...stage })),
     team: TEAM.map(({ id, name }) => ({ userId: id, name })),
     tickets: tickets.map(
       ({ description: _d, checklist: _c, updatedBy: _u, ...ticket }) => ticket,
@@ -219,4 +228,19 @@ export function fakeDeleteTicket(ticketId: string): "deleted" | "not_found" {
   if (index === -1) return "not_found";
   tickets.splice(index, 1);
   return "deleted";
+}
+
+/** Moves open tickets of one stage to another (completing a stage, #138). */
+export function fakeMoveOpenTickets(
+  fromStage: string,
+  toStage: string,
+): number {
+  let moved = 0;
+  for (const ticket of tickets) {
+    if (ticket.stageId === fromStage && ticket.status !== "done") {
+      ticket.stageId = toStage;
+      moved += 1;
+    }
+  }
+  return moved;
 }

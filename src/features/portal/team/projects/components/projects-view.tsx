@@ -248,7 +248,7 @@ export function ProjectsView({
                       >
                         <span className="flex flex-col gap-0.5">
                           <Link
-                            href={`/team/projects/${project.publicId}/board`}
+                            href={`/team/projects/${project.publicId}`}
                             className="text-[14px] font-semibold text-text-primary hover:underline"
                           >
                             {project.clientName}
@@ -318,9 +318,9 @@ export function ProjectsView({
                     <header className="flex items-start justify-between gap-3">
                       <div className="flex min-w-0 flex-col gap-0.5">
                         <h2 className="text-[17px] font-semibold text-text-primary">
-                          {/* The whole card opens the project's board. */}
+                          {/* The whole card opens the project's overview. */}
                           <Link
-                            href={`/team/projects/${project.publicId}/board`}
+                            href={`/team/projects/${project.publicId}`}
                             className="after:absolute after:inset-0 after:rounded-lg"
                           >
                             {project.clientName}

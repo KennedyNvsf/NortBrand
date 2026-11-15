@@ -318,6 +318,11 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   Moves: mouse drag on desktop, the card's status menu everywhere. Layout animations
   load `domMax` in a nested `LazyMotion` (board only). Client components import
   `shell/initials.ts`, never `shell/client-data.ts` (server; caught by check:bundles).
+- **Stage management and team overview (#138, docs/guides/portal.md § 13):**
+  `/team/projects/<NB-xxxx>` (overview) and `…/timeline`; `src/features/portal/team/plan/`.
+  Completing a stage is one SQL transaction (`portal_complete_stage`); health, launch
+  and milestones post an update and email the client after saving (a failed email never
+  undoes the change). Rules in `plan.ts` (progress, health suggestion, attention).
 - **The repository is public until launch** (Actions minutes, 2026-11-14): never commit
   secrets or personal data; making it private again is on the launch checklist.
 - **Email:** Supabase sends codes through custom SMTP on Resend; app emails use the

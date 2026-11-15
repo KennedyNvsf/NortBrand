@@ -4,6 +4,7 @@ import { site } from "@/content/site";
 import type { Locale } from "@/i18n/routing";
 import { emailMessages, toEmail, type RenderedEmail } from "@/lib/email/render";
 
+import { PortalUpdateEmail } from "./portal-update";
 import { PortalWelcomeEmail } from "./portal-welcome";
 
 export type PortalWelcome = {
@@ -48,6 +49,51 @@ export function renderPortalWelcome(
         button: t("button"),
         fallback: t("fallback"),
         footer: t("footer", { studio: site.name, email: welcome.email }),
+      }}
+    />,
+  );
+}
+
+export type PortalUpdateNotice = {
+  locale: Locale;
+  projectName: string;
+  publicId: string;
+  authorName: string;
+  body: string;
+  /** The site's origin, e.g. https://nortbrand.pt. */
+  siteUrl: string;
+};
+
+/** A team update, in the client's language, linking that project's portal. */
+export function renderPortalUpdate(
+  notice: PortalUpdateNotice,
+): Promise<RenderedEmail> {
+  const t = createTranslator({
+    locale: notice.locale,
+    messages: emailMessages[notice.locale],
+    namespace: "Emails.portalUpdate",
+  });
+  const portalUrl = `${notice.siteUrl.replace(/\/$/, "")}/${notice.locale}/portal/${notice.publicId}`;
+  const values = {
+    project: notice.projectName,
+    author: notice.authorName,
+    studio: site.name,
+  };
+
+  return toEmail(
+    t("subject", values),
+    <PortalUpdateEmail
+      locale={notice.locale}
+      studio={site.name}
+      body={notice.body}
+      portalUrl={portalUrl}
+      copy={{
+        preview: t("preview", values),
+        heading: t("heading", values),
+        byline: t("byline", values),
+        button: t("button"),
+        fallback: t("fallback"),
+        footer: t("footer", values),
       }}
     />,
   );

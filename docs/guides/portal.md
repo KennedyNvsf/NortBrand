@@ -1,7 +1,7 @@
 # Client portal
 
 **Covers:** #131 (client sign-in), #132 (team sign-in and roles), #133 (shells and
-states), #134 (overview and tasks), #135 (timeline, files and updates), #136 (team projects and new project), #137 (team board and ticket editor). Later portal tickets
+states), #134 (overview and tasks), #135 (timeline, files and updates), #136 (team projects and new project), #137 (team board and ticket editor), #138 (stage management and the team overview). Later portal tickets
 extend this guide. **Source:**
 ADR-009, Figma 12 Portal — Client (`516:2`), 14 Portal — Motion (`566:127`). The data model
 is in the [Database guide](./database.md) § 7.
@@ -501,3 +501,62 @@ the editor.
 per ticket (a stale save is refused there too). Spec: `tests/e2e/team-board.spec.ts`; each
 test creates its own ticket because the store is shared per server. The concurrency test
 uses two browser contexts (admin and member).
+
+## 13. Stage management and the team project overview (#138)
+
+**What.** A project's overview for the team (Figma TM-07) at `/team/projects/<NB-xxxx>`,
+and its timeline with stage management (TM-05, TM-05b) at `…/timeline`. Code:
+`src/features/portal/team/plan/`. The projects list now opens the overview.
+
+### Database (`20261119120000_portal_stage_management.sql`)
+
+All SECURITY INVOKER, so RLS decides (`works_on_project`) and updates are posted as the
+teammate (`updates_team_insert` checks `author_id`).
+
+| Function                                               | What it does                                                                                                                                                                                                                                                                              |
+| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `portal_set_stage_dates`                               | Changes an open stage's dates; a finished stage is locked (PT409).                                                                                                                                                                                                                        |
+| `portal_reopen_stage`                                  | Makes a finished stage open again.                                                                                                                                                                                                                                                        |
+| `portal_complete_stage`                                | **One transaction**: only the current stage (PT409 otherwise); ends it today if planned later; starts the next stage today if planned later; moves open tickets to the next stage (keeping their status) or leaves them; posts an optional milestone update. Any failure changes nothing. |
+| `portal_set_project_health` / `portal_set_launch_date` | Change the project and post an optional update in the same transaction (waiting on the client marks it "Needs you").                                                                                                                                                                      |
+
+Today is Lisbon's date (`private.lisbon_today()`). pgTAP `11_portal_stage_management.test.sql`
+(24): who may change the plan, locked stages, a failing completion leaves everything as it
+was, a full completion, reopen, health and launch.
+
+### Rules (`plan.ts`, unit-tested)
+
+- **Progress:** every ticket for the team; only client-visible ones for the client (shown
+  side by side: "The client sees 14 of 28").
+- **Health suggestion:** waiting on the client (a ticket blocked on them) → at risk
+  (tickets past due, or the current stage past its planned end) → on track. The team
+  chooses; the suggestion only explains.
+- **Attention list:** blocked on the client for N days, a client who hasn't signed in 3+
+  days after the invite, a ticket in review for 3+ days. "Since" uses the ticket's last
+  change (no status history yet).
+- **Completion plan:** what's open in the current stage, the next stage, and whether
+  completing now is early.
+
+### Telling the client
+
+Health, launch date and completing a stage open an editable update with "Email the
+client" (on by default). The change and the update are saved together; the email
+(`src/features/portal/emails/portal-update.tsx`, EN/PT, reused by #139) goes after, to
+every invited or active client in their language. A failed email never undoes the change:
+the result says so ("Saved, but the email didn't go out").
+
+### Pages
+
+- **Overview:** needs attention (with "Open ticket"), KPIs (progress ring, current
+  stage, this week, launch; 4 → 2 × 2 → stacked), the stage track, open work in the
+  current stage, latest updates. The ring and the track play once a session, keyed apart
+  from the client portal's.
+- **Timeline:** health (a radio group with arrow keys) with its suggestion, the launch
+  target, and the stages table (dates save when a field is left; Reopen; Complete stage).
+  Rows stack below 768 px; the Complete stage dialog is a bottom sheet on mobile.
+
+### Fake backend (e2e)
+
+The board's fake store holds a mutable plan (`fakePlan`); `plan/e2e-store.ts` applies the
+actions. Spec: `tests/e2e/team-plan.spec.ts`; tests that change the plan run on desktop
+only and put it back.
