@@ -259,6 +259,13 @@ functions `portal_check_team_invite`, `portal_add_team_member` and
 of an active project; PT422 outside the allowed domain). `private.portal_bootstrap_first_admin`
 has no grants: the SQL editor only. Tests: `supabase/tests/07_portal_team_access.test.sql`.
 
+### File uploads (#140)
+
+`20261121120000_portal_files_upload.sql`: Storage rules by path for the project's team
+(read, upload, delete under `projects/<project>/`), SVG removed from the bucket, and
+`portal_register_file` (SECURITY INVOKER, needs the uploaded object). Tests:
+`supabase/tests/13_portal_files_upload.test.sql`.
+
 ### Updates and the daily digest (#139)
 
 `20261120120000_portal_updates_digest.sql`: `portal_post_update`, `portal_edit_update`,

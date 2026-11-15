@@ -328,6 +328,11 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   (`team/notify.ts`). Daily digest: Vercel Cron → `/api/portal/digest` (Bearer
   `CRON_SECRET`) → `portal_claim_digests` (Vault `portal_cron_secret`, at most once per
   client per day). The client feed refreshes every 30 s (no Realtime: httpOnly session).
+- **Files (#140, docs/guides/portal.md § 15):** team Files tab (`team/files/`). Uploads go
+  browser → Storage through a signed upload URL, then the server checks the real type by
+  magic bytes (`magic.ts`) and the true size before `portal_register_file`; new files are
+  team-only. Storage rules by path for the project's team; SVG not accepted. Free plan
+  storage is 1 GB (tech debt).
 - **The repository is public until launch** (Actions minutes, 2026-11-14): never commit
   secrets or personal data; making it private again is on the launch checklist.
 - **Email:** Supabase sends codes through custom SMTP on Resend; app emails use the

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { getPortalViewer } from "@/features/portal/auth/access";
-import { E2E_PROJECT_VIEW } from "@/features/portal/overview/e2e-fixture";
+import { fakeFindFile } from "@/features/portal/team/files/e2e-store";
 import { isFakeBackendEnabled } from "@/lib/e2e-backend";
 import { getPortalSupabase } from "@/lib/supabase/auth";
 
@@ -53,8 +53,9 @@ export async function GET(
   }
 
   if (isFakeBackendEnabled()) {
-    const file = E2E_PROJECT_VIEW.files.find((entry) => entry.id === fileId);
-    if (!file) return notFound();
+    // Like RLS for a client: only shared files (team-only ones are a plain 404).
+    const file = fakeFindFile(fileId);
+    if (!file?.shared) return notFound();
     return NextResponse.redirect(`https://files.e2e.example/${file.id}`, {
       status: 302,
       headers: NO_STORE,

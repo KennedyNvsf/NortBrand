@@ -625,6 +625,63 @@ export const teamUpdatesCopy = {
 } as const;
 
 export type TeamUpdatesCopy = typeof teamUpdatesCopy;
+
+/** Team files (#140; Figma TM-08). */
+export const teamFilesCopy = {
+  metaTitle: "Files",
+  upload: "Upload file",
+  dropTitle: "Drop files here to upload.",
+  dropHint:
+    "PDF, images, ZIP · up to 50 MB · new files are team only until you share them",
+  chooseFiles: "Choose files to upload",
+  uploading: "Uploading {name}…",
+  uploaded: "Uploaded {name}. It's team only until you share it.",
+  groups: { design: "Design", documents: "Documents" },
+  groupIntro: {
+    design: "Approved designs and brand material.",
+    documents: "Everything we agreed.",
+  },
+  kinds: { pdf: "PDF", zip: "ZIP", image: "Image" },
+  by: "{name} · {day}",
+  visible: "Visible to client",
+  teamOnly: "Team only",
+  download: "Download",
+  downloadLabel: "Download {name}",
+  menu: "Actions for {name}",
+  share: "Share with the client",
+  unshare: "Make team only",
+  rename: "Rename",
+  delete: "Delete",
+  shared: "{name} is visible to the client.",
+  unshared: "{name} is team only now.",
+  renameTitle: "Rename file",
+  renameLabel: "File name",
+  save: "Save",
+  cancel: "Cancel",
+  renamed: "Renamed.",
+  deleteTitle: "Delete “{name}”?",
+  deleteShared:
+    "{client} will no longer be able to download it. This can't be undone.",
+  deleteTeamOnly: "The client never saw it. This can't be undone.",
+  deleteConfirm: "Delete file",
+  deleted: "Deleted {name}.",
+  empty:
+    "No files yet. Upload designs and documents; share them when they're ready for the client.",
+  loadFailed: "We couldn't load the files. Refresh the page to try again.",
+  errors: {
+    nameInvalid: "Give the file a name (up to 200 characters).",
+    empty: "{name} is empty.",
+    tooLarge: "{name} is over 50 MB.",
+    typeNotAllowed:
+      "{name} isn't a PDF, image or ZIP file, so it wasn't uploaded.",
+    notFound: "That file is gone. Refresh the page.",
+    forbidden: "You can't change files on this project.",
+    failed: "Something went wrong with {name}. Please try again.",
+    uploadFailed: "{name} didn't upload. Check your connection and try again.",
+  },
+} as const;
+
+export type TeamFilesCopy = typeof teamFilesCopy;
 export type TeamOverviewCopy = typeof teamOverviewCopy;
 export type TimelineCopy = typeof timelineCopy;
 export type TeamProjectCopy = typeof teamProjectCopy;
