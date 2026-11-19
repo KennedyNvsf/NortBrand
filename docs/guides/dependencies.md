@@ -1,6 +1,6 @@
 # Dependencies and security patches
 
-How dependencies are pinned, how we patch a vulnerable one, and what is still open (#88).
+How dependencies are pinned, how we patch a vulnerable one, and what is still open (#88, #156).
 
 ## 1. What we did in #88
 
@@ -25,9 +25,27 @@ All three Next.js advisories applied to this app:
 
 The site wasn't deployed yet, so nothing was exposed. The fix had to land before #45.
 
+## 1b. Next.js 16.4.6 (#156)
+
+On 2026-11-19, `next build` stopped with `SecurityFatalError`: 16.4.1 was flagged, and
+retrying didn't get past it, so no build (local, CI or Vercel) could finish. We moved
+`next` and `eslint-config-next` to **16.4.6**, the current release in the same minor line.
+
+The 16.4.5 advisories that apply here:
+
+- cross-tenant and cross-user disclosure or poisoning in `"use cache"` (the blog data
+  layer caches with it);
+- cache poisoning of shared fallback shells in Cache Components through request-supplied
+  route params (every `[locale]` page and the portal shells use Cache Components);
+- an SVG rejection bypass in the image optimizer (Sanity images go through it).
+
+The others (self-hosted response forwarding, Edge-runtime cookie header) don't apply: we
+run on Vercel and use no Edge runtime. 16.4.2–16.4.4 and 16.4.6 are Turbopack and
+runtime fixes; route handler responses are now compressed automatically (16.4.6).
+
 ## 2. How dependencies are pinned
 
-- **Exact versions in `package.json`** (`"next": "16.4.1"`, never `^16.4.1`). A version
+- **Exact versions in `package.json`** (`"next": "16.4.6"`, never `^16.4.6`). A version
   changes only in a reviewed pull request, and the lockfile is the record.
 - **Minimum release age.** pnpm refuses versions newer than its minimum release age,
   which protects against a compromised release that gets pulled within hours.

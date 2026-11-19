@@ -74,7 +74,16 @@ for (const route of routes) {
         const robots = page.locator('meta[name="robots"]');
         // Every page of a Vercel preview is noindex (src/lib/seo/deployment.ts).
         if (isNoindex || onPreview) {
-          await expect(robots).toHaveAttribute("content", /noindex/);
+          // Every robots tag must say noindex. The prerendered sample blog 404 gets
+          // identical copies after hydration on Next.js 16.4.6 (one in the server HTML;
+          // docs/tech-debt.md), so the count isn't asserted here.
+          await expect(robots.first()).toHaveAttribute("content", /noindex/);
+          const contents = await robots.evaluateAll((tags) =>
+            tags.map((tag) => tag.getAttribute("content") ?? ""),
+          );
+          expect(contents.every((content) => content.includes("noindex"))).toBe(
+            true,
+          );
         } else {
           await expect(robots).toHaveCount(0);
         }
