@@ -337,6 +337,7 @@ export type Database = {
       projects: {
         Row: {
           client_name: string;
+          clients_signed_out_at: string | null;
           created_at: string;
           health: string;
           id: string;
@@ -351,6 +352,7 @@ export type Database = {
         };
         Insert: {
           client_name: string;
+          clients_signed_out_at?: string | null;
           created_at?: string;
           health?: string;
           id?: string;
@@ -365,6 +367,7 @@ export type Database = {
         };
         Update: {
           client_name?: string;
+          clients_signed_out_at?: string | null;
           created_at?: string;
           health?: string;
           id?: string;
@@ -661,6 +664,16 @@ export type Database = {
         Returns: boolean;
       };
       mark_consultation_notified: { Args: { p_id: string }; Returns: boolean };
+      portal_add_client: {
+        Args: {
+          p_email: string;
+          p_locale: string;
+          p_name: string;
+          p_project_id: string;
+          p_user_id: string;
+        };
+        Returns: string;
+      };
       portal_add_team_member: {
         Args: { p_name: string; p_role: string; p_user_id: string };
         Returns: undefined;
@@ -688,6 +701,18 @@ export type Database = {
           project_name: string;
           public_id: string;
           updates: Json;
+        }[];
+      };
+      portal_clear_lockout: {
+        Args: { p_email: string; p_project_id: string };
+        Returns: boolean;
+      };
+      portal_client_lockouts: {
+        Args: { p_project_id: string };
+        Returns: {
+          email: string;
+          locked_at: string;
+          unlocks_at: string;
         }[];
       };
       portal_code_state: {
@@ -788,11 +813,24 @@ export type Database = {
         Args: { p_email: string; p_public_id: string };
         Returns: number;
       };
+      portal_remove_client: {
+        Args: { p_client_id: string; p_project_id: string };
+        Returns: undefined;
+      };
       portal_remove_team_member: {
         Args: { p_user_id: string };
         Returns: undefined;
       };
       portal_reopen_stage: { Args: { p_stage_id: string }; Returns: undefined };
+      portal_rotate_project_id: {
+        Args: { p_project_id: string };
+        Returns: {
+          email: string;
+          locale: string;
+          name: string;
+          public_id: string;
+        }[];
+      };
       portal_save_ticket: {
         Args: {
           p_checklist: Json;

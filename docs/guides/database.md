@@ -259,6 +259,16 @@ functions `portal_check_team_invite`, `portal_add_team_member` and
 of an active project; PT422 outside the allowed domain). `private.portal_bootstrap_first_admin`
 has no grants: the SQL editor only. Tests: `supabase/tests/07_portal_team_access.test.sql`.
 
+### Client access (#141)
+
+`20261122120000_portal_client_access.sql`: `projects.clients_signed_out_at` and a new
+`private.is_project_client` that accepts only sessions created after it (rotating the
+Project ID signs that project's clients out at once); the `keep_one_client` trigger
+(the last person who can sign in can't be removed or deleted); admin functions
+`portal_add_client`, `portal_remove_client`, `portal_rotate_project_id`,
+`portal_clear_lockout`, and `portal_client_lockouts` for the project's team. Tests:
+`supabase/tests/14_portal_client_access.test.sql`.
+
 ### File uploads (#140)
 
 `20261121120000_portal_files_upload.sql`: Storage rules by path for the project's team

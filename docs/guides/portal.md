@@ -1,7 +1,7 @@
 # Client portal
 
 **Covers:** #131 (client sign-in), #132 (team sign-in and roles), #133 (shells and
-states), #134 (overview and tasks), #135 (timeline, files and updates), #136 (team projects and new project), #137 (team board and ticket editor), #138 (stage management and the team overview), #139 (updates, Needs you emails and the digest), #140 (files with private storage). Later portal tickets
+states), #134 (overview and tasks), #135 (timeline, files and updates), #136 (team projects and new project), #137 (team board and ticket editor), #138 (stage management and the team overview), #139 (updates, Needs you emails and the digest), #140 (files with private storage), #141 (client access). Later portal tickets
 extend this guide. **Source:**
 ADR-009, Figma 12 Portal — Client (`516:2`), 14 Portal — Motion (`566:127`). The data model
 is in the [Database guide](./database.md) § 7.
@@ -672,3 +672,63 @@ object; a stuck object is reported as an orphan. Downloads go through
 `/api/portal/files/fake-upload` (404 outside the fake backend). Spec:
 `tests/e2e/team-files.spec.ts` (real PDF uploaded team-only, shared, renamed, deleted; a
 text file named .pdf refused; a client refused a team-only file).
+
+## 16. Client access (#141)
+
+**What.** The project's Client access tab (Figma TM-06 `543:369`, guarded states TM-09
+`547:612`) at `/team/projects/<NB-xxxx>/access`: the people who can sign in, the Project
+ID, and the last 30 days of sign-in activity. Admins add people, resend invites, lift a
+sign-in pause, remove people and regenerate the Project ID; members see the page
+read-only. Code: `src/features/portal/team/client-access/`.
+
+### Rotating the Project ID (the important part)
+
+```
+admin: Regenerate ID → confirm
+  → portal_rotate_project_id   new NB-xxxx, projects.clients_signed_out_at = now(),
+                               access_events 'project_id_rotated', returns the people
+  → every person gets the welcome email in its "new Project ID" form (newId: true)
+client, next request:
+  → private.is_project_client  accepts only a session (JWT session_id → auth.sessions)
+                               created after clients_signed_out_at
+  → RLS returns nothing → the client layout sees no readable project at all
+  → /portal?reason=signed-out  ("You've been signed out"); they sign in with the new ID
+```
+
+Why a cut-off and not deleting sessions: deleting `auth.sessions` would sign the same
+person out of their _other_ projects too, and the access token would keep working until
+it expires (up to an hour). The cut-off is checked by RLS on every query, so it applies at
+once and only to this project. A refreshed token keeps its session, so it stays refused.
+Projects that were never rotated have no cut-off and skip the session lookup.
+
+### People
+
+- **Add** (`add-person.ts`, tested): admin only → email checked → the existing auth user
+  is reused, or one is created (service role, auth administration only, ADR-009) →
+  `portal_add_client` (a removed person comes back as invited) → welcome email →
+  `portal_log_invite_sent`. If adding fails, a newly created auth user is deleted again.
+  A failed email keeps the person and says "use Resend invite".
+- **Remove**: `portal_remove_client`. A trigger (`private.keep_one_client`) refuses to
+  remove, or delete, the last person who can sign in (invited or active), so a direct
+  update by an admin is refused too. The page mirrors it (`canRemove`): the dialog says
+  why and offers "Add someone first" instead of "Remove anyway" (deviation from TM-09,
+  following the ticket; in tech debt).
+- **Unlock now**: `portal_clear_lockout` deletes the pause; the person asks for a new code.
+  `portal_client_lockouts` lists who is paused for the project's team.
+
+### Activity
+
+`access_events` for the last 30 days (at most 100), newest first, with the teammate who
+acted. Sign-in trouble ("too many wrong codes") is shown in red with its text.
+
+### Tests
+
+- pgTAP `14_portal_client_access.test.sql` (22): roles, add/re-add/duplicate, the last
+  person (function and direct update), lockouts, and rotation: the old session loses the
+  project, the person's other project is unaffected, a token without a session id is
+  refused, and a new session gets access back.
+- Unit: `access-rules.test.ts`, `add-person.test.ts`, the new-ID email in `render.test.ts`.
+- e2e `team-access.spec.ts` (fake backend, `client-access/e2e-store.ts`): the page, add
+  with inline errors, duplicate refused, remove, regenerate after a warning, members
+  read-only, axe, 390 px and touch targets. The fake rotation changes only the ID the
+  page shows, so other specs keep using NB-1234.

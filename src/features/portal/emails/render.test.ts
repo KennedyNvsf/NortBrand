@@ -43,6 +43,18 @@ describe("renderPortalWelcome", () => {
       pt.Emails.portalWelcome.subject.replace("{project}", welcome.projectName),
     );
   });
+
+  it("says the Project ID changed when it was rotated (#141)", async () => {
+    const email = await renderPortalWelcome({
+      ...welcome,
+      locale: "en",
+      projectId: "NB-7310",
+      newId: true,
+    });
+    expect(email.subject).toBe(`A new Project ID for ${welcome.projectName}`);
+    expect(email.text).toContain("NB-7310");
+    expect(email.text).toContain("you've been signed out");
+  });
 });
 
 describe("renderPortalUpdate", () => {

@@ -5,7 +5,10 @@ import { notFound } from "next/navigation";
 import { locale as rootLocale } from "next/root-params";
 import { Suspense, type ReactNode } from "react";
 
-import { getPortalViewer } from "@/features/portal/auth/access";
+import {
+  getClientProjects,
+  getPortalViewer,
+} from "@/features/portal/auth/access";
 import { getClientShell } from "@/features/portal/shell/client-data";
 import {
   ClientShell,
@@ -20,6 +23,7 @@ import { routing, type Locale } from "@/i18n/routing";
  * - No valid session (or the 30-day marker ran out): back to sign-in, which shows
  *   "You've been signed out" (CP-08).
  * - A Project ID this user can't read: 404. RLS decides; a guessed ID looks missing.
+ *   With no readable project at all (the ID was rotated, #141): signed out.
  * - Per request and per user (ADR-009): read inside Suspense; the fallback is the shell
  *   skeleton, shown only after 300 ms. Noindex.
  */
@@ -75,7 +79,14 @@ async function ShellGate({
   }
 
   const data = await getClientShell(projectId);
-  if (!data) notFound();
+  if (!data) {
+    // Signed in, but no project is readable at all: the Project ID was rotated, which
+    // ends every client session for the project in SQL (#141). Treat it as signed out.
+    if ((await getClientProjects()).length === 0) {
+      redirect({ href: "/portal?reason=signed-out", locale });
+    }
+    notFound();
+  }
 
   const t = await getTranslations("Portal.shell");
   const copy: ClientShellCopy = {

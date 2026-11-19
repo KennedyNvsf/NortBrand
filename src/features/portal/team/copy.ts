@@ -682,6 +682,107 @@ export const teamFilesCopy = {
 } as const;
 
 export type TeamFilesCopy = typeof teamFilesCopy;
+
+/** Client access (#141; Figma TM-06 543:369, guarded states TM-09 547:612). */
+export const teamAccessCopy = {
+  metaTitle: "Client access",
+  people: {
+    title: "People who can sign in",
+    intro: "Each person uses their own email with the Project ID.",
+    add: "Add person",
+    listLabel: "People who can sign in",
+    active: "Active",
+    invited: "Invited",
+    locked: "Locked out",
+    signedIn: "Signed in {when}",
+    neverSignedIn: "Active · not signed in yet",
+    inviteSent: "Invite sent {day} · not signed in yet",
+    lockedDetail: "Too many wrong codes, {time} · unlocks at {unlocks}",
+    resend: "Resend invite",
+    unlock: "Unlock now",
+    remove: "Remove",
+    resendLabel: "Resend the invite to {name}",
+    unlockLabel: "Unlock sign-in for {name}",
+    removeLabel: "Remove {name}",
+    resent: "Invite sent again to {email}.",
+    unlocked: "{name} can sign in again.",
+    removed: "{name} can no longer sign in.",
+    adminOnly: "Only admins can change who signs in.",
+  },
+  add: {
+    email: "Email",
+    name: "Name (optional)",
+    language: "Email language",
+    languages: { pt: "Portuguese", en: "English" },
+    hint: "They'll get the welcome email with the Project ID straight away.",
+    cancel: "Cancel",
+    send: "Send invite",
+    added: "Invite sent to {email}.",
+    addedNotSent:
+      "{email} was added, but the welcome email didn't go out. Use Resend invite.",
+  },
+  remove: {
+    title: "Remove {name}?",
+    body: "{name} won't be able to sign in to {client} any more. Their past activity stays in the log.",
+    confirm: "Remove",
+    cancel: "Cancel",
+    lastTitle: "Remove {name}?",
+    lastBody:
+      "{name} is the only person who can sign in to {client}. Add someone else first, or the client will lose access.",
+    addFirst: "Add someone first",
+  },
+  projectId: {
+    label: "Project ID",
+    body: "Clients sign in with it and their email. It's in every welcome email.",
+    copy: "Copy ID",
+    copied: "Project ID copied.",
+    copyFailed: "Couldn't copy. Select the ID and copy it yourself.",
+    regenerate: "Regenerate ID",
+    regenerateHint:
+      "Use this if the ID was shared with the wrong person. Everyone is signed out and gets the new ID by email.",
+    confirmTitle: "Regenerate the Project ID?",
+    confirmBody:
+      "Everyone at {client} is signed out now and gets the new ID by email. The old ID stops working at once.",
+    confirm: "Regenerate ID",
+    cancel: "Cancel",
+    rotated: "New Project ID {id}. Everyone was signed out and emailed.",
+    rotatedSomeFailed:
+      "New Project ID {id}. Some emails didn't go out ({failed}); use Resend invite.",
+  },
+  activity: {
+    title: "Sign-in activity",
+    intro: "The last 30 days. Only the team can see this.",
+    empty: "No sign-in activity in the last 30 days.",
+    when: "{day} · {time}",
+    today: "Today",
+    events: {
+      sign_in: "{person} signed in.",
+      wrong_code: "{person} entered a wrong code.",
+      locked:
+        "{person} entered too many wrong codes. Sign-in is paused for {minutes} minutes.",
+      lockout_cleared: "{actor} unlocked sign-in for {person}.",
+      invite_sent: "{actor} sent an invite to {email}.",
+      client_removed: "{actor} removed {person}.",
+      project_id_rotated:
+        "{actor} regenerated the Project ID. Everyone was signed out.",
+    },
+    someone: "Someone at NortBrand",
+  },
+  errors: {
+    emailInvalid: "Enter an email like name@company.pt.",
+    nameTooLong: "Keep the name under 80 characters.",
+    alreadyAdded: "That email can already sign in to this project.",
+    isTeammate: "That's a NortBrand teammate's email. Clients need their own.",
+    lastPerson:
+      "Add someone else first: this is the only person who can sign in.",
+    notFound: "That person or project is gone. Refresh the page.",
+    forbidden: "Only admins can change client access.",
+    failed: "Something went wrong. Please try again.",
+  },
+  loadFailed: "We couldn't load client access. Refresh the page to try again.",
+} as const;
+
+export type TeamAccessCopy = typeof teamAccessCopy;
 export type TeamOverviewCopy = typeof teamOverviewCopy;
 export type TimelineCopy = typeof timelineCopy;
 export type TeamProjectCopy = typeof teamProjectCopy;

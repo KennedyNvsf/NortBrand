@@ -134,3 +134,13 @@ export function formatUpdateTime(
   }
   return formatDay(day, locale);
 }
+
+/** "14:15", Lisbon time (24-hour in both languages). */
+export function formatLisbonTime(timestamp: string): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: LISBON,
+  }).format(new Date(timestamp));
+}
