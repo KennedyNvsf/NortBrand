@@ -107,7 +107,7 @@ export function SearchDialog({
                 router.push(first.href);
               }
             }}
-            className="h-14 w-full min-w-0 bg-transparent text-[16px] text-text-primary outline-none placeholder:text-text-muted"
+            className="h-14 w-full min-w-0 appearance-none bg-transparent text-[16px] text-text-primary outline-none placeholder:text-text-muted [&::-webkit-search-cancel-button]:appearance-none"
           />
           <button
             type="button"

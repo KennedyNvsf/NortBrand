@@ -823,11 +823,11 @@ export type TeamSearchCopy = typeof teamSearchCopy;
 
 /** The Team table (#142; Figma TM-12). */
 export const teamTableCopy = {
-  summary: "{people} · {projects} active",
+  summary: "{people} · {projects}",
   peopleOne: "1 person",
   peopleMany: "{count} people",
-  projectsOne: "1 project",
-  projectsMany: "{count} projects",
+  projectsOne: "1 active project",
+  projectsMany: "{count} active projects",
   invite: "Invite teammate",
   closeInvite: "Close",
   tableLabel: "Teammates",
