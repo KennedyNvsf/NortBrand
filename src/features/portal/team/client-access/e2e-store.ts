@@ -17,7 +17,7 @@ import type {
 type Store = {
   publicId: string;
   people: ClientPerson[];
-  lockouts: Lockout[];
+  lockedEmails: string[];
   events: AccessEvent[];
   nextEventId: number;
 };
@@ -57,13 +57,7 @@ function seed(): Store {
         lastSignInAt: "2026-11-01T09:00:00Z",
       },
     ],
-    lockouts: [
-      {
-        email: "hugo@e2e.example",
-        lockedAt: minutesAgo(5),
-        unlocksAt: new Date(Date.now() + 10 * 60_000).toISOString(),
-      },
-    ],
+    lockedEmails: ["hugo@e2e.example"],
     events: [
       {
         id: 3,
@@ -101,9 +95,13 @@ export function fakeClientAccess() {
   return {
     publicId: store.publicId,
     people: store.people.map((person) => ({ ...person })),
-    lockouts: store.lockouts.filter(
-      (lockout) => new Date(lockout.unlocksAt) > new Date(),
-    ),
+    // A seeded pause stays current (paused 5 minutes ago, 10 left) until it's cleared,
+    // so a long-running test server never sees it expire.
+    lockouts: store.lockedEmails.map((email): Lockout => ({
+      email,
+      lockedAt: minutesAgo(5),
+      unlocksAt: new Date(Date.now() + 10 * 60_000).toISOString(),
+    })),
     events: [...store.events].sort((a, b) =>
       b.occurredAt.localeCompare(a.occurredAt),
     ),
@@ -175,9 +173,8 @@ export function fakeRotate(actorName: string) {
 }
 
 export function fakeClearLockout(email: string, actorName: string): boolean {
-  const before = store.lockouts.length;
-  store.lockouts = store.lockouts.filter((lockout) => lockout.email !== email);
-  const cleared = store.lockouts.length < before;
+  const cleared = store.lockedEmails.includes(email);
+  store.lockedEmails = store.lockedEmails.filter((entry) => entry !== email);
   if (cleared) log("lockout_cleared", email, actorName);
   return cleared;
 }
