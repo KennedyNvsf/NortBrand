@@ -103,6 +103,10 @@ test.describe("Client portal shell", () => {
     await page.getByRole("button", { name: /Switch project/ }).click();
     await expect(page.getByRole("menuitem")).toHaveCount(2);
     await page.keyboard.press("Escape");
+    // Wait for the menu to finish closing: while it's open (or fading out), Radix hides
+    // the rest of the page with aria-hidden, which axe would report.
+    await expect(page.getByRole("menuitem")).toHaveCount(0);
+    await expect(page.locator("[data-aria-hidden]")).toHaveCount(0);
 
     const { violations } = await new AxeBuilder({ page })
       .withTags(WCAG_TAGS)
