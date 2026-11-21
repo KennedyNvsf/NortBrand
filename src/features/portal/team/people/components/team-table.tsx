@@ -68,8 +68,11 @@ export function TeamTable({
   };
 
   const projectsLabel = (person: TeamPerson) => {
-    if (person.role === "admin")
+    if (person.role === "admin") {
+      if (activeProjects === 0) return copy.noProjects;
+      if (activeProjects === 1) return copy.allProjectsOne;
       return fill(copy.allProjects, { count: activeProjects });
+    }
     return person.projectNames.length > 0
       ? person.projectNames.join(", ")
       : copy.noProjects;

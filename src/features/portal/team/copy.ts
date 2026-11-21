@@ -840,6 +840,8 @@ export const teamTableCopy = {
     actions: "Actions",
   },
   allProjects: "All {count} projects",
+  /** An admin's cell when there is one active project ("All 1 projects" reads wrong). */
+  allProjectsOne: "All projects",
   noProjects: "No projects yet",
   never: "Not signed in yet",
   now: "Now",
