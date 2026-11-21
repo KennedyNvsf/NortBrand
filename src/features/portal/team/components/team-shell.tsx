@@ -1,16 +1,15 @@
-import { Search } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { Logo } from "@/components/site/logo";
 import { Toaster } from "@/components/ui/sonner";
-import { ICON_STROKE } from "@/lib/icons";
 
 import { AccountMenu } from "../../shell/account-menu";
 import { initials } from "../../shell/initials";
 import { PortalNav, type PortalNavItem } from "../../shell/portal-nav";
 import { signOutTeam } from "../actions";
-import { teamShellCopy } from "../copy";
+import { teamSearchCopy, teamShellCopy } from "../copy";
+import { SearchLauncher } from "../search/components/search-launcher";
 import type { TeamShellData } from "../shell-data";
 
 /*
@@ -19,7 +18,7 @@ import type { TeamShellData } from "../shell-data";
  *            (boards use the icon rail instead: `nav="rail"`, from the board ticket)
  *   tablet   top bar · tabs under it · content
  *   mobile   top bar (56) · content · bottom tab bar
- * English only (ADR-009). Search is drawn but disabled until the search ticket (#142).
+ * English only (ADR-009). Search (⌘K) opens a dialog (#142); results respect RLS.
  */
 
 export function teamNavItems(counts: TeamShellData["counts"]): PortalNavItem[] {
@@ -74,30 +73,19 @@ export function TeamShell({
         <span className="shrink-0 rounded-sm bg-action-secondary-subtle px-2 py-0.5 text-[11px] font-semibold tracking-[0.08em] text-action-secondary uppercase">
           {copy.badge}
         </span>
-        <label className="hidden w-full max-w-[360px] items-center gap-2 rounded-md border border-border-default bg-bg-primary px-3 md:flex">
-          <span className="sr-only">{copy.search}</span>
-          <Search
-            aria-hidden
-            strokeWidth={ICON_STROKE}
-            className="size-4 shrink-0 text-text-muted"
-          />
-          <input
-            type="search"
-            disabled
-            placeholder={copy.search}
-            title={copy.searchSoon}
-            className="h-10 w-full min-w-0 bg-transparent text-[14px] text-text-primary placeholder:text-text-muted disabled:cursor-not-allowed"
-          />
-        </label>
+        <SearchLauncher copy={teamSearchCopy} label={copy.searchOpen} />
         <span className="flex-1" />
-        <AccountMenu
-          initials={initials(data.viewer.name)}
-          name={data.viewer.name}
-          email={data.viewer.email}
-          accountLabel={copy.account}
-          signOutLabel={copy.signOut}
-          signOut={signOutTeam}
-        />
+        {/* Phones: search icon, then the account (Figma TM-M05). */}
+        <div className="max-md:order-2">
+          <AccountMenu
+            initials={initials(data.viewer.name)}
+            name={data.viewer.name}
+            email={data.viewer.email}
+            accountLabel={copy.account}
+            signOutLabel={copy.signOut}
+            signOut={signOutTeam}
+          />
+        </div>
       </header>
 
       <PortalNav

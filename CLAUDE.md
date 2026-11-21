@@ -338,6 +338,10 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   accepts only sessions created after it (JWT `session_id`), so that project's clients
   are signed out at once and get the new ID by email. The last person who can sign in
   can't be removed (trigger). Admins manage; members read.
+- **My tickets, Team, search (#142, docs/guides/portal.md § 17):** `team/my-tickets/`,
+  `team/people/`, `team/search/`. Role change is `portal_set_team_role` (admin only, never
+  the last admin); search is `portal_search`, SECURITY INVOKER so RLS decides what a
+  teammate finds; the dialog loads with `next/dynamic`. Settings is #159, View as client #160.
 - **The repository is public until launch** (Actions minutes, 2026-11-14): never commit
   secrets or personal data; making it private again is on the launch checklist.
 - **Email:** Supabase sends codes through custom SMTP on Resend; app emails use the

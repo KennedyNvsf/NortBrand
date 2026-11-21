@@ -122,7 +122,7 @@ export const teamShellCopy = {
     settings: "Settings",
   },
   search: "Search projects and tickets",
-  searchSoon: "Search arrives with the My tickets / Team / Settings ticket.",
+  searchOpen: "Search projects and tickets (⌘K)",
   account: "Account",
   signOut: "Sign out",
   loading: "Loading the workspace",
@@ -244,6 +244,24 @@ export const teamPagesCopy = {
     title: "My tickets",
     emptyTitle: "Nothing assigned to you",
     emptyBody: "Tickets you own show up here, most urgent first.",
+    summary:
+      "{open} open across {projects} · {overdue} overdue · {week} due this week",
+    summaryShort: "{open} open · {overdue} overdue · {week} this week",
+    projectOne: "1 project",
+    projectMany: "{count} projects",
+    groups: { overdue: "Overdue", thisWeek: "This week", later: "Later" },
+    due: "Due {day}",
+    noDue: "No due date",
+    teamOnly: "Team only",
+    showMore: "Show {count} more",
+    openLabel: "Open {title} on the {project} board",
+    statusLabels: {
+      todo: "To do",
+      in_progress: "In progress",
+      in_review: "In review",
+      blocked: "Blocked",
+    },
+    loadFailed: "We couldn't load your tickets. Refresh the page to try again.",
   },
   settings: {
     title: "Settings",
@@ -783,6 +801,69 @@ export const teamAccessCopy = {
 } as const;
 
 export type TeamAccessCopy = typeof teamAccessCopy;
+
+/** Search (#142; top bar, ⌘K; TM-09 "Search · no results"). */
+export const teamSearchCopy = {
+  title: "Search",
+  description: "Find projects by name or Project ID, and tickets by title.",
+  field: "Search projects and tickets",
+  hint: "Type at least 2 characters.",
+  searching: "Searching…",
+  projects: "Projects",
+  tickets: "Tickets",
+  noResultsTitle: "No results for “{query}”",
+  noResultsBody:
+    "Search covers project names, Project IDs like NB-4821, and ticket titles.",
+  failed: "Search didn't work. Try again.",
+  resultsCount: "{count} results",
+  close: "Close search",
+} as const;
+
+export type TeamSearchCopy = typeof teamSearchCopy;
+
+/** The Team table (#142; Figma TM-12). */
+export const teamTableCopy = {
+  summary: "{people} · {projects} active",
+  peopleOne: "1 person",
+  peopleMany: "{count} people",
+  projectsOne: "1 project",
+  projectsMany: "{count} projects",
+  invite: "Invite teammate",
+  closeInvite: "Close",
+  tableLabel: "Teammates",
+  columns: {
+    person: "Person",
+    role: "Role",
+    projects: "Projects",
+    openTickets: "Open tickets",
+    lastActive: "Last active",
+    actions: "Actions",
+  },
+  allProjects: "All {count} projects",
+  noProjects: "No projects yet",
+  never: "Not signed in yet",
+  now: "Now",
+  minutesAgo: "{count} min ago",
+  hoursAgo: "{count} h ago",
+  today: "Today, {time}",
+  roleLabel: "Role for {name}",
+  you: "You",
+  remove: "Remove",
+  removeLabel: "Remove {name}",
+  removeTitle: "Remove {name}?",
+  removeBody:
+    "Their tickets and updates go to each project's lead. They can't sign in any more.",
+  roleSaved: "{name} is now {role}.",
+  errors: {
+    forbidden: "Only admins can change roles.",
+    lastAdmin: "Someone must stay an admin. Make another teammate admin first.",
+    notFound: "That teammate isn't on the team any more.",
+    failed: "Something went wrong. Please try again.",
+  },
+  loadFailed: "We couldn't load the team. Refresh the page to try again.",
+} as const;
+
+export type TeamTableCopy = typeof teamTableCopy;
 export type TeamOverviewCopy = typeof teamOverviewCopy;
 export type TimelineCopy = typeof timelineCopy;
 export type TeamProjectCopy = typeof teamProjectCopy;

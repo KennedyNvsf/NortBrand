@@ -122,7 +122,7 @@ projects that user sees.
 **What.** `/team/sign-in` (TM-14) and a guarded `/team` page with the team list, invite
 and remove. English only, outside the locale routes (its own root layout, like
 `/studio`), noindex, disallowed in robots.txt. The portal shell (#133) and the full Team
-page (TM-12, the My tickets / Team / Settings ticket) build on it.
+page (TM-12, #142, § 17) build on it.
 
 **Access model (lead's decision, 2026-11-13).** Invite-only by any email. An optional
 allowed domain (`portal_settings.allowed_team_domain`, off) limits invites; a trigger on
@@ -225,7 +225,7 @@ one nav is in the accessibility tree). The active item comes from the URL.
   tasks/page.tsx  Suspense(fallback: PageSkeleton) → H1 + day-one EmptyState
 /team/settings
   (workspace)/layout.tsx  getTeamShell() (viewer + counts) → null? → /team/sign-in
-  settings/page.tsx  member → ReadOnlyNotice; admin → the settings (#142)
+  settings/page.tsx  member → ReadOnlyNotice; admin → the settings (#159)
 ```
 
 - `getClientShell` reads the project, the client's other projects (switcher), the counts
@@ -732,3 +732,98 @@ acted. Sign-in trouble ("too many wrong codes") is shown in red with its text.
   with inline errors, duplicate refused, remove, regenerate after a warning, members
   read-only, axe, 390 px and touch targets. The fake rotation changes only the ID the
   page shows, so other specs keep using NB-1234.
+
+## 17. My tickets, Team and search (#142)
+
+**What.** Three team-workspace pieces (Figma 13 Portal — Team `528:188`): **My tickets**
+(TM-11 `545:541`, phones TM-M05 `560:871`) at `/team/my-tickets`, the full **Team** page
+(TM-12 `545:850`) at `/team/team`, and **search** (⌘K / Ctrl+K) from the top bar, with the
+"what search covers" empty state from TM-09 (`547:612`). Settings is #159 and View as
+client is #160 (lead's decision, 2026-11-21). Code: `src/features/portal/team/my-tickets/`,
+`people/` and `search/`; SQL in `20261123120000_portal_team_workspace.sql`.
+
+### My tickets (request flow)
+
+```
+/team/my-tickets  (workspace layout: getTeamShell → signed in?)
+  getMyTickets(viewer.userId)   tickets owned by me, not done, on active projects,
+                                read under my session (RLS: only projects I work on), ≤ 200
+  groupMyTickets(rows, today)   my-tickets.ts (pure, unit-tested), Lisbon dates:
+                                  Overdue    due before today
+                                  This week  today … Sunday of this week
+                                  Later      after Sunday, or no due date (last)
+  MyTicketsView                 summary line, one section per group; each row shows
+                                status, project, "Team only" and the due date and links
+                                to /team/projects/<NB-xxxx>/board?ticket=N
+```
+
+Only Later folds: it shows 5 and a "Show N more" button (client state, no fetch).
+Empty groups are left out; with no tickets at all the page shows the shared EmptyState.
+
+### Team page
+
+- **Read:** `getTeamOverview()` (`people/data.ts`) calls `portal_team_overview()`
+  (SECURITY DEFINER, teammates only, `42501` otherwise). It returns each active teammate's
+  role, the active projects they work on (admins: all), open tickets and **last active**,
+  which is `auth.users.last_sign_in_at`: only a definer function can read `auth`. The
+  label ("Now", "12 min ago", "Today, 10:02", a date) is `last-active.ts` (tested).
+- **Role cards and table** (`people/components/team-table.tsx`): the role cards count
+  admins and members; below 1024 the table drops the secondary columns (projects, last
+  active), and below 768 each row becomes a card (Portal responsive rules `560:2243`).
+- **Invite and remove** are the #132 flows (`team-roster.tsx`); the invite form now opens
+  from "Invite teammate", as in TM-12. Members see everything read-only.
+- **Role change** (admins only):
+
+```
+admin picks a role → setTeamRoleAction (people/actions.ts)
+  → setTeamRole (roles.ts, tested)   viewer is admin? zod (uuid, admin|member)
+  → portal_set_team_role             require_team_admin(); advisory lock, so two admins
+                                     can't demote each other at the same moment;
+                                     refuses to demote the last active admin (PT409
+                                     last_admin)
+  → "saved" → router.refresh()  |  refused: forbidden / lastAdmin / notFound / failed
+```
+
+The check is in the action and in SQL; the SQL one is the one that counts.
+
+### Search
+
+```
+⌘K, or the top-bar field (tablet+) / icon (phones)
+  SearchLauncher   the dialog is a next/dynamic chunk, prefetched when the browser is idle
+                   or on hover/focus, mounted the first time it opens
+  SearchDialog     debounced; under 2 characters nothing is sent; no hits → "No results
+                   for …" with what search covers (TM-09)
+  searchAction     signed-in teammate? zod (2–80 chars) → rpc portal_search
+  portal_search    SECURITY INVOKER: projects (name, Project ID, client) ≤ 8 and ticket
+                   titles ≤ 12, read through RLS, so a member never finds a project
+                   they aren't on. Typed % and _ are literal. Clients get nothing.
+  results          projects → /team/projects/<NB-xxxx>; tickets → …/board?ticket=N;
+                   Enter opens the first one
+```
+
+Why INVOKER and not a definer function with its own checks: the RLS policies already say
+who may read a project or ticket. Running as the caller reuses them, so search can never
+drift from what the board and overview show.
+
+### Tests
+
+- pgTAP `15_portal_team_workspace.test.sql` (14): search finds a member's own project
+  (Project ID in any case) and its tickets, team-only ones included, never another
+  project by name or ID, treats `%` as a literal and gives clients nothing; the overview
+  is teammates only (admins first, done tickets not counted, last sign-in); role change
+  is admin only, the last admin can't step down, and can once there is a second admin.
+- Unit: `my-tickets.test.ts` (groups, Sunday edge, sorting), `last-active.test.ts`,
+  `roles.test.ts` (forbidden, last admin, error mapping).
+- e2e `team-workspace.spec.ts` (fake backend): My tickets groups and opening a ticket on
+  its board, the Team table and an invited teammate's role change, members read-only,
+  search with ⌘K by ticket title and Project ID, the no-results state, Enter opening the
+  first hit, axe, 390 px and touch targets. `team-sign-in.spec.ts`
+  follows the new invite button and the table.
+
+### Extending
+
+- A new searchable thing: add a branch to `portal_search` (keep it INVOKER), a `kind` in
+  `search.ts` (`toHits`), and a row in the dialog. Add a pgTAP case for a user who must
+  not see it.
+- Settings (#159) adds its own route; the role rules stay in `portal_set_team_role`.
