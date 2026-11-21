@@ -17,6 +17,8 @@ export type PortalWelcome = {
   leadName: string;
   /** The site's origin, e.g. https://nortbrand.pt (passed in so this stays env-free). */
   siteUrl: string;
+  /** The Project ID was rotated (#141): same email, saying the ID changed. */
+  newId?: boolean;
 };
 
 /** The welcome email, in the client's language, linking that language's sign-in page. */
@@ -30,21 +32,29 @@ export function renderPortalWelcome(
   });
   const signInUrl = `${welcome.siteUrl.replace(/\/$/, "")}/${welcome.locale}/portal`;
 
+  const changed = welcome.newId === true;
+
   return toEmail(
-    t("subject", { project: welcome.projectName }),
+    t(changed ? "newIdSubject" : "subject", { project: welcome.projectName }),
     <PortalWelcomeEmail
       locale={welcome.locale}
       studio={site.name}
       projectId={welcome.projectId}
       signInUrl={signInUrl}
       copy={{
-        preview: t("preview", { projectId: welcome.projectId }),
-        heading: t("heading", { project: welcome.projectName }),
-        intro: t("intro", {
-          lead: welcome.leadName,
-          client: welcome.clientName,
-          studio: site.name,
+        preview: t(changed ? "newIdPreview" : "preview", {
+          projectId: welcome.projectId,
         }),
+        heading: t(changed ? "newIdHeading" : "heading", {
+          project: welcome.projectName,
+        }),
+        intro: changed
+          ? t("newIdIntro", { client: welcome.clientName, studio: site.name })
+          : t("intro", {
+              lead: welcome.leadName,
+              client: welcome.clientName,
+              studio: site.name,
+            }),
         idLabel: t("idLabel"),
         howTo: t("howTo", { email: welcome.email }),
         button: t("button"),

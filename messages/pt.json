@@ -531,7 +531,11 @@
       "howTo": "Entre com este endereço de email ({email}) e o ID do projeto. Enviamos-lhe sempre um código de 6 dígitos; não há palavra-passe para memorizar.",
       "button": "Abrir o portal",
       "fallback": "Se o botão não funcionar, copie esta ligação para o seu navegador:",
-      "footer": "Recebe este email porque a {studio} convidou {email} para um projeto. Dúvidas? Responda a este email."
+      "footer": "Recebe este email porque a {studio} convidou {email} para um projeto. Dúvidas? Responda a este email.",
+      "newIdSubject": "Um novo ID do projeto para {project}",
+      "newIdPreview": "Entre com o seu novo ID do projeto {projectId}.",
+      "newIdHeading": "O seu ID do projeto {project} mudou",
+      "newIdIntro": "A {studio} emitiu um novo ID do projeto para o portal de {client}, por isso a sua sessão foi terminada. Use o novo ID abaixo da próxima vez que entrar."
     },
     "portalUpdate": {
       "subject": "{project}: novidades de {author}",

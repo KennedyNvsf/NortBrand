@@ -333,6 +333,11 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   magic bytes (`magic.ts`) and the true size before `portal_register_file`; new files are
   team-only. Storage rules by path for the project's team; SVG not accepted. Free plan
   storage is 1 GB (tech debt).
+- **Client access (#141, docs/guides/portal.md § 16):** `team/client-access/`. Rotating
+  the Project ID sets `projects.clients_signed_out_at`; `private.is_project_client`
+  accepts only sessions created after it (JWT `session_id`), so that project's clients
+  are signed out at once and get the new ID by email. The last person who can sign in
+  can't be removed (trigger). Admins manage; members read.
 - **The repository is public until launch** (Actions minutes, 2026-11-14): never commit
   secrets or personal data; making it private again is on the launch checklist.
 - **Email:** Supabase sends codes through custom SMTP on Resend; app emails use the

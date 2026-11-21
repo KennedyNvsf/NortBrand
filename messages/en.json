@@ -531,7 +531,11 @@
       "howTo": "Sign in with this email address ({email}) and your Project ID. Each time, we'll send you a 6-digit code; there's no password to remember.",
       "button": "Open the portal",
       "fallback": "If the button doesn't work, copy this link into your browser:",
-      "footer": "You're receiving this because {studio} invited {email} to a project. Questions? Reply to this email."
+      "footer": "You're receiving this because {studio} invited {email} to a project. Questions? Reply to this email.",
+      "newIdSubject": "A new Project ID for {project}",
+      "newIdPreview": "Sign in with your new Project ID {projectId}.",
+      "newIdHeading": "Your Project ID for {project} has changed",
+      "newIdIntro": "{studio} has issued a new Project ID for {client}'s portal, so you've been signed out. Use the new ID below the next time you sign in."
     },
     "portalUpdate": {
       "subject": "{project}: an update from {author}",
