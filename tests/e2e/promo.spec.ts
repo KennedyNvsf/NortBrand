@@ -184,3 +184,145 @@ test.describe("home promo before a cookie choice", () => {
     await advanceUntilOpen(page);
   });
 });
+
+/*
+ * The corner card on About and Services (#127): the same trigger and dismissal as the
+ * Home modal, but non-blocking. A labelled `aside` (complementary landmark), never a
+ * dialog; it takes no focus. On mobile it holds the Sticky CTA's slot.
+ */
+function promoCard(page: Page, title: RegExp = /20% off/) {
+  return page.getByRole("complementary", { name: title });
+}
+
+test.describe("promo corner card", () => {
+  test.use({ storageState: { cookies: [consentCookie], origins: [] } });
+
+  for (const path of ["/en/about", "/en/services"]) {
+    test(`shows 8 s after load on ${path}, without taking focus`, async ({
+      page,
+    }) => {
+      await openHome(page, path);
+      await page.clock.fastForward(7000);
+      await expect(promoCard(page)).toHaveCount(0);
+
+      const card = await advanceUntilOpen(page, promoCard(page));
+      await expect(card).toContainText(copy("en", "Promo.terms"));
+      await expect(
+        card.getByRole("link", { name: copy("en", "Common.bookConsultation") }),
+      ).toHaveAttribute("href", "/en/contact");
+      await expect(page.getByRole("dialog")).toHaveCount(0);
+      // Non-blocking: focus stays where it was, and the page still scrolls.
+      expect(await page.evaluate(() => document.activeElement?.tagName)).toBe(
+        "BODY",
+      );
+      expect(
+        await page.evaluate(() =>
+          document.body.hasAttribute("data-scroll-locked"),
+        ),
+      ).toBe(false);
+    });
+  }
+
+  test("Close dismisses it, and the Home modal stays closed too", async ({
+    page,
+  }) => {
+    await openHome(page, "/en/about");
+    const card = await advanceUntilOpen(page, promoCard(page));
+    await card.getByRole("button", { name: copy("en", "Promo.close") }).click();
+    await page.clock.resume();
+    await expect(promoCard(page)).toHaveCount(0);
+    expect(
+      await page.evaluate(
+        (key) => window.localStorage.getItem(key),
+        PROMO_STORAGE_KEY,
+      ),
+    ).toBe(promo.id);
+
+    // Same page, so the clock is already installed: navigate and give it time.
+    await page.goto("/en");
+    await page.waitForLoadState("networkidle");
+    await page.clock.fastForward(20_000);
+    await expect(promoDialog(page)).toHaveCount(0);
+  });
+
+  test("Book a Consultation goes to Contact and dismisses the offer", async ({
+    page,
+  }) => {
+    await openHome(page, "/en/services");
+    const card = await advanceUntilOpen(page, promoCard(page));
+    await page.clock.resume();
+    await card
+      .getByRole("link", { name: copy("en", "Common.bookConsultation") })
+      .click();
+    await expect(page).toHaveURL(/\/en\/contact$/);
+    expect(
+      await page.evaluate(
+        (key) => window.localStorage.getItem(key),
+        PROMO_STORAGE_KEY,
+      ),
+    ).toBe(promo.id);
+  });
+
+  test("never shows after the offer ends", async ({ page }) => {
+    await openHome(page, "/en/about", AFTER_OFFER);
+    await page.clock.fastForward(20_000);
+    await expect(promoCard(page)).toHaveCount(0);
+  });
+
+  test("takes the Sticky CTA's slot on mobile, and gives it back", async ({
+    page,
+  }) => {
+    test.skip(!isMobile(page), "mobile only");
+    // Services: long enough that the bar has room between the hero and the CTA band
+    // (on About the band, which hides the bar by design, is already in view).
+    await openHome(page, "/en/services");
+    const sticky = page.locator('[data-slot="sticky-cta"]');
+    // Past the hero, where the Sticky CTA shows. (Mobile WebKit has no mouse wheel, so
+    // scroll the window directly.)
+    await page.evaluate(() => {
+      window.scrollTo(0, 1300);
+    });
+    const card = await advanceUntilOpen(page, promoCard(page));
+    // The bar's IntersectionObserver runs once the clock does.
+    await page.clock.resume();
+
+    // Never both at once: the bar wants to show (data-visible) but leaves the slot
+    // while the card holds it (hidden, so out of the tab order too).
+    await expect(sticky).toHaveAttribute("data-visible", "true");
+    await expect(sticky).toBeHidden();
+    await expect(card).toBeVisible();
+
+    await card.getByRole("button", { name: copy("en", "Promo.close") }).click();
+    await expect(promoCard(page)).toHaveCount(0);
+    await expect(sticky).toBeVisible();
+  });
+
+  for (const path of ["/en/about", "/pt/services"]) {
+    test(`has no axe violations while open on ${path}`, async ({ page }) => {
+      await openHome(page, path);
+      await advanceUntilOpen(
+        page,
+        promoCard(page, path.startsWith("/pt") ? /20% de desconto/ : /20% off/),
+      );
+      await page.clock.resume();
+      await settleAnimations(page);
+      const { violations } = await new AxeBuilder({ page })
+        .include('[data-motion="promo-card"]')
+        .withTags(WCAG_TAGS)
+        .analyze();
+      expect(violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+    });
+  }
+
+  test("never overflows the screen at 390 in Portuguese", async ({ page }) => {
+    test.skip(!isMobile(page), "mobile only");
+    await openHome(page, "/pt/about");
+    await advanceUntilOpen(page, promoCard(page, /20% de desconto/));
+    const overflow = await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth -
+        document.documentElement.clientWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+});

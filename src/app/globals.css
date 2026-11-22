@@ -723,6 +723,65 @@ body[data-scroll-locked] [data-slot="sticky-cta"] {
 }
 
 /*
+ * Promo corner card (Motion Spec › PROMO, "Promo card (About, Services)"; #127).
+ * Rises from its corner: origin bottom right, opacity 0→1, y 16→0, scale 0.96→1, in
+ * 300 ms ease-out quint (--ease-emphasized); exits down 8 px to scale 0.98 in 225 ms
+ * ease-in (--ease-exit). On mobile the Sticky CTA exits first (below), so the card waits
+ * for it before rising into the same slot. Reduced motion: opacity only (keyframes
+ * swapped), and the global rule caps it at 150 ms.
+ */
+[data-motion="promo-card"] {
+  transform-origin: bottom right;
+  animation: promo-card-in 300ms var(--ease-emphasized) both;
+}
+
+[data-motion="promo-card"][data-state="closed"] {
+  animation: promo-card-out 225ms var(--ease-exit) both;
+}
+
+@media (width < 48rem) {
+  [data-motion="promo-card"][data-state="open"] {
+    animation-delay: var(--duration-base);
+  }
+}
+
+@keyframes promo-card-in {
+  from {
+    opacity: 0;
+    translate: 0 16px;
+    scale: 0.96;
+  }
+}
+
+@keyframes promo-card-out {
+  to {
+    opacity: 0;
+    translate: 0 8px;
+    scale: 0.98;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-motion="promo-card"] {
+    animation-name: promo-fade-in;
+  }
+  [data-motion="promo-card"][data-state="closed"] {
+    animation-name: promo-fade-out;
+  }
+}
+
+/* While the promo card is on screen it holds the Sticky CTA's slot on mobile: the bar
+   fades out, then leaves the tab order and the accessibility tree (visibility), and
+   comes back once the card has left (<body data-promo-card> is removed then). */
+body[data-promo-card] [data-slot="sticky-cta"] {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition-property: opacity, translate, visibility;
+  transition-delay: 0s, 0s, var(--duration-base);
+}
+
+/*
  * Reduced motion: no translation, scaling, parallax or path drawing; opacity fades only,
  * at 150ms or less. This is the global safety net; components should also branch on
  * useReducedMotion() once Motion is added.
