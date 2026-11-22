@@ -106,3 +106,31 @@ export function fakeCreateProject(
 export function fakeSendWelcome(welcome: WelcomeEmail): Promise<boolean> {
   return Promise.resolve(welcome.email !== "bounce@e2e.example");
 }
+
+/** Archive / restore (#165). The role and the rules are checked in lifecycle.ts. */
+export function fakeSetProjectStatus(
+  projectId: string,
+  status: "active" | "closed",
+): Promise<"ok" | { error: { code: string; message?: string } }> {
+  const project = projects.find((candidate) => candidate.id === projectId);
+  if (!project) return Promise.resolve({ error: { code: "P0002" } });
+  project.status = status;
+  return Promise.resolve("ok");
+}
+
+/** Delete permanently (#165): checks the typed Project ID like SQL; no accounts to drop. */
+export function fakeDeleteProject(
+  projectId: string,
+  confirm: string,
+): Promise<string[] | { error: { code: string; message?: string } }> {
+  const index = projects.findIndex((candidate) => candidate.id === projectId);
+  const project = projects[index];
+  if (!project) return Promise.resolve({ error: { code: "P0002" } });
+  if (confirm.trim().toUpperCase() !== project.publicId) {
+    return Promise.resolve({
+      error: { code: "22023", message: "confirm_mismatch" },
+    });
+  }
+  projects.splice(index, 1);
+  return Promise.resolve([]);
+}

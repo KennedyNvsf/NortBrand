@@ -3,6 +3,7 @@ import type { TicketStatus } from "../../overview/domain";
 import type { BoardTicket } from "./board";
 import type { SaveTicketInput } from "./ticket";
 import type { EditableTicket } from "./conflict";
+import { fakeProjects } from "../projects/e2e-store";
 import type { TeamBoard } from "./data";
 
 /**
@@ -96,7 +97,28 @@ const plan = {
 export const fakePlan = plan;
 
 export function fakeBoard(publicId: string): TeamBoard | null {
-  if (publicId !== E2E_PROJECT_VIEW.publicId) return null;
+  const stored = fakeProjects().find(
+    (project) => project.publicId === publicId,
+  );
+  if (!stored) return null;
+  if (publicId !== E2E_PROJECT_VIEW.publicId) {
+    // A project made in a test (#136): its stages, no tickets yet.
+    return {
+      project: {
+        id: stored.id,
+        publicId,
+        name: stored.name,
+        clientName: stored.clientName,
+        health: stored.health,
+        launchesOn: stored.launchesOn,
+        clientEmail: null,
+        status: stored.status,
+      },
+      stages: stored.stages.map((stage) => ({ ...stage })),
+      team: TEAM.slice(0, 1).map(({ id, name }) => ({ userId: id, name })),
+      tickets: [],
+    };
+  }
   return {
     project: {
       id: PROJECT_ID,
@@ -106,6 +128,7 @@ export function fakeBoard(publicId: string): TeamBoard | null {
       health: plan.health,
       launchesOn: plan.launchesOn,
       clientEmail: "joao@e2e.example",
+      status: stored.status,
     },
     stages: plan.stages.map((stage) => ({ ...stage })),
     team: TEAM.map(({ id, name }) => ({ userId: id, name })),

@@ -71,9 +71,11 @@ test.describe("Team projects", () => {
       .filter({ visible: true })
       .click();
     await expect(page).toHaveURL(/\?view=archived$/);
+    // Other specs may archive their own projects (#165): only check that the active
+    // NB-1234 isn't listed here.
     await expect(
-      main.getByText("Nothing archived.").filter({ visible: true }),
-    ).toBeVisible();
+      main.getByText("E2E Café website · NB-1234").filter({ visible: true }),
+    ).toHaveCount(0);
   });
 
   test("an admin creates a project: stages previewed, clients invited", async ({
