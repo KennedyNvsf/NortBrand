@@ -138,3 +138,26 @@ export function fakeRemoveMember(
   member.active = false;
   return Promise.resolve("ok");
 }
+
+/** Role change (#142), with the SQL rule: never demote the last active admin. */
+export function fakeSetRole(
+  userId: string,
+  role: TeamRole,
+): Promise<"ok" | { error: { code: string; message?: string } }> {
+  const email = emailOf(userId);
+  const member = email ? roster.get(email) : undefined;
+  if (!member?.active) return Promise.resolve({ error: { code: "P0002" } });
+  const otherAdmins = [...roster.entries()].filter(
+    ([other, entry]) =>
+      other !== email && entry.active && entry.role === "admin",
+  );
+  if (
+    member.role === "admin" &&
+    role === "member" &&
+    otherAdmins.length === 0
+  ) {
+    return Promise.resolve({ error: { code: "PT409", message: "last_admin" } });
+  }
+  member.role = role;
+  return Promise.resolve("ok");
+}

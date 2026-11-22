@@ -16,9 +16,11 @@ import {
 } from "@/components/ui/select";
 
 import { fill } from "../../auth/components/copy";
-import type { Teammate } from "../access";
 import { inviteTeammateAction, removeTeammateAction } from "../actions";
-import type { TeamPageCopy } from "../copy";
+import { ConfirmDialog } from "../../states/confirm-dialog";
+import type { TeamPageCopy, TeamTableCopy } from "../copy";
+import { TeamTable } from "../people/components/team-table";
+import type { TeamOverview, TeamPerson } from "../people/data";
 import type {
   InviteFieldErrors,
   InviteResult,
@@ -27,10 +29,10 @@ import type {
 } from "../team-admin";
 
 /*
- * The team list with invite and remove (#132). The full Team page (TM-12: table, roles,
- * projects, last active) is the My tickets / Team / Settings ticket; this is the part the
- * access model needs now. Admins invite and remove; members see the list read-only and
- * who to ask. Every action is checked again on the server and in SQL.
+ * The Team page body (#132, #142; Figma TM-12): summary and "Invite teammate", the role
+ * cards, the invite form, the people table (roles changed inline) and a guarded remove.
+ * Admins invite, change roles and remove; members see it read-only and who to ask.
+ * Every action is checked again on the server and in SQL.
  */
 
 type Message = { tone: "ok" | "error"; text: string };
@@ -69,25 +71,75 @@ function removeMessage(copy: TeamPageCopy, result: RemoveResult): Message {
 
 export function TeamRoster({
   copy,
-  team,
+  tableCopy,
+  overview,
   viewer,
+  now,
 }: {
   copy: TeamPageCopy;
-  team: Teammate[];
+  tableCopy: TeamTableCopy;
+  overview: TeamOverview;
   viewer: { userId: string; role: TeamRole };
+  now: string;
 }) {
   const router = useRouter();
   const [message, setMessage] = useState<Message>();
+  const [inviting, setInviting] = useState(false);
+  const [removing, setRemoving] = useState<TeamPerson | null>(null);
+  const [pending, startTransition] = useTransition();
   const isAdmin = viewer.role === "admin";
-  const firstAdmin = team.find((person) => person.role === "admin");
+  const firstAdmin = overview.people.find((person) => person.role === "admin");
+  const people =
+    overview.people.length === 1
+      ? tableCopy.peopleOne
+      : fill(tableCopy.peopleMany, { count: overview.people.length });
+  const projects =
+    overview.activeProjects === 1
+      ? tableCopy.projectsOne
+      : fill(tableCopy.projectsMany, { count: overview.activeProjects });
 
   const done = (next: Message) => {
     setMessage(next);
-    if (next.tone === "ok") router.refresh();
+    if (next.tone === "ok") {
+      setInviting(false);
+      router.refresh();
+    }
   };
 
   return (
     <div className="flex flex-col gap-lg">
+      <div className="flex flex-col gap-md md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-h3 text-text-primary">{copy.title}</h1>
+          <p className="text-body text-text-muted">
+            {fill(tableCopy.summary, { people, projects })}
+          </p>
+        </div>
+        {isAdmin ? (
+          <Button
+            type="button"
+            variant={inviting ? "secondary" : "primary"}
+            aria-expanded={inviting}
+            onClick={() => {
+              setInviting((open) => !open);
+            }}
+          >
+            {inviting ? tableCopy.closeInvite : tableCopy.invite}
+          </Button>
+        ) : null}
+      </div>
+
+      <div className="grid gap-md md:grid-cols-2">
+        <div className="rounded-lg border border-border-default p-lg">
+          <h2 className="text-label text-text-primary">{copy.admin}</h2>
+          <p className="text-small text-text-muted">{copy.adminSummary}</p>
+        </div>
+        <div className="rounded-lg border border-border-default p-lg">
+          <h2 className="text-label text-text-primary">{copy.member}</h2>
+          <p className="text-small text-text-muted">{copy.memberSummary}</p>
+        </div>
+      </div>
+
       <div aria-live="polite">
         {message ? (
           message.tone === "ok" ? (
@@ -100,113 +152,48 @@ export function TeamRoster({
         ) : null}
       </div>
 
-      <ul className="flex flex-col divide-y divide-border-default rounded-lg border border-border-default bg-bg-surface">
-        {team.map((person) => (
-          <TeammateRow
-            key={person.userId}
-            copy={copy}
-            person={person}
-            isYou={person.userId === viewer.userId}
-            canRemove={isAdmin && person.userId !== viewer.userId}
-            onRemoved={done}
-          />
-        ))}
-      </ul>
+      {isAdmin && inviting ? <InviteForm copy={copy} onDone={done} /> : null}
 
-      {isAdmin ? (
-        <InviteForm copy={copy} onDone={done} />
-      ) : (
+      <TeamTable
+        copy={tableCopy}
+        roleNames={{ admin: copy.admin, member: copy.member }}
+        people={overview.people}
+        activeProjects={overview.activeProjects}
+        viewer={viewer}
+        now={now}
+        onRemove={isAdmin ? setRemoving : undefined}
+      />
+
+      {!isAdmin ? (
         <p className="text-small text-text-muted">
           {fill(copy.readOnly, { admin: firstAdmin?.name ?? copy.admin })}
         </p>
-      )}
-
+      ) : null}
       <p className="text-small text-text-muted">{copy.footnote}</p>
+
+      <ConfirmDialog
+        open={removing !== null}
+        onOpenChange={(open) => {
+          if (!open) setRemoving(null);
+        }}
+        title={fill(tableCopy.removeTitle, { name: removing?.name ?? "" })}
+        body={tableCopy.removeBody}
+        confirmLabel={copy.remove}
+        cancelLabel={copy.cancel}
+        pending={pending}
+        onConfirm={() => {
+          const person = removing;
+          if (!person) return;
+          startTransition(async () => {
+            const result = await removeTeammateAction({
+              userId: person.userId,
+            });
+            setRemoving(null);
+            done(removeMessage(copy, result));
+          });
+        }}
+      />
     </div>
-  );
-}
-
-function TeammateRow({
-  copy,
-  person,
-  isYou,
-  canRemove,
-  onRemoved,
-}: {
-  copy: TeamPageCopy;
-  person: Teammate;
-  isYou: boolean;
-  canRemove: boolean;
-  onRemoved: (message: Message) => void;
-}) {
-  const [confirming, setConfirming] = useState(false);
-  const [pending, startTransition] = useTransition();
-
-  return (
-    <li className="flex flex-col gap-3 px-md py-3 md:flex-row md:items-center md:justify-between">
-      <div className="flex min-w-0 flex-col">
-        <span className="text-label text-text-primary">
-          {person.name}
-          {isYou ? (
-            <span className="text-text-muted"> · {copy.you}</span>
-          ) : null}
-        </span>
-        <span className="truncate text-small text-text-muted">
-          {person.email}
-        </span>
-      </div>
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="text-small text-text-muted">
-          {person.role === "admin" ? copy.admin : copy.member}
-        </span>
-        {canRemove ? (
-          confirming ? (
-            <>
-              <span className="text-small text-text-primary">
-                {fill(copy.removeConfirm, { name: person.name })}
-              </span>
-              <Button
-                type="button"
-                variant="secondary"
-                loading={pending}
-                onClick={() => {
-                  startTransition(async () => {
-                    const result = await removeTeammateAction({
-                      userId: person.userId,
-                    });
-                    setConfirming(false);
-                    onRemoved(removeMessage(copy, result));
-                  });
-                }}
-              >
-                {pending ? copy.removing : copy.remove}
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                disabled={pending}
-                onClick={() => {
-                  setConfirming(false);
-                }}
-              >
-                {copy.cancel}
-              </Button>
-            </>
-          ) : (
-            <Button
-              type="button"
-              variant="ghost"
-              aria-label={`${copy.remove} ${person.name}`}
-              onClick={() => {
-                setConfirming(true);
-              }}
-            >
-              {copy.remove}
-            </Button>
-          )
-        ) : null}
-      </div>
-    </li>
   );
 }
 

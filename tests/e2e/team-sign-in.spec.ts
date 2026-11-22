@@ -104,12 +104,15 @@ test.describe("Team portal", () => {
     const name = `New Person ${run}`;
     await signIn(page, "admin@e2e.example");
 
+    // The invite form opens from "Invite teammate" (Figma TM-12).
+    await page.getByRole("button", { name: "Invite teammate" }).click();
     await page.getByLabel("Name").fill(name);
     await page.getByLabel("Email").fill(email);
     await page.getByRole("button", { name: "Send invite" }).click();
     await expect(page.getByText("Invited.")).toBeVisible();
     await expect(page.getByText(email)).toBeVisible();
 
+    await page.getByRole("button", { name: "Invite teammate" }).click();
     await page.getByLabel("Name").fill("Outsider");
     await page.getByLabel("Email").fill("someone@outside.example");
     await page.getByRole("button", { name: "Send invite" }).click();
@@ -131,11 +134,11 @@ test.describe("Team portal", () => {
   test("a member sees the team read-only", async ({ page }) => {
     await signIn(page, "member@e2e.example");
     await expect(
-      page.getByRole("listitem").filter({ hasText: "admin@e2e.example" }),
+      page.getByRole("row").filter({ hasText: "admin@e2e.example" }),
     ).toBeVisible();
-    await expect(page.getByRole("button", { name: "Send invite" })).toHaveCount(
-      0,
-    );
+    await expect(
+      page.getByRole("button", { name: "Invite teammate" }),
+    ).toHaveCount(0);
     await expect(page.getByRole("button", { name: /^Remove / })).toHaveCount(0);
     await expect(
       page.getByText(

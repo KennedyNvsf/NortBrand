@@ -1,15 +1,22 @@
+import * as Sentry from "@sentry/nextjs";
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { Suspense } from "react";
 
-import { getTeamViewer, listTeammates } from "@/features/portal/team/access";
-import { TeamRoster } from "@/features/portal/team/components/team-roster";
-import { teamPageCopy, teamShellCopy } from "@/features/portal/team/copy";
 import { PageSkeleton } from "@/features/portal/states/skeletons";
+import { getTeamViewer } from "@/features/portal/team/access";
+import { TeamRoster } from "@/features/portal/team/components/team-roster";
+import {
+  teamPageCopy,
+  teamShellCopy,
+  teamTableCopy,
+} from "@/features/portal/team/copy";
+import { getTeamOverview } from "@/features/portal/team/people/data";
 
 /*
- * Team (#132, inside the #133 shell): the role summary and the team list with invite and
- * remove. The full TM-12 table (projects, open tickets, last active) is the My tickets /
- * Team / Settings ticket. The workspace layout guards the session.
+ * Team (#132, #142; Figma TM-12): role summary, the people table (role, projects, open
+ * tickets, last active), invite, role change and remove. Dynamic and per user; the
+ * workspace layout guards the session.
  */
 
 export const metadata: Metadata = { title: teamPageCopy.metaTitle };
@@ -23,29 +30,32 @@ export default function TeamPage() {
 }
 
 async function TeamContent() {
+  await connection();
   const viewer = await getTeamViewer();
   if (viewer.status !== "signed_in") return null;
-  const team = await listTeammates();
-  const copy = teamPageCopy;
+
+  let overview;
+  try {
+    overview = await getTeamOverview();
+  } catch (error) {
+    Sentry.captureException(error, { tags: { feature: "portal-team" } });
+    return (
+      <div className="flex flex-col gap-lg">
+        <h1 className="text-h3 text-text-primary">{teamPageCopy.title}</h1>
+        <p role="alert" className="text-body text-text-muted">
+          {teamTableCopy.loadFailed}
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col gap-lg">
-      <h1 className="text-h3 text-text-primary">{copy.title}</h1>
-      <div className="grid gap-md md:grid-cols-2">
-        <div className="rounded-lg border border-border-default p-lg">
-          <h2 className="text-label text-text-primary">{copy.admin}</h2>
-          <p className="text-small text-text-muted">{copy.adminSummary}</p>
-        </div>
-        <div className="rounded-lg border border-border-default p-lg">
-          <h2 className="text-label text-text-primary">{copy.member}</h2>
-          <p className="text-small text-text-muted">{copy.memberSummary}</p>
-        </div>
-      </div>
-      <TeamRoster
-        copy={copy}
-        team={team}
-        viewer={{ userId: viewer.userId, role: viewer.role }}
-      />
-    </div>
+    <TeamRoster
+      copy={teamPageCopy}
+      tableCopy={teamTableCopy}
+      overview={overview}
+      viewer={{ userId: viewer.userId, role: viewer.role }}
+      now={new Date().toISOString()}
+    />
   );
 }

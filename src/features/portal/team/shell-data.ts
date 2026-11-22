@@ -6,6 +6,7 @@ import { getPortalSupabase } from "@/lib/supabase/auth";
 
 import { getTeamViewer } from "./access";
 import { E2E_TEAM_COOKIE } from "./e2e-backend";
+import { FAKE_MY_TICKETS_COUNT } from "./my-tickets/data";
 import { fakeProjects } from "./projects/e2e-store";
 import type { TeamRole } from "./team-admin";
 
@@ -37,7 +38,7 @@ export const getTeamShell = cache(
           projects: fakeProjects().filter(
             (project) => project.status === "active",
           ).length,
-          myTickets: 0,
+          myTickets: FAKE_MY_TICKETS_COUNT,
         },
       };
     }

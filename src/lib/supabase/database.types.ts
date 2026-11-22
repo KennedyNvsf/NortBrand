@@ -852,6 +852,16 @@ export type Database = {
           version: string;
         }[];
       };
+      portal_search: {
+        Args: { p_query: string };
+        Returns: {
+          kind: string;
+          project_name: string;
+          project_public_id: string;
+          ticket_number: number;
+          title: string;
+        }[];
+      };
       portal_set_launch_date: {
         Args: {
           p_launches_on: string;
@@ -872,7 +882,23 @@ export type Database = {
         Args: { p_ends_on?: string; p_stage_id: string; p_starts_on: string };
         Returns: undefined;
       };
+      portal_set_team_role: {
+        Args: { p_role: string; p_user_id: string };
+        Returns: undefined;
+      };
       portal_team_code_state: { Args: { p_email: string }; Returns: string };
+      portal_team_overview: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          email: string;
+          last_active_at: string;
+          name: string;
+          open_tickets: number;
+          project_names: string[];
+          role: string;
+          user_id: string;
+        }[];
+      };
       submit_consultation_request: {
         Args: {
           p_email: string;
