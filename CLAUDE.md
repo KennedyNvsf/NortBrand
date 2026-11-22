@@ -384,6 +384,9 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
 - Shows 8 s after the cookie choice, once per visitor (localStorage `nb_promo_dismissed`
   = offer id, fails closed), never after `endsAt` (checked in the browser), never over
   another open dialog. The launcher renders nothing until due, so pages stay static.
+- The corner card on About and Services (#127, `CornerPromo`): non-blocking `aside`, same trigger
+  and dismissal; on mobile it holds the Sticky CTA's slot (`<body data-promo-card>`, globals.css).
+  Its line reuses `Promo.terms` (lead, 2026-11-22: no new string).
 - Mount it per page, never in the layout. Playwright specs start with the offer
   dismissed (`tests/e2e/promo-state.ts`); `promo.spec.ts` does not.
 

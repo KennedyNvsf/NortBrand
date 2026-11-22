@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 import { CtaBand, CtaHighlight } from "@/components/site/cta-band";
+import { CornerPromo } from "@/features/promo/components/corner-promo";
 import { localizedPageMetadata } from "@/i18n/page-metadata";
 
 import { AboutHero } from "./_components/about-hero";
@@ -36,6 +37,7 @@ export default async function AboutPage() {
         })}
         subtext={t("subtext")}
       />
+      <CornerPromo placement="about" />
     </main>
   );
 }

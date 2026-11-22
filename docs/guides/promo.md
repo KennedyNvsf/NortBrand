@@ -115,3 +115,78 @@ time until the dialog opens (12 s cap). It resumes the clock before axe, because
 - **A new placement:** add it to `PromoPlacement`; the events take it automatically.
 - **Never** mount the launcher in the layout. It belongs to the pages that show the offer
   (performance guide: widgets go in the layout only if every page uses them).
+
+## 7. The corner card on About and Services (#127)
+
+**What.** The non-blocking version of the offer (Figma 02 Components › Promo Card
+`510:794`: desktop `510:791`, 380 px; tablet `510:792`, 360 px; mobile `510:793`). It
+has the eyebrow, the headline with the red keyword, one line, a full-width "Book a
+Consultation" and a round Close. Bottom-right from 768 px up. On mobile it sits in the
+Sticky CTA's slot (12 px above the safe area) and the Sticky CTA steps aside while it's
+there. It shows on About and Services only.
+
+**Same rules as the modal.** It uses the same `usePromoTrigger` (8 s after the cookie
+choice, once per visitor, never after the end date, never over an open dialog) and the
+same `nb_promo_dismissed` flag. Closing the card hides the Home modal too, and the other
+way round. It also sends the same `promo_*` events, with `placement` `about` or
+`services`.
+
+**The copy.** The headline is the modal's (`Promo.title`). The line is the offer's
+terms (`Promo.terms`) instead of Figma's shorter sentence: the lead decided on
+2026-11-22 to reuse already translated copy rather than add a string, because an
+untranslated string fails the production build. Figma's line is "Book a free
+consultation before 31 December. New projects only."; the terms read "Offer ends 31
+December 2026. New projects only."
+
+### Runtime
+
+```
+About / Services (static HTML, no promo markup)
+  └ CornerPromo (server)        translates Promo + Common, per page (never the layout)
+      └ PromoCardLauncher (client, renders nothing yet)
+          ├ usePromoTrigger → due  →  trackEvent("promo_view", { placement })
+          ├ due → <body data-promo-card>  →  the Sticky CTA fades out, then hides
+          ├ mount PromoCard (own small chunk)  →  rises from its corner
+          ├ Close / Book → dismissPromo + promo_dismiss / promo_click → data-state=closed
+          └ exit animation ends (or 400 ms fallback) → unmount → body attribute removed
+                                                     → the Sticky CTA comes back
+```
+
+- **Non-blocking.** It is an `aside` labelled by its headline (a complementary
+  landmark), not a dialog. It never moves focus, never locks scroll and never takes a
+  backdrop. Its controls sit at the end of the page's tab order, after the CTA band,
+  where it's mounted.
+- **The Sticky CTA hand-off** is CSS (`globals.css`). While `<body data-promo-card>` is
+  set, the bar fades out and then becomes `visibility: hidden`, so it leaves the tab
+  order and the accessibility tree. The attribute is removed only after the card has
+  finished leaving, so the bar comes back after the card and never on top of it. On
+  mobile the card's entrance waits `--duration-base` (the bar's exit) before it rises.
+- **Motion** (Motion Spec › PROMO, "Promo card"): it rises from bottom right, with
+  opacity 0→1, y 16→0 and scale 0.96→1, in 300 ms `--ease-emphasized` (ease-out quint).
+  It exits down 8 px to scale 0.98 in 225 ms `--ease-exit`. With reduced motion the
+  keyframes swap for the opacity-only `promo-fade-in` / `promo-fade-out`, and the
+  global rule caps them at 150 ms.
+
+### Files
+
+| File                                                    | What and why                                                                                                                                                                               |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `src/features/promo/components/corner-promo.tsx`        | Server shell, placed at the end of About's and Services' `<main>`. Passes the five strings the card needs as props, so `Promo` stays out of the client bundle.                             |
+| `src/features/promo/components/promo-card-launcher.tsx` | Client. Trigger, analytics, dismissal, the body attribute and the exit phase. `phase` is derived from `due` (no state set inside an effect); a 400 ms timer unmounts if no animation runs. |
+| `src/features/promo/components/promo-card.tsx`          | The UI, loaded with `next/dynamic` when due. The close button grows to a 44 px hit area on touch (`touch-target`).                                                                         |
+| `src/app/globals.css`                                   | The card's keyframes under `data-motion="promo-card"` and the Sticky CTA rule.                                                                                                             |
+
+### Tests
+
+`promo.spec.ts` › "promo corner card" (both projects):
+
+- it shows 8 s after load on About and Services, with the terms and a link to Contact,
+  no dialog, focus left on the page and no scroll lock;
+- Close dismisses it, and the Home modal then stays closed;
+- Book goes to Contact and dismisses it;
+- it never shows after the end date;
+- at 390 it takes the Sticky CTA's slot (never both visible) and gives it back;
+- axe passes while it's open, in EN and PT;
+- there's no overflow at 390 in PT.
+
+The pages stay static (○ in the build).

@@ -6,6 +6,7 @@ import { JsonLd } from "@/components/site/json-ld";
 import { services } from "@/content/services";
 import { publicEnv } from "@/env";
 import { localeAlternates } from "@/i18n/metadata";
+import { CornerPromo } from "@/features/promo/components/corner-promo";
 import { localizedPageMetadata } from "@/i18n/page-metadata";
 import { servicesJsonLd } from "@/lib/seo/structured-data";
 
@@ -52,6 +53,7 @@ export default async function ServicesPage() {
       <ServiceGrid />
       <ServicesApproach />
       <CtaBand headline={t("headline")} subtext={t("subtext")} />
+      <CornerPromo placement="services" />
     </main>
   );
 }
