@@ -352,6 +352,11 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   (`portal_client_preview`, SECURITY INVOKER, team on the project only), mirroring the
   client policies; the client views take `preview` and read that bundle. Change both
   together (pgTAP 17 compares them).
+- **Archive and delete (#165, docs/guides/portal.md § 20):** admins only, from "Manage project"
+  on the team overview. Archived (`status = 'closed'`) = hidden from clients and read-only for
+  the team (every team write policy uses `private.can_edit_project`). Delete needs the
+  Project ID typed; children cascade, then the app removes Storage files and the auth users of
+  clients on no other project. New project tables: cascade + `can_edit_project`.
 - **The repository is public until launch** (Actions minutes, 2026-11-14): never commit
   secrets or personal data; making it private again is on the launch checklist.
 - **Email:** Supabase sends codes through custom SMTP on Resend; app emails use the

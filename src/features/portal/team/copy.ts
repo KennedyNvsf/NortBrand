@@ -1056,3 +1056,51 @@ export const previewCopy = {
 } as const;
 
 export type PreviewCopy = typeof previewCopy;
+
+/**
+ * Archive and delete a project (#165). Not drawn in Figma: the card follows the
+ * overview's cards, the dialogs follow TM-09 "Ticket · delete" (547:664).
+ */
+export const manageProjectCopy = {
+  title: "Manage project",
+  archive: {
+    label: "Archive project",
+    body: "{client} loses access to the portal. Everything is kept, and you can restore it.",
+    confirmTitle: "Archive “{project}”?",
+    confirmBody:
+      "{client} will no longer be able to sign in to this project. The team can still read it but can't change anything until it's restored.",
+    confirm: "Archive project",
+    done: "Project archived",
+  },
+  restore: {
+    label: "Restore project",
+    body: "This project is archived: read-only for the team, and {client} can't sign in.",
+    confirmTitle: "Restore “{project}”?",
+    confirmBody:
+      "{client} can sign in again with their Project ID, and the team can change the project.",
+    confirm: "Restore project",
+    done: "Project restored",
+  },
+  delete: {
+    label: "Delete permanently",
+    body: "Removes the project, its tickets, updates and files for good.",
+    confirmTitle: "Delete “{project}” permanently?",
+    confirmBody:
+      "The project, its tickets, updates, milestones and files are deleted for good. Clients who have no other project lose their sign-in. This can't be undone.",
+    field: "Type {id} to confirm",
+    confirm: "Delete project",
+    done: "{project} was deleted",
+    leftovers:
+      "{project} was deleted, but some files or client accounts couldn't be removed. We've been told.",
+  },
+  cancel: "Cancel",
+  archivedBadge: "Archived · read-only",
+  errors: {
+    forbidden: "Only admins can archive or delete a project.",
+    notFound: "This project no longer exists.",
+    mismatch: "That isn't this project's ID.",
+    failed: "Something went wrong and nothing changed. Please try again.",
+  },
+} as const;
+
+export type ManageProjectCopy = typeof manageProjectCopy;

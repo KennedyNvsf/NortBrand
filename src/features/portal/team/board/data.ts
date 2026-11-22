@@ -24,6 +24,8 @@ export type TeamBoard = {
     health: ProjectHealth;
     launchesOn: string;
     clientEmail: string | null;
+    /** "closed": archived (#165), read-only for the team and gone for its clients. */
+    status: "active" | "closed";
   };
   stages: PortalStage[];
   /** Who can own a ticket: the project's team and its lead. */
@@ -48,7 +50,7 @@ export const getTeamBoard = cache(async function getTeamBoard(
   const { data, error } = await supabase
     .from("projects")
     .select(
-      "id, public_id, name, client_name, health, launches_on, lead:team_members!projects_lead_id_fkey(user_id, name), project_team(user_id, team_members(name)), project_clients(email, status), stages(id, position, name, starts_on, ends_on, completed_at), tickets(id, number, title, status, stage_id, owner_id, due_on, client_visible, waiting_on_client, updated_at, owner:team_members!tickets_owner_id_fkey(name))",
+      "id, public_id, name, client_name, health, launches_on, status, lead:team_members!projects_lead_id_fkey(user_id, name), project_team(user_id, team_members(name)), project_clients(email, status), stages(id, position, name, starts_on, ends_on, completed_at), tickets(id, number, title, status, stage_id, owner_id, due_on, client_visible, waiting_on_client, updated_at, owner:team_members!tickets_owner_id_fkey(name))",
     )
     .eq("public_id", publicId)
     .maybeSingle();
@@ -71,6 +73,7 @@ export const getTeamBoard = cache(async function getTeamBoard(
       clientEmail:
         data.project_clients.find((client) => client.status !== "removed")
           ?.email ?? null,
+      status: data.status === "closed" ? "closed" : "active",
     },
     stages: data.stages
       .map((stage) => ({

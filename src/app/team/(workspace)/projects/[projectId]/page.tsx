@@ -4,11 +4,14 @@ import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
+import { getTeamViewer } from "@/features/portal/team/access";
 import {
+  manageProjectCopy,
   teamOverviewCopy,
   teamProjectCopy,
   teamShellCopy,
 } from "@/features/portal/team/copy";
+import { ManageProject } from "@/features/portal/team/projects/components/manage-project";
 import { TeamOverview } from "@/features/portal/team/plan/components/team-overview";
 import { getTeamPlan, type TeamPlan } from "@/features/portal/team/plan/data";
 import { PageSkeleton } from "@/features/portal/states/skeletons";
@@ -17,6 +20,7 @@ import { ProjectActions } from "@/features/portal/team/updates/components/projec
 /*
  * A project's overview for the team (#138; Figma TM-07). Dynamic and per user (ADR-009):
  * RLS shows the project only to its team; one the viewer can't see is a plain 404.
+ * Admins also get "Manage project": archive, restore, delete (#165).
  */
 
 export const metadata: Metadata = { title: teamOverviewCopy.metaTitle };
@@ -48,14 +52,30 @@ async function OverviewContent({ params }: Pick<Props, "params">) {
     );
   }
   if (!plan) notFound();
+  const viewer = await getTeamViewer();
+  const isAdmin = viewer.status === "signed_in" && viewer.role === "admin";
 
   return (
-    <TeamOverview
-      plan={plan}
-      copy={teamOverviewCopy}
-      headerCopy={teamProjectCopy}
-      actions={<ProjectActions board={plan} />}
-      now={new Date()}
-    />
+    <div className="flex flex-col gap-lg">
+      <TeamOverview
+        plan={plan}
+        copy={teamOverviewCopy}
+        headerCopy={teamProjectCopy}
+        actions={<ProjectActions board={plan} />}
+        now={new Date()}
+      />
+      {isAdmin ? (
+        <ManageProject
+          project={{
+            id: plan.project.id,
+            publicId: plan.project.publicId,
+            name: plan.project.name,
+            clientName: plan.project.clientName,
+            status: plan.project.status,
+          }}
+          copy={manageProjectCopy}
+        />
+      ) : null}
+    </div>
   );
 }

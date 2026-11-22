@@ -45,6 +45,15 @@ export async function deleteAuthUser(userId: string): Promise<void> {
 }
 
 /**
+ * Deletes a client's auth user when their only project is deleted (#165). Says whether
+ * it worked, so the caller can report an account left behind.
+ */
+export async function removeAuthUser(userId: string): Promise<boolean> {
+  const { error } = await authAdmin().deleteUser(userId);
+  return !error;
+}
+
+/**
  * Blocks (a removed teammate) or unblocks (a returning one) sign-in. A ban also stops
  * existing sessions from refreshing; the app stops serving them at once, because every
  * team page checks the active team_members row.

@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,7 +13,9 @@ import {
 /*
  * The guarded delete (#133; TM-09 "Ticket · delete", "Client access · last person").
  * It says what will be lost, because deletion is visible to the client. Focus starts on
- * Cancel, the safe choice; Esc and the backdrop cancel too.
+ * Cancel, the safe choice; Esc and the backdrop cancel too. `children` adds a guard (e.g.
+ * typing the Project ID to delete a project, #165) and `confirmDisabled` holds the
+ * confirm button until it is met.
  * Modals (14 Portal — Motion): centred from tablet up (the dialog's scale and fade, 250 ms
  * in, 150 ms out); on mobile a bottom sheet (Portal · Responsive rules).
  */
@@ -24,6 +28,8 @@ export function ConfirmDialog({
   cancelLabel,
   onConfirm,
   pending = false,
+  confirmDisabled = false,
+  children,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -33,6 +39,8 @@ export function ConfirmDialog({
   cancelLabel: string;
   onConfirm: () => void;
   pending?: boolean;
+  confirmDisabled?: boolean;
+  children?: ReactNode;
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -51,6 +59,7 @@ export function ConfirmDialog({
         <DialogDescription className="text-body text-text-muted">
           {body}
         </DialogDescription>
+        {children}
         <div className="flex flex-col-reverse gap-3 pt-2 md:flex-row md:items-center md:justify-end">
           <Button
             type="button"
@@ -63,7 +72,12 @@ export function ConfirmDialog({
           >
             {cancelLabel}
           </Button>
-          <Button type="button" onClick={onConfirm} loading={pending}>
+          <Button
+            type="button"
+            onClick={onConfirm}
+            loading={pending}
+            disabled={confirmDisabled}
+          >
             {confirmLabel}
           </Button>
         </div>

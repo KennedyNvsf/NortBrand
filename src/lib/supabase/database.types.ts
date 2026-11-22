@@ -785,6 +785,12 @@ export type Database = {
           public_id: string;
         }[];
       };
+      portal_delete_project: {
+        Args: { p_confirm: string; p_project_id: string };
+        Returns: {
+          user_id: string;
+        }[];
+      };
       portal_delete_update: {
         Args: { p_update_id: string };
         Returns: undefined;
@@ -920,6 +926,10 @@ export type Database = {
           p_update_body?: string;
         };
         Returns: string;
+      };
+      portal_set_project_status: {
+        Args: { p_project_id: string; p_status: string };
+        Returns: undefined;
       };
       portal_set_stage_dates: {
         Args: { p_ends_on?: string; p_stage_id: string; p_starts_on: string };

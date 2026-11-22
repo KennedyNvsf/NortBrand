@@ -1052,3 +1052,84 @@ then `select` for `authenticated`.
   its client policy, and a pgTAP pair (preview vs a client's session).
 - If a client policy changes, change `portal_client_preview` in the same migration;
   test 17 compares the two.
+
+## 20. Archive and delete a project (#165)
+
+**What.** Admins can **archive** a client project (and restore it) or **delete it
+permanently**, from a "Manage project" card at the bottom of the team project overview.
+Lead's decisions, 2026-11-22: both actions; on delete, a client's sign-in account goes
+only when this was their only project. Not drawn in Figma: the card follows the
+overview's cards, the dialogs follow TM-09 "Ticket · delete" (`547:664`). Code:
+`src/features/portal/team/projects/lifecycle.ts` (rules), `lifecycle-actions.ts`,
+`components/manage-project.tsx`; SQL in `20261126120000_portal_archive_delete_projects.sql`.
+
+### Archive and restore
+
+```
+"Archive project" → ConfirmDialog (focus on Cancel) → setProjectStatusAction
+  setProjectStatus (lifecycle.ts)  admin? zod (uuid, active|closed)
+  portal_set_project_status        SECURITY DEFINER, require_team_admin(); P0002 if gone
+  → toast, router.refresh()
+```
+
+An archived project (`status = 'closed'`):
+
+- **disappears for its clients**: `private.is_project_client` already required an active
+  project (#141), so RLS hides it everywhere and the client portal treats them as
+  signed out of it;
+- **is read-only for the team**: every team write policy (projects, stages, tickets,
+  checklist items, updates, update links, files, milestones) now checks
+  `private.can_edit_project` = works on the project **and** it's active. The header
+  shows "Archived · read-only" instead of View as client, Post update and New ticket;
+- moves to the Archived tab of the projects list (#133 already sorted it there);
+- keeps everything. Restoring is the same function with `active`.
+
+The status column is no longer updatable directly (`revoke update (status)`), so only
+the admin-only function changes it.
+
+### Delete permanently
+
+```
+"Delete permanently" → ConfirmDialog with "Type NB-xxxx to confirm" (confirm held
+until it matches, any case) → deleteProjectAction → deleteProject (lifecycle.ts):
+  admin? zod
+  listFiles      Storage list of projects/<id>/ (the admin's session; the Storage read
+                 rule lets admins read any project's folder). A failed list doesn't
+                 block the delete; the files are reported as left over.
+  remove         portal_delete_project (SECURITY DEFINER, require_team_admin()): locks
+                 the project, checks the typed ID (22023 confirm_mismatch), lists the
+                 clients on no other project (any state but removed) who aren't
+                 teammates, deletes the project (every child by ON DELETE CASCADE), and
+                 returns those user ids
+  removeFiles    Storage remove of the listed paths
+  deleteAccount  removeAuthUser per returned id (service role, auth administration
+                 only, ADR-009)
+  → toast ("… was deleted", or a warning when cleanup didn't finish) → /team
+```
+
+Once the row is gone there is no undo, so Storage and account cleanup never turn the
+result into a failure: they're reported (codes only) and returned as leftovers. A
+client on another project keeps their account and that project.
+
+### Tests
+
+- pgTAP `18_portal_archive_delete_projects.test.sql` (22): the public key and members
+  (even the lead) can't archive, change the status directly or delete; an archived
+  project is invisible to its client and its tickets too; the team still reads it but
+  can't change a ticket or post an update; restored, the client sees it again; delete
+  refuses a wrong Project ID and an unknown project (and deletes nothing), accepts the
+  ID in any case, returns only the client whose only project it was, removes every
+  child row, keeps the other client's other project and leaves other projects alone.
+  Every earlier test still passes with the new write policies.
+- Unit `lifecycle.test.ts`: role, zod, error mapping, the order of the delete, and
+  leftovers when Storage or an account can't be removed.
+- e2e `team-lifecycle.spec.ts` (fake backend): an admin creates a project, archives it
+  (badge, Archived tab), restores it, and deletes it once the ID is typed (wrong ID
+  holds the button; afterwards the page is not found); members get no card. axe, 390 px,
+  touch targets. `team-projects.spec.ts` no longer expects an empty Archived tab.
+
+### Extending
+
+- A new project table: give it `project_id … on delete cascade` and a team write
+  policy through `private.can_edit_project`, so archive and delete cover it.
+- New Storage folders for a project: list and remove them in `deleteProjectAction`.
