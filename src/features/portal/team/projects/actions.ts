@@ -10,6 +10,7 @@ import { reportPortalFailure } from "../../auth/server";
 import { renderPortalWelcome } from "../../emails/render";
 import { getTeamViewer, listTeammates } from "../access";
 import { fakeCreateAuthUser } from "../e2e-backend";
+import { getStageTemplate } from "../settings/data";
 import {
   createProject,
   type CreateProjectResult,
@@ -58,6 +59,7 @@ export async function createProjectAction(
 
   return createProject(input, {
     viewer: getTeamViewer,
+    stageTemplate: getStageTemplate,
     findAccounts: async (emails) => {
       if (!portal) return fakeFindAccounts(emails);
       const { data, error } = await portal.rpc("portal_find_client_users", {

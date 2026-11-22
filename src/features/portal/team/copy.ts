@@ -268,8 +268,8 @@ export const teamPagesCopy = {
     readOnlyTitle: "Only admins can change settings",
     readOnlyBody: "Ask {admin} if something here needs to change.",
     back: "Back to projects",
-    adminBody:
-      "Workspace settings (allowed email domain, code limits, notifications) arrive with the Settings ticket.",
+    adminBody: "Admins only. Changes apply to every project.",
+    loadFailed: "We couldn't load the settings. Refresh the page to try again.",
   },
 } as const;
 
@@ -940,4 +940,105 @@ export const teamStatesCopy = {
     body: "For your security, sessions end after 30 days. Sign in again with a new code; it takes a minute.",
     action: "Sign in again",
   },
+} as const;
+
+/**
+ * Workspace Settings (#159; Figma TM-13 546:583). Not drawn in TM-13, added within the
+ * system: the "Team sign-in" section (allowed team domain, ADR-009), the template
+ * editor behind "Edit template", and the save states.
+ */
+export const settingsCopy = {
+  formLabel: "Workspace settings",
+  clientSignIn: {
+    title: "Client sign-in",
+    body: "Keeps client projects private. These are the recommended defaults.",
+    codeExpiry: "Codes expire after",
+    codeExpiryHint: "How long the emailed 6-digit code works.",
+    codeExpiryLocked: "Set by the sign-in service. It can't be changed here.",
+    minutes: "{count} minutes",
+    minuteOne: "1 minute",
+    tries: "Wrong codes allowed",
+    triesHint: "After this, the code is cancelled and sign-in pauses.",
+    pause: "Pause after too many tries",
+    hours: "{count} hours",
+    hourOne: "1 hour",
+    dayOne: "1 day",
+    days: "{count} days",
+    session: "Stay signed in for",
+    sessionHint: "On the same device, unless the client signs out.",
+  },
+  notifications: {
+    title: "Notifications",
+    digest: "Client digest",
+    digestHint: "One email a day with new updates, only if there are any.",
+    digestOn: "Daily at 18:00",
+    digestOff: "Off",
+    needsYou: "“Needs you” posts email right away",
+    needsYouHint: "Requests to the client never wait for the digest.",
+    needsYouLocked: "Always on",
+    firstSignIn: "Tell me when a client signs in for the first time",
+    firstSignInHint: "Emails the project lead.",
+  },
+  team: {
+    title: "Team sign-in",
+    body: "Who can be invited to the team portal.",
+    domain: "Allowed team domain",
+    domainHint:
+      "Invites must use an email at this domain. Leave it empty to allow any email.",
+    domainPlaceholder: "Any email",
+  },
+  template: {
+    title: "Stage template",
+    body: "New projects start from this. Durations spread between the start and launch dates.",
+    listLabel: "Stages in the template",
+    weekOne: "1 week",
+    weeks: "{count} weeks",
+    launchDay: "Launch day",
+    ongoing: "Ongoing",
+    edit: "Edit template",
+    done: "Done",
+    editorLabel: "Edit the stage template",
+    stageName: "Stage {index} name",
+    stageWeeks: "Stage {index} weeks",
+    weeksUnit: "weeks",
+    launchName: "Launch stage name",
+    afterName: "Care stage name",
+    moveUp: "Move {name} up",
+    moveDown: "Move {name} down",
+    remove: "Remove {name}",
+    add: "Add stage",
+    newStage: "New stage",
+    fixedNote:
+      "Launch is the launch day and Care has no end, so neither has a duration.",
+  },
+  discard: "Discard",
+  save: "Save settings",
+  saving: "Saving…",
+  saved: "Settings saved",
+  errors: {
+    domainInvalid: "Enter a domain like studio.pt, without the @.",
+    stageNameInvalid: "Give every stage a name, up to 60 characters.",
+    weeksInvalid: "Use 1 to 52 weeks.",
+    templateInvalid: "The template needs at least one stage before Launch.",
+    stageNamesRepeat: "Two stages have the same name.",
+    forbidden: "Only admins can change settings.",
+    stale:
+      "Another admin saved settings after you opened this page. Discard to load theirs, then make your change again.",
+    failed: "Settings weren't saved. Please try again.",
+    fix: "Check the highlighted fields.",
+  },
+} as const;
+
+export type SettingsCopy = typeof settingsCopy;
+
+/** To the project lead on a client's first sign-in (#159). Team emails are English. */
+export const firstSignInEmailCopy = {
+  subject: "{client} signed in to {project}",
+  preview: "{client} opened the {project} portal for the first time.",
+  heading: "{client} has signed in",
+  body: "Hi {lead}, {client} signed in to the {project} portal for the first time. You can see their sign-ins on the project's Client access page.",
+  button: "Open Client access",
+  fallback: "Or copy this link:",
+  footer:
+    "You get this because “Tell me when a client signs in for the first time” is on in {studio} Settings.",
 } as const;

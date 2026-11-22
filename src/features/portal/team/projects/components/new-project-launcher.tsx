@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 import type { TeamPagesCopy } from "../../copy";
+import type { TemplateStage } from "../templates";
 
 /*
  * The "New project" button (#136). The dialog (a form, Radix Dialog and Select) loads in
@@ -27,12 +28,14 @@ export function NewProjectLauncher({
   team,
   viewerId,
   suggestedId,
+  stageTemplate,
 }: {
   label: string;
   copy: TeamPagesCopy["newProject"];
   team: { userId: string; name: string }[];
   viewerId: string;
   suggestedId: string | null;
+  stageTemplate: readonly TemplateStage[];
 }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -72,6 +75,7 @@ export function NewProjectLauncher({
           team={team}
           viewerId={viewerId}
           suggestedId={suggestedId}
+          stageTemplate={stageTemplate}
         />
       ) : null}
     </>

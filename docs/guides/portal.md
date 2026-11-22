@@ -79,7 +79,8 @@ projects that user sees.
   public, so its own limit is lowered to 10 per 5 minutes per IP (tech debt records the
   rest).
 - **Sessions end after 30 days in the app,** with the signed marker, because the Free plan
-  can't time-box them.
+  can't time-box them. Since #159 a client's length is Settings › "Stay signed in for",
+  signed into the marker at sign-in (§ 18).
 - **The form never sits inside Suspense.** First the form was the boundary's fallback
   (two forms in the page while the session streamed in), then a skeleton was. In CI the
   boundary sometimes switched to client rendering before its content arrived (something
@@ -397,8 +398,9 @@ generates a fresh one and returns it.
 
 ### Stage templates (`templates.ts`)
 
-One template today, **Standard**: Discovery, Design, Development, Review (weights 2, 3,
-8, 3), then Launch (the launch day) and Care (from launch, open-ended). The working
+One template, **Standard**, stored in `portal_stage_template` and edited in Settings
+since #159 (§ 18): Discovery, Design, Development, Review (2, 3, 6 and 3 weeks, used as
+weights), then Launch (the launch day) and Care (from launch, open-ended). The working
 stages share the days up to the day before launch, back to back. The same function draws
 the modal's preview and builds the rows on the server. At least 8 days between start
 and launch (two per working stage). The team adjusts stages afterwards (#138).
@@ -827,3 +829,125 @@ drift from what the board and overview show.
   `search.ts` (`toHits`), and a row in the dialog. Add a pgTAP case for a user who must
   not see it.
 - Settings (#159) adds its own route; the role rules stay in `portal_set_team_role`.
+
+## 18. Workspace Settings (#159)
+
+**What.** The team's Settings page (Figma TM-13 `546:583`) at `/team/settings`, and the
+members' state (TM-09 "Settings · members" `547:612`). Admins edit; members see the same
+values read-only under the TM-09 notice, and the server refuses their saves. Code:
+`src/features/portal/team/settings/`; SQL in `20261124120000_portal_workspace_settings.sql`.
+Split from #142; View as client is #160.
+
+### Where each setting takes effect
+
+| Setting (TM-13)                    | Stored in                                     | Read by                                                        |
+| ---------------------------------- | --------------------------------------------- | -------------------------------------------------------------- |
+| Codes expire after                 | Supabase Auth (OTP expiry, `config.toml`)     | Shown read-only (lead's decision, 2026-11-21)                  |
+| Wrong codes allowed                | `portal_settings.code_max_tries`              | `portal_register_wrong_code` (client and team, SQL)            |
+| Pause after too many tries         | `portal_settings.lockout_minutes`             | `private.portal_is_locked` and the team equivalent (SQL)       |
+| Stay signed in for                 | `portal_settings.session_days`                | Client sign-in → the session marker (below)                    |
+| Client digest                      | `portal_settings.daily_digest`                | `portal_claim_digests` returns nothing while off (SQL, #139)   |
+| "Needs you" posts email right away | Always on                                     | `team/notify.ts` (#139); shown locked as in Figma              |
+| Tell me when a client signs in …   | `portal_settings.notify_first_client_sign_in` | `portal_complete_client_sign_in` → the project lead's email    |
+| Allowed team domain (not in TM-13) | `portal_settings.allowed_team_domain`         | The `team_members` trigger and the invite check (#132)         |
+| Stage template                     | `portal_stage_template`                       | New projects (`create-project.ts`) and the new-project preview |
+
+### Saving (request flow)
+
+```
+SettingsForm (client)  values as Selects/Switches/Input; "Edit template" opens the editor
+  checkSettings()      rules.ts (zod-free, shared with the server): domain, names, weeks,
+                       one or more working stages then Launch then Care, unique names
+  saveSettingsAction   settings.ts: admin? → zod → rpc portal_save_settings
+  portal_save_settings SECURITY DEFINER, require_team_admin(); locks the settings row,
+                       refuses a stale save (PT409 stale_settings: the updated_at the
+                       page loaded no longer matches); validates the template; updates
+                       every setting and replaces the template in one transaction
+  saved → toast "Settings saved" → router.refresh(); the page keys the form by updatedAt,
+          so it remounts clean from what's stored
+  refused → field errors inline (template errors open the editor), or the form error:
+            forbidden / stale ("Discard to load theirs") / failed
+```
+
+Discard resets the form and refreshes, which also loads another admin's newer save.
+
+### Session length
+
+Clients' sessions last `session_days` from their next sign-in.
+`portal_complete_client_sign_in` (SECURITY DEFINER, run with the client's new session)
+now returns a row: the project, the session length, and the first sign-in notice. The
+action signs the length into the marker: `<issued at>.<days>.<HMAC over
+user|issued|days>` (`session-marker.ts`), so it can't be stretched. Markers from before
+#159 (`<issued>.<signature>`) still count for 30 days. Teammates keep 30 days: the
+setting sits under "Client sign-in".
+
+A shorter setting doesn't cut sessions that already exist; they end at the length they
+were signed with (at most 90 days). Rotating a project's Project ID (#141) is the way to
+sign a project's clients out at once.
+
+### First client sign-in email
+
+```
+client verifies their code → portal_complete_client_sign_in
+  reads the client row before updating it: last_sign_in_at is null → first sign-in
+  setting on and the project lead active → notify_email / notify_name in the result
+parseCompletion (completion.ts, tested)  also accepts the pre-#159 answer (a bare uuid),
+                                          so sign-in works while a deploy waits for its
+                                          migration
+after() → notifyFirstSignIn (first-sign-in.ts) → renderPortalFirstSignIn → Resend
+```
+
+The email goes to the **project lead** (lead's decision, 2026-11-22), in English (team
+emails), and links the project's Client access page. It runs after the response, so a
+failed email never affects sign-in; only Resend's error code is reported. The lead's
+address stays on the server. A client re-added after removal (#141) counts as new.
+
+### Stage template
+
+`portal_stage_template` (position, name, kind `work`/`launch`/`after`, weeks for working
+stages only), seeded with Figma's Standard: Discovery 2, Design 3, Development 6, Review 3
+weeks, Launch, Care. Weeks are **weights**: `spreadStages` (`templates.ts`) shares the
+days between start and launch in proportion, as before. Launch stays the launch day and
+Care has no end (lead's decision, 2026-11-22; Figma showed "Launch · 1 week").
+Teammates read it through RLS; nobody writes it except `portal_save_settings`. The page
+and the create action read it with `getStageTemplate()` (`settings/data.ts`), which falls
+back to `DEFAULT_STAGE_TEMPLATE` if the stored one can't be read. Existing projects keep
+their stages.
+
+The editor (not drawn in TM-13): rename any stage; weeks (1–52) for working stages; add a
+working stage (inserted before Launch, up to 12 stages), remove (at least one working
+stage stays), move up or down among the working stages.
+
+### Layout
+
+TM-13 has no tablet or phone frames; the Portal responsive rules apply: one column (at
+most 768 px), each row's label on the left and control on the right, the domain field
+under its label on phones, Save and Discard stacked full width on phones. Members'
+controls are disabled (one `fieldset`), so the values are readable but not operable.
+
+### Tests
+
+- pgTAP `16_portal_workspace_settings.test.sql` (23): members, clients and the public key
+  can't save, nobody writes the template directly; stale saves, bad orders, repeated
+  names, zero weeks and out-of-range values are refused and change nothing; a save stores
+  everything (domain trimmed and lower-cased) and replaces the template in order; **each
+  value takes effect:** two tries pause on the second miss, the pause length decides
+  whether sign-in is still paused, a client's first sign-in returns the saved session
+  length and the lead to tell, later sign-ins and the setting off tell nobody. Test 06
+  follows the new return shape. The digest switch stays in test 12.
+- Unit: `settings.test.ts` (save flow, error mapping, rules, `toTemplate`),
+  `session-marker.test.ts` (length signed in, can't be stretched, legacy markers),
+  `completion.test.ts`, `templates.test.ts` (weeks as weights, an edited template),
+  `render.test.ts` (the lead's email).
+- e2e `team-settings.spec.ts` (fake backend): every TM-13 setting shown, the template
+  editor's checks and Discard, a save that survives a reload (desktop only, undone at the
+  end; the template is never saved there because the fake store is shared), members
+  read-only under the notice, axe, 390 px and touch targets.
+
+### Extending
+
+- A new setting: a column on `portal_settings` (with a check constraint), a parameter on
+  `portal_save_settings`, the field in `settings.ts` (zod) and `rules.ts`, a row in the
+  form, and a pgTAP case proving it takes effect.
+- Several templates later: add a template key column to `portal_stage_template` and map
+  `STAGE_TEMPLATE_IDS` to it; the new-project select already sends an id.

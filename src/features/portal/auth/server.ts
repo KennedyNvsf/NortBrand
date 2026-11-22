@@ -6,7 +6,9 @@ import { getServerEnv, publicEnv } from "@/env";
 import {
   createSessionMarker,
   PORTAL_SESSION_COOKIE,
-  PORTAL_SESSION_MAX_AGE_SECONDS,
+  PORTAL_SESSION_DAYS,
+  sessionMaxAgeSeconds,
+  toSessionDays,
 } from "./session-marker";
 
 /*
@@ -44,8 +46,15 @@ export function reportPortalFailure(
   };
 }
 
-/** Starts the 30-day session marker (session-marker.ts) for a signed-in user. */
-export async function setSessionMarker(userId: string) {
+/**
+ * Starts the session marker (session-marker.ts) for a signed-in user. `days`: the
+ * client's Settings value; teammates keep the 30-day default.
+ */
+export async function setSessionMarker(
+  userId: string,
+  days: number = PORTAL_SESSION_DAYS,
+) {
+  const length = toSessionDays(days);
   const cookieStore = await cookies();
   cookieStore.set(
     PORTAL_SESSION_COOKIE,
@@ -53,6 +62,7 @@ export async function setSessionMarker(userId: string) {
       getServerEnv().NEWSLETTER_TOKEN_SECRET,
       userId,
       Date.now(),
+      length,
     ),
     {
       httpOnly: true,
@@ -61,7 +71,7 @@ export async function setSessionMarker(userId: string) {
       secure: publicEnv.NEXT_PUBLIC_SITE_URL.startsWith("https://"),
       sameSite: "lax",
       path: "/",
-      maxAge: PORTAL_SESSION_MAX_AGE_SECONDS,
+      maxAge: sessionMaxAgeSeconds(length),
     },
   );
 }

@@ -342,6 +342,11 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   `team/people/`, `team/search/`. Role change is `portal_set_team_role` (admin only, never
   the last admin); search is `portal_search`, SECURITY INVOKER so RLS decides what a
   teammate finds; the dialog loads with `next/dynamic`. Settings is #159, View as client #160.
+- **Settings (#159, docs/guides/portal.md § 18):** `team/settings/`. One SQL save
+  (`portal_save_settings`, admin only, refuses a stale save); the stage template is the
+  `portal_stage_template` table (weeks as weights; Launch and Care fixed). A client's
+  session length is signed into the marker at sign-in; the first sign-in emails the
+  project lead. Form rules in `rules.ts` (zod-free, shared with the browser).
 - **The repository is public until launch** (Actions minutes, 2026-11-14): never commit
   secrets or personal data; making it private again is on the launch checklist.
 - **Email:** Supabase sends codes through custom SMTP on Resend; app emails use the

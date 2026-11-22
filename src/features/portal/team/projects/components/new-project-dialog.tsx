@@ -31,18 +31,20 @@ import type { TeamPagesCopy } from "../../copy";
 import { createProjectAction } from "../actions";
 import type { CreateFieldErrors, CreateProjectResult } from "../create-project";
 import {
-  STAGE_TEMPLATES,
   STAGE_TEMPLATE_IDS,
+  STAGE_TEMPLATE_LABELS,
   minimumDays,
   spreadStages,
   type StageTemplateId,
+  type TemplateStage,
 } from "../templates";
 
 /*
  * New project · invite client (#136; Figma TM-04 531:513). A client component only
  * because it's a form; it loads in its own chunk (new-project-launcher.tsx). Validation
  * here is for comfort: the server action validates everything again and computes the
- * stages itself. The stage dates preview uses the same rule as the server (templates.ts).
+ * stages itself. The stage dates preview uses the same rule and the same stored template
+ * (Settings, #159) as the server (templates.ts).
  * Modals (14 Portal — Motion): centred from tablet up, a bottom sheet on mobile.
  */
 
@@ -60,10 +62,11 @@ function todayIso(): string {
 function errorText(
   copy: Copy,
   error: CreateFieldErrors[keyof CreateFieldErrors],
+  template: readonly TemplateStage[],
 ) {
   if (!error) return undefined;
   if (error === "launchTooSoon") {
-    return fill(copy.errors.launchTooSoon, { days: minimumDays("standard") });
+    return fill(copy.errors.launchTooSoon, { days: minimumDays(template) });
   }
   return copy.errors[error];
 }
@@ -75,6 +78,7 @@ export function NewProjectDialog({
   team,
   viewerId,
   suggestedId,
+  stageTemplate,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -82,6 +86,7 @@ export function NewProjectDialog({
   team: Person[];
   viewerId: string;
   suggestedId: string | null;
+  stageTemplate: readonly TemplateStage[];
 }) {
   const router = useRouter();
   const ids = useId();
@@ -107,7 +112,7 @@ export function NewProjectDialog({
   const [formError, setFormError] = useState<string>();
 
   const preview = launchesOn
-    ? spreadStages(template, startsOn, launchesOn)
+    ? spreadStages(stageTemplate, startsOn, launchesOn)
     : null;
 
   /** Adds what's typed as a chip. Returns false when it isn't an email. */
@@ -269,7 +274,7 @@ export function NewProjectDialog({
                   />
                   {errors.name ? (
                     <FieldError id={fieldId("name-error")}>
-                      {errorText(copy, errors.name)}
+                      {errorText(copy, errors.name, stageTemplate)}
                     </FieldError>
                   ) : null}
                 </div>
@@ -291,7 +296,9 @@ export function NewProjectDialog({
                     </SelectContent>
                   </Select>
                   {errors.leadId ? (
-                    <FieldError>{errorText(copy, errors.leadId)}</FieldError>
+                    <FieldError>
+                      {errorText(copy, errors.leadId, stageTemplate)}
+                    </FieldError>
                   ) : null}
                 </div>
               </div>
@@ -316,7 +323,7 @@ export function NewProjectDialog({
                   />
                   {errors.clientName ? (
                     <FieldError id={fieldId("clientName-error")}>
-                      {errorText(copy, errors.clientName)}
+                      {errorText(copy, errors.clientName, stageTemplate)}
                     </FieldError>
                   ) : null}
                 </div>
@@ -421,7 +428,7 @@ export function NewProjectDialog({
                   <FieldError id={fieldId("emails-error")}>
                     {draftError
                       ? copy.errors.emailNotValid
-                      : errorText(copy, errors.emails)}
+                      : errorText(copy, errors.emails, stageTemplate)}
                   </FieldError>
                 ) : null}
                 <p
@@ -452,7 +459,7 @@ export function NewProjectDialog({
                   />
                   {errors.startsOn ? (
                     <FieldError id={fieldId("startsOn-error")}>
-                      {errorText(copy, errors.startsOn)}
+                      {errorText(copy, errors.startsOn, stageTemplate)}
                     </FieldError>
                   ) : null}
                 </div>
@@ -471,7 +478,7 @@ export function NewProjectDialog({
                   />
                   {errors.launchesOn ? (
                     <FieldError id={fieldId("launchesOn-error")}>
-                      {errorText(copy, errors.launchesOn)}
+                      {errorText(copy, errors.launchesOn, stageTemplate)}
                     </FieldError>
                   ) : null}
                 </div>
@@ -492,7 +499,7 @@ export function NewProjectDialog({
                     <SelectContent>
                       {STAGE_TEMPLATE_IDS.map((id) => (
                         <SelectItem key={id} value={id}>
-                          {STAGE_TEMPLATES[id].label}
+                          {STAGE_TEMPLATE_LABELS[id]}
                         </SelectItem>
                       ))}
                     </SelectContent>

@@ -162,6 +162,27 @@ export type Database = {
         };
         Relationships: [];
       };
+      portal_stage_template: {
+        Row: {
+          kind: string;
+          name: string;
+          position: number;
+          weeks: number | null;
+        };
+        Insert: {
+          kind: string;
+          name: string;
+          position: number;
+          weeks?: number | null;
+        };
+        Update: {
+          kind?: string;
+          name?: string;
+          position?: number;
+          weeks?: number | null;
+        };
+        Relationships: [];
+      };
       project_clients: {
         Row: {
           email: string;
@@ -721,7 +742,15 @@ export type Database = {
       };
       portal_complete_client_sign_in: {
         Args: { p_public_id: string };
-        Returns: string;
+        Returns: {
+          client_email: string;
+          notify_email: string;
+          notify_name: string;
+          project_id: string;
+          project_name: string;
+          project_public_id: string;
+          session_days: number;
+        }[];
       };
       portal_complete_stage: {
         Args: {
@@ -830,6 +859,19 @@ export type Database = {
           name: string;
           public_id: string;
         }[];
+      };
+      portal_save_settings: {
+        Args: {
+          p_allowed_team_domain: string;
+          p_code_max_tries: number;
+          p_daily_digest: boolean;
+          p_expected_updated_at: string;
+          p_lockout_minutes: number;
+          p_notify_first_client_sign_in: boolean;
+          p_session_days: number;
+          p_stages: Json;
+        };
+        Returns: string;
       };
       portal_save_ticket: {
         Args: {
