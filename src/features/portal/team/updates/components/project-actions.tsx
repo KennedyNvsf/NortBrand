@@ -6,18 +6,24 @@ import { ICON_STROKE } from "@/lib/icons";
 
 import { getTeamViewer } from "../../access";
 import type { TeamBoard } from "../../board/data";
-import { boardCopy, teamUpdatesCopy } from "../../copy";
+import { boardCopy, previewCopy, teamUpdatesCopy } from "../../copy";
 import { PostUpdateLauncher } from "./post-update-launcher";
 
 /*
  * The project header's actions on every team project page (Figma TM-02, TM-05, TM-07,
- * TM-10): "Post update" (#139) and "New ticket" (#137). Server component; the dialog it
- * opens is client code loaded on demand.
+ * TM-10): "View as client" (#160, a read-only preview of the client portal), "Post
+ * update" (#139) and "New ticket" (#137). Server component; the dialog it opens is
+ * client code loaded on demand.
  */
 export async function ProjectActions({ board }: { board: TeamBoard }) {
   const viewer = await getTeamViewer();
   return (
     <>
+      <Button asChild variant="ghost">
+        <Link href={`/team/projects/${board.project.publicId}/preview`}>
+          {previewCopy.viewAsClient}
+        </Link>
+      </Button>
       <PostUpdateLauncher
         copy={teamUpdatesCopy}
         projectId={board.project.id}

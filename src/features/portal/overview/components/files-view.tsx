@@ -26,6 +26,7 @@ import {
 } from "../data";
 import { lisbonToday } from "../domain";
 import { formatDay, type PortalLocale } from "../format";
+import type { PreviewTarget } from "../scope";
 import { LoadFailed } from "./load-failed";
 
 /*
@@ -46,23 +47,26 @@ const GROUPS: FileGroup[] = ["design", "documents"];
 export async function FilesView({
   publicId,
   locale,
+  preview,
 }: {
   publicId: string;
   locale: PortalLocale;
+  /** View as client (#160): render the team's preview of this project. */
+  preview?: PreviewTarget;
 }) {
   await connection();
   let view: ProjectView | null;
   let files: PortalFile[] = [];
   try {
-    view = await getProjectView(publicId);
-    if (view) files = await getProjectFiles(view.id);
+    view = await getProjectView(publicId, Boolean(preview));
+    if (view) files = await getProjectFiles(view.id, preview?.publicId);
   } catch (error) {
     Sentry.captureException(error, { tags: { feature: "portal-files" } });
     return <LoadFailed locale={locale} />;
   }
   if (!view) return null;
 
-  const t = await getTranslations("Portal.files");
+  const t = await getTranslations({ locale, namespace: "Portal.files" });
   const today = lisbonToday(new Date());
   const latest = files[0];
   const dayOf = (createdAt: string) => {

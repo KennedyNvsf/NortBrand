@@ -20,6 +20,7 @@ import {
   type StatusFilter,
 } from "../domain";
 import { formatDay, formatRange, type PortalLocale } from "../format";
+import { portalBase, type PreviewTarget } from "../scope";
 import { LoadFailed } from "./load-failed";
 import { Avatar, StatusPill } from "./status";
 import { TaskDetail } from "./task-detail";
@@ -35,18 +36,21 @@ import { TaskDetailFrame } from "./task-detail-frame";
 export async function TasksView({
   publicId,
   locale,
+  preview,
   statusParam,
   taskParam,
 }: {
   publicId: string;
   locale: PortalLocale;
+  /** View as client (#160): render the team's preview of this project. */
+  preview?: PreviewTarget;
   statusParam: unknown;
   taskParam: unknown;
 }) {
   await connection();
   let view: ProjectView | null;
   try {
-    view = await getProjectView(publicId);
+    view = await getProjectView(publicId, Boolean(preview));
   } catch (error) {
     Sentry.captureException(error, { tags: { feature: "portal-tasks" } });
     return <LoadFailed locale={locale} />;
@@ -54,9 +58,9 @@ export async function TasksView({
   if (!view) return null;
 
   const [t, status, overview] = await Promise.all([
-    getTranslations("Portal.tasks"),
-    getTranslations("Portal.status"),
-    getTranslations("Portal.overview"),
+    getTranslations({ locale, namespace: "Portal.tasks" }),
+    getTranslations({ locale, namespace: "Portal.status" }),
+    getTranslations({ locale, namespace: "Portal.overview" }),
   ]);
   const now = new Date();
   const today = lisbonToday(now);
@@ -67,7 +71,7 @@ export async function TasksView({
     filterByStatus(view.tickets, filter),
   );
   const current = currentStage(view.stages);
-  const base = `/${locale}/portal/${view.publicId}/tasks`;
+  const base = `${portalBase(locale, view.publicId, preview)}/tasks`;
   const query = (next: { status?: StatusFilter; task?: number }) => {
     const params = new URLSearchParams();
     const statusValue = next.status ?? filter;
@@ -312,6 +316,7 @@ export async function TasksView({
           locale={locale}
           today={today}
           now={now}
+          preview={preview?.publicId}
         />
       </TaskDetailFrame>
     </div>

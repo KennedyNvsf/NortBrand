@@ -28,6 +28,7 @@ import {
   formatUpdateTime,
   type PortalLocale,
 } from "../format";
+import { portalBase, type PreviewTarget } from "../scope";
 import { LoadFailed } from "./load-failed";
 import { ProgressRing } from "./progress-ring";
 import { StageTrack } from "./stage-track";
@@ -66,14 +67,17 @@ function Card({
 export async function OverviewView({
   publicId,
   locale,
+  preview,
 }: {
   publicId: string;
   locale: PortalLocale;
+  /** View as client (#160): render the team's preview of this project. */
+  preview?: PreviewTarget;
 }) {
   await connection();
   let view: ProjectView | null;
   try {
-    view = await getProjectView(publicId);
+    view = await getProjectView(publicId, Boolean(preview));
   } catch (error) {
     Sentry.captureException(error, { tags: { feature: "portal-overview" } });
     return <LoadFailed locale={locale} />;
@@ -81,14 +85,14 @@ export async function OverviewView({
   if (!view) return null;
 
   const [t, status, health] = await Promise.all([
-    getTranslations("Portal.overview"),
-    getTranslations("Portal.status"),
-    getTranslations("Portal.health"),
+    getTranslations({ locale, namespace: "Portal.overview" }),
+    getTranslations({ locale, namespace: "Portal.status" }),
+    getTranslations({ locale, namespace: "Portal.health" }),
   ]);
 
   const now = new Date();
   const today = lisbonToday(now);
-  const base = `/${locale}/portal/${view.publicId}`;
+  const base = portalBase(locale, view.publicId, preview);
   const stage = currentStage(view.stages);
   const stageIndex = stage
     ? view.stages.findIndex((s) => s.id === stage.id) + 1

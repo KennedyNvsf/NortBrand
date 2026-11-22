@@ -347,6 +347,11 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   `portal_stage_template` table (weeks as weights; Launch and Care fixed). A client's
   session length is signed into the marker at sign-in; the first sign-in emails the
   project lead. Form rules in `rules.ts` (zod-free, shared with the browser).
+- **View as client (#160, docs/guides/portal.md § 19):** `/team/projects/<NB-xxxx>/preview/<en|pt>/…`,
+  `src/features/portal/preview/`. The client's view is computed in SQL
+  (`portal_client_preview`, SECURITY INVOKER, team on the project only), mirroring the
+  client policies; the client views take `preview` and read that bundle. Change both
+  together (pgTAP 17 compares them).
 - **The repository is public until launch** (Actions minutes, 2026-11-14): never commit
   secrets or personal data; making it private again is on the launch checklist.
 - **Email:** Supabase sends codes through custom SMTP on Resend; app emails use the
