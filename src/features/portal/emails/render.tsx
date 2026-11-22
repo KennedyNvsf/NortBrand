@@ -4,7 +4,10 @@ import { site } from "@/content/site";
 import type { Locale } from "@/i18n/routing";
 import { emailMessages, toEmail, type RenderedEmail } from "@/lib/email/render";
 
+import { fill } from "../auth/components/copy";
+import { firstSignInEmailCopy } from "../team/copy";
 import { PortalDigestEmail } from "./portal-digest";
+import { PortalFirstSignInEmail } from "./portal-first-sign-in";
 import { PortalUpdateEmail } from "./portal-update";
 import { PortalWelcomeEmail } from "./portal-welcome";
 
@@ -171,6 +174,45 @@ export function renderPortalDigest(
         button: t("button"),
         fallback: t("fallback"),
         footer: t("footer", values),
+      }}
+    />,
+  );
+}
+
+export type PortalFirstSignIn = {
+  leadName: string;
+  clientEmail: string;
+  projectName: string;
+  publicId: string;
+  /** The site's origin, e.g. https://nortbrand.pt. */
+  siteUrl: string;
+};
+
+/** To the project lead: a client signed in for the first time (#159). English only. */
+export function renderPortalFirstSignIn(
+  notice: PortalFirstSignIn,
+): Promise<RenderedEmail> {
+  const copy = firstSignInEmailCopy;
+  const accessUrl = `${notice.siteUrl.replace(/\/$/, "")}/team/projects/${notice.publicId}/access`;
+  const values = {
+    lead: notice.leadName,
+    client: notice.clientEmail,
+    project: notice.projectName,
+    studio: site.name,
+  };
+
+  return toEmail(
+    fill(copy.subject, values),
+    <PortalFirstSignInEmail
+      studio={site.name}
+      accessUrl={accessUrl}
+      copy={{
+        preview: fill(copy.preview, values),
+        heading: fill(copy.heading, values),
+        body: fill(copy.body, values),
+        button: copy.button,
+        fallback: copy.fallback,
+        footer: fill(copy.footer, values),
       }}
     />,
   );

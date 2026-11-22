@@ -1,37 +1,39 @@
 /*
  * Stage templates for a new project (#136; Figma TM-04 "Plan"). Pure, so the modal's
  * preview and the server action use the same rule: the server recomputes the stages from
- * the template id and never trusts dates sent by the browser.
+ * the template and never trusts dates sent by the browser.
  *
- * The working stages share the days from the start to the day before launch, in
- * proportion to their weight, back to back. "Launch" is the launch day; "Care" starts on
- * it and has no end. The team adjusts each stage afterwards (#138).
+ * Since #159 the template lives in the database (`portal_stage_template`, edited in
+ * Settings, Figma TM-13). Each working stage has a duration in weeks; the weeks are
+ * relative weights, so the working stages share the days from the start to the day
+ * before launch in proportion, back to back. "Launch" is the launch day; "Care" starts
+ * on it and has no end (lead's decision, 2026-11-22). The team adjusts each stage
+ * afterwards (#138).
  */
 
 export const STAGE_TEMPLATE_IDS = ["standard"] as const;
 export type StageTemplateId = (typeof STAGE_TEMPLATE_IDS)[number];
+export const STAGE_TEMPLATE_LABELS: Record<StageTemplateId, string> = {
+  standard: "Standard",
+};
 
-type TemplateStage =
-  | { name: string; kind: "work"; weight: number }
+export type TemplateStage =
+  | { name: string; kind: "work"; weeks: number }
   | { name: string; kind: "launch" }
   | { name: string; kind: "after" };
 
-export const STAGE_TEMPLATES: Record<
-  StageTemplateId,
-  { label: string; stages: readonly TemplateStage[] }
-> = {
-  standard: {
-    label: "Standard",
-    stages: [
-      { name: "Discovery", kind: "work", weight: 2 },
-      { name: "Design", kind: "work", weight: 3 },
-      { name: "Development", kind: "work", weight: 8 },
-      { name: "Review", kind: "work", weight: 3 },
-      { name: "Launch", kind: "launch" },
-      { name: "Care", kind: "after" },
-    ],
-  },
-};
+/**
+ * The seeded template (migration 20261124120000, Figma TM-13). The fake backend starts
+ * from it, and the app falls back to it if the stored template can't be read.
+ */
+export const DEFAULT_STAGE_TEMPLATE: readonly TemplateStage[] = [
+  { name: "Discovery", kind: "work", weeks: 2 },
+  { name: "Design", kind: "work", weeks: 3 },
+  { name: "Development", kind: "work", weeks: 6 },
+  { name: "Review", kind: "work", weeks: 3 },
+  { name: "Launch", kind: "launch" },
+  { name: "Care", kind: "after" },
+];
 
 export type PlannedStage = {
   name: string;
@@ -40,11 +42,8 @@ export type PlannedStage = {
 };
 
 /** Each working stage needs at least two days. */
-export function minimumDays(template: StageTemplateId): number {
-  return (
-    STAGE_TEMPLATES[template].stages.filter((stage) => stage.kind === "work")
-      .length * 2
-  );
+export function minimumDays(template: readonly TemplateStage[]): number {
+  return template.filter((stage) => stage.kind === "work").length * 2;
 }
 
 const DAY_MS = 86_400_000;
@@ -74,7 +73,7 @@ export function daysBetween(start: string, end: string): number {
  * too close together for every working stage to get its minimum.
  */
 export function spreadStages(
-  template: StageTemplateId,
+  template: readonly TemplateStage[],
   startsOn: string,
   launchesOn: string,
 ): PlannedStage[] | null {
@@ -82,25 +81,25 @@ export function spreadStages(
   const span = daysBetween(startsOn, launchesOn);
   if (span < minimumDays(template)) return null;
 
-  const stages = STAGE_TEMPLATES[template].stages;
-  const totalWeight = stages.reduce(
-    (sum, stage) => sum + (stage.kind === "work" ? stage.weight : 0),
+  const totalWeeks = template.reduce(
+    (sum, stage) => sum + (stage.kind === "work" ? stage.weeks : 0),
     0,
   );
+  if (totalWeeks <= 0) return null;
   const start = toDay(startsOn);
   const launch = toDay(launchesOn);
 
   let cumulative = 0;
   let cursor = start;
-  return stages.map((stage) => {
+  return template.map((stage) => {
     if (stage.kind === "launch") {
       return { name: stage.name, startsOn: launchesOn, endsOn: launchesOn };
     }
     if (stage.kind === "after") {
       return { name: stage.name, startsOn: launchesOn, endsOn: null };
     }
-    cumulative += stage.weight;
-    const next = start + Math.round((span * cumulative) / totalWeight);
+    cumulative += stage.weeks;
+    const next = start + Math.round((span * cumulative) / totalWeeks);
     const planned = {
       name: stage.name,
       startsOn: toIso(cursor),

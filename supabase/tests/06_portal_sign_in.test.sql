@@ -120,8 +120,8 @@ truncate private.portal_rate_events;
 
 select set_config('request.jwt.claims', '{"sub":"20000000-0000-4000-a000-000000000011","role":"authenticated"}', true);
 set local role authenticated;
-select is(public.portal_complete_client_sign_in('nb-9101'), '20000000-0000-4000-b000-000000000001'::uuid, 'the client completes sign-in to their project');
-select is(public.portal_complete_client_sign_in('NB-9102'), null, 'a closed project cannot be completed');
+select is((select project_id from public.portal_complete_client_sign_in('nb-9101')), '20000000-0000-4000-b000-000000000001'::uuid, 'the client completes sign-in to their project');
+select is((select project_id from public.portal_complete_client_sign_in('NB-9102')), null, 'a closed project cannot be completed');
 reset role;
 
 select ok(
@@ -131,13 +131,13 @@ select ok(
 
 select set_config('request.jwt.claims', '{"sub":"20000000-0000-4000-a000-000000000012","role":"authenticated"}', true);
 set local role authenticated;
-select is(public.portal_complete_client_sign_in('NB-9101'), '20000000-0000-4000-b000-000000000001'::uuid, 'an invited client can complete sign-in');
+select is((select project_id from public.portal_complete_client_sign_in('NB-9101')), '20000000-0000-4000-b000-000000000001'::uuid, 'an invited client can complete sign-in');
 reset role;
 select is((select status from public.project_clients where email = 'invited@test.example'), 'active', 'the first sign-in activates an invited client');
 
 select set_config('request.jwt.claims', '{"sub":"20000000-0000-4000-a000-000000000014","role":"authenticated"}', true);
 set local role authenticated;
-select is(public.portal_complete_client_sign_in('NB-9101'), null, 'a user who is not a client completes nothing');
+select is((select project_id from public.portal_complete_client_sign_in('NB-9101')), null, 'a user who is not a client completes nothing');
 reset role;
 
 -- ---------------------------------------------------------------------------

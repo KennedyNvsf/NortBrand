@@ -4,6 +4,7 @@ import pt from "../../../../messages/pt.json";
 
 import {
   renderPortalDigest,
+  renderPortalFirstSignIn,
   renderPortalUpdate,
   renderPortalWelcome,
 } from "./render";
@@ -163,5 +164,25 @@ describe("renderPortalDigest", () => {
     expect(email.html).toContain('lang="pt"');
     expect(email.html).toContain("Precisa de si");
     expect(email.subject).toBe("Café website: as novidades de hoje");
+  });
+});
+
+describe("renderPortalFirstSignIn", () => {
+  it("tells the lead which client signed in and links Client access", async () => {
+    const email = await renderPortalFirstSignIn({
+      leadName: "Tiago Sousa",
+      clientEmail: "joao@client.example",
+      projectName: "Atlântico Café website",
+      publicId: "NB-9961",
+      siteUrl: "https://nortbrand.pt/",
+    });
+    expect(email.subject).toBe(
+      "joao@client.example signed in to Atlântico Café website",
+    );
+    expect(email.html).toContain('lang="en"');
+    expect(email.html).toContain(
+      'href="https://nortbrand.pt/team/projects/NB-9961/access"',
+    );
+    expect(email.text).toContain("Hi Tiago Sousa");
   });
 });

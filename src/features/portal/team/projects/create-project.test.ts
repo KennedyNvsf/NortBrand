@@ -5,6 +5,7 @@ import {
   type CreateProjectDeps,
   type NewProject,
 } from "./create-project";
+import { DEFAULT_STAGE_TEMPLATE } from "./templates";
 
 const ADMIN = {
   status: "signed_in",
@@ -34,6 +35,7 @@ function deps(overrides: Partial<CreateProjectDeps> = {}) {
   const saved: NewProject[] = [];
   const base: CreateProjectDeps = {
     viewer: () => Promise.resolve(ADMIN),
+    stageTemplate: () => Promise.resolve(DEFAULT_STAGE_TEMPLATE),
     findAccounts: (emails) =>
       Promise.resolve(
         emails.map((email) => ({

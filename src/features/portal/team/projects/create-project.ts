@@ -5,13 +5,15 @@ import {
   STAGE_TEMPLATE_IDS,
   spreadStages,
   type PlannedStage,
+  type TemplateStage,
 } from "./templates";
 
 /*
  * New project with client invite (#136, ADR-009), free of Next.js and Supabase so it can
  * be tested with fakes; actions.ts supplies the real dependencies.
  *
- *   admin? → validate (zod) → stages from the template (never from the browser)
+ *   admin? → validate (zod) → stages from the stored template (Settings, #159),
+ *   never from the browser
  *   → look up the clients' accounts (refuse teammates' emails)
  *   → create the missing auth users (auth administration, service role)
  *   → one SQL transaction: project, lead, stages, clients
@@ -138,6 +140,8 @@ export type WelcomeEmail = {
 
 export type CreateProjectDeps = {
   viewer: () => Promise<TeamViewer>;
+  /** The workspace's stage template (`portal_stage_template`, edited in Settings). */
+  stageTemplate: () => Promise<readonly TemplateStage[]>;
   findAccounts: (emails: string[]) => Promise<ClientAccount[] | DbError>;
   createAuthUser: (
     email: string,
@@ -185,7 +189,7 @@ export async function createProject(
   const project = parsed.data;
 
   const stages = spreadStages(
-    project.template,
+    await deps.stageTemplate(),
     project.startsOn,
     project.launchesOn,
   );

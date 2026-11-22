@@ -13,6 +13,7 @@ import {
   getTeamProjects,
 } from "@/features/portal/team/projects/data";
 import { parseProjectView } from "@/features/portal/team/projects/list";
+import { getStageTemplate } from "@/features/portal/team/settings/data";
 import { EmptyState } from "@/features/portal/states/empty-state";
 import { PageSkeleton } from "@/features/portal/states/skeletons";
 
@@ -69,6 +70,7 @@ async function ProjectsContent({ searchParams }: Pick<Props, "searchParams">) {
       }))}
       viewerId={data.viewer.userId}
       suggestedId={await getSuggestedProjectId()}
+      stageTemplate={await getStageTemplate()}
     />
   ) : null;
 

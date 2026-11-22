@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies, headers } from "next/headers";
+import { after } from "next/server";
 
 import { getServerEnv } from "@/env";
 import { routing } from "@/i18n/routing";
@@ -9,6 +10,7 @@ import { clientIp, hashIp } from "@/lib/ip-hash";
 import { getPortalSupabase } from "@/lib/supabase/auth";
 import { getSupabase } from "@/lib/supabase/server";
 
+import { parseCompletion } from "./completion";
 import {
   E2E_PORTAL_COOKIE,
   e2eUserId,
@@ -17,6 +19,7 @@ import {
   fakeRegisterWrongCode,
   fakeVerify,
 } from "./e2e-backend";
+import { notifyFirstSignIn } from "./first-sign-in";
 import {
   BEGIN_ANSWERS,
   CODE_STATES,
@@ -25,6 +28,7 @@ import {
   setSessionMarker,
   sleep,
 } from "./server";
+import { fakeSettings } from "../team/settings/e2e-store";
 import { PORTAL_SESSION_COOKIE } from "./session-marker";
 import {
   requestCode,
@@ -101,7 +105,10 @@ export async function verifyClientCode(
       complete: () => Promise.resolve("00000000-0000-4000-b000-00000000e2e0"),
       signOut: () => Promise.resolve(),
       startSession: async () => {
-        await setSessionMarker(e2eUserId(signedInEmail));
+        await setSessionMarker(
+          e2eUserId(signedInEmail),
+          fakeSettings().sessionDays,
+        );
         (await cookies()).set(E2E_PORTAL_COOKIE, signedInEmail, {
           httpOnly: true,
           path: "/",
@@ -113,6 +120,8 @@ export async function verifyClientCode(
   }
 
   const portal = await getPortalSupabase();
+  // Set by complete(), read by startSession(): the saved session length (#159).
+  let sessionDays: number | undefined;
 
   return verifyCode(input, {
     codeState: async (request) => {
@@ -156,14 +165,19 @@ export async function verifyClientCode(
         },
       );
       if (error) return { error: { code: error.code } };
-      return data;
+      const completion = parseCompletion(data);
+      if (!completion) return null;
+      sessionDays = completion.sessionDays;
+      const notice = completion.notice;
+      if (notice) after(() => notifyFirstSignIn(notice));
+      return completion.projectId;
     },
     signOut: async () => {
       await portal.auth.signOut();
     },
     startSession: async () => {
       const { data } = await portal.auth.getUser();
-      if (data.user) await setSessionMarker(data.user.id);
+      if (data.user) await setSessionMarker(data.user.id, sessionDays);
     },
     reportFailure,
   });
