@@ -1133,3 +1133,66 @@ client on another project keeps their account and that project.
 - A new project table: give it `project_id … on delete cascade` and a team write
   policy through `private.can_edit_project`, so archive and delete cover it.
 - New Storage folders for a project: list and remove them in `deleteProjectAction`.
+
+## 21. Security review before launch (#143)
+
+**What.** The portal's pre-launch review (2026-11-22): IDOR and cross-role attempts on
+every server action, route and database function; sessions; Project ID rotation; rate
+limits; the service-role key; Storage. Accessibility is in
+`docs/accessibility-audit.md` § 6. Result: **every cross-project and cross-role attempt
+is refused**, with the tests committed; no open finding.
+
+### Layers, and where each is proven
+
+The portal never relies on one check. A server action checks the caller, and the
+database checks again, so a forged or skipped action still can't cross a line.
+
+| Area                     | How it's enforced                                                                                                                                                                                         | Proven by                                                         |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| Team server actions (35) | Each starts by reading the team viewer (`getTeamViewer`: an active `team_members` row) and the role where needed; a client session has no row, so every team action answers `forbidden` before any work.  | Unit tests per feature (`*.test.ts`, the `forbidden` cases)       |
+| Cross-project data       | RLS on every portal table (`works_on_project`, `is_project_client`); composite foreign keys keep child rows in their project; 38 portal functions check the role or run as the caller.                    | **pgTAP 19** (the sweep), and 05–18 per feature                   |
+| Client vs team pages     | Client pages need a client session and marker; team pages need an active teammate; neither session opens the other side.                                                                                  | `portal-security.spec.ts`                                         |
+| Sessions                 | A signed marker cookie (HMAC, bound to the user, its length signed in) ends client sessions after Settings' days and team sessions after 30; without it the session counts as signed out.                 | `session-marker.test.ts`; `portal-shell.spec.ts` (signed out)     |
+| Project ID rotation      | `projects.clients_signed_out_at`; `is_project_client` accepts only sessions created after it.                                                                                                             | pgTAP 14                                                          |
+| Sign-in limits           | Code requests: 10 per IP hash per hour, 200 in total (`PT429`); wrong codes: Settings' tries, then a pause; Supabase Auth: 10 verifications per 5 minutes per IP, 2 emails per hour per address.          | pgTAP 06, 07, 16; `sign-in.test.ts`                               |
+| Service-role key         | Only `src/lib/supabase/admin.ts` (`server-only`), only for auth administration; never in a client bundle.                                                                                                 | `pnpm check:bundles` (CI, every PR)                               |
+| Storage                  | Private `portal-files` bucket; reads by path follow `project_files` RLS; downloads only through `/api/portal/files/<id>` as a 60-second signed URL with the reader's session; uploads checked by content. | pgTAP 08, 13; `portal-content.spec.ts`, `portal-security.spec.ts` |
+| Routes                   | `/api/portal/digest` needs `Bearer CRON_SECRET` (401, or 503 unset); `/api/portal/files/fake-upload` exists only on the fake backend, which is refused on Vercel production.                              | `portal-security.spec.ts`; `src/lib/e2e-backend.ts`               |
+| Newer surfaces           | Settings (admin, stale saves refused), View as client (team on the project only, client filter in SQL), archive/delete (admin, typed Project ID).                                                         | pgTAP 16, 17, 18; and the sweep                                   |
+
+### The sweep (pgTAP 19)
+
+Two attackers against project B: a **member who works only on project A**, and a
+**client of project A**. The member tries every project-scoped function (tickets,
+updates, health, launch, stages, files, client access, rotation, archive, delete) on B,
+direct inserts into B's tables, a ticket in A pointing at B's stage, and direct updates
+and deletes on B's rows. The client tries the same on their own project and on B, plus
+every team-only function (overview, roles, invites, settings, create project, account
+look-ups). Every attempt raises. The one function that doesn't is
+`portal_complete_team_sign_in`, which by design answers `null` (no role) to anyone who
+isn't a teammate and records nothing. Finally, a checksum of all of B's rows, the
+settings and the team, taken as the owner before and after, must match, so a statement
+that "succeeded" while touching nothing can't hide a leak.
+
+### Findings
+
+| Finding                                                                                                   | Severity | Status        |
+| --------------------------------------------------------------------------------------------------------- | -------- | ------------- |
+| `portal_stage_template` kept Supabase's default grants (incl. `anon` select); RLS already blocked access. | Low      | Fixed in #160 |
+| Members could change `projects.status` directly through a column grant.                                   | Medium   | Fixed in #165 |
+| The client task detail scrolled sideways at 390 (accessibility, 1.4.10 Reflow).                           | Low      | Fixed in #143 |
+
+No finding is open. Known limits stay in `docs/tech-debt.md` (for example, editors on an
+archived project open and their saves are refused).
+
+### Not covered
+
+Load testing (out of scope). A person still has to do the screen-reader and real-iOS
+passes (`docs/accessibility-audit.md` § 5).
+
+### Extending
+
+- A new team action: start with the viewer (and role) check in its domain function, add
+  its `forbidden` unit case, and add it to pgTAP 19 if it reaches the database.
+- A new portal table or function: add an attempt from both attackers to pgTAP 19 and,
+  if it holds project data, include the table in the checksum.

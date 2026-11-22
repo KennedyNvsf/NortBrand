@@ -11,6 +11,7 @@ of each check. Target: WCAG 2.2 AA plus the project rules in CLAUDE.md › Acces
 | WebKit engine (§ 4.1)         | 2026-11-07 | `main` at `76576f9` (after #105) | Done. No open failure; keyboard limited (§ 4.1)          |
 | Real Safari (iOS)             | —          | —                                | **Pending**, needs an iPhone (§ 5)                       |
 | Rerun with final copy + legal | —          | after #77 and #78                | **Pending** (§ 5)                                        |
+| Portal (automated, § 6)       | 2026-11-22 | `main` at `1a56354` + #143       | Done. One failure fixed in #143; no open failure         |
 
 #84 stays open until the pending passes are recorded here.
 
@@ -159,3 +160,58 @@ control has a name and role; form errors are announced; the menu, dialog and ban
 and return focus correctly; and the PT pages are read in Portuguese.
 
 Any failure found becomes its own ticket (`|A11Y| …`) and is listed in § 1.
+
+## 6. Client portal and team portal (#143)
+
+**Pass:** 2026-11-22, `main` at `1a56354` plus #143's fix. Automated, on the fake backend
+(`E2E_FAKE_BACKEND=1` production build). Harness: `tests/e2e/portal-a11y.spec.ts`.
+
+**Result: every portal screen passes every automated check at 1440, 768 and 390.**
+One failure was found and fixed in #143 (below). No open failure, so no new ticket.
+
+### What was checked
+
+Every screen, at each width, in Chromium:
+
+- **axe** with the WCAG 2.0/2.1 A and AA and WCAG 2.2 AA rules (after animations settle);
+- **exactly one visible H1**;
+- **the content's language**: `lang` of the document, or of the View as client wrapper
+  (`<div lang="pt">` inside the English team portal);
+- at **390**: **no horizontal overflow**, every control's **hit area ≥ 44 × 44 px**
+  (`touch-targets.ts`), and, with **reduced motion** on, **no visible content left at
+  opacity 0** by an entrance animation.
+
+Each feature's own spec also checks its states (dialogs, editors, empty and error
+states) with axe, one H1 and the 390 checks; those ran green in the same build.
+
+### Screens
+
+| Area   | Screen                                                                   | Locale | 1440 | 768 | 390 |
+| ------ | ------------------------------------------------------------------------ | ------ | ---- | --- | --- |
+| Client | Sign-in (`/[locale]/portal`)                                             | EN, PT | ✓    | ✓   | ✓   |
+| Client | Overview, Tasks, Task detail, Timeline, Files, Updates                   | EN     | ✓    | ✓   | ✓ ¹ |
+| Client | Overview, Tasks, Task detail, Timeline, Files, Updates                   | PT     | ✓    | ✓   | ✓ ¹ |
+| Team   | Sign-in (`/team/sign-in`)                                                | EN     | ✓    | ✓   | ✓   |
+| Team   | Projects, Archived, My tickets, Team, Settings, States                   | EN     | ✓    | ✓   | ✓   |
+| Team   | Project overview, Board, Ticket editor, Timeline, Files, Updates, Access | EN     | ✓    | ✓   | ✓   |
+| Team   | View as client: overview (PT), tasks (EN)                                | PT, EN | ✓    | ✓   | ✓   |
+
+¹ Fixed in #143: with a task open below 1280 px, the tasks page scrolled sideways at
+390 (543 px wide). The list sat in a grid column that sized to the filter chips' full
+width (`whitespace-nowrap`); the column now has `min-w-0`, so the chips scroll inside
+their own row as designed. 1.4.10 Reflow (AA).
+
+### Motion (Figma 14 Portal — Motion)
+
+- Every portal animation takes its values from the tokens (`src/lib/motion.ts`,
+  `globals.css`); a search for raw durations, delays, easings and springs in the portal
+  found none.
+- Once-a-session moments go through `use-session-moment.ts` (sessionStorage), as the
+  spec's tiers require.
+- Reduced motion: the 390 pass above runs with `prefers-reduced-motion: reduce` and
+  found no content left hidden.
+
+### Not covered here
+
+Screen readers, real Safari on iOS and the WebKit keyboard pass are the same pending
+items as for the marketing site (§ 5): they need a person and a device.

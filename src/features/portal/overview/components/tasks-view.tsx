@@ -303,7 +303,9 @@ export async function TasksView({
 
   return (
     <div className="grid gap-lg min-[80rem]:-my-8 min-[80rem]:-mr-10 min-[80rem]:grid-cols-[minmax(0,1fr)_440px] min-[80rem]:gap-0">
-      <div className="min-[80rem]:py-8 min-[80rem]:pr-10">{list}</div>
+      {/* min-w-0: a grid item sizes to its content's min width by default, and the
+          filter chips (nowrap, scrolling) would widen the page past 390 px (#143). */}
+      <div className="min-w-0 min-[80rem]:py-8 min-[80rem]:pr-10">{list}</div>
       <TaskDetailFrame
         title={selected.title}
         closeHref={query({})}
