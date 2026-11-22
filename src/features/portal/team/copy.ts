@@ -1042,3 +1042,17 @@ export const firstSignInEmailCopy = {
   footer:
     "You get this because “Tell me when a client signs in for the first time” is on in {studio} Settings.",
 } as const;
+
+/** View as client (#160; Figma TM-07 “View as client”). The banner is not drawn in Figma. */
+export const previewCopy = {
+  viewAsClient: "View as client",
+  banner: "Previewing as the client · read-only",
+  bannerLabel: "Client preview",
+  language: "Client’s language",
+  languages: { en: "EN", pt: "PT" },
+  languageNames: { en: "English", pt: "Portuguese" },
+  exit: "Back to project",
+  loadFailed: "We couldn’t load the preview. Refresh the page to try again.",
+} as const;
+
+export type PreviewCopy = typeof previewCopy;

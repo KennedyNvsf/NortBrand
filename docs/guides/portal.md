@@ -951,3 +951,104 @@ controls are disabled (one `fieldset`), so the values are readable but not opera
   form, and a pgTAP case proving it takes effect.
 - Several templates later: add a template key column to `portal_stage_template` and map
   `STAGE_TEMPLATE_IDS` to it; the new-project select already sends an id.
+
+## 19. View as client (#160)
+
+**What.** "View as client" on every team project page (Figma TM-07 `544:402`, a ghost
+button before Post update and New ticket) opens a read-only preview of that project's
+client portal: overview, tasks (with the task detail), timeline, files and updates, in
+the client portal's own frame, under a banner that reads "Previewing as the client ·
+read-only", with an EN/PT switch and "Back to project". Lead's decision 2026-11-15; split
+from #142 on 2026-11-21. Code: `src/features/portal/preview/`; SQL in
+`20261125120000_portal_client_preview.sql`.
+
+### Why the filter lives in SQL
+
+RLS shows the team everything, so a teammate reading the tables gets team-only tickets,
+unshared files and deleted posts. The preview can't impersonate a client (no client
+accounts for the team, ADR-009), so the client's view is computed in the database by
+`portal_client_preview(public_id)`, which applies the same rules as the client policies:
+
+| Data                  | Client policy (#130, #135)         | In the preview                                      |
+| --------------------- | ---------------------------------- | --------------------------------------------------- |
+| tickets               | `client_visible`                   | `client_visible` only                               |
+| checklist items       | of a client-visible ticket         | of client-visible tickets only                      |
+| updates               | `deleted_at is null`               | live only, newest 20 (like the client's read)       |
+| update ↔ ticket links | live update, client-visible ticket | links to client-visible tickets only                |
+| files                 | `shared`                           | shared only (and the count)                         |
+| stages, milestones    | all of the project                 | all of the project                                  |
+| teammates (names)     | the project's team                 | the project's team; anyone else reads as the studio |
+
+It is **SECURITY INVOKER**: the caller's own RLS still applies on top, and it returns
+null unless `private.works_on_project` (admins: every project; members: their projects).
+A client, or a member who isn't on the project, gets nothing. It writes nothing.
+
+### Request flow
+
+```
+"View as client"  → /team/projects/<NB-xxxx>/preview
+  page.tsx         team session? → portal_client_preview → redirect to /preview/<lang>,
+                   the language most of the project's clients use (pt if none)
+/preview/<en|pt>/… layout: PreviewGate (preview/gate.tsx)
+  getTeamShell()   no team session → /team/sign-in
+  getPreviewBundle (preview/data.ts, cached per request) → rpc → zod → the client
+                   screens' own types (ProjectView, checklists, milestones, files, shell)
+  null → 404; a read error → "We couldn't load the preview" (Sentry, code only)
+  MotionProvider + <div lang> + ClientShell(preview: base, banner) → the page
+pages              the client views themselves (OverviewView, TasksView, TimelineView,
+                   FilesView, UpdatesView) with preview={{ base, publicId }}
+```
+
+The client views take an optional `preview` target (`overview/scope.ts`): their data
+functions (`getProjectView`, `getChecklist`, `getMilestones`, `getProjectFiles`) read the
+preview bundle instead of the client's RLS tables, and their links start from the
+preview's base (`portalBase`). They always pass the locale to `getTranslations`, so the
+same screens render in EN or PT outside the `/[locale]` routes. The client shell's copy
+comes from `getClientShellCopy(locale)` (`shell/shell-copy.ts`), shared with the client
+layout. In preview the shell has no account menu (nobody is signed in as the client)
+and its project switcher holds only this project; "Message your team" stays a mailto:
+to the lead, as the client sees it.
+
+The language is a path segment, so every link inside the screens keeps it; the switch
+(`language-switch.tsx`, a small client component) swaps the segment in the current URL
+and keeps the section and its query (`?task=3`). The banner is team UI, so English.
+
+### Read-only
+
+The client screens have no actions (the client portal is read-only). Downloads still go
+through `/api/portal/files/<id>` with the teammate's session; only shared files are
+listed. Nothing in the preview calls a write, and the SQL function can't write.
+
+### Also in the migration
+
+`portal_stage_template` (#159) had kept Supabase's default table grants (including
+`anon` SELECT); RLS already refused every read and write outside the team, but the
+grants now match the other portal tables: `revoke all` from `anon` and `authenticated`,
+then `select` for `authenticated`.
+
+### Tests
+
+- pgTAP `17_portal_client_preview.test.sql` (22): the public key can't call it; a
+  client, a member off the project and an unknown ID get nothing; an admin previews any
+  project; for the lead, the preview holds the client-visible tickets, their checklist,
+  the live updates (newest first) with links only to visible tickets, the shared files
+  and count, every stage and milestone, the project's team, and no team-only text
+  anywhere. **The same rows are then read under a client's session** (tickets,
+  checklist, updates, links, files, teammates), so the preview equals what the client
+  policies return. The opening language comes from the clients.
+- Unit `preview.test.ts`: reshaping (names only for the project's team, the shell's
+  lead and counts, the language), a malformed answer is refused, the language swap
+  keeps section and query, `portalBase`.
+- e2e `team-preview.spec.ts` (fake backend): from the project page to `/preview/pt`,
+  the banner and `lang`, no team actions, account or forms, EN/PT keeps the section,
+  every section opens, Back to project, sign-in required, an unknown project or
+  language is the not-found page, axe, 390 px and touch targets. The client portal
+  specs still pass on the shared views.
+
+### Extending
+
+- A new client screen: take `preview?: PreviewTarget` in its view, read through a data
+  function that checks it, add the data to `portal_client_preview` with the same rule as
+  its client policy, and a pgTAP pair (preview vs a client's session).
+- If a client policy changes, change `portal_client_preview` in the same migration;
+  test 17 compares the two.

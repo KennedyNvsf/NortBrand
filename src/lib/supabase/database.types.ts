@@ -736,6 +736,7 @@ export type Database = {
           unlocks_at: string;
         }[];
       };
+      portal_client_preview: { Args: { p_public_id: string }; Returns: Json };
       portal_code_state: {
         Args: { p_email: string; p_public_id: string };
         Returns: string;

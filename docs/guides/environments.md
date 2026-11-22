@@ -195,6 +195,8 @@ removing teammates refuse to run. Then create each project's first admin
 The local stack gets the same settings from `supabase/config.toml`. Nothing here costs
 money on the current plans.
 
+**Workspace settings (2026-11-22, lead's approval):** `20261124120000_portal_workspace_settings` pushed to `nortbrand-dev` after #159 merged (dry run first; history 14/14; `portal_stage_template` has RLS and the 6 seeded stages, `portal_save_settings` is SECURITY DEFINER, `anon` cannot call it or `portal_complete_client_sign_in`, checked by query). It left Supabase's default grants on `portal_stage_template`; #160's migration revokes them. `nortbrand-prod` waits for the lead's approval.
+
 **Team workspace (2026-11-22, lead's approval):** `20261123120000_portal_team_workspace` pushed to `nortbrand-dev` after #142 merged (dry run first; history 13/13; `portal_search` is SECURITY INVOKER, `portal_team_overview` and `portal_set_team_role` are SECURITY DEFINER, and `anon` cannot execute any of them, checked by query). `nortbrand-prod` waits for the lead's approval.
 
 **Stage management (2026-11-15, lead's approval):** `20261119120000_portal_stage_management` pushed to `nortbrand-dev` and `nortbrand-prod` after #138 merged (history 9/9 on both; the five functions are SECURITY INVOKER and `anon` cannot execute them, checked by query). The CLI is linked back to `nortbrand-dev`.

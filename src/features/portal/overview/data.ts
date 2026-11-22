@@ -3,6 +3,7 @@ import { cache } from "react";
 import { isFakeBackendEnabled } from "@/lib/e2e-backend";
 import { getPortalSupabase } from "@/lib/supabase/auth";
 
+import { getPreviewBundle } from "../preview/data";
 import { isTicketStatus, type PortalStage, type PortalTicket } from "./domain";
 import { E2E_PROJECT_VIEW } from "./e2e-fixture";
 
@@ -12,6 +13,9 @@ import { E2E_PROJECT_VIEW } from "./e2e-fixture";
  * undeleted ones, checklists only for visible tickets (the policies in #130). Names are
  * resolved from the teammates the client may see; anyone hidden reads as the studio.
  * Cached per request (layout, page and detail share one read); never across users.
+ *
+ * View as client (#160): with `preview` set, each function returns the
+ * client's view computed in SQL (preview/data.ts) instead, for a teammate's session.
  */
 
 export type ProjectHealth = "on_track" | "at_risk" | "waiting_on_client";
@@ -70,8 +74,10 @@ const isHealth = (value: unknown): value is ProjectHealth =>
 
 export const getProjectView = cache(async function getProjectView(
   publicId: string,
+  preview = false,
 ): Promise<ProjectView | null> {
   const wanted = publicId.toUpperCase();
+  if (preview) return (await getPreviewBundle(wanted))?.view ?? null;
   if (isFakeBackendEnabled()) {
     return wanted === E2E_PROJECT_VIEW.publicId ? E2E_PROJECT_VIEW : null;
   }
@@ -169,7 +175,13 @@ export const getProjectView = cache(async function getProjectView(
 });
 
 /** A visible task's checklist (RLS returns nothing for a task the client can't see). */
-export async function getChecklist(ticketId: string): Promise<ChecklistItem[]> {
+export async function getChecklist(
+  ticketId: string,
+  preview?: string,
+): Promise<ChecklistItem[]> {
+  if (preview) {
+    return (await getPreviewBundle(preview))?.checklists[ticketId] ?? [];
+  }
   if (isFakeBackendEnabled()) {
     return E2E_PROJECT_VIEW.checklists[ticketId] ?? [];
   }
@@ -185,7 +197,11 @@ export async function getChecklist(ticketId: string): Promise<ChecklistItem[]> {
 }
 
 /** The project's milestones, by date. */
-export async function getMilestones(projectId: string): Promise<Milestone[]> {
+export async function getMilestones(
+  projectId: string,
+  preview?: string,
+): Promise<Milestone[]> {
+  if (preview) return (await getPreviewBundle(preview))?.milestones ?? [];
   if (isFakeBackendEnabled()) return E2E_PROJECT_VIEW.milestones;
   const { data, error } = await (
     await getPortalSupabase()
@@ -210,7 +226,9 @@ export async function getMilestones(projectId: string): Promise<Milestone[]> {
  */
 export async function getProjectFiles(
   projectId: string,
+  preview?: string,
 ): Promise<PortalFile[]> {
+  if (preview) return (await getPreviewBundle(preview))?.files ?? [];
   if (isFakeBackendEnabled()) return E2E_PROJECT_VIEW.files;
   const supabase = await getPortalSupabase();
   const [files, people] = await Promise.all([

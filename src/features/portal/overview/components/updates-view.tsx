@@ -12,6 +12,7 @@ import { groupUpdatesByDay } from "../content";
 import { getProjectView, type ProjectView } from "../data";
 import { formatUpdateTime, type PortalLocale } from "../format";
 import { FeedRefresher } from "./feed-refresher";
+import { portalBase, type PreviewTarget } from "../scope";
 import { LoadFailed } from "./load-failed";
 import { Avatar } from "./status";
 
@@ -27,14 +28,17 @@ import { Avatar } from "./status";
 export async function UpdatesView({
   publicId,
   locale,
+  preview,
 }: {
   publicId: string;
   locale: PortalLocale;
+  /** View as client (#160): render the team's preview of this project. */
+  preview?: PreviewTarget;
 }) {
   await connection();
   let view: ProjectView | null;
   try {
-    view = await getProjectView(publicId);
+    view = await getProjectView(publicId, Boolean(preview));
   } catch (error) {
     Sentry.captureException(error, { tags: { feature: "portal-updates" } });
     return <LoadFailed locale={locale} />;
@@ -42,13 +46,13 @@ export async function UpdatesView({
   if (!view) return null;
 
   const [t, overview] = await Promise.all([
-    getTranslations("Portal.updates"),
-    getTranslations("Portal.overview"),
+    getTranslations({ locale, namespace: "Portal.updates" }),
+    getTranslations({ locale, namespace: "Portal.overview" }),
   ]);
   const now = new Date();
   const groups = groupUpdatesByDay(view.updates, now);
   const tasks = new Map(view.tickets.map((ticket) => [ticket.id, ticket]));
-  const tasksBase = `/${locale}/portal/${view.publicId}/tasks`;
+  const tasksBase = `${portalBase(locale, view.publicId, preview)}/tasks`;
 
   return (
     <div className="flex max-w-[720px] flex-col gap-lg">

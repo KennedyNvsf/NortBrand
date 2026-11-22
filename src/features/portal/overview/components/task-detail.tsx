@@ -23,6 +23,7 @@ export async function TaskDetail({
   locale,
   today,
   now,
+  preview,
 }: {
   view: ProjectView;
   ticket: PortalTicket;
@@ -30,12 +31,14 @@ export async function TaskDetail({
   locale: PortalLocale;
   today: string;
   now: Date;
+  /** View as client (#160): the Project ID being previewed. */
+  preview?: string;
 }) {
   const [t, status, overview, checklist] = await Promise.all([
-    getTranslations("Portal.tasks"),
-    getTranslations("Portal.status"),
-    getTranslations("Portal.overview"),
-    getChecklist(ticket.id),
+    getTranslations({ locale, namespace: "Portal.tasks" }),
+    getTranslations({ locale, namespace: "Portal.status" }),
+    getTranslations({ locale, namespace: "Portal.overview" }),
+    getChecklist(ticket.id, preview),
   ]);
   const linked = view.updates.filter((update) =>
     update.ticketIds.includes(ticket.id),

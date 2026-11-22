@@ -10,10 +10,8 @@ import {
   getPortalViewer,
 } from "@/features/portal/auth/access";
 import { getClientShell } from "@/features/portal/shell/client-data";
-import {
-  ClientShell,
-  type ClientShellCopy,
-} from "@/features/portal/shell/client-shell";
+import { ClientShell } from "@/features/portal/shell/client-shell";
+import { getClientShellCopy } from "@/features/portal/shell/shell-copy";
 import { ShellSkeleton } from "@/features/portal/states/skeletons";
 import { redirect } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
@@ -88,24 +86,7 @@ async function ShellGate({
     notFound();
   }
 
-  const t = await getTranslations("Portal.shell");
-  const copy: ClientShellCopy = {
-    projectLabel: t("projectLabel"),
-    navLabel: t("navLabel"),
-    nav: {
-      overview: t("nav.overview"),
-      tasks: t("nav.tasks"),
-      timeline: t("nav.timeline"),
-      files: t("nav.files"),
-      updates: t("nav.updates"),
-    },
-    yourTeam: t("yourTeam"),
-    messageTeam: t("messageTeam"),
-    messageShort: t("messageShort"),
-    account: t("account"),
-    signOut: t("signOut"),
-    switchProject: t("switchProject"),
-  };
+  const copy = await getClientShellCopy(locale);
 
   return (
     <ClientShell data={data} locale={locale} copy={copy}>

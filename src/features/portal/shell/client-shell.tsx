@@ -74,14 +74,20 @@ export function ClientShell({
   data,
   locale,
   copy,
+  preview,
   children,
 }: {
   data: ClientShellData;
   locale: Locale;
   copy: ClientShellCopy;
+  /**
+   * View as client (#160): the same frame for the team, with links under the preview's
+   * base, its banner on top and no account menu (nobody is signed in as the client).
+   */
+  preview?: { base: string; banner: ReactNode };
   children: ReactNode;
 }) {
-  const base = `/${locale}/portal/${data.project.publicId}`;
+  const base = preview?.base ?? `/${locale}/portal/${data.project.publicId}`;
   const items = clientNavItems(base, copy, data.counts);
   const mailto = `mailto:${data.messageTo}?subject=${encodeURIComponent(
     `${data.project.name} (${data.project.publicId})`,
@@ -89,6 +95,7 @@ export function ClientShell({
 
   return (
     <div className="flex min-h-dvh flex-col bg-bg-surface">
+      {preview?.banner}
       <header className="flex h-14 items-center gap-4 border-b border-border-default px-(--gutter) md:h-16 md:pr-8 md:pl-6">
         <Link
           href={base}
@@ -107,7 +114,7 @@ export function ClientShell({
             label={copy.switchProject}
             projects={data.projects.map((project) => ({
               ...project,
-              href: `/${locale}/portal/${project.publicId}`,
+              href: preview ? base : `/${locale}/portal/${project.publicId}`,
             }))}
           />
           <span className="shrink-0 rounded-sm border border-border-default bg-bg-primary px-2 py-[3px] text-[12px] font-medium tracking-[0.04em] text-text-muted">
@@ -128,14 +135,16 @@ export function ClientShell({
             {copy.messageTeam}
           </span>
         </a>
-        <AccountMenu
-          initials={initials(data.viewer.name ?? data.viewer.email)}
-          name={data.viewer.name}
-          email={data.viewer.email}
-          accountLabel={copy.account}
-          signOutLabel={copy.signOut}
-          signOut={signOutClient.bind(null, locale)}
-        />
+        {preview ? null : (
+          <AccountMenu
+            initials={initials(data.viewer.name ?? data.viewer.email)}
+            name={data.viewer.name}
+            email={data.viewer.email}
+            accountLabel={copy.account}
+            signOutLabel={copy.signOut}
+            signOut={signOutClient.bind(null, locale)}
+          />
+        )}
       </header>
 
       <PortalNav

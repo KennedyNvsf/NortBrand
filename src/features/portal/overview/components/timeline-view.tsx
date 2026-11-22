@@ -17,6 +17,7 @@ import {
   type PortalLocale,
 } from "../format";
 import { Gantt } from "./gantt";
+import type { PreviewTarget } from "../scope";
 import { LoadFailed } from "./load-failed";
 import { StatusPill } from "./status";
 
@@ -70,16 +71,19 @@ function monthLabel(
 export async function TimelineView({
   publicId,
   locale,
+  preview,
 }: {
   publicId: string;
   locale: PortalLocale;
+  /** View as client (#160): render the team's preview of this project. */
+  preview?: PreviewTarget;
 }) {
   await connection();
   let view: ProjectView | null;
   let milestones: Milestone[] = [];
   try {
-    view = await getProjectView(publicId);
-    if (view) milestones = await getMilestones(view.id);
+    view = await getProjectView(publicId, Boolean(preview));
+    if (view) milestones = await getMilestones(view.id, preview?.publicId);
   } catch (error) {
     Sentry.captureException(error, { tags: { feature: "portal-timeline" } });
     return <LoadFailed locale={locale} />;
@@ -87,8 +91,8 @@ export async function TimelineView({
   if (!view) return null;
 
   const [t, health] = await Promise.all([
-    getTranslations("Portal.timeline"),
-    getTranslations("Portal.health"),
+    getTranslations({ locale, namespace: "Portal.timeline" }),
+    getTranslations({ locale, namespace: "Portal.health" }),
   ]);
   const today = lisbonToday(new Date());
   const current = currentStage(view.stages);
