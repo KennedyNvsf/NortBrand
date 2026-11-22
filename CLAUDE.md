@@ -357,6 +357,10 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   the team (every team write policy uses `private.can_edit_project`). Delete needs the
   Project ID typed; children cascade, then the app removes Storage files and the auth users of
   clients on no other project. New project tables: cascade + `can_edit_project`.
+- **Security review (#143, docs/guides/portal.md § 21):** pgTAP 19 sweeps every portal function and
+  table across projects and roles; `portal-security.spec.ts` keeps client and team sessions apart;
+  `portal-a11y.spec.ts` is the portal accessibility harness (`docs/accessibility-audit.md` § 6).
+  New team actions and portal functions get an attempt in pgTAP 19.
 - **The repository is public until launch** (Actions minutes, 2026-11-14): never commit
   secrets or personal data; making it private again is on the launch checklist.
 - **Email:** Supabase sends codes through custom SMTP on Resend; app emails use the
