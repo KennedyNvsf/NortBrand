@@ -362,7 +362,8 @@ recipient is refused. The free tier allows 100 emails a day.
 "permission": "full_access" }` and pipe the returned `token` into
    `vercel env add RESEND_API_KEY --environment production --sensitive` (done this way on
    8 November).
-6. Decide the team inbox for new requests (`NOTIFY_TO_EMAIL`).
+6. Decide the team inbox for new requests (`NOTIFY_TO_EMAIL`): Production uses
+   `studio@nortbrand.pt` (§ 3a, from 24 November).
 7. **Webhooks → Add Webhook** (once the site has a URL, #45), one per environment:
    - Endpoint: `https://<site>/api/newsletter/resend-webhook`.
    - Events: **contact.updated** only. Other events are acknowledged and ignored, so
@@ -372,6 +373,52 @@ recipient is refused. The free tier allows 100 emails a day.
    - Check it from the webhook's attempts log: unsubscribe a test contact in Resend and
      look for **200**. A **401** means the secret is wrong; a **500** means the database or
      Resend failed and Resend will retry (docs/guides/newsletter.md).
+
+## 3a. Team mailboxes: Zoho Mail (#79) · set up 23–24 November
+
+Resend only **sends** (from `send.nortbrand.pt`). Mail people write _to_ NortBrand lands
+in Zoho Mail, on the apex `nortbrand.pt` (`nortbrand.com` is someone else's, ADR-008).
+Chosen over Gmail forwarding + "Send as", which Google ends for third-party addresses in
+January 2027.
+
+**What exists**
+
+- Organization **NortBrand** in Zoho's **EU** data centre (`mailadmin.zoho.eu`), super
+  admin: the lead. One mailbox, `kennedynvsf@nortbrand.pt` (its mailbox address), with
+  the alias `studio@nortbrand.pt` (display name "NortBrand Studio"). Mail to either lands
+  in the same inbox; reply from either by choosing it as **From**.
+- `studio@nortbrand.pt` is the site's public email (`src/content/site.ts`), the
+  `replyTo` on visitor confirmations, and the Production `NOTIFY_TO_EMAIL`.
+- **Plan:** Mail Premium **trial until 8 December 2026**. The Forever Free plan isn't
+  offered in the EU data centre. Before the trial ends, switch to **Mail Lite 5 GB,
+  1 user** (about €10.80 a year + VAT; Subscription → select 5 GB → Upgrade). A paid
+  service: the lead's decision and purchase. It is on the go-live checklist.
+
+**DNS at Dynadot** (Domain Records unless noted; TTL 5 minutes). Added on 24 November
+next to the existing records, nothing else changed. Zoho's DNS Mapping step reported all
+verified.
+
+| Type       | Host                                   | Value                                                           | Priority |
+| ---------- | -------------------------------------- | --------------------------------------------------------------- | -------- |
+| TXT        | @                                      | `zoho-verification=zb88173609.zmverify.zoho.eu`                 |          |
+| MX         | @                                      | `mx.zoho.eu`                                                    | 10       |
+| MX         | @                                      | `mx2.zoho.eu`                                                   | 20       |
+| MX         | @                                      | `mx3.zoho.eu`                                                   | 50       |
+| TXT (SPF)  | @                                      | `v=spf1 include:zohomail.eu ~all`                               |          |
+| TXT (DKIM) | `zmail._domainkey` (Subdomain Records) | `v=DKIM1; k=rsa; p=…` from Zoho → Domains → Email Configuration |          |
+
+- **One SPF record per host.** Zoho's is on the apex; Resend's lives under
+  `send.nortbrand.pt`, so they never need merging. A new sender on the apex is added
+  inside the same record (`include:…`), never as a second `v=spf1` record.
+- The existing `_dmarc` record (`p=none`) covers both senders.
+- Check from Dynadot's own nameserver, which has no cache:
+  `nslookup -type=MX nortbrand.pt ns1.dyna-ns.net`. Dynadot publishes a saved change
+  within a few minutes.
+
+**Adding someone later:** a second paid user (Users → Add) for a person who needs their
+own login. A shared address only needs an alias or a group, which costs nothing. To limit
+portal team invites to company addresses, turn on the allowed domain `nortbrand.pt`
+in Team → Settings (docs/guides/portal.md § 18).
 
 ## 4. Sentry
 
@@ -453,7 +500,7 @@ column by hand.
 | `RESEND_SEGMENT_ID`             | Newsletter segment                    | same                                | same                                |
 | `RESEND_WEBHOOK_SECRET`         | production webhook secret             | preview webhook secret              | any `whsec_` value                  |
 | `EMAIL_FROM`                    | `NortBrand <hello@send.nortbrand.pt>` | `NortBrand <onboarding@resend.dev>` | `NortBrand <onboarding@resend.dev>` |
-| `NOTIFY_TO_EMAIL`               | team inbox                            | your own inbox                      | your own inbox                      |
+| `NOTIFY_TO_EMAIL`               | `studio@nortbrand.pt`                 | your own inbox                      | your own inbox                      |
 | `IP_HASH_SALT`                  | generated                             | generated (different)               | any 32+ characters                  |
 | `NEWSLETTER_TOKEN_SECRET`       | generated                             | same as Development⁴                | generated, also in dev Vault        |
 | `SUPABASE_SERVICE_ROLE_KEY`     | prod secret key (from #132)           | dev secret key                      | dev secret key, or local²           |

@@ -3,9 +3,9 @@ import type { SiteConfig } from "@/content/site";
 /*
  * schema.org JSON-LD (brief, "SEO"): Organization on every page, Service on Services,
  * BlogPosting and BreadcrumbList on blog posts (#62).
- * - Details still marked `placeholder` in site.ts (email, phone, social links) are left
- *   out, so search engines never learn stand-in contact data; they appear once the
- *   client confirms them.
+ * - Details still marked `placeholder` in site.ts (email, social links) are left out, so
+ *   search engines never learn stand-in contact data; they appear once confirmed. There
+ *   is no public phone number (#79), so no `telephone`.
  * - Services point at the Organization by @id instead of repeating it.
  */
 
@@ -21,7 +21,6 @@ export type OrganizationJsonLd = Thing & {
   description: string;
   address: { "@type": "PostalAddress"; addressCountry: "PT" };
   email?: string;
-  telephone?: string;
   sameAs?: string[];
 };
 
@@ -53,7 +52,7 @@ export function organizationJsonLd({
   description: string;
   config: SiteConfig;
 }): OrganizationJsonLd {
-  const { email, phone } = config.contact;
+  const { email } = config.contact;
   const sameAs = config.social
     .filter((link) => !link.placeholder)
     .map((link) => link.href);
@@ -68,7 +67,6 @@ export function organizationJsonLd({
     description,
     address: { "@type": "PostalAddress", addressCountry: "PT" },
     ...(!email.placeholder && { email: email.value }),
-    ...(!phone.placeholder && { telephone: phone.value }),
     ...(sameAs.length > 0 && { sameAs }),
   };
 }

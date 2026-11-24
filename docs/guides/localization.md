@@ -215,7 +215,7 @@ tool like `tsx`. The trade-off is that Node needs exact file paths, so these fil
 ### `src/i18n/release-guard.ts`: the launch safety net
 
 ```
-pnpm build                     → ⚠ warning, lists pseudo keys, build succeeds
+pnpm build                     → ⚠ warning, lists pseudo keys (and site.ts placeholders), build succeeds
 RELEASE_BUILD=1 pnpm build     → ✖ build FAILS
 VERCEL_ENV=production          → ✖ build FAILS (Vercel sets this automatically)
 pnpm check:release             → ✖ always strict, for a pre-launch check
@@ -260,7 +260,10 @@ what stops English text from shipping on the Portuguese site.
 4. **Changed the meaning of an English string that already has a real PT translation?**
    Delete the PT value, so it becomes pseudo again and goes back to the translator. The
    script can't detect this on its own.
-5. **Before launch:** `pnpm check:release` must pass.
+5. **Before launch:** `pnpm check:release` must pass. It checks more than translations:
+   draft legal text (`src/content/legal.ts`) and contact details still marked
+   `placeholder` in `src/content/site.ts` (#79) fail it too, and the site.ts check also
+   fails release builds, through the same `runSiteDetailsGuard` in `release-guard.ts`.
 
 ### Translation changes until launch (#76)
 

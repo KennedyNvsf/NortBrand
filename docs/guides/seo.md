@@ -69,9 +69,10 @@ translator, so a mistyped key fails the type check.
 - **Making the image static.** Under `[locale]`, the image route rendered per request
   until it exported `generateStaticParams` (one PNG per locale, built once).
 - **Placeholder contact details stay out of JSON-LD.** `organizationJsonLd` only includes
-  email, phone and `sameAs` links whose `site.ts` entry is confirmed (`placeholder:
+  email and `sameAs` links whose `site.ts` entry is confirmed (`placeholder:
 false`), so search engines never learn stand-in data. They appear automatically once
-  the client confirms them, and a unit test covers both cases.
+  the client confirms them, and a unit test covers both cases. There is no public
+  phone number (#79), so there is no `telephone`.
 - **Safe JSON-LD.** `serializeJsonLd` escapes `<`, so translated copy can never close the
   `<script>` early. A unit test feeds it `</script>`.
 - **Service @ids** are the block URLs (`/en/services#web-design`), and each Service

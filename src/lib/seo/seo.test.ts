@@ -97,11 +97,30 @@ describe("organizationJsonLd", () => {
     const organization = organizationJsonLd({
       siteUrl: SITE,
       description: "A studio",
-      config: site,
+      config: {
+        ...site,
+        contact: {
+          ...site.contact,
+          email: { value: "studio@nortbrand.pt", placeholder: true },
+        },
+        social: [
+          {
+            network: "linkedin",
+            label: "LinkedIn",
+            href: "https://www.linkedin.com/",
+            placeholder: true,
+          },
+        ],
+      },
     });
     expect(organization).not.toHaveProperty("email");
-    expect(organization).not.toHaveProperty("telephone");
     expect(organization).not.toHaveProperty("sameAs");
+  });
+
+  it("never lists a telephone (no public phone, #79)", () => {
+    expect(
+      organizationJsonLd({ siteUrl: SITE, description: "x", config: site }),
+    ).not.toHaveProperty("telephone");
   });
 
   it("includes confirmed contact details", () => {
@@ -110,7 +129,6 @@ describe("organizationJsonLd", () => {
       contact: {
         ...site.contact,
         email: { value: "studio@nortbrand.pt", placeholder: false },
-        phone: { value: "+351210000000", placeholder: false },
       },
       social: [
         {
@@ -129,7 +147,6 @@ describe("organizationJsonLd", () => {
       }),
     ).toMatchObject({
       email: "studio@nortbrand.pt",
-      telephone: "+351210000000",
       sameAs: ["https://www.instagram.com/nortbrand"],
     });
   });

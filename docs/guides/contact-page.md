@@ -41,10 +41,9 @@ The page stays static. Everything about the form's behaviour, states and tests i
 
 ## 4. Other decisions
 
-- **Contact details come from `site.ts` only** (`CLAUDE.md`). Email and phone are real
-  `mailto:` / `tel:` links. Office hours are new in `site.ts` as `contact.hours`. Like
-  the email and phone, they are `placeholder: true` with a `TODO(client)`, so
-  `hasPlaceholders()` still reports them before launch. The day range ("Mon – Fri")
+- **Contact details come from `site.ts` only** (`CLAUDE.md`). The email is a real
+  `mailto:` link; office hours are `contact.hours`. Figma's phone row is gone: there is
+  no public phone number (§ 6). The day range ("Mon – Fri")
   lives in the message, so translators can localise it, and the times are interpolated.
 - **`LogoMark`** reuses the logo's own mark path with a tighter view box. It is
   decorative and sized per breakpoint to Figma's 40 × 32 / 52 × 42 / 60 × 48 boxes.
@@ -65,7 +64,59 @@ The page stays static. Everything about the form's behaviour, states and tests i
 - Page harness: axe, one H1, lang, canonical + hreflang, no overflow at 390, in EN and
   PT, on desktop and mobile.
 - `tests/e2e/contact.spec.ts`:
-  - the H1, and the mailto/tel links and hours
+  - the H1, the `studio@nortbrand.pt` mailto link and the hours, and no `tel:` link
   - **no `<form>` on the page, and every field, the select and Send Request disabled**
   - no sticky CTA after scrolling (mobile)
   - the FAQ opening one answer at a time
+
+## 6. Contact details and the release guard (#79)
+
+**What changed.** The lead confirmed the contact details on 24 November:
+
+| Detail       | Value                   | Where it shows                                                                                                   |
+| ------------ | ----------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Email        | `studio@nortbrand.pt`   | Contact hero, FAQ, mobile menu, legal pages, JSON-LD `email`, visitor confirmation emails (`replyTo` and footer) |
+| Phone        | **none**                | removed from the hero, the type and the JSON-LD                                                                  |
+| Office hours | Mon – Fri, 9:00 – 18:00 | Contact hero                                                                                                     |
+| Social links | still placeholders      | footer, JSON-LD `sameAs` once confirmed                                                                          |
+
+The address is an alias of the team's Zoho mailbox, so a reply to a visitor goes out from
+the same company address it came in on ([Environments](./environments.md) § 3a).
+
+**How a detail flows.** Every field in `src/content/site.ts` is `{ value, placeholder }`.
+Components read `value`; two things read `placeholder`:
+
+1. `organizationJsonLd` leaves unconfirmed details out of the JSON-LD, so search engines
+   never index a stand-in.
+2. The release guard. `unconfirmedSiteDetails()` returns names like `social.linkedin`,
+   and `runSiteDetailsGuard()` (in `src/i18n/release-guard.ts`, next to the translation
+   guard) acts on them:
+
+```
+pnpm build                  → ⚠ warns, lists the unconfirmed details
+RELEASE_BUILD=1 pnpm build  → ✖ fails
+VERCEL_ENV=production       → ✖ fails (every production deployment of main)
+pnpm check:release          → ✖ fails, alongside the pseudo-string and draft-legal checks
+```
+
+**Why it's built this way**
+
+- _The guard takes a list instead of importing `site.ts`._ `release-guard.ts` stays a
+  pure function of its inputs, easy to test, and `next.config.ts` and the script pass in
+  `unconfirmedSiteDetails()`. `site.ts` has no imports at all, so Node can load it
+  straight from the script and from `next.config.ts`.
+- _It fails production builds, not only `check:release`._ Before #79,
+  `hasPlaceholders()` existed but nothing called it outside a test. A check that only
+  runs when someone remembers is how stand-in data ships. The cost: **`main` can't
+  deploy to production while a placeholder remains**, so the social URLs have to be
+  confirmed (or the networks dropped) before this ticket merges.
+- _The phone is gone from the type, not just hidden._ `SiteConfig` no longer has
+  `phone`, so no component can render one by accident, and the `phone` icon left the
+  icon map with its last user. The consultation form's own optional phone field is
+  unrelated and unchanged.
+- _The day range stays in the messages_ ("Mon – Fri"), so translators own it; `site.ts`
+  holds only the times.
+
+**Changing a detail later:** edit `site.ts`, keep `placeholder: false` only for
+confirmed values, update `tests/e2e/contact.spec.ts` if the hero changes, and run
+`pnpm check:release`.

@@ -71,3 +71,25 @@ export function runReleaseGuard(
   );
   return report;
 }
+
+/**
+ * Contact details still marked `placeholder` in src/content/site.ts (#79), passed in as
+ * `unconfirmedSiteDetails()` so this file stays free of content imports. Same rule as
+ * the translations: strict builds throw, other builds warn.
+ */
+export function runSiteDetailsGuard(
+  unconfirmed: readonly string[],
+  { strict }: { strict: boolean },
+): void {
+  if (unconfirmed.length === 0) return;
+
+  const list = unconfirmed.map((detail) => `    ${detail}`).join("\n");
+  if (strict) {
+    throw new Error(
+      `Release guard: unconfirmed contact details in src/content/site.ts.\n${list}\nConfirm them (placeholder: false) before releasing.`,
+    );
+  }
+  console.warn(
+    `⚠ Release guard: unconfirmed contact details in src/content/site.ts (allowed outside release builds).\n${list}`,
+  );
+}

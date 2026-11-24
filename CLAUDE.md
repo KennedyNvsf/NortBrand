@@ -146,7 +146,8 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md, accessibi
     intact. Process: docs/guides/localization.md § 6.
   - `en.json` and `pt.json` must always have exactly the same keys, and each PT string
     the same placeholders and rich-text tags. A unit test enforces both.
-- **Release guard:** any remaining `[[ ]]` string fails the build when
+- **Release guard:** any remaining `[[ ]]` string, or contact detail still marked
+  `placeholder` in `src/content/site.ts` (#79), fails the build when
   `VERCEL_ENV=production` or `RELEASE_BUILD=1`. Other builds only print a warning. Run
   `pnpm check:release` before launch.
   pnpm check:bundles # after a build: no service-role key in client bundles (CI runs it)
@@ -464,8 +465,10 @@ Rules:
 - Sticky CTA (mobile) on every page except Contact, Legal, the 404 and blog posts (decided
   2026-10-08, following Figma Home and the Handoff). A page opts in by marking its hero with
   `data-sticky-cta-trigger`. It links to `/[locale]/contact`.
-- Contact email and phone are placeholders until provided. Read them from
-  `src/content/site.ts` only.
+- Contact details (#79, lead 2026-11-24): public email `studio@nortbrand.pt` (an alias of
+  the team's Zoho mailbox, docs/guides/environments.md § 3a), office hours Mon – Fri
+  9:00 – 18:00, **no public phone number**. Social profile URLs are still placeholders.
+  Read them from `src/content/site.ts` only.
 
 ## Commands (keep this section accurate as scripts are added)
 
@@ -478,7 +481,7 @@ pnpm test           # vitest
 pnpm test:e2e       # playwright
 pnpm build
 pnpm i18n:pseudo    # regenerate placeholder pt.json from en.json (keeps real translations; --reset for all)
-pnpm check:release  # strict guard: pseudo translations + draft legal text; must pass before launch
+pnpm check:release  # strict guard: pseudo translations + draft legal text + site.ts placeholders; must pass before launch
 pnpm lhci autorun   # Lighthouse budgets (after E2E_FAKE_BACKEND=1 pnpm build); not a dependency, runs via pnpm dlx
 pnpm lighthouse:summary  # score table from the last Lighthouse run
 pnpm icons:generate # favicon.ico, apple-icon.png, logo-square.png from src/app/icon.svg (commit the output)
