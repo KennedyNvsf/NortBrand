@@ -57,6 +57,27 @@ describe("unconfirmedSiteDetails (release guard, #79)", () => {
     ).toEqual(["contact.hours", "social.linkedin"]);
   });
 
+  it("narrows to the groups asked for (release builds check contact only)", () => {
+    const mixed: SiteConfig = {
+      ...confirmed,
+      contact: {
+        ...confirmed.contact,
+        email: { ...confirmed.contact.email, placeholder: true },
+      },
+      social: confirmed.social.map((link) => ({ ...link, placeholder: true })),
+    };
+    expect(unconfirmedSiteDetails(mixed, ["contact"])).toEqual([
+      "contact.email",
+    ]);
+    expect(unconfirmedSiteDetails(mixed, ["social"])).toEqual([
+      "social.instagram",
+    ]);
+  });
+
+  it("has no unconfirmed contact details, so release builds pass", () => {
+    expect(unconfirmedSiteDetails(site, ["contact"])).toEqual([]);
+  });
+
   it("checks the real site config by default", () => {
     expect(unconfirmedSiteDetails()).toEqual(unconfirmedSiteDetails(site));
   });

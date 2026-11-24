@@ -93,11 +93,15 @@ Components read `value`; two things read `placeholder`:
    guard) acts on them:
 
 ```
-pnpm build                  → ⚠ warns, lists the unconfirmed details
-RELEASE_BUILD=1 pnpm build  → ✖ fails
-VERCEL_ENV=production       → ✖ fails (every production deployment of main)
-pnpm check:release          → ✖ fails, alongside the pseudo-string and draft-legal checks
+                            contact.* placeholder     social.* placeholder
+pnpm build                  ⚠ warns                   ⚠ warns
+RELEASE_BUILD=1 pnpm build  ✖ fails                   ⚠ warns
+VERCEL_ENV=production       ✖ fails (every production deployment of main)   ⚠ warns
+pnpm check:release          ✖ fails                   ✖ fails
 ```
+
+`unconfirmedSiteDetails(site, ["contact"])` narrows the list to one group; `next.config.ts`
+calls the guard twice, strict for `contact` and warn-only for `social`.
 
 **Why it's built this way**
 
@@ -105,11 +109,15 @@ pnpm check:release          → ✖ fails, alongside the pseudo-string and draft
   pure function of its inputs, easy to test, and `next.config.ts` and the script pass in
   `unconfirmedSiteDetails()`. `site.ts` has no imports at all, so Node can load it
   straight from the script and from `next.config.ts`.
-- _It fails production builds, not only `check:release`._ Before #79,
+- _Contact placeholders fail production builds, not only `check:release`._ Before #79,
   `hasPlaceholders()` existed but nothing called it outside a test. A check that only
-  runs when someone remembers is how stand-in data ships. The cost: **`main` can't
-  deploy to production while a placeholder remains**, so the social URLs have to be
-  confirmed (or the networks dropped) before this ticket merges.
+  runs when someone remembers is how stand-in data ships. A wrong email or office hours
+  on the live site is a real cost, so those block a production deploy.
+- _Social placeholders only warn in builds_ (lead, 2026-11-24). The profile URLs come
+  later, and blocking every deploy of `main` until then would stop unrelated work from
+  shipping. A stand-in social link points at the network's home page and is kept out of
+  the JSON-LD, so it's harmless meanwhile. `pnpm check:release` still fails on them, so
+  they remain a launch blocker (go-live checklist).
 - _The phone is gone from the type, not just hidden._ `SiteConfig` no longer has
   `phone`, so no component can render one by accident, and the `phone` icon left the
   icon map with its last user. The consultation form's own optional phone field is

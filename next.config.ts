@@ -4,7 +4,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 import { withSentryConfig } from "@sentry/nextjs/config";
 
 import { validateEnv } from "./src/env.schema";
-import { unconfirmedSiteDetails } from "./src/content/site";
+import { site, unconfirmedSiteDetails } from "./src/content/site";
 import {
   isReleaseBuild,
   runReleaseGuard,
@@ -40,8 +40,10 @@ export default function config(phase: string): NextConfig {
   if (!isTypegen) validateEnv();
 
   // Pseudo translations and unconfirmed site.ts contact details (#79) fail release
-  // builds and only warn on other builds. Next.js loads this file again in its build
-  // workers, which inherit the env flag below, so the warning prints once.
+  // builds and only warn on other builds. Placeholder social links only ever warn here,
+  // so main keeps deploying while the profile URLs are pending (lead, 2026-11-24);
+  // `pnpm check:release` still fails on them. Next.js loads this file again in its
+  // build workers, which inherit the env flag below, so the warning prints once.
   const strict = isReleaseBuild(process.env);
   if (
     phase === PHASE_PRODUCTION_BUILD &&
@@ -49,7 +51,10 @@ export default function config(phase: string): NextConfig {
     (strict || process.env.RELEASE_GUARD_CHECKED !== "1")
   ) {
     runReleaseGuard("./messages", { strict });
-    runSiteDetailsGuard(unconfirmedSiteDetails(), { strict });
+    runSiteDetailsGuard(unconfirmedSiteDetails(site, ["contact"]), { strict });
+    runSiteDetailsGuard(unconfirmedSiteDetails(site, ["social"]), {
+      strict: false,
+    });
     process.env.RELEASE_GUARD_CHECKED = "1";
   }
 

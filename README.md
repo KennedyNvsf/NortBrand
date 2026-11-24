@@ -100,8 +100,9 @@ with `~` runs, so the layout is still tested with Portuguese-length text.
 
 **Release guard.** `pnpm build` prints a warning listing the pseudo keys and any contact
 detail still marked `placeholder` in `src/content/site.ts`. With `VERCEL_ENV=production`
-or `RELEASE_BUILD=1` it fails instead, and `pnpm check:release` always fails while any
-remain (it also checks the legal documents for draft text).
+or `RELEASE_BUILD=1` it fails instead (social-link placeholders only warn), and
+`pnpm check:release` always fails while any remain (it also checks the legal documents
+for draft text).
 
 ## Developer guides
 

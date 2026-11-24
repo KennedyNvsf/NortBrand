@@ -262,8 +262,9 @@ what stops English text from shipping on the Portuguese site.
    script can't detect this on its own.
 5. **Before launch:** `pnpm check:release` must pass. It checks more than translations:
    draft legal text (`src/content/legal.ts`) and contact details still marked
-   `placeholder` in `src/content/site.ts` (#79) fail it too, and the site.ts check also
-   fails release builds, through the same `runSiteDetailsGuard` in `release-guard.ts`.
+   `placeholder` in `src/content/site.ts` (#79) fail it too. Contact placeholders also fail
+   release builds (social links only warn there), through `runSiteDetailsGuard` in
+   `release-guard.ts`.
 
 ### Translation changes until launch (#76)
 

@@ -147,7 +147,7 @@ docs/                    README, adr/, guides/, runbook, tech-debt.md, accessibi
   - `en.json` and `pt.json` must always have exactly the same keys, and each PT string
     the same placeholders and rich-text tags. A unit test enforces both.
 - **Release guard:** any remaining `[[ ]]` string, or contact detail still marked
-  `placeholder` in `src/content/site.ts` (#79), fails the build when
+  `placeholder` in `src/content/site.ts` (#79; social links only warn), fails the build when
   `VERCEL_ENV=production` or `RELEASE_BUILD=1`. Other builds only print a warning. Run
   `pnpm check:release` before launch.
   pnpm check:bundles # after a build: no service-role key in client bundles (CI runs it)
