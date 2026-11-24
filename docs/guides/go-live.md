@@ -61,7 +61,10 @@ Each item is a ticket or a check. Launch waits until every box is ticked.
 - [ ] #77 final English copy, #78 reviewed Privacy and Terms, #79 contact details, #82
       image licences: merged.
 - [ ] `pnpm check:release` passes on `main` (no pseudo translations, no draft legal
-      text).
+      text, no `site.ts` contact placeholders).
+- [ ] Zoho Mail is on a paid plan (Mail Lite 5 GB, 1 user) before the Mail Premium
+      trial ends on **8 December**, or `studio@nortbrand.pt` stops receiving
+      ([Environments](./environments.md) § 3a).
 - [ ] #84 accessibility and QA audit: done. The Services hero video's WCAG 2.2.2
       exception is accepted (tech debt), not a blocker.
 - [ ] `pnpm audit`: no critical or high finding outside the two CLI-only ones in tech

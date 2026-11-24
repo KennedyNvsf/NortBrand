@@ -15,12 +15,12 @@ test.describe("contact page", () => {
     );
     const details = hero.getByRole("list", { name: "Contact details" });
     await expect(
-      details.getByRole("link", { name: /hello@nortbrand.pt/ }),
-    ).toHaveAttribute("href", "mailto:hello@nortbrand.pt");
-    await expect(
-      details.getByRole("link", { name: /\+351 000 000 000/ }),
-    ).toHaveAttribute("href", "tel:+351000000000");
+      details.getByRole("link", { name: /studio@nortbrand.pt/ }),
+    ).toHaveAttribute("href", "mailto:studio@nortbrand.pt");
     await expect(details).toContainText("Mon – Fri · 9:00 – 18:00");
+    // No public phone number (#79).
+    await expect(details.locator('a[href^="tel:"]')).toHaveCount(0);
+    await expect(details.getByRole("listitem")).toHaveCount(2);
   });
 
   test("has no sticky CTA", async ({ page }) => {

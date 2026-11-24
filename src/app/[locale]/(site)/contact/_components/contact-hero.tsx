@@ -11,8 +11,9 @@ import { ConsultationFormCard } from "./consultation-form-card";
 /*
  * Figma Contact › Hero (desktop 278:85, tablet 378:109, mobile 378:328): intro and
  * contact details beside the consultation form card on desktop; stacked below.
- * - Contact details come only from src/content/site.ts (CLAUDE.md) and are still
- *   placeholders there (TODO(client)).
+ * - Contact details come only from src/content/site.ts (CLAUDE.md): email and office
+ *   hours. There is no public phone number (lead, 2026-11-24, #79), so Figma's phone
+ *   row is left out.
  * - No data-sticky-cta-trigger: Contact has no sticky CTA (it is the booking page).
  * - Entrance (CSS, first paint): headline, lead, details, then the form card.
  * Holds the page's only H1.
@@ -22,12 +23,12 @@ type Detail = {
   icon: IconName;
   label: string;
   value: string;
-  href?: `mailto:${string}` | `tel:${string}`;
+  href?: `mailto:${string}`;
 };
 
 export async function ContactHero() {
   const t = await getTranslations("Contact.hero");
-  const { email, phone, phoneDisplay, hours } = site.contact;
+  const { email, hours } = site.contact;
 
   const details: Detail[] = [
     {
@@ -35,12 +36,6 @@ export async function ContactHero() {
       label: t("email"),
       value: email.value,
       href: `mailto:${email.value}`,
-    },
-    {
-      icon: "phone",
-      label: t("phone"),
-      value: phoneDisplay.value,
-      href: `tel:${phone.value}`,
     },
     {
       icon: "calendar",

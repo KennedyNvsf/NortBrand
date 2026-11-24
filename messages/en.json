@@ -275,7 +275,6 @@
       "lead": "Tell us a bit about your business and what you’re hoping to achieve. We’ll reply within one business day — no sales pitch, just a real answer.",
       "detailsLabel": "Contact details",
       "email": "Email",
-      "phone": "Phone",
       "availability": "Availability",
       "hours": "Mon – Fri · {opens} – {closes}"
     },

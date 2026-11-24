@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { site } from "@/content/site";
 
 import { fill } from "../../auth/components/copy";
 import { ConfirmDialog } from "../../states/confirm-dialog";
@@ -193,7 +194,9 @@ export function StatesGallery() {
           body={copy.empty.body}
           action={
             <Button asChild variant="secondary" showIcon>
-              <a href="mailto:hello@nortbrand.pt">{copy.empty.action}</a>
+              <a href={`mailto:${site.contact.email.value}`}>
+                {copy.empty.action}
+              </a>
             </Button>
           }
         />

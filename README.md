@@ -50,7 +50,7 @@ installs and can lock files during builds.
 | `pnpm test`                         | Vitest unit tests (`src/**/*.test.ts`).                                                                                                                                         |
 | `pnpm test:e2e`                     | Playwright against a production build. Run `pnpm exec playwright install chromium webkit` once first. Needs the env vars. Set `E2E_PORT=3100` while `pnpm dev` holds port 3000. |
 | `pnpm i18n:pseudo`                  | Regenerate `messages/pt.json` from `en.json`, keeping real translations. `--reset` replaces every key.                                                                          |
-| `pnpm check:release`                | Strict release guard: fails while any pseudo translation remains. Must pass before launch.                                                                                      |
+| `pnpm check:release`                | Strict release guard: fails while a pseudo translation, draft legal text or `site.ts` contact placeholder remains.                                                              |
 | `pnpm db:start` / `pnpm db:stop`    | Local Supabase (Postgres + API) in Docker. Needs Docker Desktop running.                                                                                                        |
 | `pnpm db:reset`                     | Rebuild the local database from `supabase/migrations` and `seed.sql`.                                                                                                           |
 | `pnpm db:types`                     | Regenerate `src/lib/supabase/database.types.ts` from the local database.                                                                                                        |
@@ -98,9 +98,11 @@ with `~` runs, so the layout is still tested with Portuguese-length text.
   (`<green>`).
 - How translation changes travel until launch: [Localization § 6](docs/guides/localization.md).
 
-**Release guard.** `pnpm build` prints a warning listing the pseudo keys. With
-`VERCEL_ENV=production` or `RELEASE_BUILD=1` it fails instead, and `pnpm check:release`
-always fails while any remain.
+**Release guard.** `pnpm build` prints a warning listing the pseudo keys and any contact
+detail still marked `placeholder` in `src/content/site.ts`. With `VERCEL_ENV=production`
+or `RELEASE_BUILD=1` it fails instead (social-link placeholders only warn), and
+`pnpm check:release` always fails while any remain (it also checks the legal documents
+for draft text).
 
 ## Developer guides
 

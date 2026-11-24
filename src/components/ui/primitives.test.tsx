@@ -58,7 +58,6 @@ describe("icons", () => {
         "mail",
         "menu",
         "pencil",
-        "phone",
         "share",
       ].sort(),
     );

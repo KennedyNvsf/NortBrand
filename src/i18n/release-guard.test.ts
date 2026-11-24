@@ -5,7 +5,12 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { pseudoLocalize } from "./pseudo";
-import { isReleaseBuild, runReleaseGuard, scanMessages } from "./release-guard";
+import {
+  isReleaseBuild,
+  runReleaseGuard,
+  runSiteDetailsGuard,
+  scanMessages,
+} from "./release-guard";
 
 let dir: string;
 
@@ -66,5 +71,32 @@ describe("runReleaseGuard", () => {
 
     expect(runReleaseGuard(dir, { strict: false })).toHaveLength(1);
     expect(warn).toHaveBeenCalledOnce();
+  });
+});
+
+describe("runSiteDetailsGuard (#79)", () => {
+  it("passes silently when every detail is confirmed", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    expect(() => {
+      runSiteDetailsGuard([], { strict: true });
+    }).not.toThrow();
+    runSiteDetailsGuard([], { strict: false });
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it("fails a strict build and names each unconfirmed detail", () => {
+    expect(() => {
+      runSiteDetailsGuard(["social.instagram", "social.linkedin"], {
+        strict: true,
+      });
+    }).toThrow(/site\.ts[\s\S]*social\.instagram[\s\S]*social\.linkedin/);
+  });
+
+  it("only warns outside release builds", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    expect(() => {
+      runSiteDetailsGuard(["contact.email"], { strict: false });
+    }).not.toThrow();
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("contact.email"));
   });
 });
