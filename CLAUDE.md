@@ -467,7 +467,8 @@ Rules:
   `data-sticky-cta-trigger`. It links to `/[locale]/contact`.
 - Contact details (#79, lead 2026-11-24): public email `studio@nortbrand.pt` (an alias of
   the team's Zoho mailbox, docs/guides/environments.md § 3a), office hours Mon – Fri
-  9:00 – 18:00, **no public phone number**. Social profile URLs are still placeholders.
+  9:00 – 18:00, **no public phone number**. Social profiles (#171, 2026-11-25): Instagram
+  `nortbrand_pt`, LinkedIn company page `nortbrand`.
   Read them from `src/content/site.ts` only.
 
 ## Commands (keep this section accurate as scripts are added)

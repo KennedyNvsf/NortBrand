@@ -45,6 +45,20 @@ test.describe("site footer", () => {
     expect(hrefs).toEqual(["/pt/about", "/pt/blog", "/pt/contact"]);
   });
 
+  test("links Follow us to the NortBrand profiles (#171)", async ({ page }) => {
+    await page.goto("/en");
+    const follow = page
+      .getByRole("contentinfo")
+      .locator("section[aria-labelledby='footer-follow']");
+
+    await expect(
+      follow.getByRole("link", { name: "Instagram" }),
+    ).toHaveAttribute("href", "https://www.instagram.com/nortbrand_pt/");
+    await expect(
+      follow.getByRole("link", { name: "LinkedIn" }),
+    ).toHaveAttribute("href", "https://www.linkedin.com/company/nortbrand/");
+  });
+
   test("shows the current year and the legal links", async ({ page }) => {
     await page.goto("/en");
     const footer = page.getByRole("contentinfo");
