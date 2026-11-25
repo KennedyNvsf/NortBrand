@@ -78,7 +78,7 @@ The page stays static. Everything about the form's behaviour, states and tests i
 | Email        | `studio@nortbrand.pt`   | Contact hero, FAQ, mobile menu, legal pages, JSON-LD `email`, visitor confirmation emails (`replyTo` and footer) |
 | Phone        | **none**                | removed from the hero, the type and the JSON-LD                                                                  |
 | Office hours | Mon – Fri, 9:00 – 18:00 | Contact hero                                                                                                     |
-| Social links | still placeholders      | footer, JSON-LD `sameAs` once confirmed                                                                          |
+| Social links | see below (#171)        | footer "Follow us", JSON-LD `sameAs`                                                                             |
 
 The address is an alias of the team's Zoho mailbox, so a reply to a visitor goes out from
 the same company address it came in on ([Environments](./environments.md) § 3a).
@@ -124,6 +124,21 @@ calls the guard twice, strict for `contact` and warn-only for `social`.
   unrelated and unchanged.
 - _The day range stays in the messages_ ("Mon – Fri"), so translators own it; `site.ts`
   holds only the times.
+
+**Social profiles (#171).** Confirmed on 25 November, after #79 had shipped them as
+placeholders:
+
+| Network   | URL                                         |
+| --------- | ------------------------------------------- |
+| Instagram | https://www.instagram.com/nortbrand_pt/     |
+| LinkedIn  | https://www.linkedin.com/company/nortbrand/ |
+
+The LinkedIn company page was created the same day (Design Services, 2–10 employees,
+Vila Nova de Famalicão; the site logo and the studio line as tagline). With both set to
+`placeholder: false`, `unconfirmedSiteDetails()` is empty: the footer links go to the
+profiles, the Organization JSON-LD gains `sameAs`, and `pnpm check:release` no longer
+reports any `site.ts` detail. The warn-only rule for social placeholders stays in
+`next.config.ts` for the next network that is added before its profile exists.
 
 **Changing a detail later:** edit `site.ts`, keep `placeholder: false` only for
 confirmed values, update `tests/e2e/contact.spec.ts` if the hero changes, and run

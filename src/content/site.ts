@@ -13,7 +13,8 @@
  *
  * Confirmed by the lead on 2026-11-24 (#79): the public email is the studio mailbox
  * (Zoho Mail, docs/guides/environments.md), there is no public phone number, and the
- * office hours are Figma's Mon – Fri, 9:00 – 18:00.
+ * office hours are Figma's Mon – Fri, 9:00 – 18:00. The Instagram and LinkedIn profiles
+ * followed on 2026-11-25 (#171).
  */
 
 export type SocialNetwork = "instagram" | "linkedin" | "behance" | "dribbble";
@@ -49,19 +50,18 @@ export const site = {
     email: { value: "studio@nortbrand.pt", placeholder: false },
     hours: { value: { opens: "9:00", closes: "18:00" }, placeholder: false },
   },
-  // TODO(client): the profile URLs for NortBrand's Instagram and LinkedIn.
   social: [
     {
       network: "instagram",
       label: "Instagram",
-      href: "https://www.instagram.com/",
-      placeholder: true,
+      href: "https://www.instagram.com/nortbrand_pt/",
+      placeholder: false,
     },
     {
       network: "linkedin",
       label: "LinkedIn",
-      href: "https://www.linkedin.com/",
-      placeholder: true,
+      href: "https://www.linkedin.com/company/nortbrand/",
+      placeholder: false,
     },
   ],
 } as const satisfies SiteConfig;

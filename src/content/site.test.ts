@@ -7,6 +7,27 @@ describe("site config", () => {
     for (const link of site.social) expect(link.href).toMatch(/^https:\/\//);
   });
 
+  it("links the confirmed NortBrand profiles (#171)", () => {
+    expect(
+      site.social.map(({ network, href, placeholder }) => ({
+        network,
+        href,
+        placeholder,
+      })),
+    ).toEqual([
+      {
+        network: "instagram",
+        href: "https://www.instagram.com/nortbrand_pt/",
+        placeholder: false,
+      },
+      {
+        network: "linkedin",
+        href: "https://www.linkedin.com/company/nortbrand/",
+        placeholder: false,
+      },
+    ]);
+  });
+
   it("publishes the studio mailbox on nortbrand.pt", () => {
     expect(site.contact.email).toEqual({
       value: "studio@nortbrand.pt",
@@ -74,8 +95,8 @@ describe("unconfirmedSiteDetails (release guard, #79)", () => {
     ]);
   });
 
-  it("has no unconfirmed contact details, so release builds pass", () => {
-    expect(unconfirmedSiteDetails(site, ["contact"])).toEqual([]);
+  it("has no unconfirmed details, so release builds and check:release pass", () => {
+    expect(unconfirmedSiteDetails(site)).toEqual([]);
   });
 
   it("checks the real site config by default", () => {
