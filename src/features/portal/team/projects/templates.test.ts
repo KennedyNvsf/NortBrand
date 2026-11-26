@@ -20,7 +20,7 @@ describe("spreadStages", () => {
       "Development",
       "Review",
       "Launch",
-      "Care",
+      "Support",
     ]);
     expect(stages?.at(0)?.startsOn).toBe("2026-11-17");
     // Each working stage starts the day after the previous one ends.
@@ -39,7 +39,7 @@ describe("spreadStages", () => {
       endsOn: "2027-04-14",
     });
     expect(stages?.at(5)).toEqual({
-      name: "Care",
+      name: "Support",
       startsOn: "2027-04-14",
       endsOn: null,
     });

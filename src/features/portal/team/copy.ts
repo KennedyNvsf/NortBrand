@@ -58,7 +58,7 @@ export const teamBrandCopy = {
   /** Figma breaks the line after the comma (TM-14). */
   titleLines: ["Every project,", "one place."],
   body: "Tickets, stages, updates and client access for everything the studio is working on.",
-  stages: ["Discovery", "Design", "Development", "Review", "Launch", "Care"],
+  stages: ["Discovery", "Design", "Development", "Review", "Launch", "Support"],
   clientPrompt: "Are you a client?",
   clientLink: "Track your project",
 } as const;
@@ -1002,14 +1002,14 @@ export const settingsCopy = {
     stageWeeks: "Stage {index} weeks",
     weeksUnit: "weeks",
     launchName: "Launch stage name",
-    afterName: "Care stage name",
+    afterName: "Support stage name",
     moveUp: "Move {name} up",
     moveDown: "Move {name} down",
     remove: "Remove {name}",
     add: "Add stage",
     newStage: "New stage",
     fixedNote:
-      "Launch is the launch day and Care has no end, so neither has a duration.",
+      "Launch is the launch day and Support has no end, so neither has a duration.",
   },
   discard: "Discard",
   save: "Save settings",

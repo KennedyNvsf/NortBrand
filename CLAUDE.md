@@ -251,11 +251,11 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
 - **Routes:** client portal under `/[locale]/portal/…` (EN/PT); team portal under
   `/team/…` (English only, outside the locale middleware like `/studio`). All portal
   routes are dynamic, `noindex`, out of the sitemap and disallowed in `robots.txt`.
-- **Entry point:** the "Track Project" nav item (Figma Nav `514:399`, between Blog and
+- **Entry point:** the "Client Portal" nav item ("Track Project" in Figma and until #77; Figma Nav `514:399`, between Blog and
   Contact) links to `/[locale]/portal`. It is also in the tablet/mobile menu in the same
   order (lead's decision, 2026-11-13; not yet drawn in the menu frames), and not in the
   footer. Client sign-in (CP-01/CP-02) sits inside SiteNav
-  and SiteFooter with Track Project active; team sign-in (TM-14) is standalone.
+  and SiteFooter with Client Portal active; team sign-in (TM-14) is standalone.
 - **Auth components** (drawn on the portal pages, not on 02 Components): the split
   sign-in card (form panel + dark brand panel with the mini stage tracker), the 6-box code
   input (default, focus, error with one shake, filled), the resend countdown, and the
@@ -345,7 +345,7 @@ the Resend segment (`RESEND_SEGMENT_ID`, properties `locale` and `unsubscribe_ur
   teammate finds; the dialog loads with `next/dynamic`. Settings is #159, View as client #160.
 - **Settings (#159, docs/guides/portal.md § 18):** `team/settings/`. One SQL save
   (`portal_save_settings`, admin only, refuses a stale save); the stage template is the
-  `portal_stage_template` table (weeks as weights; Launch and Care fixed). A client's
+  `portal_stage_template` table (weeks as weights; Launch and Support fixed). A client's
   session length is signed into the marker at sign-in; the first sign-in emails the
   project lead. Form rules in `rules.ts` (zod-free, shared with the browser).
 - **View as client (#160, docs/guides/portal.md § 19):** `/team/projects/<NB-xxxx>/preview/<en|pt>/…`,

@@ -5,7 +5,14 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(23);
+select plan(24);
+
+-- The seeded template names the stage after launch "Support" (#77, migration
+-- 20261126130000), before any save below replaces it.
+select results_eq(
+  $$select name from public.portal_stage_template where kind = 'after'$$,
+  $$values ('Support')$$,
+  'the seeded stage after launch is Support');
 
 truncate public.projects cascade;
 delete from public.team_members;
