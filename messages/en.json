@@ -409,36 +409,69 @@
       "sections": {
         "whoWeAre": {
           "title": "Who we are",
-          "body": "NortBrand Studio (“NortBrand”, “we”, “us”) is a digital product and web design studio based in Portugal. We are responsible for the personal information collected through this website. You can reach us at <email></email>."
+          "body": "NortBrand (“NortBrand”, “we”, “us”) is a web design and digital product studio in Portugal, run as a self-employed business (NIF 298581175). We are responsible for the personal information collected through this website and its client area. You can reach us at <email></email>."
         },
         "collect": {
           "title": "Information we collect",
-          "body": "We only collect information you choose to give us, plus basic technical data needed to run the site.",
+          "body": "We collect only what you give us, what the client area needs to work, and a little technical data to keep the site running safely.",
           "items": {
-            "contactForm": "Contact details and messages you send through the contact form (name, email, phone number, project details)",
-            "newsletter": "Your email address, if you subscribe to the newsletter",
-            "usage": "Basic usage data such as pages visited and device type [analytics provider to be confirmed]"
+            "contactForm": "Consultation requests: your name, email, phone number (optional), the service you’re interested in and your message.",
+            "newsletter": "Newsletter: your email address and language, once you confirm your subscription.",
+            "portal": "Client area (clients only): your name, email and language, your project’s tasks, files, updates and messages, and an activity log of sign-ins and invitations.",
+            "usage": "Analytics, only if you accept analytics cookies: pages visited, device type and country, never your name or email.",
+            "technical": "Security and error data: a scrambled (hashed) version of your IP address to stop spam and repeated sign-in attempts, and error reports with names and emails removed."
           }
         },
         "use": {
           "title": "How we use your information",
-          "body": "We use your information to reply to your enquiries, deliver the services you ask for, send the newsletter you subscribed to, and improve how this website works. We do not sell your personal information."
+          "body": "We use your information only for the purposes below, with the GDPR legal basis for each in brackets. We don’t sell your personal information or use it for advertising.",
+          "items": {
+            "reply": "To reply to your consultation request and prepare a proposal (steps before a contract).",
+            "deliver": "To deliver our services and run your client area (performance of a contract).",
+            "newsletter": "To send the newsletter you subscribed to (your consent, which you can withdraw at any time).",
+            "analytics": "To understand how the site is used and improve it, with Google Analytics (your consent).",
+            "security": "To keep the site and the client area secure and fix errors (our legitimate interest in a safe, working service).",
+            "legal": "To keep the records the law requires, such as billing records (legal obligation)."
+          }
         },
         "cookies": {
           "title": "Cookies and analytics",
-          "body": "We use one essential cookie, nb_consent, to remember your cookie choice for 6 months. Only with your consent, Google Analytics sets the _ga cookie and a _ga_ cookie named after our analytics property, to measure how the site is used; this data may be transferred to the United States. You can change your choice at any time from Cookie settings in the footer. [Cookie details to be confirmed.]"
+          "body": "We use the cookies below. Essential cookies are always on; analytics cookies are set only if you accept them, and Google Analytics never loads before you do. You can change your choice at any time from Cookie settings in the footer.",
+          "items": {
+            "consent": "nb_consent (essential): remembers your cookie choice. 6 months.",
+            "locale": "NEXT_LOCALE (essential): remembers your language. 1 year.",
+            "portalSession": "nb_portal_session (essential, client area only): keeps you signed in for 30 days, or the length your project team sets (up to 90 days).",
+            "portalAuth": "sb-…-auth-token (essential, client area only): your sign-in session with our database provider, Supabase. It stops working when your session ends or you sign out.",
+            "analytics": "_ga, and _ga_ followed by our property ID (analytics, only with your consent): Google Analytics. 2 years, unless you withdraw consent, which deletes them."
+          }
         },
         "sharing": {
           "title": "Sharing your information",
-          "body": "We only share personal information with service providers who help us operate the website and our business, such as hosting and email providers, and only as needed to provide those services. [List of providers to be confirmed.]"
+          "body": "We share personal information only with the service providers below, and only as far as they need it to run the website and our work. Where any of them handles data outside the European Union, the transfer is covered by the safeguards the GDPR requires, such as the EU–US Data Privacy Framework or the European Commission’s standard contractual clauses.",
+          "items": {
+            "vercel": "Vercel: website hosting (servers in Dublin, Ireland; pages are delivered from servers worldwide).",
+            "supabase": "Supabase: database, sign-in and file storage for requests, the newsletter list and the client area (Ireland).",
+            "resend": "Resend: sends our emails from its EU region (Ireland) and keeps the newsletter list.",
+            "sentry": "Sentry: error monitoring, with names and emails removed (EU, Germany).",
+            "google": "Google: Google Analytics, only with your consent. Data may be transferred to the United States.",
+            "sanity": "Sanity: hosts our blog articles and images. When you read the blog, its servers see your IP address, as any website host would."
+          }
         },
         "retention": {
           "title": "How long we keep it",
-          "body": "We keep personal information only for as long as needed for the purposes described above, or as required by law. [Retention periods to be confirmed.]"
+          "body": "We keep personal information only as long as we need it:",
+          "items": {
+            "requests": "Consultation requests that don’t become projects: 12 months, then deleted.",
+            "clients": "Client area data: for the length of the project and 12 months after it is archived, then deleted.",
+            "newsletter": "Newsletter: until you unsubscribe. We then delete you from our email provider and keep only a record that you unsubscribed, so we never email you again.",
+            "analytics": "Analytics data: 2 months in Google Analytics.",
+            "security": "Spam-prevention logs: 1 hour.",
+            "billing": "Contracts and billing records: as long as Portuguese tax law requires."
+          }
         },
         "rights": {
           "title": "Your rights",
-          "body": "Under the GDPR you can ask to access, correct, delete or export your personal information, and to object to or restrict how we use it. You can withdraw consent at any time, and you can lodge a complaint with the Portuguese data protection authority (CNPD)."
+          "body": "Under the GDPR you can ask to access, correct, delete or receive a copy of your personal information, and to object to or restrict how we use it. Where we rely on your consent, you can withdraw it at any time. Write to <email></email> and we’ll reply within one month. You can also complain to the Portuguese data protection authority, the CNPD (www.cnpd.pt)."
         },
         "contact": {
           "title": "Contact us",
@@ -464,7 +497,7 @@
         },
         "enquiries": {
           "title": "Enquiries and proposals",
-          "body": "Sending a contact request doesn’t create a client relationship. Any project work is covered by a separate written agreement. [To be confirmed.]"
+          "body": "Sending a contact request doesn’t create a client relationship. Any project work is covered by a separate written agreement."
         },
         "links": {
           "title": "Third-party links",
@@ -472,7 +505,7 @@
         },
         "liability": {
           "title": "Limitation of liability",
-          "body": "We do our best to keep the information on this website accurate and up to date, but we provide it “as is”, without warranties. To the extent permitted by law, NortBrand is not liable for losses arising from your use of the site. [To be reviewed by legal counsel.]"
+          "body": "We do our best to keep the information on this website accurate and up to date, but we provide it “as is”, without warranties. To the extent permitted by law, NortBrand is not liable for losses arising from your use of the site."
         },
         "changes": {
           "title": "Changes to these terms",
@@ -480,7 +513,7 @@
         },
         "law": {
           "title": "Governing law",
-          "body": "These terms are governed by the laws of Portugal. [Jurisdiction to be confirmed.]"
+          "body": "These terms are governed by the laws of Portugal. Any dispute will be settled by the courts of the Braga judicial district (Comarca de Braga), unless the law gives you the right to go to another court, as it may if you are a consumer."
         },
         "contact": {
           "title": "Contact",

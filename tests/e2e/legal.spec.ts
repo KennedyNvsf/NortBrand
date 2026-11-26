@@ -22,9 +22,9 @@ test.describe("legal pages", () => {
       page
         .locator("article")
         .getByRole("link", { name: "studio@nortbrand.pt" }),
-    ).toHaveCount(2);
+    ).toHaveCount(3);
     await expect(
-      page.getByText(/^Last updated: October 4, 2026$/),
+      page.getByText(/^Last updated: November 25, 2026$/),
     ).toBeVisible();
   });
 
