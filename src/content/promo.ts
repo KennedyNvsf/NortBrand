@@ -3,9 +3,9 @@
  * Promo Card 510:794, #126/#127). Typed content, like services and FAQ: the copy lives
  * in messages under `Promo`, and this file holds what the code decides with.
  *
- * The copy repeats the discount and the end date ("20%", "31 December"). Change both
- * here and in messages/en.json when the offer changes, and mark the PT keys for the
- * translator (docs/guides/localization.md § 6).
+ * The copy repeats the offer and the end date ("free wireframe", "31 December"). Change
+ * both here and in messages/en.json when the offer changes, give it a new `id`, and
+ * mark the PT keys for the translator (docs/guides/localization.md § 6).
  */
 
 /** Where an offer can appear: the Home modal, or the corner card on About and Services. */
@@ -21,7 +21,9 @@ export type Promo = {
 };
 
 export const promo = {
-  id: "first-project-2026",
+  // A new id per offer: visitors who closed the 20% offer (`first-project-2026`) see
+  // this one once (#77).
+  id: "free-wireframe-2026",
   // 31 December, 23:59:59 in Lisbon. Lisbon is on UTC (WET) in December.
   endsAt: "2026-12-31T23:59:59Z",
   delayMs: 8000,

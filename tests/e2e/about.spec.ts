@@ -32,6 +32,22 @@ test.describe("about page", () => {
     ]);
   });
 
+  test("how we work lists the four commitments as h3s (#77)", async ({
+    page,
+  }) => {
+    await page.goto("/en/about");
+    const commitments = page.getByRole("region", {
+      name: copy("en", "About.commitments.title"),
+    });
+
+    await expect(commitments.getByRole("heading", { level: 3 })).toHaveText([
+      copy("en", "About.commitments.items.conversation.title"),
+      copy("en", "About.commitments.items.proposal.title"),
+      copy("en", "About.commitments.items.portal.title"),
+      copy("en", "About.commitments.items.aftercare.title"),
+    ]);
+  });
+
   test("principle and CTA band use the About copy", async ({ page }) => {
     await page.goto("/en/about");
 

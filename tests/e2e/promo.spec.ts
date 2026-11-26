@@ -30,9 +30,9 @@ const consentCookie = {
 
 const isMobile = (page: Page) => (page.viewportSize()?.width ?? 0) < 768;
 
-/** The open promo, by its title ("Get 20% off your first project."). */
+/** The open promo, by its title ("A free wireframe for your new website."). */
 function promoDialog(page: Page) {
-  return page.getByRole("dialog", { name: /20% off/ });
+  return page.getByRole("dialog", { name: /free wireframe/ });
 }
 
 /*
@@ -42,7 +42,7 @@ function promoDialog(page: Page) {
  */
 /** The Portuguese title has a line break, so match a phrase rather than the whole. */
 function ptDialog(page: Page) {
-  return page.getByRole("dialog", { name: /20% de desconto/ });
+  return page.getByRole("dialog", { name: /wireframe grátis/ });
 }
 
 async function openHome(page: Page, path = "/en", time = DURING_OFFER) {
@@ -190,7 +190,7 @@ test.describe("home promo before a cookie choice", () => {
  * Home modal, but non-blocking. A labelled `aside` (complementary landmark), never a
  * dialog; it takes no focus. On mobile it holds the Sticky CTA's slot.
  */
-function promoCard(page: Page, title: RegExp = /20% off/) {
+function promoCard(page: Page, title: RegExp = /free wireframe/) {
   return page.getByRole("complementary", { name: title });
 }
 
@@ -302,7 +302,10 @@ test.describe("promo corner card", () => {
       await openHome(page, path);
       await advanceUntilOpen(
         page,
-        promoCard(page, path.startsWith("/pt") ? /20% de desconto/ : /20% off/),
+        promoCard(
+          page,
+          path.startsWith("/pt") ? /wireframe grátis/ : /free wireframe/,
+        ),
       );
       await page.clock.resume();
       await settleAnimations(page);
@@ -317,7 +320,7 @@ test.describe("promo corner card", () => {
   test("never overflows the screen at 390 in Portuguese", async ({ page }) => {
     test.skip(!isMobile(page), "mobile only");
     await openHome(page, "/pt/about");
-    await advanceUntilOpen(page, promoCard(page, /20% de desconto/));
+    await advanceUntilOpen(page, promoCard(page, /wireframe grátis/));
     const overflow = await page.evaluate(
       () =>
         document.documentElement.scrollWidth -

@@ -5,12 +5,14 @@ import { CtaBand, CtaHighlight } from "@/components/site/cta-band";
 import { CornerPromo } from "@/features/promo/components/corner-promo";
 import { localizedPageMetadata } from "@/i18n/page-metadata";
 
+import { AboutCommitments } from "./_components/about-commitments";
 import { AboutHero } from "./_components/about-hero";
 import { AboutPrinciple } from "./_components/about-principle";
 import { AboutStory } from "./_components/about-story";
 
 /*
- * About (Figma 07 — About, 300:2): Hero · Our story · Our principle · CTA band. Nav,
+ * About (Figma 07 — About, 300:2): Hero · Our story · Our principle · How we work
+ * (#77, no Figma frame; see AboutCommitments) · CTA band. Nav,
  * footer and the mobile sticky CTA come from the (site) layout. Static for both
  * locales, and entirely server-rendered: the page ships no component JavaScript of
  * its own.
@@ -31,6 +33,7 @@ export default async function AboutPage() {
       <AboutHero />
       <AboutStory />
       <AboutPrinciple />
+      <AboutCommitments />
       <CtaBand
         headline={t.rich("headline", {
           highlight: (chunks) => <CtaHighlight>{chunks}</CtaHighlight>,

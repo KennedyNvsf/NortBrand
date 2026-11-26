@@ -10,9 +10,9 @@ export type PromoCopy = {
   label: string;
   /** "Ends 31 Dec" */
   until: string;
-  /** The figure: "20%". */
+  /** The figure: "Free". */
   offer: string;
-  /** "Off your first project" */
+  /** "Website wireframe" */
   offerLabel: string;
   /** Rich headline with the red keyword and a line break. */
   title: ReactNode;

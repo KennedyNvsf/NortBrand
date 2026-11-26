@@ -62,7 +62,7 @@ test.describe("site nav", () => {
     const nav = page.getByRole("navigation", { name: "Main" });
     await expect(nav.getByRole("link")).toHaveCount(5);
     await expect(
-      nav.getByRole("link", { name: "Track Project" }),
+      nav.getByRole("link", { name: "Client Portal" }),
     ).toHaveAttribute("href", "/en/portal");
     await expect(nav.locator('[aria-current="page"]')).toHaveCount(0);
   });
@@ -78,7 +78,7 @@ test.describe("site nav", () => {
     await expect(dialog.getByRole("link", { name: "Services" })).toBeVisible();
     // The portal entry point is in the menu too (lead's decision, 2026-11-13).
     await expect(
-      dialog.getByRole("link", { name: "Track Project" }),
+      dialog.getByRole("link", { name: "Client Portal" }),
     ).toBeVisible();
 
     for (let i = 0; i < 12; i += 1) await page.keyboard.press("Tab");

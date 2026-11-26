@@ -16,8 +16,8 @@ import { redirect } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 
 /*
- * Track Project: the client portal's sign-in (Figma CP-01/CP-02, CP-08; #131), inside
- * the site's nav and footer with Track Project active. Dynamic by design (ADR-009): it
+ * Client Portal ("Track Project" until #77): the client portal's sign-in (Figma CP-01/CP-02, CP-08; #131), inside
+ * the site's nav and footer with Client Portal active. Dynamic by design (ADR-009): it
  * reads the session, so a signed-in client goes straight to their project. Noindex, out
  * of the sitemap and disallowed in robots.txt, like the newsletter link pages.
  */

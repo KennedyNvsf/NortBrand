@@ -16,8 +16,9 @@ function valueAt(tree: MessageTree, key: string): string | undefined {
 /*
  * What a translation must carry over unchanged: ICU argument names ({year},
  * {count, plural, …}) and rich-text tags (<green>, </red>). The words inside
- * plural branches are translated, so only the argument at the start of each
- * {…} counts, never branch keywords such as `one` or `other`.
+ * plural branches are translated, so only an argument counts: a name directly
+ * followed by `}` or `,`. Branch text that opens with a word ({Faltam # dias}) and
+ * branch keywords such as `one` or `other` don't.
  */
 const ICU_KEYWORDS = new Set([
   "plural",
@@ -32,7 +33,7 @@ const ICU_KEYWORDS = new Set([
 ]);
 
 function messageTokens(message: string): { args: string[]; tags: string[] } {
-  const args = [...message.matchAll(/\{\s*([A-Za-z_]\w*)/g)]
+  const args = [...message.matchAll(/\{\s*([A-Za-z_]\w*)\s*[,}]/g)]
     .map((match) => match[1] ?? "")
     .filter((name) => !ICU_KEYWORDS.has(name));
   const tags = [...message.matchAll(/<\/?[A-Za-z]\w*\s*\/?>/g)].map((match) =>

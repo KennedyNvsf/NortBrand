@@ -20,8 +20,8 @@
     "newsletterUnsubscribeDescription": "Deixe de receber a newsletter da NortBrand.",
     "blogTitle": "Blog",
     "blogDescription": "Ideias sobre design, marca e sites que funcionam, escritas pelo estúdio NortBrand.",
-    "portalTitle": "Acompanhe o seu projeto",
-    "portalDescription": "Entre para acompanhar o seu projeto NortBrand: fases, tarefas, ficheiros e novidades."
+    "portalTitle": "Área de cliente",
+    "portalDescription": "Inicie sessão para acompanhar o seu projeto NortBrand: etapas, tarefas, ficheiros e atualizações."
   },
   "Common": {
     "skipToContent": "Saltar para o conteúdo",
@@ -36,7 +36,7 @@
     "services": "Serviços",
     "about": "Sobre nós",
     "blog": "Blog",
-    "trackProject": "Acompanhar projeto",
+    "trackProject": "Área de cliente",
     "contact": "Contactos",
     "openMenu": "Abrir menu",
     "closeMenu": "Fechar menu",
@@ -80,12 +80,12 @@
   },
   "Promo": {
     "label": "Oferta limitada",
-    "until": "Termina a 31 dez",
-    "offer": "20%",
-    "offerLabel": "No seu primeiro projeto",
-    "title": "<red>20% de desconto</red><br></br>no primeiro projeto.",
-    "body": "Marque uma conversa gratuita até 31 de dezembro e o desconto é aplicado ao seu primeiro projeto. Sem compromisso, apenas uma conversa sobre o que precisa.",
-    "terms": "Oferta válida até 31 de dezembro de 2026. Apenas para novos projetos.",
+    "until": "Termina a 31 dez.",
+    "offer": "Grátis",
+    "offerLabel": "Wireframe do seu site",
+    "title": "Um <red>wireframe grátis</red><br></br>para o seu novo site.",
+    "body": "Marque uma conversa gratuita até 31 de dezembro. Se aceitar a nossa proposta, desenhamos sem custos o wireframe do seu novo site: o esboço de cada página.",
+    "terms": "Válido para conversas marcadas até 31 de dezembro de 2026. O wireframe é gratuito depois de aceitar a proposta do projeto. Apenas para novos projetos.",
     "dismiss": "Agora não",
     "close": "Fechar a oferta"
   },
@@ -142,6 +142,10 @@
           "body": "Lançamos e continuamos a melhorar: conteúdos, desempenho e novas funcionalidades."
         }
       }
+    },
+    "cta": {
+      "headline": "Vamos criar um site que <highlight>traz clientes</highlight>.",
+      "subtext": "Marque uma conversa gratuita e fale-nos daquilo de que o seu negócio precisa — sem templates nem suposições."
     }
   },
   "Services": {
@@ -159,7 +163,7 @@
       "moreDetailsLabel": "O que inclui: {name}"
     },
     "grid": {
-      "title": "Abra qualquer <red>serviço</red> para <indent>ver o que está incluído.</indent>"
+      "title": "Escolha um <red>serviço</red> para <indent>ver o que inclui.</indent>"
     },
     "details": {
       "position": "{current} / {total}",
@@ -264,6 +268,29 @@
       "title": "Minimalismo, mas <indent>sempre <greenUnderline>funcional</greenUnderline>.</indent>",
       "body": "Todos os projetos da NortBrand devem ser claros, ter um propósito e ser pensados para as pessoas que os vão usar — seja um site simples e eficaz <strong>hoje</strong>, seja um produto digital completo que evolui para marcações, experiências de cliente e aplicações móveis <strong>amanhã</strong>."
     },
+    "commitments": {
+      "eyebrow": "Como trabalhamos",
+      "title": "O que pode <greenUnderline>esperar</greenUnderline> de nós.",
+      "intro": "Somos um estúdio em Portugal e trabalhamos em português e inglês. Isto é o que todos os projetos têm, desde a primeira conversa.",
+      "items": {
+        "conversation": {
+          "title": "Primeiro, uma conversa a sério",
+          "body": "Uma conversa gratuita de 30 minutos sobre o seu negócio e os seus objetivos, antes de desenharmos ou orçamentarmos o que quer que seja."
+        },
+        "proposal": {
+          "title": "Uma proposta clara e detalhada",
+          "body": "Âmbito, prazos e preço por escrito, sem custos escondidos. Nada começa sem o seu acordo."
+        },
+        "portal": {
+          "title": "O seu projeto, sempre à vista",
+          "body": "Na sua área de cliente vê cada etapa, tarefa e ficheiro, com atualizações da equipa de poucos em poucos dias."
+        },
+        "aftercare": {
+          "title": "Continuamos consigo depois do lançamento",
+          "body": "Com a manutenção, o seu site fica atualizado, monitorizado e com cópias de segurança. Nunca fica por sua conta."
+        }
+      }
+    },
     "cta": {
       "headline": "Vamos começar pelo <highlight>seu negócio</highlight>.",
       "subtext": "Marque uma conversa gratuita e conte-nos o que o seu negócio faz, a quem se dirige e o que tem mesmo de funcionar."
@@ -353,7 +380,7 @@
         },
         "timeline": {
           "question": "Quanto tempo demora um projeto?",
-          "answer": "Depende do âmbito e da rapidez com que os conteúdos e o feedback chegam. A proposta inclui um calendário com etapas claras, para saber o que acontece e quando."
+          "answer": "Depende do âmbito e da rapidez com que os conteúdos e o feedback chegam. A proposta inclui um calendário com etapas claras, e pode acompanhar cada uma delas na sua área de cliente."
         },
         "content": {
           "question": "Preciso de ter os conteúdos prontos?",
@@ -515,47 +542,47 @@
     "portalCode": {
       "preview": "O seu código de 6 dígitos para abrir o projeto.",
       "heading": "O seu código de acesso",
-      "intro": "Use este código para abrir o seu projeto no portal do cliente {studio}.",
+      "intro": "Use este código para abrir o seu projeto na área de cliente da {studio}.",
       "codeLabel": "O seu código",
-      "expiry": "É válido durante 10 minutos. Depois de 3 tentativas erradas, peça um novo.",
-      "ignore": "Não pediu para entrar? Pode ignorar este email; ninguém abre o seu projeto sem o código.",
-      "footer": "{site} · Portal do cliente"
+      "expiry": "É válido durante 10 minutos. Depois de 3 tentativas erradas, deixa de funcionar e o início de sessão fica em pausa durante 15 minutos.",
+      "ignore": "Não pediu para iniciar sessão? Pode ignorar este email; ninguém abre o seu projeto sem o código.",
+      "footer": "{site} · Área de cliente"
     },
     "portalWelcome": {
-      "subject": "O portal do projeto {project}",
-      "preview": "Entre com este email e o ID do projeto {projectId}.",
-      "heading": "Acompanhe o projeto {project} em tempo real",
-      "intro": "{lead} criou um portal de projeto para {client} na {studio}. Etapas, tarefas, ficheiros e novidades, tudo num só lugar.",
-      "idLabel": "O seu ID do projeto",
-      "howTo": "Entre com este endereço de email ({email}) e o ID do projeto. Enviamos-lhe sempre um código de 6 dígitos; não há palavra-passe para memorizar.",
-      "button": "Abrir o portal",
+      "subject": "A sua área de cliente para o projeto {project}",
+      "preview": "Inicie sessão com este email e o ID do projeto {projectId}.",
+      "heading": "Acompanhe o projeto {project} passo a passo",
+      "intro": "{lead}, da {studio}, criou uma área de cliente para o projeto de {client}. Etapas, tarefas, ficheiros e atualizações, tudo num só lugar.",
+      "idLabel": "O ID do seu projeto",
+      "howTo": "Use este endereço de email ({email}) e o ID do projeto. Sempre que iniciar sessão, enviamos-lhe um código de 6 dígitos; não há palavra-passe para memorizar.",
+      "button": "Abrir área de cliente",
       "fallback": "Se o botão não funcionar, copie esta ligação para o seu navegador:",
       "footer": "Recebe este email porque a {studio} convidou {email} para um projeto. Dúvidas? Responda a este email.",
-      "newIdSubject": "Um novo ID do projeto para {project}",
-      "newIdPreview": "Entre com o seu novo ID do projeto {projectId}.",
-      "newIdHeading": "O seu ID do projeto {project} mudou",
-      "newIdIntro": "A {studio} emitiu um novo ID do projeto para o portal de {client}, por isso a sua sessão foi terminada. Use o novo ID abaixo da próxima vez que entrar."
+      "newIdSubject": "Novo ID do projeto {project}",
+      "newIdPreview": "Inicie sessão com o novo ID do projeto: {projectId}.",
+      "newIdHeading": "O ID do projeto {project} mudou",
+      "newIdIntro": "A {studio} criou um novo ID para o projeto de {client} e, por segurança, terminou a sua sessão. Use o novo ID abaixo da próxima vez que iniciar sessão."
     },
     "portalUpdate": {
-      "subject": "{project}: novidades de {author}",
-      "preview": "{author} publicou uma novidade sobre {project}.",
-      "heading": "Novidades sobre {project}",
+      "subject": "{project}: atualização de {author}",
+      "preview": "{author} publicou uma atualização sobre {project}.",
+      "heading": "Atualização sobre {project}",
       "byline": "{author} · {studio}",
-      "button": "Abrir o portal",
+      "button": "Abrir área de cliente",
       "fallback": "Se o botão não funcionar, copie esta ligação para o seu navegador:",
-      "footer": "Recebe este email porque acompanha {project} no portal de projetos da {studio}. Dúvidas? Responda a este email.",
-      "subjectNeedsYou": "{project}: {author} precisa de algo de si",
-      "headingNeedsYou": "A sua equipa precisa de algo de si"
+      "footer": "Recebe este email porque acompanha {project} na área de cliente da {studio}. Dúvidas? Responda a este email.",
+      "subjectNeedsYou": "{project}: {author} aguarda algo da sua parte",
+      "headingNeedsYou": "A equipa aguarda algo da sua parte"
     },
     "portalDigest": {
       "subject": "{project}: as novidades de hoje",
-      "preview": "{count, plural, one {# nova novidade} other {# novas novidades}} da sua equipa.",
+      "preview": "{count, plural, one {# nova atualização} other {# novas atualizações}} da sua equipa.",
       "heading": "Hoje em {project}",
-      "needsYou": "Precisa de si",
+      "needsYou": "À sua espera",
       "milestone": "Marco",
       "meta": "{author} · {time}",
       "team": "A sua equipa",
-      "button": "Abrir o portal",
+      "button": "Abrir área de cliente",
       "fallback": "Se o botão não funcionar, copie esta ligação para o seu navegador:",
       "footer": "Recebe este email uma vez por dia, só quando há novidades em {project}. Dúvidas? Responda a este email."
     }
@@ -681,7 +708,7 @@
   "Portal": {
     "signIn": {
       "eyebrow": "Acompanhe o seu projeto",
-      "title": "Entre no seu projeto.",
+      "title": "Aceda ao seu projeto.",
       "intro": "Use o email que temos registado e o ID do projeto que está no seu email de boas-vindas.",
       "email": "Email",
       "emailPlaceholder": "nome@empresa.pt",
@@ -694,7 +721,7 @@
       "lostId": "Perdeu o ID do projeto?",
       "contactUs": "Contacte-nos",
       "noMatch": "Não encontrámos um projeto para esse email e ID. Verifique o seu email de boas-vindas ou contacte-nos.",
-      "locked": "Demasiados códigos errados. Por segurança, a entrada fica em pausa durante 15 minutos.",
+      "locked": "Três códigos errados seguidos. Por segurança, o início de sessão fica em pausa durante 15 minutos. Depois, peça um novo código.",
       "rateLimited": "Demasiados pedidos. Aguarde alguns minutos e tente novamente.",
       "failed": "Algo correu mal do nosso lado. Tente novamente dentro de momentos.",
       "codeTitle": "Verifique o seu email.",
@@ -702,8 +729,8 @@
       "codeLabel": "Código de 6 dígitos",
       "codeSubmit": "Abrir o meu projeto",
       "codeChecking": "A verificar…",
-      "codeWrongOne": "Esse código não corresponde. Tem mais 1 tentativa.",
-      "codeWrongOther": "Esse código não corresponde. Tem mais {tries} tentativas.",
+      "codeWrongOne": "Esse código não está correto. Resta-lhe 1 tentativa.",
+      "codeWrongOther": "Esse código não está correto. Restam-lhe {tries} tentativas.",
       "resendWait": "Não recebeu? Pode reenviar dentro de",
       "resendPrompt": "Não recebeu?",
       "resendAction": "Enviar novo código",
@@ -714,9 +741,9 @@
       "expiredBody": "Por segurança, os códigos só funcionam durante 10 minutos. Enviamos um novo para {email}.",
       "expiredAction": "Enviar novo código",
       "signedOutTitle": "A sua sessão terminou.",
-      "signedOutBody": "Por segurança, as sessões terminam ao fim de 30 dias. Entre novamente com um novo código; demora um minuto.",
-      "signedOutAction": "Entrar novamente",
-      "brandEyebrow": "Portal do cliente",
+      "signedOutBody": "Por segurança, as sessões terminam ao fim de 30 dias. Inicie sessão novamente com um novo código; demora um minuto.",
+      "signedOutAction": "Iniciar sessão novamente",
+      "brandEyebrow": "Área de cliente",
       "brandTitle": "O seu projeto,<br></br>à vista.",
       "brandBody": "Veja no que estamos a trabalhar, o que já está pronto e o que vem a seguir. A qualquer hora, em qualquer dispositivo.",
       "stages": {
@@ -741,7 +768,7 @@
         "tasks": "Tarefas",
         "timeline": "Cronograma",
         "files": "Ficheiros",
-        "updates": "Novidades"
+        "updates": "Atualizações"
       },
       "yourTeam": "A sua equipa",
       "messageTeam": "Falar com a equipa",
@@ -753,7 +780,7 @@
     },
     "states": {
       "setupTitle": "Estamos a preparar o seu projeto.",
-      "setupBody": "A sua equipa vai publicar a primeira novidade aqui dentro de um dia útil. Até lá, o email de boas-vindas tem tudo o que precisa.",
+      "setupBody": "A sua equipa vai publicar aqui a primeira atualização dentro de um dia útil. Até lá, o email de boas-vindas tem tudo o que precisa.",
       "setupAction": "Falar com a equipa"
     },
     "status": {
@@ -761,17 +788,17 @@
       "in_progress": "Em curso",
       "in_review": "Em revisão",
       "done": "Concluída",
-      "blocked": "Bloqueada"
+      "blocked": "Em pausa"
     },
     "health": {
       "on_track": "Dentro do prazo",
-      "at_risk": "Em risco",
+      "at_risk": "Requer atenção",
       "waiting_on_client": "À sua espera"
     },
     "overview": {
       "summary": "Etapa {current} de {total} · {stage} · {done} de {tasks} tarefas concluídas · Lançamento previsto para {launch}",
       "summaryShort": "{stage} · {done} de {tasks} tarefas concluídas · lançamento previsto para {launch}",
-      "staging": "Ver site de testes",
+      "staging": "Pré-visualizar o site",
       "progressTitle": "Progresso geral",
       "progressDone": "{done} de {total} tarefas concluídas",
       "progressLabel": "{percent}% das tarefas concluídas",
@@ -780,7 +807,7 @@
       "weekTitle": "Esta semana",
       "weekTasks": "{count, plural, one {# tarefa} other {# tarefas}}",
       "launchTitle": "Lançamento",
-      "launchDays": "{days, plural, one {# dia para o lançamento} other {# dias para o lançamento}}",
+      "launchDays": "{days, plural, one {Falta # dia para o lançamento} other {Faltam # dias para o lançamento}}",
       "launchToday": "Lançamento hoje",
       "launched": "Lançado",
       "waitingTitle": "Estamos à sua espera",
@@ -795,14 +822,14 @@
       "workingIntro": "Tarefas abertas na etapa atual, as mais urgentes primeiro.",
       "viewAllTasks": "Ver todas as tarefas",
       "allShort": "Todas",
-      "workingEmpty": "Não há nada em aberto nesta etapa neste momento.",
-      "due": "Prazo {day}",
+      "workingEmpty": "De momento, não há tarefas em aberto nesta etapa.",
+      "due": "Prazo: {day}",
       "waitingOnYou": "À sua espera",
-      "updatesTitle": "Últimas novidades",
-      "updateTitle": "Última novidade",
+      "updatesTitle": "Últimas atualizações",
+      "updateTitle": "Última atualização",
       "viewAll": "Ver todas",
-      "allUpdates": "Todas as novidades",
-      "updatesEmpty": "A sua equipa vai publicar aqui a primeira novidade em breve.",
+      "allUpdates": "Todas as atualizações",
+      "updatesEmpty": "A sua equipa vai publicar aqui a primeira atualização em breve.",
       "today": "Hoje",
       "yesterday": "Ontem",
       "team": "Equipa NortBrand",
@@ -810,15 +837,15 @@
     },
     "tasks": {
       "eyebrow": "Tarefas",
-      "title": "Tudo sobre o seu projeto",
-      "summary": "{total} tarefas · {done} concluídas · {inProgress} em curso · {inReview} em revisão · {blocked} bloqueadas · {todo} por fazer",
+      "title": "Todas as tarefas do seu projeto",
+      "summary": "{total} tarefas · {done} concluídas · {inProgress} em curso · {inReview} em revisão · {blocked} em pausa · {todo} por fazer",
       "summaryShort": "{total} tarefas · {done} concluídas · {waiting} à sua espera",
       "filterLabel": "Filtrar por estado",
       "filters": {
         "all": "Todas",
         "in_progress": "Em curso",
         "in_review": "Em revisão",
-        "blocked": "Bloqueadas",
+        "blocked": "Em pausa",
         "todo": "Por fazer",
         "done": "Concluídas"
       },
@@ -830,8 +857,8 @@
       "open": "Abrir tarefa: {title}",
       "detailMeta": "{stage} · Tarefa {number} de {total}",
       "close": "Fechar tarefa",
-      "dueIn": "Prazo {day} · {days, plural, one {# dia restante} other {# dias restantes}}",
-      "duePast": "Prazo {day}",
+      "dueIn": "Prazo: {day} · {days, plural, one {falta # dia} other {faltam # dias}}",
+      "duePast": "Prazo: {day}",
       "stage": "Etapa",
       "owner": "Responsável",
       "started": "Início",
@@ -839,10 +866,10 @@
       "about": "Sobre esta tarefa",
       "checklist": "Lista de verificação",
       "checklistCount": "{done} de {total}",
-      "latest": "Últimas sobre esta tarefa",
+      "latest": "Atualizações desta tarefa",
       "noOwner": "Equipa NortBrand",
-      "notFound": "Esta tarefa não está disponível. Pode ter sido movida ou tornada privada.",
-      "dueToday": "Prazo hoje"
+      "notFound": "Esta tarefa não está disponível. Pode ter sido movida ou já não estar visível para si.",
+      "dueToday": "Prazo: hoje"
     },
     "timeline": {
       "eyebrow": "Cronograma",
@@ -874,7 +901,7 @@
       },
       "groupIntro": {
         "design": "Designs aprovados e materiais da marca.",
-        "documents": "Tudo o que combinámos."
+        "documents": "Tudo o que ficou combinado, por escrito."
       },
       "kinds": {
         "pdf": "PDF",
@@ -888,7 +915,7 @@
       "empty": "Ainda não há ficheiros. A equipa vai partilhar aqui designs e documentos."
     },
     "updates": {
-      "eyebrow": "Novidades",
+      "eyebrow": "Atualizações",
       "title": "O que há de novo",
       "intro": "Publicações da sua equipa, as mais recentes primeiro. Publicamos de poucos em poucos dias.",
       "groups": {
@@ -897,13 +924,13 @@
         "thisWeek": "Esta semana",
         "earlier": "Anteriores"
       },
-      "needsYou": "Precisa de si",
+      "needsYou": "À sua espera",
       "milestone": "Marco",
       "edited": "editado",
       "linkedTask": "Tarefa: {title}",
-      "empty": "A sua equipa vai publicar aqui a primeira novidade dentro de um dia útil.",
-      "arrivedOne": "1 nova novidade",
-      "arrivedMany": "{count} novas novidades"
+      "empty": "A sua equipa vai publicar aqui a primeira atualização dentro de um dia útil.",
+      "arrivedOne": "1 nova atualização",
+      "arrivedMany": "{count} novas atualizações"
     }
   }
 }
