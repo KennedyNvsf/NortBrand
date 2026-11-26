@@ -409,36 +409,69 @@
       "sections": {
         "whoWeAre": {
           "title": "Quem somos",
-          "body": "A NortBrand Studio («NortBrand», «nós») é um estúdio de webdesign e produtos digitais sediado em Portugal. Somos responsáveis pelos dados pessoais recolhidos através deste site. Pode contactar-nos através de <email></email>."
+          "body": "A NortBrand («NortBrand», «nós») é um estúdio de webdesign e produtos digitais em Portugal, que exerce atividade como trabalhador independente (NIF 298581175). Somos responsáveis pelos dados pessoais recolhidos através deste site e da sua área de cliente. Pode contactar-nos através de <email></email>."
         },
         "collect": {
           "title": "Dados que recolhemos",
-          "body": "Recolhemos apenas os dados que decide fornecer-nos, além dos dados técnicos básicos necessários ao funcionamento do site.",
+          "body": "Recolhemos apenas o que nos fornece, o que a área de cliente precisa para funcionar e alguns dados técnicos para manter o site a funcionar em segurança.",
           "items": {
-            "contactForm": "Dados de contacto e mensagens que envia através do formulário de contacto (nome, email, telefone e detalhes do projeto)",
-            "newsletter": "O seu endereço de email, caso subscreva a newsletter",
-            "usage": "Dados de utilização básicos, como as páginas visitadas e o tipo de dispositivo [fornecedor de análise a confirmar]"
+            "contactForm": "Pedidos de conversa: o seu nome, email, telefone (opcional), o serviço que lhe interessa e a sua mensagem.",
+            "newsletter": "Newsletter: o seu email e idioma, depois de confirmar a subscrição.",
+            "portal": "Área de cliente (apenas clientes): o seu nome, email e idioma, as tarefas, ficheiros, atualizações e mensagens do seu projeto, e um registo de acessos e convites.",
+            "usage": "Estatísticas, apenas se aceitar os cookies de análise: páginas visitadas, tipo de dispositivo e país, nunca o seu nome nem email.",
+            "technical": "Dados de segurança e de erros: uma versão codificada de forma irreversível (hash) do seu endereço IP, para travar spam e tentativas repetidas de início de sessão, e relatórios de erros sem nomes nem emails."
           }
         },
         "use": {
           "title": "Como utilizamos os seus dados",
-          "body": "Utilizamos os seus dados para responder aos seus pedidos, prestar os serviços que solicita, enviar a newsletter que subscreveu e melhorar o funcionamento deste site. Não vendemos os seus dados pessoais."
+          "body": "Usamos os seus dados apenas para as finalidades abaixo; entre parênteses, indicamos o fundamento legal de cada uma ao abrigo do RGPD. Não vendemos os seus dados pessoais nem os usamos para publicidade.",
+          "items": {
+            "reply": "Responder ao seu pedido de conversa e preparar uma proposta (diligências pré-contratuais).",
+            "deliver": "Prestar os nossos serviços e gerir a sua área de cliente (execução de contrato).",
+            "newsletter": "Enviar a newsletter que subscreveu (o seu consentimento, que pode retirar a qualquer momento).",
+            "analytics": "Perceber como o site é usado e melhorá-lo, com o Google Analytics (o seu consentimento).",
+            "security": "Manter o site e a área de cliente seguros e corrigir erros (o nosso interesse legítimo num serviço seguro e funcional).",
+            "legal": "Guardar os registos exigidos por lei, como os de faturação (obrigação legal)."
+          }
         },
         "cookies": {
           "title": "Cookies e análise",
-          "body": "Utilizamos um cookie essencial, nb_consent, para guardar a sua escolha de cookies durante 6 meses. Apenas com o seu consentimento, o Google Analytics define o cookie _ga e um cookie _ga_ com o nome da nossa propriedade de análise, para medir a utilização do site; estes dados podem ser transferidos para os Estados Unidos. Pode alterar a sua escolha a qualquer momento em «Definições de cookies», no rodapé. [Detalhes dos cookies a confirmar.]"
+          "body": "Usamos os cookies abaixo. Os essenciais estão sempre ativos; os de análise só são usados se os aceitar, e o Google Analytics nunca é carregado antes disso. Pode alterar a sua escolha a qualquer momento em «Definições de cookies», no rodapé.",
+          "items": {
+            "consent": "nb_consent (essencial): guarda a sua escolha de cookies. 6 meses.",
+            "locale": "NEXT_LOCALE (essencial): guarda o seu idioma. 1 ano.",
+            "portalSession": "nb_portal_session (essencial, apenas na área de cliente): mantém a sessão iniciada durante 30 dias, ou durante o período definido pela equipa do seu projeto (até 90 dias).",
+            "portalAuth": "sb-…-auth-token (essencial, apenas na área de cliente): a sua sessão no nosso fornecedor de base de dados, a Supabase. Deixa de funcionar quando a sessão expira ou quando termina sessão.",
+            "analytics": "_ga e _ga_ seguido do ID da nossa propriedade (análise, apenas com o seu consentimento): Google Analytics. 2 anos, a menos que retire o consentimento, o que os apaga."
+          }
         },
         "sharing": {
           "title": "Partilha dos seus dados",
-          "body": "Só partilhamos dados pessoais com prestadores de serviços que nos ajudam a gerir o site e o nosso negócio, como fornecedores de alojamento e de email, e apenas na medida necessária para prestarem esses serviços. [Lista de fornecedores a confirmar.]"
+          "body": "Só partilhamos dados pessoais com os prestadores de serviços abaixo, e apenas na medida em que precisam deles para gerir o site e o nosso trabalho. Quando algum deles trata dados fora da União Europeia, a transferência está protegida pelas garantias exigidas pelo RGPD, como o Quadro de Privacidade de Dados UE-EUA ou as cláusulas contratuais-tipo da Comissão Europeia.",
+          "items": {
+            "vercel": "Vercel: alojamento do site (servidores em Dublin, Irlanda; as páginas são entregues a partir de servidores em todo o mundo).",
+            "supabase": "Supabase: base de dados, início de sessão e armazenamento de ficheiros dos pedidos, da lista da newsletter e da área de cliente (Irlanda).",
+            "resend": "Resend: envia os nossos emails a partir da sua região na UE (Irlanda) e guarda a lista da newsletter.",
+            "sentry": "Sentry: monitorização de erros, sem nomes nem emails (UE, Alemanha).",
+            "google": "Google: Google Analytics, apenas com o seu consentimento. Os dados podem ser transferidos para os Estados Unidos.",
+            "sanity": "Sanity: aloja os artigos e as imagens do blog. Quando lê o blog, os seus servidores veem o seu endereço IP, como acontece com qualquer alojamento."
+          }
         },
         "retention": {
           "title": "Durante quanto tempo os guardamos",
-          "body": "Guardamos os dados pessoais apenas durante o tempo necessário para as finalidades descritas acima, ou pelo período exigido por lei. [Prazos de conservação a confirmar.]"
+          "body": "Guardamos os dados pessoais apenas durante o tempo necessário:",
+          "items": {
+            "requests": "Pedidos de conversa que não dão origem a projetos: 12 meses; depois, são apagados.",
+            "clients": "Dados da área de cliente: durante o projeto e até 12 meses depois de ser arquivado; depois, são apagados.",
+            "newsletter": "Newsletter: até cancelar a subscrição. Nessa altura, apagamos o seu contacto no fornecedor de email e guardamos apenas o registo de que cancelou, para nunca mais lhe enviarmos emails.",
+            "analytics": "Dados de análise: 2 meses no Google Analytics.",
+            "security": "Registos contra spam: 1 hora.",
+            "billing": "Contratos e registos de faturação: durante o período exigido pela lei fiscal portuguesa."
+          }
         },
         "rights": {
           "title": "Os seus direitos",
-          "body": "Ao abrigo do RGPD, pode pedir o acesso, a retificação, o apagamento ou a portabilidade dos seus dados pessoais, bem como opor-se ao seu tratamento ou pedir a sua limitação. Pode retirar o consentimento a qualquer momento e apresentar reclamação à Comissão Nacional de Proteção de Dados (CNPD)."
+          "body": "Ao abrigo do RGPD, pode pedir o acesso, a retificação, o apagamento ou uma cópia dos seus dados pessoais, bem como opor-se ao seu tratamento ou pedir a sua limitação. Quando o fundamento é o seu consentimento, pode retirá-lo a qualquer momento. Escreva para <email></email> e respondemos no prazo de um mês. Pode também apresentar reclamação à Comissão Nacional de Proteção de Dados (CNPD, www.cnpd.pt)."
         },
         "contact": {
           "title": "Contacte-nos",
@@ -464,7 +497,7 @@
         },
         "enquiries": {
           "title": "Pedidos e propostas",
-          "body": "O envio de um pedido de contacto não cria uma relação contratual. Qualquer trabalho é regido por um acordo escrito separado. [A confirmar.]"
+          "body": "O envio de um pedido de contacto não cria uma relação contratual. Qualquer trabalho é regido por um acordo escrito separado."
         },
         "links": {
           "title": "Ligações para sites de terceiros",
@@ -472,7 +505,7 @@
         },
         "liability": {
           "title": "Limitação de responsabilidade",
-          "body": "Fazemos o possível para manter a informação deste site correta e atualizada, mas disponibilizamo-la «tal como está», sem garantias. Na medida permitida por lei, a NortBrand não é responsável por perdas resultantes da utilização do site. [A rever por um advogado.]"
+          "body": "Fazemos o possível para manter a informação deste site correta e atualizada, mas disponibilizamo-la «tal como está», sem garantias. Na medida permitida por lei, a NortBrand não é responsável por perdas resultantes da utilização do site."
         },
         "changes": {
           "title": "Alterações a estes termos",
@@ -480,7 +513,7 @@
         },
         "law": {
           "title": "Lei aplicável",
-          "body": "Estes termos regem-se pela lei portuguesa. [Foro competente a confirmar.]"
+          "body": "Estes termos regem-se pela lei portuguesa. Para qualquer litígio são competentes os tribunais da comarca de Braga, salvo se a lei lhe der o direito de recorrer a outro tribunal, como pode acontecer se for consumidor."
         },
         "contact": {
           "title": "Contacto",

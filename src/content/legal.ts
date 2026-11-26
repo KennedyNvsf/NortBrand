@@ -6,8 +6,8 @@
  * - `id` is the section's anchor (/legal/privacy#your-rights) and its table-of-contents
  *   target; `key` names the copy (`Legal.<document>.sections.<key>.title | body`).
  * - `items` adds a bullet list (`…sections.<key>.items.<item>`).
- * - `status: "draft"` means the text is the Figma placeholder awaiting legal review.
- *   `pnpm check:release` fails while any document is a draft.
+ * - `status: "draft"` means the text awaits legal review; `pnpm check:release` fails
+ *   while any document is a draft. Both were reviewed on 2026-11-26 (#78).
  *
  * Imported by scripts/check-release.mts, so keep it free of path-alias imports.
  */
@@ -29,27 +29,63 @@ type LegalDocument = {
 export const legalDocuments = {
   privacy: {
     path: "/legal/privacy",
-    updated: "2026-10-04",
-    status: "draft",
+    updated: "2026-11-25",
+    status: "reviewed",
     sections: [
       { id: "who-we-are", key: "whoWeAre" },
       {
         id: "information-we-collect",
         key: "collect",
-        items: ["contactForm", "newsletter", "usage"],
+        items: ["contactForm", "newsletter", "portal", "usage", "technical"],
       },
-      { id: "how-we-use-your-information", key: "use" },
-      { id: "cookies-and-analytics", key: "cookies" },
-      { id: "sharing-your-information", key: "sharing" },
-      { id: "how-long-we-keep-it", key: "retention" },
+      {
+        id: "how-we-use-your-information",
+        key: "use",
+        items: [
+          "reply",
+          "deliver",
+          "newsletter",
+          "analytics",
+          "security",
+          "legal",
+        ],
+      },
+      {
+        id: "cookies-and-analytics",
+        key: "cookies",
+        items: [
+          "consent",
+          "locale",
+          "portalSession",
+          "portalAuth",
+          "analytics",
+        ],
+      },
+      {
+        id: "sharing-your-information",
+        key: "sharing",
+        items: ["vercel", "supabase", "resend", "sentry", "google", "sanity"],
+      },
+      {
+        id: "how-long-we-keep-it",
+        key: "retention",
+        items: [
+          "requests",
+          "clients",
+          "newsletter",
+          "analytics",
+          "security",
+          "billing",
+        ],
+      },
       { id: "your-rights", key: "rights" },
       { id: "contact-us", key: "contact" },
     ],
   },
   terms: {
     path: "/legal/terms",
-    updated: "2026-10-04",
-    status: "draft",
+    updated: "2026-11-25",
+    status: "reviewed",
     sections: [
       { id: "acceptance", key: "acceptance" },
       { id: "using-the-website", key: "use" },

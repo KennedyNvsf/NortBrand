@@ -37,8 +37,14 @@ describe("legal documents", () => {
     expect(JSON.stringify(en.Legal)).not.toContain("@");
   });
 
+  it("has both documents reviewed, so the release check passes (#78)", () => {
+    expect(draftLegalDocuments()).toEqual([]);
+  });
+
   it("reports draft documents so the release check can fail on them", () => {
-    expect(draftLegalDocuments()).toEqual(["privacy", "terms"]);
+    expect(draftLegalDocuments({ privacy: { status: "draft" } })).toEqual([
+      "privacy",
+    ]);
     expect(draftLegalDocuments({ privacy: { status: "reviewed" } })).toEqual(
       [],
     );

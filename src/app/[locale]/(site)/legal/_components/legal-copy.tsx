@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { getTranslations } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 
 import { highlightTags } from "@/components/site/highlight";
 import { legalDocuments } from "@/content/legal";
@@ -42,6 +42,7 @@ export const emailTag = {
 
 export async function privacyCopy(): Promise<LegalCopy> {
   const t = await getTranslations("Legal.privacy");
+  const { sections } = (await getMessages()).Legal.privacy;
   return {
     title: t.rich("title", highlightTags),
     lead: t("lead"),
@@ -51,12 +52,32 @@ export async function privacyCopy(): Promise<LegalCopy> {
       body: t.rich(`sections.${section.key}.body`, emailTag),
       items:
         "items" in section
-          ? section.items.map((item) =>
-              t(`sections.${section.key}.items.${item}`),
-            )
+          ? listItems(sections[section.key].items, section.items, section.key)
           : undefined,
     })),
   };
+}
+
+/*
+ * A section's bullets, in legal.ts order. Several sections have lists (#78), and
+ * TypeScript pairs every section key with every item name, so each item can't be a
+ * typed key of its own. The section's `items` come from the request's messages
+ * (getMessages, same locale) and are checked here. Items are plain text (no ICU
+ * arguments or tags), so the raw strings are final.
+ */
+function listItems(
+  raw: Record<string, string>,
+  items: readonly string[],
+  section: string,
+): string[] {
+  const entries = new Map<string, unknown>(Object.entries(raw));
+  return items.map((item) => {
+    const value = entries.get(item);
+    if (typeof value !== "string") {
+      throw new Error(`Missing legal list item ${section}.items.${item}`);
+    }
+    return value;
+  });
 }
 
 export async function termsCopy(): Promise<LegalCopy> {

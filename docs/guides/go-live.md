@@ -238,6 +238,9 @@ Every rollback gets a ticket afterwards, saying what happened, why, and the foll
   `p=quarantine` ([Environments](./environments.md) § 3). 🔒
 - **Ongoing:** run `pnpm audit` before each production deploy
   ([Dependencies](./dependencies.md)).
+- **Monthly (from December 2027):** the Privacy Policy's retention, by hand: delete
+  consultation requests older than 12 months, and projects archived more than 12 months
+  ago ([Legal pages](./legal-pages.md) § 6).
 
 ## 7. Who does what
 
