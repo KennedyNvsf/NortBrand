@@ -21,7 +21,7 @@ describe("isActiveRoute", () => {
 });
 
 describe("navItems", () => {
-  it("puts Track Project between Blog and Contact, linking to the portal", () => {
+  it("puts the Client Portal item between Blog and Contact, linking to the portal", () => {
     expect(navItems.map(({ key }) => key)).toEqual([
       "services",
       "about",
@@ -34,7 +34,7 @@ describe("navItems", () => {
     );
   });
 
-  it("keeps Track Project active on every portal page", () => {
+  it("keeps the Client Portal item active on every portal page", () => {
     expect(isActiveRoute("/portal", "/portal")).toBe(true);
     expect(isActiveRoute("/portal/NB-4821", "/portal")).toBe(true);
   });

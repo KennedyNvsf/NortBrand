@@ -11,7 +11,7 @@ import {
  * Rules for the team's Projects list (#136; Figma TM-01), pure and unit-tested.
  *
  * Tabs: Active (open, launch still ahead), Waiting on client (active and waiting),
- * Launched (open, launch date passed: in Care), Archived (closed). The tab is URL state
+ * Launched (open, launch date passed: in Support), Archived (closed). The tab is URL state
  * (?view=). Progress counts every ticket: the team sees team-only tickets too.
  */
 

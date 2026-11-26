@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import asking from "@/assets/images/asking.jpg";
 import homeWhy from "@/assets/images/home-why.jpg";
-import { CtaBand } from "@/components/site/cta-band";
+import { CtaBand, CtaHighlight } from "@/components/site/cta-band";
 import { FeatureSplit } from "@/components/site/feature-split";
 import { highlightTags } from "@/components/site/highlight";
 import { HomePromo } from "@/features/promo/components/home-promo";
@@ -79,7 +79,12 @@ export default async function HomePage() {
         }}
       />
       <HomeProcess />
-      <CtaBand />
+      <CtaBand
+        headline={t.rich("cta.headline", {
+          highlight: (chunks) => <CtaHighlight>{chunks}</CtaHighlight>,
+        })}
+        subtext={t("cta.subtext")}
+      />
       <HomePromo />
     </main>
   );

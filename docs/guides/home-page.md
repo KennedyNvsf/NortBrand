@@ -13,7 +13,7 @@ Why it matters    mark panel | right-aligned copy + 3 checks
 What we do        5 ServiceCards → /services#<slug>
 Our philosophy    left copy + 3 checks | mark panel   (mirror of "Why it matters")
 How it works      4 steps: journey line (desktop), 2×2 (tablet), connector (mobile)
-CTA band          from #8
+CTA band          from #8; Home headline and subtext from `Home.cta` (#77)
 ```
 
 Nav, footer and the mobile sticky CTA come from the `(site)` layout.

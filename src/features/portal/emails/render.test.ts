@@ -54,7 +54,7 @@ describe("renderPortalWelcome", () => {
     });
     expect(email.subject).toBe(`A new Project ID for ${welcome.projectName}`);
     expect(email.text).toContain("NB-7310");
-    expect(email.text).toContain("you've been signed out");
+    expect(email.text).toContain("you’ve been signed out");
   });
 });
 
@@ -144,7 +144,7 @@ describe("renderPortalDigest", () => {
       updates: [...digest.updates],
       locale: "en",
     });
-    expect(email.subject).toBe("Café website: today's updates");
+    expect(email.subject).toBe("Café website: today’s updates");
     expect(email.text).toContain("Rui Matos · 10:20");
     expect(email.text).toContain("Your team · 16:05");
     expect(email.html).toContain("Needs you");
@@ -162,7 +162,7 @@ describe("renderPortalDigest", () => {
       locale: "pt",
     });
     expect(email.html).toContain('lang="pt"');
-    expect(email.html).toContain("Precisa de si");
+    expect(email.html).toContain("À sua espera");
     expect(email.subject).toBe("Café website: as novidades de hoje");
   });
 });

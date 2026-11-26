@@ -49,13 +49,13 @@ async function typeCode(page: Page, code: string) {
   await page.keyboard.type(code);
 }
 
-test.describe("Track Project", () => {
+test.describe("Client Portal", () => {
   test("the nav links to the portal and marks it active", async ({ page }) => {
     await page.goto("/en/portal");
     test.skip(!isDesktop(page), "desktop nav");
     const link = page
       .getByRole("navigation", { name: "Main" })
-      .getByRole("link", { name: "Track Project" });
+      .getByRole("link", { name: "Client Portal" });
     await expect(link).toHaveAttribute("aria-current", "page");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       copy("en", "Portal.signIn.title"),
@@ -104,7 +104,7 @@ test.describe("Track Project", () => {
 
     await typeCode(page, "000000");
     await expect(
-      page.getByText("That code didn't match. You have 2 tries left."),
+      page.getByText(copy("en", "Portal.signIn.codeWrongOther", { tries: 2 })),
     ).toBeVisible();
 
     await typeCode(page, "123456");

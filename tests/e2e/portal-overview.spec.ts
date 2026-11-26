@@ -59,7 +59,7 @@ test.describe("Client overview", () => {
 
     // The most urgent open task first: the one waiting on the client.
     const working = main(page).getByRole("region", {
-      name: "What we're working on",
+      name: copy("en", "Portal.overview.workingTitle"),
     });
     await expect(working.getByRole("listitem").first()).toContainText(
       "Menu photos for the menu page",
@@ -119,7 +119,7 @@ test.describe("Client tasks", () => {
     const filters = page.getByRole("navigation", {
       name: copy("en", "Portal.tasks.filterLabel"),
     });
-    await filters.getByRole("link", { name: /Blocked/ }).click();
+    await filters.getByRole("link", { name: /On hold/ }).click();
     await expect(page).toHaveURL(/status=blocked/);
     await expect(
       main(page).getByRole("link", { name: /Open task/ }),

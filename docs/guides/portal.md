@@ -8,7 +8,7 @@ is in the [Database guide](./database.md) § 7.
 
 ## 1. What we built
 
-- **Track Project** in the site navigation (desktop nav and the tablet/mobile menu, not
+- **Client Portal** ("Track Project" until #77) in the site navigation (desktop nav and the tablet/mobile menu, not
   the footer) opens `/[locale]/portal`.
 - **Sign-in in two steps** (CP-01, CP-02):
   1. The client enters their email and Project ID (`NB-4821`). If they match an open
@@ -106,7 +106,7 @@ projects that user sees.
 | `src/features/portal/auth/emails/render-template.test.tsx` | The committed template matches the component; both languages carry `{{ .Token }}`; the subject matches `config.toml`                                                                                                                                                                |
 | `src/proxy.test.ts`                                        | Locale negotiation unchanged; portal URLs never locale-redirected                                                                                                                                                                                                                   |
 | `tests/e2e/portal-sign-in.spec.ts`                         | Nav entry and active state; validation; one no-match message; wrong code → right code → project → sign out; 3 wrong codes → expired; locked; rate limited; guard redirect; signed-out screen; PT copy; axe on the code step                                                         |
-| `tests/e2e/routes.ts`                                      | Track Project runs through the page harness (EN/PT, axe, one H1, overflow, tap targets)                                                                                                                                                                                             |
+| `tests/e2e/routes.ts`                                      | Client Portal runs through the page harness (EN/PT, axe, one H1, overflow, tap targets)                                                                                                                                                                                             |
 
 ## 6. Day-to-day
 
@@ -400,7 +400,7 @@ generates a fresh one and returns it.
 
 One template, **Standard**, stored in `portal_stage_template` and edited in Settings
 since #159 (§ 18): Discovery, Design, Development, Review (2, 3, 6 and 3 weeks, used as
-weights), then Launch (the launch day) and Care (from launch, open-ended). The working
+weights), then Launch (the launch day) and Support (from launch, open-ended; "Care" until #77). The working
 stages share the days up to the day before launch, back to back. The same function draws
 the modal's preview and builds the rows on the server. At least 8 days between start
 and launch (two per working stage). The team adjusts stages afterwards (#138).
@@ -857,7 +857,7 @@ Split from #142; View as client is #160.
 ```
 SettingsForm (client)  values as Selects/Switches/Input; "Edit template" opens the editor
   checkSettings()      rules.ts (zod-free, shared with the server): domain, names, weeks,
-                       one or more working stages then Launch then Care, unique names
+                       one or more working stages then Launch then Support, unique names
   saveSettingsAction   settings.ts: admin? → zod → rpc portal_save_settings
   portal_save_settings SECURITY DEFINER, require_team_admin(); locks the settings row,
                        refuses a stale save (PT409 stale_settings: the updated_at the
@@ -906,9 +906,9 @@ address stays on the server. A client re-added after removal (#141) counts as ne
 
 `portal_stage_template` (position, name, kind `work`/`launch`/`after`, weeks for working
 stages only), seeded with Figma's Standard: Discovery 2, Design 3, Development 6, Review 3
-weeks, Launch, Care. Weeks are **weights**: `spreadStages` (`templates.ts`) shares the
+weeks, Launch, Support (renamed from Care by migration 20261126130000, #77). Weeks are **weights**: `spreadStages` (`templates.ts`) shares the
 days between start and launch in proportion, as before. Launch stays the launch day and
-Care has no end (lead's decision, 2026-11-22; Figma showed "Launch · 1 week").
+Support has no end (lead's decision, 2026-11-22; Figma showed "Launch · 1 week").
 Teammates read it through RLS; nobody writes it except `portal_save_settings`. The page
 and the create action read it with `getStageTemplate()` (`settings/data.ts`), which falls
 back to `DEFAULT_STAGE_TEMPLATE` if the stored one can't be read. Existing projects keep

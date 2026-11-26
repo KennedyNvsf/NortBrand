@@ -51,7 +51,7 @@ const STAGES = [
   {
     id: "e2e-s6",
     position: 6,
-    name: "Care",
+    name: "Support",
     startsOn: "2027-02-15",
     endsOn: null,
     completed: false,

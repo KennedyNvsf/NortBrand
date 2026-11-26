@@ -1,8 +1,8 @@
 {
   "Metadata": {
     "siteName": "NortBrand",
-    "homeTitle": "NortBrand — Websites built like products, for small businesses",
-    "homeDescription": "NortBrand designs and builds websites for local and service-based businesses: clear, fast and made to bring in enquiries. Book a free consultation.",
+    "homeTitle": "NortBrand — Web design studio in Portugal for small businesses",
+    "homeDescription": "Websites for local and service-based businesses: clear, fast and made to bring in enquiries. Book a free consultation, in English or Portuguese.",
     "servicesTitle": "Web design, development and content services",
     "servicesDescription": "Web design, web development, content writing, social media management and website maintenance for local and service-based businesses.",
     "aboutTitle": "About",
@@ -36,14 +36,14 @@
     "services": "Services",
     "about": "About",
     "blog": "Blog",
-    "trackProject": "Track Project",
+    "trackProject": "Client Portal",
     "contact": "Contact",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "menuTitle": "Menu"
   },
   "Footer": {
-    "tagline": "NortBrand is a digital product and web design studio for local and service-based businesses.",
+    "tagline": "NortBrand is a web design and digital product studio in Portugal, working with local and service-based businesses at home and abroad.",
     "services": "Services",
     "company": "Company",
     "follow": "Follow us",
@@ -81,11 +81,11 @@
   "Promo": {
     "label": "Limited offer",
     "until": "Ends 31 Dec",
-    "offer": "20%",
-    "offerLabel": "Off your first project",
-    "title": "Get <red>20% off</red><br></br>your first project.",
-    "body": "Book a free consultation before 31 December and the discount comes off your first project. No commitment, just a conversation about what you need.",
-    "terms": "Offer ends 31 December 2026. New projects only.",
+    "offer": "Free",
+    "offerLabel": "Website wireframe",
+    "title": "A <red>free wireframe</red><br></br>for your new website.",
+    "body": "Book a free consultation by 31 December. If you accept our proposal, we design your wireframe, the page-by-page plan of your new site, free of charge.",
+    "terms": "For consultations booked by 31 December 2026. The wireframe is free once you accept your project proposal. New projects only.",
     "dismiss": "Not now",
     "close": "Close the offer"
   },
@@ -142,6 +142,10 @@
           "body": "We launch, then keep improving — content, performance and features that grow with your business."
         }
       }
+    },
+    "cta": {
+      "headline": "Let’s build something that actually <highlight>converts</highlight>.",
+      "subtext": "Book a free consultation and let’s talk about what your business actually needs — no templates, no guesswork."
     }
   },
   "Services": {
@@ -159,7 +163,7 @@
       "moreDetailsLabel": "What’s included: {name}"
     },
     "grid": {
-      "title": "Open any <red>service</red> to <indent>see what's included.</indent>"
+      "title": "Open any <red>service</red> to <indent>see what’s included.</indent>"
     },
     "details": {
       "position": "{current} / {total}",
@@ -264,6 +268,29 @@
       "title": "Minimalism, but <indent>always <greenUnderline>functional</greenUnderline>.</indent>",
       "body": "Every NortBrand project should be clear, purposeful and built around the people who will actually use it — whether that means a focused business website <strong>today</strong> or a complete digital product that grows into bookings, customer experiences and mobile apps <strong>tomorrow</strong>."
     },
+    "commitments": {
+      "eyebrow": "How we work",
+      "title": "What you can <greenUnderline>count on</greenUnderline>.",
+      "intro": "We’re a studio in Portugal, working with clients in Portuguese and English. This is what every project gets, from the first call on.",
+      "items": {
+        "conversation": {
+          "title": "A real conversation first",
+          "body": "A free 30-minute consultation about your business and goals, before anything is designed or quoted."
+        },
+        "proposal": {
+          "title": "A clear, itemised proposal",
+          "body": "Scope, timeline and price in writing, with no hidden fees. Nothing starts until you agree."
+        },
+        "portal": {
+          "title": "Your project, always in view",
+          "body": "Your own client area shows every stage, task and file, with updates from the team every few days."
+        },
+        "aftercare": {
+          "title": "We stay after launch",
+          "body": "Maintenance keeps your site updated, monitored and backed up, so you’re never left on your own."
+        }
+      }
+    },
     "cta": {
       "headline": "Let’s start with <highlight>your business</highlight>.",
       "subtext": "Book a free consultation and tell us what your business does, who it serves and what actually needs to work."
@@ -276,7 +303,7 @@
       "detailsLabel": "Contact details",
       "email": "Email",
       "availability": "Availability",
-      "hours": "Mon – Fri · {opens} – {closes}"
+      "hours": "Mon – Fri · {opens} – {closes} (Lisbon time)"
     },
     "form": {
       "title": "Book a Consultation",
@@ -353,7 +380,7 @@
         },
         "timeline": {
           "question": "How long does a project take?",
-          "answer": "It depends on scope and on how quickly content and feedback come together. The proposal includes a timeline with clear milestones, so you know what happens when."
+          "answer": "It depends on scope and on how quickly content and feedback come together. The proposal includes a timeline with clear milestones, and you can follow every stage in your client area."
         },
         "content": {
           "question": "Do I need to have my content ready?",
@@ -517,24 +544,24 @@
       "heading": "Your sign-in code",
       "intro": "Use this code to open your project in the {studio} client portal.",
       "codeLabel": "Your code",
-      "expiry": "It works for 10 minutes. After 3 wrong tries, ask for a new one.",
-      "ignore": "Didn't ask to sign in? You can ignore this email; nobody can open your project without the code.",
+      "expiry": "It works for 10 minutes. After 3 wrong tries it stops working and sign-in pauses for 15 minutes.",
+      "ignore": "Didn’t ask to sign in? You can ignore this email; nobody can open your project without the code.",
       "footer": "{site} · Client portal"
     },
     "portalWelcome": {
       "subject": "Your project portal for {project}",
       "preview": "Sign in with this email and Project ID {projectId}.",
-      "heading": "Follow {project} as it happens",
-      "intro": "{lead} has set up a project portal for {client} at {studio}. Stages, tasks, files and updates are all in one place.",
+      "heading": "Follow {project} step by step",
+      "intro": "{lead} at {studio} has set up a project portal for {client}. Stages, tasks, files and updates are all in one place.",
       "idLabel": "Your Project ID",
-      "howTo": "Sign in with this email address ({email}) and your Project ID. Each time, we'll send you a 6-digit code; there's no password to remember.",
+      "howTo": "Sign in with this email address ({email}) and your Project ID. Each time, we’ll send you a 6-digit code; there’s no password to remember.",
       "button": "Open the portal",
-      "fallback": "If the button doesn't work, copy this link into your browser:",
-      "footer": "You're receiving this because {studio} invited {email} to a project. Questions? Reply to this email.",
+      "fallback": "If the button doesn’t work, copy this link into your browser:",
+      "footer": "You’re receiving this because {studio} invited {email} to a project. Questions? Reply to this email.",
       "newIdSubject": "A new Project ID for {project}",
       "newIdPreview": "Sign in with your new Project ID {projectId}.",
       "newIdHeading": "Your Project ID for {project} has changed",
-      "newIdIntro": "{studio} has issued a new Project ID for {client}'s portal, so you've been signed out. Use the new ID below the next time you sign in."
+      "newIdIntro": "{studio} has issued a new Project ID for {client}'s portal, so you’ve been signed out. Use the new ID below the next time you sign in."
     },
     "portalUpdate": {
       "subject": "{project}: an update from {author}",
@@ -542,13 +569,13 @@
       "heading": "An update on {project}",
       "byline": "{author} · {studio}",
       "button": "Open the portal",
-      "fallback": "If the button doesn't work, copy this link into your browser:",
-      "footer": "You're receiving this because you follow {project} on the {studio} project portal. Questions? Reply to this email.",
+      "fallback": "If the button doesn’t work, copy this link into your browser:",
+      "footer": "You’re receiving this because you follow {project} on the {studio} project portal. Questions? Reply to this email.",
       "subjectNeedsYou": "{project}: {author} needs something from you",
       "headingNeedsYou": "Your team needs something from you"
     },
     "portalDigest": {
-      "subject": "{project}: today's updates",
+      "subject": "{project}: today’s updates",
       "preview": "{count, plural, one {# new update} other {# new updates}} from your team.",
       "heading": "Today on {project}",
       "needsYou": "Needs you",
@@ -556,8 +583,8 @@
       "meta": "{author} · {time}",
       "team": "Your team",
       "button": "Open the portal",
-      "fallback": "If the button doesn't work, copy this link into your browser:",
-      "footer": "You get this email once a day, only when there's news on {project}. Questions? Reply to this email."
+      "fallback": "If the button doesn’t work, copy this link into your browser:",
+      "footer": "You get this email once a day, only when there’s news on {project}. Questions? Reply to this email."
     }
   },
   "Newsletter": {
@@ -687,14 +714,14 @@
       "emailPlaceholder": "you@company.com",
       "projectId": "Project ID",
       "projectIdPlaceholder": "NB-0000",
-      "projectIdHint": "It's in your welcome email from NortBrand.",
+      "projectIdHint": "It’s in your welcome email from NortBrand.",
       "send": "Send me a code",
       "sending": "Sending…",
-      "sendNote": "We'll email you a 6-digit code. No password to remember.",
+      "sendNote": "We’ll email you a 6-digit code. No password to remember.",
       "lostId": "Lost your Project ID?",
       "contactUs": "Contact us",
-      "noMatch": "We couldn't find a project for that email and Project ID. Check your welcome email, or contact us.",
-      "locked": "Too many wrong codes. For your security, sign-in is paused for 15 minutes.",
+      "noMatch": "We couldn’t find a project for that email and Project ID. Check your welcome email, or contact us.",
+      "locked": "Three wrong codes in a row. For your security, sign-in is paused for 15 minutes. After that, send yourself a new code.",
       "rateLimited": "Too many requests. Please wait a few minutes and try again.",
       "failed": "Something went wrong on our side. Please try again in a moment.",
       "codeTitle": "Check your email.",
@@ -702,30 +729,30 @@
       "codeLabel": "6-digit code",
       "codeSubmit": "Open my project",
       "codeChecking": "Checking…",
-      "codeWrongOne": "That code didn't match. You have 1 try left.",
-      "codeWrongOther": "That code didn't match. You have {tries} tries left.",
-      "resendWait": "Didn't get it? You can resend in",
-      "resendPrompt": "Didn't get it?",
+      "codeWrongOne": "That code didn’t match. You have 1 try left.",
+      "codeWrongOther": "That code didn’t match. You have {tries} tries left.",
+      "resendWait": "Didn’t get it? You can resend in",
+      "resendPrompt": "Didn’t get it?",
       "resendAction": "Send a new code",
       "codeSentAgain": "We sent a new code.",
       "wrongAddress": "Wrong address?",
       "useDifferentEmail": "Use a different email",
       "expiredTitle": "That code has expired.",
-      "expiredBody": "For your security, codes only work for 10 minutes. We'll send a fresh one to {email}.",
+      "expiredBody": "For your security, codes only work for 10 minutes. We’ll send a fresh one to {email}.",
       "expiredAction": "Send a new code",
-      "signedOutTitle": "You've been signed out.",
+      "signedOutTitle": "You’ve been signed out.",
       "signedOutBody": "For your security, sessions end after 30 days. Sign in again with a new code; it takes a minute.",
       "signedOutAction": "Sign in again",
       "brandEyebrow": "Client portal",
-      "brandTitle": "Your project,<br></br>in the open.",
-      "brandBody": "See what we're working on, what's finished and what comes next. Any time, from any device.",
+      "brandTitle": "Your project,<br></br>always in view.",
+      "brandBody": "See what we’re working on, what’s finished and what comes next. Any time, from any device.",
       "stages": {
         "discovery": "Discovery",
         "design": "Design",
         "development": "Development",
         "review": "Review",
         "launch": "Launch",
-        "care": "Care"
+        "care": "Support"
       },
       "errors": {
         "emailInvalid": "Enter a valid email address.",
@@ -752,8 +779,8 @@
       "loading": "Loading your project"
     },
     "states": {
-      "setupTitle": "We're setting up your project.",
-      "setupBody": "Your team will post the first update here within one working day. Until then, your welcome email has everything you need.",
+      "setupTitle": "We’re setting up your project.",
+      "setupBody": "Your team will post the first update here within one business day. Until then, your welcome email has everything you need.",
       "setupAction": "Message your team"
     },
     "status": {
@@ -761,17 +788,17 @@
       "in_progress": "In progress",
       "in_review": "In review",
       "done": "Done",
-      "blocked": "Blocked"
+      "blocked": "On hold"
     },
     "health": {
       "on_track": "On track",
-      "at_risk": "At risk",
+      "at_risk": "Needs attention",
       "waiting_on_client": "Waiting on you"
     },
     "overview": {
       "summary": "Stage {current} of {total} · {stage} · {done} of {tasks} tasks done · Launch planned for {launch}",
       "summaryShort": "{stage} · {done} of {tasks} tasks done · launch planned for {launch}",
-      "staging": "View staging site",
+      "staging": "Preview your site",
       "progressTitle": "Overall progress",
       "progressDone": "{done} of {total} tasks done",
       "progressLabel": "{percent}% of tasks done",
@@ -783,7 +810,7 @@
       "launchDays": "{days, plural, one {# day to go} other {# days to go}}",
       "launchToday": "Launching today",
       "launched": "Launched",
-      "waitingTitle": "We're waiting on you",
+      "waitingTitle": "We’re waiting on you",
       "waitingBody": "{task}. {owner} asked on {day}.",
       "waitingBodyNoOwner": "{task}.",
       "stagesTitle": "Project stages",
@@ -791,7 +818,7 @@
       "timelineShort": "Timeline",
       "now": "Now",
       "from": "From",
-      "workingTitle": "What we're working on",
+      "workingTitle": "What we’re working on",
       "workingIntro": "Open tasks in the current stage, most urgent first.",
       "viewAllTasks": "View all tasks",
       "allShort": "All",
@@ -806,19 +833,19 @@
       "today": "Today",
       "yesterday": "Yesterday",
       "team": "NortBrand team",
-      "loadFailed": "We couldn't load your project just now. Please refresh in a moment."
+      "loadFailed": "We couldn’t load your project just now. Please refresh in a moment."
     },
     "tasks": {
       "eyebrow": "Tasks",
-      "title": "Everything on your project",
-      "summary": "{total} tasks · {done} done · {inProgress} in progress · {inReview} in review · {blocked} blocked · {todo} to do",
+      "title": "Every task on your project",
+      "summary": "{total} tasks · {done} done · {inProgress} in progress · {inReview} in review · {blocked} on hold · {todo} to do",
       "summaryShort": "{total} tasks · {done} done · {waiting} waiting on you",
       "filterLabel": "Filter by status",
       "filters": {
         "all": "All",
         "in_progress": "In progress",
         "in_review": "In review",
-        "blocked": "Blocked",
+        "blocked": "On hold",
         "todo": "To do",
         "done": "Done"
       },
@@ -833,7 +860,7 @@
       "dueIn": "Due {day} · {days, plural, one {# day left} other {# days left}}",
       "duePast": "Due {day}",
       "stage": "Stage",
-      "owner": "Owner",
+      "owner": "Assigned to",
       "started": "Started",
       "dueLabel": "Due",
       "about": "About this task",
@@ -841,7 +868,7 @@
       "checklistCount": "{done} of {total}",
       "latest": "Latest on this task",
       "noOwner": "NortBrand team",
-      "notFound": "That task isn't available. It may have been moved or made private.",
+      "notFound": "That task isn’t available. It may have been moved or made private.",
       "dueToday": "Due today"
     },
     "timeline": {
@@ -861,7 +888,7 @@
       "milestoneDone": "Done",
       "milestoneUpcoming": "Upcoming",
       "milestonesEmpty": "Your team will add milestones here as the plan takes shape.",
-      "empty": "Your team is planning the stages. They'll appear here soon."
+      "empty": "Your team is planning the stages. They’ll appear here soon."
     },
     "files": {
       "eyebrow": "Files",
@@ -874,7 +901,7 @@
       },
       "groupIntro": {
         "design": "Approved designs and brand material.",
-        "documents": "Everything we agreed."
+        "documents": "Everything we’ve agreed, in writing."
       },
       "kinds": {
         "pdf": "PDF",
@@ -889,7 +916,7 @@
     },
     "updates": {
       "eyebrow": "Updates",
-      "title": "What's new",
+      "title": "What’s new",
       "intro": "Posts from your team, newest first. We post every few days.",
       "groups": {
         "today": "Today",
@@ -901,7 +928,7 @@
       "milestone": "Milestone",
       "edited": "edited",
       "linkedTask": "Task: {title}",
-      "empty": "Your team will post the first update here within one working day.",
+      "empty": "Your team will post the first update here within one business day.",
       "arrivedOne": "1 new update",
       "arrivedMany": "{count} new updates"
     }

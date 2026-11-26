@@ -95,7 +95,7 @@ test.describe("Team projects", () => {
     // The stage dates preview follows the dates.
     const preview = dialog.getByRole("list", { name: "Stage dates" });
     await expect(preview.getByRole("listitem")).toHaveCount(6);
-    await expect(preview).toContainText("Care");
+    await expect(preview).toContainText("Support");
 
     const { violations } = await new AxeBuilder({ page })
       .include("[role=dialog]")

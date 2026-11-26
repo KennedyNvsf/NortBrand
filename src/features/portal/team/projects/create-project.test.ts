@@ -83,7 +83,7 @@ describe("createProject", () => {
       "Development",
       "Review",
       "Launch",
-      "Care",
+      "Support",
     ]);
     // Emails are normalised and de-duplicated; existing accounts are reused.
     expect(project?.clients).toEqual([

@@ -62,7 +62,7 @@ export type SettingsFieldErrors = {
   stages?: Record<number, { name?: SettingsError; weeks?: SettingsError }>;
 };
 
-/** One or more working stages, then Launch, then Care; names unique (any case). */
+/** One or more working stages, then Launch, then the after stage (Support); names unique (any case). */
 export function templateProblem(
   stages: readonly TemplateStage[],
 ): "templateInvalid" | "stageNamesRepeat" | null {

@@ -19,7 +19,7 @@ type BrandPanelProps = {
   eyebrow: string;
   title: ReactNode;
   body: string;
-  /** Stage names for the mini tracker, Discovery → Care. */
+  /** Stage names for the mini tracker, Discovery → Support. */
   stages: readonly string[];
   /** The stage shown as current in the illustration. */
   currentStage?: number;

@@ -521,7 +521,7 @@ function NumberSelect({
 
 /**
  * "Edit template" (not drawn in TM-13): rename stages, set working stages' weeks, add,
- * remove and reorder working stages. Launch and Care stay last and have no duration.
+ * remove and reorder working stages. Launch and Support stay last and have no duration.
  */
 function TemplateEditor({
   stages,

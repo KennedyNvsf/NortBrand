@@ -33,7 +33,7 @@ function nextMonth(iso: string): string {
 
 /**
  * The months the Gantt shows: from the first stage's month to the month after the last
- * known date (the launch, or the last stage end), so an open-ended "Care" has room.
+ * known date (the launch, or the last stage end), so an open-ended "Support" has room.
  */
 export function timelineSpan(
   stages: readonly PortalStage[],

@@ -1,6 +1,6 @@
 # About page
 
-**Covers:** #11. **Design source:** Figma 07 — About (`300:2`): desktop `300:3`, tablet
+**Covers:** #11, #77 (How we work). **Design source:** Figma 07 — About (`300:2`): desktop `300:3`, tablet
 `377:76`, mobile `377:259`.
 
 ## 1. What we built
@@ -12,6 +12,7 @@ JavaScript of its own):
 Hero            centred eyebrow · H1 with "same care" underlined · intro paragraph
 Our story       heading | red-bar statement · intro · 01–04 list · outro with bold words
 Our principle   two-line headline (second line indented) · paragraph on the story column
+How we work     heading | intro · four commitments, 2 × 2 (#77, no Figma frame)
 CTA band        About headline ("your business" in red) + subtext
 ```
 
@@ -22,7 +23,7 @@ There is no imagery on this page in Figma, so there are no placeholders.
 ```
 src/app/[locale]/(site)/about/page.tsx                 composes sections, metadata
 src/app/[locale]/(site)/about/_components/
-   about-hero.tsx · about-story.tsx · about-principle.tsx
+   about-hero.tsx · about-story.tsx · about-principle.tsx · about-commitments.tsx
 src/components/site/highlight.tsx                      + emphasisTags (<strong>)
 src/app/globals.css                                    + text-intro type role
 ```
@@ -66,6 +67,22 @@ half-sentences, the message marks the line with a tag:
 `<indent>` renders `md:block md:pl-12 lg:pl-22.5`. On mobile it stays inline, so the
 sentence flows as one line, as in the mobile frame.
 
+### `about-commitments.tsx` (#77)
+
+The final copy added "How we work" (`About.commitments`): an eyebrow, a title with
+"count on" underlined, an intro and four commitments (a first conversation, a written
+proposal, the client area, aftercare). Figma has no frame for it, so:
+
+- **It reuses Our Story's layout and tokens** rather than inventing a new one: the
+  360 px heading column beside the text column on desktop, stacked below, and the same
+  top-border list, 2 × 2 from tablet. Nothing new enters the design system; the missing
+  frame is logged in `docs/tech-debt.md`.
+- **An unordered list with an h3 per commitment.** Unlike Our Story's points, these
+  aren't a sequence, so there are no 01–04 numbers. Each title is a real heading, so a
+  screen-reader user can jump between them, and the outline stays H1 → H2 → H3.
+- It sits after Our principle and before the CTA band: the page moves from why the
+  studio exists to what a client gets, then asks for the call.
+
 ### `emphasisTags`
 
 `<strong>` in messages becomes SemiBold `text-text-primary` inside muted paragraphs
@@ -77,4 +94,4 @@ emphasis is also semantic.
 - `tests/e2e/routes.ts`: About joins the page harness (axe, one H1, lang, canonical,
   hreflang, no overflow at 390), in EN and PT, on desktop and mobile.
 - `tests/e2e/about.spec.ts`: hero H1, the four story points in order, the principle
-  heading and the CTA headline.
+  heading and the CTA headline; the four commitments as h3s, in order (#77).

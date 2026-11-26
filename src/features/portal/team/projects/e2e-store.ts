@@ -29,7 +29,7 @@ const projects: TeamProject[] = [
       ["Development", false],
       ["Review", false],
       ["Launch", false],
-      ["Care", false],
+      ["Support", false],
     ].map(([name, completed], index) => ({
       id: `00000000-0000-4000-c000-00000000e2e${String(index)}`,
       position: index + 1,
