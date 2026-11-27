@@ -27,7 +27,7 @@ test.describe("site footer", () => {
 
     await expect(services.getByRole("link")).toHaveCount(5);
     await expect(
-      services.getByRole("link", { name: "Web Design" }),
+      services.getByRole("link", { name: "UX/UI & Brand Design" }),
     ).toHaveAttribute("href", "/en/services#web-design");
   });
 

@@ -202,7 +202,7 @@ test.describe("what reaches analytics", () => {
     await card.getByLabel("Name").fill("Maria Costa");
     await card.getByLabel("Email").fill("maria@studio.pt");
     await card.getByRole("combobox", { name: "I’m interested in" }).click();
-    await page.getByRole("option", { name: "Web Design" }).click();
+    await page.getByRole("option", { name: "UX/UI & Brand Design" }).click();
     await card
       .getByLabel("Tell us about your project")
       .fill("A booking website for our clinic, please.");

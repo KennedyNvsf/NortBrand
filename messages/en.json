@@ -1,12 +1,12 @@
 {
   "Metadata": {
     "siteName": "NortBrand",
-    "homeTitle": "NortBrand — Web design studio in Portugal for small businesses",
-    "homeDescription": "Websites for local and service-based businesses: clear, fast and made to bring in enquiries. Book a free consultation, in English or Portuguese.",
-    "servicesTitle": "Web design, development and content services",
-    "servicesDescription": "Web design, web development, content writing, social media management and website maintenance for local and service-based businesses.",
+    "homeTitle": "NortBrand — Websites, apps & software studio in Portugal",
+    "homeDescription": "Websites, apps, custom software and branding for businesses of every size: clear, fast and built to grow. Book a free consultation, in English or Portuguese.",
+    "servicesTitle": "UX/UI design, development and content services",
+    "servicesDescription": "UX/UI and brand design, web, app and software development, content writing, social media management, plus maintenance and support for businesses of every size.",
     "aboutTitle": "About",
-    "aboutDescription": "NortBrand designs digital work for small businesses with the same care they give their own products and services.",
+    "aboutDescription": "NortBrand designs and builds digital products with the same care our clients give their own products and services.",
     "contactTitle": "Contact",
     "contactDescription": "Book a free 30-minute consultation with NortBrand. Tell us about your business and we’ll reply within one business day.",
     "privacyTitle": "Privacy Policy",
@@ -19,7 +19,7 @@
     "newsletterUnsubscribeTitle": "Unsubscribe",
     "newsletterUnsubscribeDescription": "Stop receiving the NortBrand newsletter.",
     "blogTitle": "Blog",
-    "blogDescription": "Ideas on design, branding and building websites that work, from the NortBrand studio.",
+    "blogDescription": "Ideas on design, branding and building digital products that work, from the NortBrand studio.",
     "portalTitle": "Track your project",
     "portalDescription": "Sign in to follow your NortBrand project: stages, tasks, files and updates."
   },
@@ -43,7 +43,7 @@
     "menuTitle": "Menu"
   },
   "Footer": {
-    "tagline": "NortBrand is a web design and digital product studio in Portugal, working with local and service-based businesses at home and abroad.",
+    "tagline": "NortBrand is a digital studio in Portugal that designs and builds websites, apps and software for businesses of every size, at home and abroad.",
     "services": "Services",
     "company": "Company",
     "follow": "Follow us",
@@ -54,17 +54,17 @@
     "cookies": "Cookie settings"
   },
   "ServiceNames": {
-    "webDesign": "Web Design",
-    "webDevelopment": "Web Development",
+    "webDesign": "UX/UI & Brand Design",
+    "webDevelopment": "Web, App & Software Development",
     "contentWriting": "Content Writing",
     "socialMedia": "Social Media Management",
-    "maintenance": "Website Maintenance"
+    "maintenance": "Maintenance & Support"
   },
   "ServiceSummaries": {
-    "webDesign": "Clean, modern interfaces built around your business and your customers — not a template with your logo on it.",
-    "webDevelopment": "Fast, reliable builds with real product architecture underneath, ready to grow with you.",
+    "webDesign": "Interfaces for websites, apps and software, plus logos and social media posts — designed around your users, not a template.",
+    "webDevelopment": "Websites, web apps, mobile apps and custom software — fast, reliable and built on solid foundations, ready to grow with you.",
     "contentWriting": "Clear, on-brand copy that explains what you do and why it matters — without the filler.",
-    "socialMedia": "Consistent, on-brand content that keeps your business visible between projects.",
+    "socialMedia": "Planned, on-brand posts that keep your business visible and remembered.",
     "maintenance": "Ongoing updates, monitoring and small fixes, so your site keeps working as hard as you do."
   },
   "CtaBand": {
@@ -82,9 +82,9 @@
     "label": "Limited offer",
     "until": "Ends 31 Dec",
     "offer": "Free",
-    "offerLabel": "Website wireframe",
-    "title": "A <red>free wireframe</red><br></br>for your new website.",
-    "body": "Book a free consultation by 31 December. If you accept our proposal, we design your wireframe, the page-by-page plan of your new site, free of charge.",
+    "offerLabel": "Wireframe for your project",
+    "title": "A <red>free wireframe</red><br></br>for your next project.",
+    "body": "Book a free consultation by 31 December. If you accept our proposal, we design your wireframe, the screen-by-screen plan of your website, app or software, free of charge.",
     "terms": "For consultations booked by 31 December 2026. The wireframe is free once you accept your project proposal. New projects only.",
     "dismiss": "Not now",
     "close": "Close the offer"
@@ -92,8 +92,8 @@
   "Home": {
     "hero": {
       "eyebrow": "A Digital Branding Experience",
-      "title": "Websites built like <green>products</green>, not brochures.",
-      "lead": "We design and build modern websites, landing pages and digital products for local and service-based businesses — functional from day one, built to grow.",
+      "title": "Websites and apps built like <green>products</green>, not brochures.",
+      "lead": "From brand identity to custom software, we design and build websites, apps and digital products for businesses of every size — functional from day one, built to grow.",
       "secondary": "View Services"
     },
     "why": {
@@ -151,8 +151,8 @@
   "Services": {
     "hero": {
       "eyebrow": "Services",
-      "title": "What your business <red>needs</red> to show up <green>online</green>.",
-      "lead": "From your first landing page to ongoing maintenance — pick what you need now, add the rest as you grow.",
+      "title": "What your business <red>needs</red> to grow <green>online</green>.",
+      "lead": "From a logo to a full software platform — pick what you need now, add the rest as you grow.",
       "quote": "Good design isn’t decoration. It’s how people decide whether to trust you.",
       "quoteSource": "On design"
     },
@@ -171,35 +171,35 @@
     },
     "items": {
       "webDesign": {
-        "title": "Interfaces people actually <greenUnderline>enjoy</greenUnderline> using",
-        "details": "Clean, modern interfaces built around your business and your customers — not a template with your logo on it. Every layout decision ties back to what you actually need people to do.",
+        "title": "Interfaces people enjoy, brands they <greenUnderline>remember</greenUnderline>",
+        "details": "Clear, modern interfaces for websites, apps and software, designed around your users — not a template with your logo on it. Plus logos and social media posts that match.",
         "included": {
-          "first": "Custom visual design",
-          "second": "Mobile-first layouts",
+          "first": "UX/UI for websites, apps and software",
+          "second": "Logos and social media graphics",
           "third": "Up to 3 rounds of revisions"
         }
       },
       "webDevelopment": {
         "title": "Built to perform, built to <greenUnderline>last</greenUnderline>",
-        "details": "Fast, reliable builds with real product architecture underneath, ready to grow with you — from a simple landing page to a full booking system.",
+        "details": "Websites, web apps, mobile apps and custom software, fast and reliable with real product architecture underneath — from a focused landing page to a full platform, ready to grow with you.",
         "included": {
-          "first": "Responsive development",
-          "second": "Performance optimisation",
-          "third": "Clean, maintainable code"
+          "first": "Websites and web apps",
+          "second": "Mobile apps for iOS and Android",
+          "third": "Custom software with clean, maintainable code"
         }
       },
       "contentWriting": {
         "title": "Words that do their <greenUnderline>job</greenUnderline>",
-        "details": "Clear, on-brand copy that explains what you do and why it matters — without the filler. Every page says exactly what it needs to, and nothing more.",
+        "details": "Clear, on-brand copy for websites, apps and social media, in Portuguese and English — written for each market, not translated word for word.",
         "included": {
-          "first": "Website copywriting",
+          "first": "Website and app copy, in Portuguese and English",
           "second": "Tone & voice guidance",
           "third": "SEO-aware structure"
         }
       },
       "socialMedia": {
         "title": "Stay visible, stay <greenUnderline>consistent</greenUnderline>",
-        "details": "Consistent, on-brand content that keeps your business visible between projects — so people don’t forget you the moment they leave your site.",
+        "details": "Planned, on-brand posts that keep your business visible and remembered — long after people leave your site.",
         "included": {
           "first": "Content calendar & planning",
           "second": "Post design & copy",
@@ -211,7 +211,7 @@
         "details": "Ongoing updates, monitoring and small fixes, so your site keeps working as hard as you do — without you having to think about it.",
         "included": {
           "first": "Regular updates & backups",
-          "second": "Uptime monitoring",
+          "second": "Ongoing project monitoring",
           "third": "Priority support for fixes"
         }
       }
@@ -226,8 +226,8 @@
           "body": "Your logo, colours and typography aren’t decoration — they’re the visual shorthand people use to recognise and trust you before they’ve read a single word."
         },
         "visualDesign": {
-          "title": "Colour & visual design",
-          "body": "Colour, type and spacing do quiet work: they guide the eye, signal what matters and make your business feel the same everywhere it shows up."
+          "title": "UX & visual design",
+          "body": "Colour, type, spacing and clear flows do quiet work: they guide the eye, make every step easy and give your business the same look everywhere it shows up."
         },
         "contentStrategy": {
           "title": "Content strategy",
@@ -248,7 +248,7 @@
     "hero": {
       "eyebrow": "About NortBrand",
       "title": "Digital work, designed with the <greenUnderline>same care</greenUnderline>.",
-      "lead": "NortBrand started with a simple belief: small businesses deserve digital experiences that are designed with the same care as the products and services they provide."
+      "lead": "NortBrand started with a simple belief: every business, big or small, deserves digital products designed with the same care it puts into its own work."
     },
     "story": {
       "eyebrow": "Our story",
@@ -375,8 +375,8 @@
       "link": "Send us a message",
       "items": {
         "cost": {
-          "question": "How much does a website cost?",
-          "answer": "It depends on scope. A focused landing page costs far less than a multi-page build with booking features. After a short call we send a clear, itemised proposal, with no hidden fees."
+          "question": "How much does a project cost?",
+          "answer": "It depends on scope. A focused landing page costs far less than a custom app or software platform. After a short call we send a clear, itemised proposal, with no hidden fees."
         },
         "timeline": {
           "question": "How long does a project take?",
@@ -695,7 +695,7 @@
   "Blog": {
     "eyebrow": "Blog",
     "title": "Ideas on design, branding and building things that work.",
-    "lead": "Notes from the studio on what actually makes a difference for local and service-based businesses.",
+    "lead": "Notes from the studio on what actually makes a difference for businesses online.",
     "featuredLabel": "Featured article",
     "readMore": "Read More",
     "byline": "{author} · {date}",

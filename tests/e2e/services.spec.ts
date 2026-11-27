@@ -125,7 +125,7 @@ test.describe("services page", () => {
     await page.goto("/en/services");
     const { trigger, details } = await openDetails(
       page,
-      "Web Development",
+      "Web, App & Software Development",
       copy("en", "Services.items.webDevelopment.title"),
     );
     await expect(details).toHaveAttribute(
@@ -159,7 +159,7 @@ test.describe("services page", () => {
     await page.goto("/en/services");
     const { details } = await openDetails(
       page,
-      "Website Maintenance",
+      "Maintenance & Support",
       "Peace of Mind, Built In",
     );
     await details.getByRole("button", { name: "Close" }).last().click();
@@ -173,7 +173,7 @@ test.describe("services page", () => {
     await page.goto("/en/services");
     const { details } = await openDetails(
       page,
-      "Web Design",
+      "UX/UI & Brand Design",
       copy("en", "Services.items.webDesign.title"),
     );
     const mark = details.locator("svg path[stroke]").first();
@@ -334,7 +334,7 @@ test.describe("services page", () => {
     await page.keyboard.press("Escape");
     await expect(card.getByRole("button")).toHaveCount(1);
     await expect(card.getByRole("button")).toHaveAccessibleName(
-      "What’s included: Website Maintenance",
+      "What’s included: Maintenance & Support",
     );
   });
 
@@ -443,7 +443,7 @@ test.describe("details panel with reduced motion", () => {
     await page.goto("/en/services");
     const { details } = await openDetails(
       page,
-      "Web Design",
+      "UX/UI & Brand Design",
       copy("en", "Services.items.webDesign.title"),
     );
     const mark = details.locator("svg path[stroke]").first();

@@ -162,7 +162,7 @@ launch:
    portal sessions after 30 days itself, with a signed marker cookie
    (`src/features/portal/auth/session-marker.ts`).
 4. **Authentication → Emails → Templates → Magic Link:** subject
-   `NortBrand: your sign-in code / o seu código de acesso`, body: the whole of
+   `NortBrand: your sign-in code / o teu código de acesso`, body: the whole of
    `supabase/templates/portal-code.html` (generated from React Email; EN or PT by the
    user's `locale` metadata). Paste it again whenever that file changes.
 5. **Authentication → Emails → SMTP settings:** enable custom SMTP with Resend

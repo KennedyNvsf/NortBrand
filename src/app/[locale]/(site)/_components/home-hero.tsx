@@ -30,7 +30,7 @@ export async function HomeHero() {
       className="flex min-h-[calc(100svh-var(--header-height))] items-center bg-bg-surface py-14 md:py-18 lg:py-2xl"
     >
       <div className="container-page flex flex-col items-center gap-5 text-center lg:gap-xl">
-        <p {...enterItem(0)} className="text-overline text-action-secondary">
+        <p {...enterItem(0)} className="text-overline text-text-accent">
           {t("eyebrow")}
         </p>
         <h1

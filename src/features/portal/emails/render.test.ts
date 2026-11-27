@@ -162,7 +162,7 @@ describe("renderPortalDigest", () => {
       locale: "pt",
     });
     expect(email.html).toContain('lang="pt"');
-    expect(email.html).toContain("À sua espera");
+    expect(email.html).toContain("À tua espera");
     expect(email.subject).toBe("Café website: as novidades de hoje");
   });
 });
