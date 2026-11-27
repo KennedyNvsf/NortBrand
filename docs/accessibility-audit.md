@@ -10,22 +10,28 @@ of each check. Target: WCAG 2.2 AA plus the project rules in CLAUDE.md › Acces
 | Screen readers                | —          | —                                | **Pending**, needs a person (§ 5)                        |
 | WebKit engine (§ 4.1)         | 2026-11-07 | `main` at `76576f9` (after #105) | Done. No open failure; keyboard limited (§ 4.1)          |
 | Real Safari (iOS)             | —          | —                                | **Pending**, needs an iPhone (§ 5)                       |
-| Rerun with final copy + legal | —          | after #77 and #78                | **Pending** (§ 5)                                        |
+| Rerun with final copy + legal | 2026-11-27 | `main` at `9646605` (after #175) | Done (§ 3a). Chromium: no failure. WebKit: one, #177     |
 | Portal (automated, § 6)       | 2026-11-22 | `main` at `1a56354` + #143       | Done. One failure fixed in #143; no open failure         |
 
 #84 stays open until the pending passes are recorded here.
 
 ## 1. Summary
 
-- **Every page passes every automated check** at 1440, 768, 390 and 320, in EN and PT
-  (28 pages × 4 widths = 112 page checks).
+- **Every page passes every automated check** at 1440, 768, 390 and 320, in EN and PT.
+  The final-content rerun (§ 3a) covers 30 pages × 4 widths = 120 page checks in
+  Chromium, with the final English, the final (informal) Portuguese and the reviewed
+  legal text.
+- **One open failure, ticketed:** #177. In WebKit (Safari's engine), some controls that
+  take keyboard focus at the edge of the screen end up entirely under the sticky header or
+  the mobile bottom bar (WCAG 2.4.11 Focus Not Obscured, AA). Chromium passes (§ 4.1).
 - **Three failures from the early pass are fixed:**
 
-  | Ticket | Failure                                                   | WCAG                        |
-  | ------ | --------------------------------------------------------- | --------------------------- |
-  | #93    | Services tab panel took focus with no visible ring        | 2.4.7 Focus Visible (AA)    |
-  | #94    | The 404 showed the Home page's title                      | 2.4.2 Page Titled (A)       |
-  | #95    | Logo links, chips and short footer links were under 44 px | Project rule (2.5.8 passes) |
+  | Ticket | Failure                                                       | WCAG                                 |
+  | ------ | ------------------------------------------------------------- | ------------------------------------ |
+  | #93    | Services tab panel took focus with no visible ring            | 2.4.7 Focus Visible (AA)             |
+  | #94    | The 404 showed the Home page's title                          | 2.4.2 Page Titled (A)                |
+  | #95    | Logo links, chips and short footer links were under 44 px     | Project rule (2.5.8 passes)          |
+  | #177   | Keyboard focus hidden under the header or bottom bar (WebKit) | 2.4.11 Focus Not Obscured (AA), open |
 
 - **One accepted exception:** the Services hero video loops with no pause control, which
   fails WCAG 2.2.2 Pause, Stop, Hide (A). It is the lead's decision (#80 closed as not
@@ -44,9 +50,10 @@ in each locale, taken from the sitemap.
 | Services                  | `/[locale]/services`                                       |                         |
 | About                     | `/[locale]/about`                                          |                         |
 | Contact                   | `/[locale]/contact`                                        | Consultation form       |
-| Privacy Policy, Terms     | `/[locale]/legal/privacy`, `/legal/terms`                  | Draft legal text        |
+| Privacy Policy, Terms     | `/[locale]/legal/privacy`, `/legal/terms`                  | Reviewed text (#78)     |
 | Newsletter confirm, unsub | `/[locale]/newsletter/confirm`, `/unsubscribe`             | noindex                 |
 | Blog                      | `/[locale]/blog`                                           |                         |
+| Client Portal (sign-in)   | `/[locale]/portal`                                         | noindex (§ 3a only)     |
 | 404                       | `/[locale]/no-such-page`, `/[locale]/blog/no-such-post`    | noindex, status 404     |
 | Blog posts 1–3            | `/en/blog/…`, `/pt/blog/pt-…` (the three translated posts) | Test content (fixtures) |
 
@@ -97,6 +104,31 @@ width, ✗ = fail.
 
 Also clean on every page and width: no `<img>` without `alt`, and no skipped heading levels.
 
+## 3a. Rerun with the final content (2026-11-27)
+
+`main` at `9646605`: the final English and Portuguese (#77, #175; Portuguese now uses the
+informal "tu"), the reviewed Privacy Policy and Terms (#78), the About "How we work"
+section and the renamed Client Portal entry. Same method and checks as § 4, on every
+route in `tests/e2e/routes.ts` (now including the Client Portal sign-in) in EN and PT,
+plus the three translated posts per locale: 30 pages.
+
+| Engine   | Widths              | Page checks | Result                                                                    |
+| -------- | ------------------- | ----------- | ------------------------------------------------------------------------- |
+| Chromium | 1440, 768, 390, 320 | 120         | **All pass**: every check in § 3's table, on every page and width         |
+| WebKit   | 1440, 390           | 60          | All pass except keyboard: Safari's Tab model (§ 4.1) and **#177** (below) |
+
+- Chromium keyboard: the skip link is the first stop on every page; every stop shows a
+  ring and is on screen; no trap. 12–46 stops per page at 1440, 5–39 at 390.
+- The § 3 table above holds for this rerun as well, with the Client Portal sign-in (EN,
+  PT) added: status 200, noindex, and every other column ✓.
+- **#177 (WebKit):** with focus moved by keyboard, WebKit scrolls the control only just
+  into view. At the top it lands under the sticky header (Contact's Name and Email; the
+  blog search and sort controls, 1440 and 390); at the bottom on mobile it lands under the
+  fixed bar (the Sticky CTA, or the promo card in its slot: Services' "What's included"
+  triggers, the footer's Cookie settings, 390). The check: no sampled point of the focused
+  control reaches `elementFromPoint`. Chromium scrolls further and has no such stop. The
+  page sets no `scroll-padding`; the fix is tracked in #177.
+
 ## 4. How each check was run
 
 A temporary Playwright script ran against the production build (`pnpm build`, then
@@ -143,17 +175,20 @@ inside Safari) on Windows, at 1440 and 390, on all 28 pages: 56 page checks.
   between buttons and form fields and skips links. (People who browse by keyboard turn on
   "Press Tab to highlight each item", or use Option+Tab.) In this WebKit build Option+Tab
   doesn't reach links either, so link-by-link navigation was checked in Chromium only.
+- **Final-content rerun (§ 3a):** the same result, plus #177, found with a stricter
+  check than in November: whether the focused control is actually visible, not only
+  inside the viewport.
 - **What WebKit can't show:** iOS Safari's own behaviour (the bottom toolbar, safe areas,
   zoom on input focus) and VoiceOver. Those stay on the iPhone check in § 5.
 
 ## 5. Still to do before #84 closes
 
-| Item                         | Who                    | What                                                                                                                                    |
-| ---------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| VoiceOver (iOS)              | a person, on an iPhone | Home, Services (tabs), Contact (form: errors, send failed, success), Blog (filters), one post, mobile menu, cookie banner               |
-| NVDA (Windows, Firefox)      | a person               | The same pages                                                                                                                          |
-| Real Safari (iOS)            | a person, on an iPhone | The same pages: layout under the toolbar and safe areas, no zoom when a form field is focused, the menu and cookie sheet. Engine: § 4.1 |
-| Rerun with the final content | Claude, after #77/#78  | This automated pass again, with the final English copy, the final Portuguese and the final legal text                                   |
+| Item                    | Who                    | What                                                                                                                                    |
+| ----------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| VoiceOver (iOS)         | a person, on an iPhone | Home, Services (tabs), Contact (form: errors, send failed, success), Blog (filters), one post, mobile menu, cookie banner               |
+| NVDA (Windows, Firefox) | a person               | The same pages                                                                                                                          |
+| Real Safari (iOS)       | a person, on an iPhone | The same pages: layout under the toolbar and safe areas, no zoom when a form field is focused, the menu and cookie sheet. Engine: § 4.1 |
+| #177                    | Claude                 | Fix and verify in WebKit; then mark it fixed in § 1                                                                                     |
 
 For each screen-reader pass, record here: landmarks and headings read in order; every
 control has a name and role; form errors are announced; the menu, dialog and banner move

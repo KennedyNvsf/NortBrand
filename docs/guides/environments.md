@@ -195,6 +195,8 @@ removing teammates refuse to run. Then create each project's first admin
 The local stack gets the same settings from `supabase/config.toml`. Nothing here costs
 money on the current plans.
 
+**Code email, informal Portuguese (2026-11-27, lead's approval, #175):** the regenerated `portal-code.html` and the new subject `NortBrand: your sign-in code / o teu código de acesso` set as the Magic link or OTP template on `nortbrand-dev` and `nortbrand-prod`, from the merged file (SHA-256 checked); confirmed on prod after a reload.
+
 **Stage rename and code email (2026-11-26, lead's approval, #77):** `20261126130000_portal_rename_care_stage` pushed to `nortbrand-dev`, then `nortbrand-prod` (dry run first; history 17/17 on both); checked by query: the template's stage after launch is "Support" on both. The regenerated `supabase/templates/portal-code.html` (curly apostrophes, the 15-minute pause line) was set as the Magic link or OTP template on both projects, from the committed file (SHA-256 checked), and confirmed after a reload. The CLI is linked back to `nortbrand-dev`.
 
 **Archive and delete (2026-11-22, lead's approval, recorded in #143):** `20261126120000_portal_archive_delete_projects` (#165) pushed to `nortbrand-dev` once PR #167 was open and to `nortbrand-prod` right after it merged (dry run first both times; history 16/16 on both). Checked by query on both: `portal_set_project_status`, `portal_delete_project` and `private.can_edit_project` are SECURITY DEFINER, `authenticated` may execute them and `anon` may not; `authenticated` can no longer update `projects.status` (other columns still can); 9 team write policies use `can_edit_project`. The CLI is linked back to `nortbrand-dev`.
