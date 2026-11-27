@@ -9,10 +9,12 @@ const isMobile = (page: Page) => (page.viewportSize()?.width ?? 0) < 768;
 test.describe("home page", () => {
   test("hero has the H1 and both calls to action", async ({ page }) => {
     await page.goto("/en");
-    const hero = page.getByRole("region", { name: /Websites built like/ });
+    const hero = page.getByRole("region", {
+      name: /Websites and apps built like/,
+    });
 
     await expect(hero.getByRole("heading", { level: 1 })).toHaveText(
-      "Websites built like products, not brochures.",
+      "Websites and apps built like products, not brochures.",
     );
     await expect(
       hero.getByRole("link", { name: "Book a Consultation" }),

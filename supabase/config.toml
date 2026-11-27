@@ -250,7 +250,7 @@ otp_expiry = 600
 
 # The portal's sign-in code (#131): generated from React Email, EN/PT by user_metadata.locale.
 [auth.email.template.magic_link]
-subject = "NortBrand: your sign-in code / o seu código de acesso"
+subject = "NortBrand: your sign-in code / o teu código de acesso"
 content_path = "./supabase/templates/portal-code.html"
 
 # Uncomment to customize email template

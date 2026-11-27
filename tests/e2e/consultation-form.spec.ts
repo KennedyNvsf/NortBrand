@@ -32,7 +32,10 @@ async function fillValid(card: Locator, name: string) {
   await card.getByLabel("Email").fill("Maria@Studio.pt");
   await card.getByLabel("Phone (optional)").fill("+351 912 345 678");
   await card.getByRole("combobox", { name: "I’m interested in" }).click();
-  await card.page().getByRole("option", { name: "Web Design" }).click();
+  await card
+    .page()
+    .getByRole("option", { name: "UX/UI & Brand Design" })
+    .click();
   await card
     .getByLabel("Tell us about your project")
     .fill(

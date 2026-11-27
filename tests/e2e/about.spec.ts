@@ -12,7 +12,7 @@ test.describe("about page", () => {
     await expect(hero.getByRole("heading", { level: 1 })).toHaveText(
       "Digital work, designed with the same care.",
     );
-    await expect(hero).toContainText("small businesses deserve");
+    await expect(hero).toContainText("every business, big or small");
   });
 
   test("our story lists the four things we understand first, in order", async ({

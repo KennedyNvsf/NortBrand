@@ -21,7 +21,7 @@ import { PortalCodeEmail } from "./portal-code";
 export const SUPABASE_TOKEN = "{{ .Token }}";
 
 /** One subject for both languages: Supabase's subject line can't branch reliably. */
-export const PORTAL_CODE_SUBJECT = `${site.name}: your sign-in code / o seu código de acesso`;
+export const PORTAL_CODE_SUBJECT = `${site.name}: your sign-in code / o teu código de acesso`;
 
 async function renderLocale(locale: Locale): Promise<string> {
   const t = createTranslator({

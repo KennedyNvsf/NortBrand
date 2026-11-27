@@ -1,27 +1,27 @@
 {
   "Metadata": {
     "siteName": "NortBrand",
-    "homeTitle": "NortBrand — Criação de sites e produtos digitais para empresas",
-    "homeDescription": "Desenhamos e desenvolvemos sites para negócios locais e empresas de serviços: claros, rápidos e pensados para gerar contactos. Marque uma conversa gratuita.",
-    "servicesTitle": "Criação de sites, webdesign e conteúdos",
-    "servicesDescription": "Webdesign, desenvolvimento web, redação de conteúdos, gestão de redes sociais e manutenção de sites para negócios locais e empresas de serviços.",
+    "homeTitle": "NortBrand — Criação de sites, apps e software à medida",
+    "homeDescription": "Sites, aplicações, software e branding para empresas de todas as dimensões: claros, rápidos e preparados para crescer. Marca uma conversa gratuita.",
+    "servicesTitle": "Criação de sites, apps, design e conteúdos",
+    "servicesDescription": "Design UX/UI e branding, desenvolvimento web, apps e software, conteúdos, redes sociais, manutenção e suporte para empresas de qualquer dimensão.",
     "aboutTitle": "Sobre nós",
-    "aboutDescription": "A NortBrand cria a presença digital de pequenas empresas com o mesmo cuidado que estas dedicam aos seus produtos e serviços.",
+    "aboutDescription": "A NortBrand desenha e desenvolve produtos digitais com o mesmo cuidado que os nossos clientes dedicam aos seus produtos e serviços.",
     "contactTitle": "Contactos",
-    "contactDescription": "Marque uma conversa gratuita de 30 minutos com a NortBrand. Fale-nos do seu negócio e respondemos no prazo de um dia útil.",
+    "contactDescription": "Marca uma conversa gratuita de 30 minutos com a NortBrand. Fala-nos do teu negócio e respondemos no prazo de um dia útil.",
     "privacyTitle": "Política de Privacidade",
-    "privacyDescription": "Que dados pessoais a NortBrand recolhe através deste site, porquê e que escolhas tem ao seu dispor.",
+    "privacyDescription": "Que dados pessoais a NortBrand recolhe através deste site, porquê e que escolhas tens ao teu dispor.",
     "termsTitle": "Termos de Utilização",
     "termsDescription": "Os termos aplicáveis à utilização do site da NortBrand.",
     "notFoundTitle": "Página não encontrada",
     "newsletterConfirmTitle": "Confirmar subscrição",
-    "newsletterConfirmDescription": "Confirme a sua subscrição da newsletter da NortBrand.",
+    "newsletterConfirmDescription": "Confirma a tua subscrição da newsletter da NortBrand.",
     "newsletterUnsubscribeTitle": "Cancelar subscrição",
-    "newsletterUnsubscribeDescription": "Deixe de receber a newsletter da NortBrand.",
+    "newsletterUnsubscribeDescription": "Deixa de receber a newsletter da NortBrand.",
     "blogTitle": "Blog",
-    "blogDescription": "Ideias sobre design, marca e sites que funcionam, escritas pelo estúdio NortBrand.",
+    "blogDescription": "Ideias sobre design, marca e produtos digitais que funcionam, escritas pelo estúdio NortBrand.",
     "portalTitle": "Área de cliente",
-    "portalDescription": "Inicie sessão para acompanhar o seu projeto NortBrand: etapas, tarefas, ficheiros e atualizações."
+    "portalDescription": "Inicia sessão para acompanhar o teu projeto NortBrand: etapas, tarefas, ficheiros e atualizações."
   },
   "Common": {
     "skipToContent": "Saltar para o conteúdo",
@@ -43,10 +43,10 @@
     "menuTitle": "Menu"
   },
   "Footer": {
-    "tagline": "A NortBrand é um estúdio de webdesign e produtos digitais para negócios locais e empresas de serviços.",
+    "tagline": "A NortBrand é um estúdio digital em Portugal que desenha e desenvolve sites, aplicações e software para empresas de qualquer dimensão.",
     "services": "Serviços",
     "company": "Empresa",
-    "follow": "Siga-nos",
+    "follow": "Segue-nos",
     "rights": "© {year} NortBrand · Feito em Portugal",
     "legal": "Legal",
     "privacy": "Política de Privacidade",
@@ -54,23 +54,23 @@
     "cookies": "Definições de cookies"
   },
   "ServiceNames": {
-    "webDesign": "Webdesign",
-    "webDevelopment": "Desenvolvimento web",
+    "webDesign": "UX/UI & branding",
+    "webDevelopment": "Desenvolvimento web, apps e software",
     "contentWriting": "Redação de conteúdos",
     "socialMedia": "Gestão de redes sociais",
-    "maintenance": "Manutenção de sites"
+    "maintenance": "Manutenção e suporte"
   },
   "ServiceSummaries": {
-    "webDesign": "Interfaces limpas e modernas, pensadas para o seu negócio e para os seus clientes — não um template com o seu logótipo.",
-    "webDevelopment": "Sites rápidos e fiáveis, construídos sobre bases sólidas e prontos a crescer consigo.",
-    "contentWriting": "Textos claros e fiéis à sua marca, que explicam o que faz e porque é importante — sem palha.",
-    "socialMedia": "Conteúdo consistente e alinhado com a sua marca, que mantém o seu negócio visível entre projetos.",
-    "maintenance": "Atualizações, monitorização e pequenas correções contínuas, para que o seu site nunca deixe de trabalhar por si."
+    "webDesign": "Interfaces de sites, apps e software, logótipos e posts para redes sociais — tudo pensado para quem o usa.",
+    "webDevelopment": "Sites, aplicações web e móveis e software à medida — rápidos, fiáveis e construídos sobre bases sólidas, prontos a crescer contigo.",
+    "contentWriting": "Textos claros e fiéis à tua marca, que explicam o que fazes e porque é importante — sem palha.",
+    "socialMedia": "Publicações planeadas e alinhadas com a tua marca, que mantêm o teu negócio visível e lembrado.",
+    "maintenance": "Atualizações, monitorização e pequenas correções contínuas, para que o teu site nunca deixe de trabalhar por ti."
   },
   "CtaBand": {
-    "headline": "Tem um projeto em mente? <highlight>Vamos falar</highlight>.",
-    "subtext": "Ler é um bom começo, mas falar é ainda melhor. Marque uma conversa gratuita e descubra connosco aquilo de que o seu negócio precisa.",
-    "cardText": "30 minutos. Sem pressão. Só uma conversa a sério sobre o seu projeto."
+    "headline": "Tens um projeto em mente? <highlight>Vamos falar</highlight>.",
+    "subtext": "Ler é um bom começo, mas falar é ainda melhor. Marca uma conversa gratuita e descobre connosco aquilo de que o teu negócio precisa.",
+    "cardText": "30 minutos. Sem pressão. Só uma conversa a sério sobre o teu projeto."
   },
   "StickyCta": {
     "label": "Marcar conversa gratuita",
@@ -82,24 +82,24 @@
     "label": "Oferta limitada",
     "until": "Termina a 31 dez.",
     "offer": "Grátis",
-    "offerLabel": "Wireframe do seu site",
-    "title": "Um <red>wireframe grátis</red><br></br>para o seu novo site.",
-    "body": "Marque uma conversa gratuita até 31 de dezembro. Se aceitar a nossa proposta, desenhamos sem custos o wireframe do seu novo site: o esboço de cada página.",
-    "terms": "Válido para conversas marcadas até 31 de dezembro de 2026. O wireframe é gratuito depois de aceitar a proposta do projeto. Apenas para novos projetos.",
+    "offerLabel": "Wireframe do teu projeto",
+    "title": "Um <red>wireframe grátis</red><br></br>para o teu próximo projeto.",
+    "body": "Marca uma conversa gratuita até 31 de dezembro. Se aceitares a nossa proposta, desenhamos sem custos o wireframe do teu site, aplicação ou software: o esboço de cada ecrã.",
+    "terms": "Válido para conversas marcadas até 31 de dezembro de 2026. O wireframe é gratuito depois de aceitares a proposta do projeto. Apenas para novos projetos.",
     "dismiss": "Agora não",
     "close": "Fechar a oferta"
   },
   "Home": {
     "hero": {
-      "eyebrow": "Branding digital, feito à medida",
-      "title": "Sites que são <green>produtos</green>, não folhetos.",
-      "lead": "Desenhamos e desenvolvemos sites, landing pages e produtos digitais para negócios locais e empresas de serviços — funcionais desde o primeiro dia e preparados para crescer.",
+      "eyebrow": "Feito em Portugal",
+      "title": "Software & <green>Branding</green> que Geram Resultados.",
+      "lead": "Da identidade visual ao software: desenhamos e desenvolvemos sites, aplicações e produtos digitais para empresas de todas as dimensões — funcionais desde o primeiro dia e preparados para crescer.",
       "secondary": "Ver serviços"
     },
     "why": {
       "eyebrow": "Porque é importante",
       "title": "Quem cresce mais depressa nem sempre é o <red>melhor</red>. É <underline>o mais claro</underline>.",
-      "body": "Uma marca digital forte não se resume a ter bom aspeto — é ser compreendida à primeira. Quando o site, os conteúdos e a presença online dizem a mesma coisa com clareza, as pessoas confiam mais depressa, hesitam menos e escolhem o seu negócio em vez da alternativa que está a um clique de distância.",
+      "body": "Uma marca digital forte não se resume a ter bom aspeto — é ser compreendida à primeira. Quando o site, os conteúdos e a presença online dizem a mesma coisa com clareza, as pessoas confiam mais depressa, hesitam menos e escolhem o teu negócio em vez da alternativa que está a um clique de distância.",
       "points": {
         "first": "A primeira impressão é instantânea",
         "second": "A consistência gera confiança à primeira vista",
@@ -108,16 +108,16 @@
     },
     "services": {
       "eyebrow": "O que fazemos",
-      "title": "Um <green>estúdio</green> para toda a sua presença digital.",
+      "title": "Um <green>estúdio</green> para toda a tua presença digital.",
       "learnMore": "Saber mais"
     },
     "philosophy": {
       "eyebrow": "A nossa filosofia",
       "title": "Não <red>adivinhamos</red>. <underline>Perguntamos</underline>.",
-      "body": "Todos os projetos da NortBrand começam com uma conversa a sério — sobre os seus clientes, os seus objetivos e o que significa, de facto, ter sucesso no seu negócio. É assim que garantimos que aquilo que construímos não fica só bonito: funciona.",
+      "body": "Todos os projetos da NortBrand começam com uma conversa a sério — sobre os teus clientes, os teus objetivos e o que significa, de facto, ter sucesso no teu negócio. É assim que garantimos que aquilo que construímos não fica só bonito: funciona.",
       "points": {
         "first": "Cada projeto começa com uma conversa, não com um template",
-        "second": "As decisões de design respondem aos objetivos reais do seu negócio",
+        "second": "As decisões de design respondem aos objetivos reais do teu negócio",
         "third": "O sucesso mede-se em resultados, não só na aparência"
       }
     },
@@ -127,11 +127,11 @@
       "steps": {
         "discover": {
           "title": "Descobrir",
-          "body": "Uma conversa gratuita sobre o seu negócio e objetivos, seguida de uma proposta clara: âmbito, prazos e preço."
+          "body": "Uma conversa gratuita sobre o teu negócio e objetivos, seguida de uma proposta clara: âmbito, prazos e preço."
         },
         "design": {
-          "title": "Desenhar",
-          "body": "Uma direção visual e uma estrutura claras, pensadas para os seus objetivos e afinadas com o seu feedback."
+          "title": "Design",
+          "body": "Uma direção visual e uma estrutura claras, pensadas para os teus objetivos e afinadas com o teu feedback."
         },
         "build": {
           "title": "Construir",
@@ -144,16 +144,16 @@
       }
     },
     "cta": {
-      "headline": "Vamos criar um site que <highlight>traz clientes</highlight>.",
-      "subtext": "Marque uma conversa gratuita e fale-nos daquilo de que o seu negócio precisa — sem templates nem suposições."
+      "headline": "Vamos criar algo que <highlight>traz clientes</highlight>.",
+      "subtext": "Marca uma conversa gratuita e fala-nos daquilo de que o teu negócio precisa — sem templates nem suposições."
     }
   },
   "Services": {
     "hero": {
       "eyebrow": "Serviços",
-      "title": "Cinco <red>serviços</red> para o seu negócio se destacar <green>online</green>.",
-      "lead": "Da primeira landing page à manutenção contínua — escolha o que precisa agora e acrescente o resto à medida que cresce.",
-      "quote": "Bom design não é decoração. É o que leva as pessoas a decidir se confiam em si.",
+      "title": "Cinco <red>serviços</red> para o teu negócio se destacar <green>online</green>.",
+      "lead": "Do logótipo a uma plataforma de software completa — escolhe o que precisas agora e acrescenta o resto à medida que cresces.",
+      "quote": "O bom design não é decoração. É o que faz as pessoas confiarem em ti.",
       "quoteSource": "Sobre design"
     },
     "blocks": {
@@ -163,7 +163,7 @@
       "moreDetailsLabel": "O que inclui: {name}"
     },
     "grid": {
-      "title": "Escolha um <red>serviço</red> para <indent>ver o que inclui.</indent>"
+      "title": "Escolhe um <red>serviço</red> para <indent>ver o que inclui.</indent>"
     },
     "details": {
       "position": "{current} / {total}",
@@ -171,35 +171,35 @@
     },
     "items": {
       "webDesign": {
-        "title": "Interfaces que dá <greenUnderline>gosto</greenUnderline> usar",
-        "details": "Interfaces limpas e modernas, pensadas para o seu negócio e para os seus clientes — não um template com o seu logótipo. Cada decisão de layout parte daquilo que quer que as pessoas façam.",
+        "title": "Interfaces que dão gosto de usar, marcas que <greenUnderline>ficam</greenUnderline>",
+        "details": "Interfaces claras e modernas para sites, aplicações e software, pensadas para quem as usa — não um template com o teu logótipo. E logótipos e posts para redes sociais a condizer.",
         "included": {
-          "first": "Design visual à medida",
-          "second": "Pensado primeiro para telemóvel",
+          "first": "UX/UI para sites, apps e software",
+          "second": "Logótipos e grafismos para redes sociais",
           "third": "Até 3 rondas de revisões"
         }
       },
       "webDevelopment": {
         "title": "Feito para funcionar, feito para <greenUnderline>durar</greenUnderline>",
-        "details": "Sites rápidos e fiáveis, construídos sobre bases sólidas e prontos a crescer consigo — de uma simples landing page a um sistema de marcações completo.",
+        "details": "Sites, aplicações web e móveis e software à medida, rápidos, fiáveis e construídos sobre bases sólidas — de uma landing page focada a uma plataforma completa, prontos a crescer contigo.",
         "included": {
-          "first": "Desenvolvimento responsivo",
-          "second": "Otimização de desempenho",
-          "third": "Código limpo e fácil de manter"
+          "first": "Sites e aplicações web",
+          "second": "Aplicações móveis para iOS e Android",
+          "third": "Software à medida, com código limpo e fácil de manter"
         }
       },
       "contentWriting": {
-        "title": "Palavras que <greenUnderline>trabalham</greenUnderline> por si",
-        "details": "Textos claros e fiéis à sua marca, que explicam o que faz e porque é importante — sem palha. Cada página diz exatamente o que precisa de dizer, e nada mais.",
+        "title": "Palavras que <greenUnderline>trabalham</greenUnderline> por ti",
+        "details": "Textos claros e fiéis à tua marca para sites, aplicações e redes sociais, em português e inglês — escritos para cada mercado, não traduzidos à letra.",
         "included": {
-          "first": "Textos para o site",
+          "first": "Textos para sites e aplicações, em português e inglês",
           "second": "Orientação de tom e voz",
           "third": "Estrutura pensada para SEO"
         }
       },
       "socialMedia": {
         "title": "Sempre visível, sempre <greenUnderline>consistente</greenUnderline>",
-        "details": "Conteúdo consistente e alinhado com a sua marca, que mantém o seu negócio visível entre projetos — para que ninguém se esqueça de si assim que sai do seu site.",
+        "details": "Publicações planeadas e alinhadas com a tua marca, que mantêm o teu negócio visível e lembrado — muito depois de saírem do teu site.",
         "included": {
           "first": "Calendário e planeamento de conteúdos",
           "second": "Design e texto das publicações",
@@ -208,10 +208,10 @@
       },
       "maintenance": {
         "title": "<greenUnderline>Tranquilidade</greenUnderline> incluída",
-        "details": "Atualizações, monitorização e pequenas correções contínuas, para que o seu site nunca deixe de trabalhar por si — sem ter de pensar nisso.",
+        "details": "Atualizações, monitorização e pequenas correções contínuas, para que o teu site nunca deixe de trabalhar por ti — sem teres de pensar nisso.",
         "included": {
           "first": "Atualizações e backups regulares",
-          "second": "Monitorização da disponibilidade",
+          "second": "Monitorização contínua do teu projeto",
           "third": "Suporte prioritário para correções"
         }
       }
@@ -223,11 +223,11 @@
       "points": {
         "brandIdentity": {
           "title": "Identidade de marca",
-          "body": "O logótipo, as cores e a tipografia não são decoração — são o atalho visual que as pessoas usam para reconhecer a sua marca e confiar nela antes de lerem uma única palavra."
+          "body": "O logótipo, as cores e a tipografia não são decoração — são o atalho visual que as pessoas usam para reconhecer a tua marca e confiar nela antes de lerem uma única palavra."
         },
         "visualDesign": {
-          "title": "Cor e design visual",
-          "body": "A cor, a tipografia e o espaçamento fazem um trabalho discreto: guiam o olhar, destacam o que importa e dão ao seu negócio a mesma imagem em todo o lado."
+          "title": "UX e design visual",
+          "body": "A cor, a tipografia, o espaçamento e percursos claros fazem um trabalho discreto: guiam o olhar, tornam cada passo fácil e dão ao teu negócio a mesma imagem em todo o lado."
         },
         "contentStrategy": {
           "title": "Estratégia de conteúdos",
@@ -235,20 +235,20 @@
         },
         "growth": {
           "title": "Crescimento e marketing",
-          "body": "O lançamento é só o ponto de partida. Visibilidade no Google, apelos à ação claros e métricas simples mantêm o seu site a trazer novos clientes muito depois do primeiro dia."
+          "body": "O lançamento é só o ponto de partida. Visibilidade no Google, apelos à ação claros e métricas simples mantêm o teu site a trazer novos clientes muito depois do primeiro dia."
         }
       }
     },
     "cta": {
       "headline": "Vamos escolher por onde começar?",
-      "subtext": "Não precisa dos cinco serviços de uma vez. Marque uma conversa gratuita e vemos juntos o que importa primeiro."
+      "subtext": "Não precisas dos cinco serviços de uma vez. Marca uma conversa gratuita e vemos juntos o que importa primeiro."
     }
   },
   "About": {
     "hero": {
       "eyebrow": "Sobre a NortBrand",
       "title": "Trabalho digital, desenhado com o <greenUnderline>mesmo cuidado</greenUnderline>.",
-      "lead": "A NortBrand nasceu de uma ideia simples: as pequenas empresas merecem experiências digitais desenhadas com o mesmo cuidado que põem nos produtos e serviços que oferecem."
+      "lead": "A NortBrand nasceu de uma ideia simples: qualquer empresa, grande ou pequena, merece produtos digitais feitos com o mesmo cuidado que dedica ao seu negócio."
     },
     "story": {
       "eyebrow": "A nossa história",
@@ -270,36 +270,36 @@
     },
     "commitments": {
       "eyebrow": "Como trabalhamos",
-      "title": "O que pode <greenUnderline>esperar</greenUnderline> de nós.",
+      "title": "O que podes <greenUnderline>esperar</greenUnderline> de nós.",
       "intro": "Somos um estúdio em Portugal e trabalhamos em português e inglês. Isto é o que todos os projetos têm, desde a primeira conversa.",
       "items": {
         "conversation": {
           "title": "Primeiro, uma conversa a sério",
-          "body": "Uma conversa gratuita de 30 minutos sobre o seu negócio e os seus objetivos, antes de desenharmos ou orçamentarmos o que quer que seja."
+          "body": "Uma conversa gratuita de 30 minutos sobre o teu negócio e os teus objetivos, antes de desenharmos ou orçamentarmos o que quer que seja."
         },
         "proposal": {
           "title": "Uma proposta clara e detalhada",
-          "body": "Âmbito, prazos e preço por escrito, sem custos escondidos. Nada começa sem o seu acordo."
+          "body": "Âmbito, prazos e preço por escrito, sem custos escondidos. Nada começa sem o teu acordo."
         },
         "portal": {
-          "title": "O seu projeto, sempre à vista",
-          "body": "Na sua área de cliente vê cada etapa, tarefa e ficheiro, com atualizações da equipa de poucos em poucos dias."
+          "title": "O teu projeto, sempre à vista",
+          "body": "Na tua área de cliente vês cada etapa, tarefa e ficheiro, com atualizações da equipa de poucos em poucos dias."
         },
         "aftercare": {
-          "title": "Continuamos consigo depois do lançamento",
-          "body": "Com a manutenção, o seu site fica atualizado, monitorizado e com cópias de segurança. Nunca fica por sua conta."
+          "title": "Continuamos contigo depois do lançamento",
+          "body": "Com a manutenção, o teu site fica atualizado, monitorizado e com cópias de segurança. Nunca ficas por tua conta."
         }
       }
     },
     "cta": {
-      "headline": "Vamos começar pelo <highlight>seu negócio</highlight>.",
-      "subtext": "Marque uma conversa gratuita e conte-nos o que o seu negócio faz, a quem se dirige e o que tem mesmo de funcionar."
+      "headline": "Vamos começar pelo <highlight>teu negócio</highlight>.",
+      "subtext": "Marca uma conversa gratuita e conta-nos o que o teu negócio faz, a quem se dirige e o que tem mesmo de funcionar."
     }
   },
   "Contact": {
     "hero": {
       "title": "Vamos começar por <greenUnderline>conversar</greenUnderline>.",
-      "lead": "Conte-nos um pouco sobre o seu negócio e o que pretende alcançar. Respondemos no prazo de um dia útil — sem discurso comercial, só uma resposta a sério.",
+      "lead": "Conta-nos um pouco sobre o teu negócio e o que pretendes alcançar. Respondemos no prazo de um dia útil — sem discurso comercial, só uma resposta a sério.",
       "detailsLabel": "Dados de contacto",
       "email": "Email",
       "availability": "Disponibilidade",
@@ -309,90 +309,90 @@
       "title": "Marcar conversa gratuita",
       "subtitle": "Uma chamada gratuita de 30 minutos. Sem pressão nem compromisso.",
       "name": "Nome",
-      "namePlaceholder": "O seu nome",
+      "namePlaceholder": "O teu nome",
       "email": "Email",
       "emailPlaceholder": "nome@empresa.pt",
       "phone": "Telefone (opcional)",
       "phonePlaceholder": "+351 000 000 000",
       "service": "Tenho interesse em",
-      "servicePlaceholder": "Selecione um serviço",
-      "message": "Fale-nos do seu projeto",
-      "messagePlaceholder": "O que faz o seu negócio e o que pretende alcançar?",
+      "servicePlaceholder": "Seleciona um serviço",
+      "message": "Fala-nos do teu projeto",
+      "messagePlaceholder": "O que faz o teu negócio e o que pretendes alcançar?",
       "submit": "Enviar pedido",
       "errors": {
-        "nameRequired": "Indique o seu nome",
+        "nameRequired": "Indica o teu nome",
         "nameTooLong": "O nome deve ter menos de 120 caracteres",
-        "emailInvalid": "Indique um endereço de email válido",
-        "phoneInvalid": "Indique um número de telefone válido ou deixe o campo vazio",
-        "serviceRequired": "Selecione um serviço",
-        "messageRequired": "Fale-nos um pouco do seu projeto",
-        "messageTooShort": "Escreva pelo menos 10 caracteres",
+        "emailInvalid": "Indica um endereço de email válido",
+        "phoneInvalid": "Indica um número de telefone válido ou deixa o campo vazio",
+        "serviceRequired": "Seleciona um serviço",
+        "messageRequired": "Fala-nos um pouco do teu projeto",
+        "messageTooShort": "Escreve pelo menos 10 caracteres",
         "messageTooLong": "A mensagem deve ter menos de 5000 caracteres"
       },
-      "sending": "A enviar o seu pedido — mantenha esta página aberta.",
+      "sending": "A enviar o teu pedido — mantém esta página aberta.",
       "sent": {
         "title": "Pedido enviado.",
-        "body": "Obrigado pelo contacto. Respondemos no prazo de um dia útil — normalmente antes — com alguns horários para a sua chamada.",
+        "body": "Obrigado pelo contacto. Respondemos no prazo de um dia útil — normalmente antes — com alguns horários para a tua chamada.",
         "replyTo": "Vamos responder para",
         "home": "Voltar ao início",
         "blog": "Ler o blog"
       },
       "failed": {
-        "title": "Não foi possível enviar a sua mensagem",
-        "body": "Não se perdeu nada — as suas respostas continuam aqui. Tente novamente ou escreva para <email></email>."
+        "title": "Não foi possível enviar a tua mensagem",
+        "body": "Não se perdeu nada — as tuas respostas continuam aqui. Tenta novamente ou escreve para <email></email>."
       },
       "rateLimited": {
         "title": "Demasiados pedidos",
-        "body": "Enviou vários pedidos na última hora. Tente novamente mais tarde ou escreva para <email></email>."
+        "body": "Enviaste vários pedidos na última hora. Tenta novamente mais tarde ou escreve para <email></email>."
       },
       "submitting": "A enviar…",
       "tryAgain": "Tentar novamente",
       "note": "Respondemos no prazo de um dia útil.",
-      "privacy": "Ao enviar, aceita que usemos os seus dados para lhe responder. <link>Política de Privacidade</link>"
+      "privacy": "Ao enviar, aceitas que usemos os teus dados para te responder. <link>Política de Privacidade</link>"
     },
     "steps": {
       "eyebrow": "O que acontece a seguir",
       "title": "Três passos. <indent>Sem <greenUnderline>surpresas</greenUnderline>.</indent>",
       "items": {
         "request": {
-          "title": "Envia o pedido",
-          "body": "Preencha o formulário com alguns dados sobre o seu negócio e aquilo de que precisa. Demora cerca de dois minutos."
+          "title": "Envias o pedido",
+          "body": "Preenche o formulário com alguns dados sobre o teu negócio e aquilo de que precisas. Demora cerca de dois minutos."
         },
         "reply": {
           "title": "Respondemos num dia útil",
-          "body": "Alguém da nossa equipa lê a sua mensagem e responde com algumas perguntas e horários possíveis para a chamada."
+          "body": "Alguém da nossa equipa lê a tua mensagem e responde com algumas perguntas e horários possíveis para a chamada."
         },
         "call": {
           "title": "Falamos sobre o projeto",
-          "body": "Uma conversa descontraída de 30 minutos para perceber os seus objetivos. Sai com um próximo passo claro, quer venhamos a trabalhar juntos ou não."
+          "body": "Uma conversa descontraída de 30 minutos para perceber os teus objetivos. Sais com um próximo passo claro, quer venhamos a trabalhar juntos ou não."
         }
       }
     },
     "faq": {
       "eyebrow": "FAQ",
       "title": "Perguntas <red>frequentes</red>",
-      "body": "Não encontra o que procura? Envie-nos uma mensagem e respondemos diretamente.",
+      "body": "Não encontras o que procuras? Envia-nos uma mensagem e respondemos diretamente.",
       "link": "Enviar mensagem",
       "items": {
         "cost": {
-          "question": "Quanto custa um site?",
-          "answer": "Depende do âmbito. Uma landing page focada custa bastante menos do que um site com várias páginas e sistema de marcações. Depois de uma conversa curta, enviamos uma proposta clara e detalhada, sem custos escondidos."
+          "question": "Quanto custa um projeto?",
+          "answer": "Depende do âmbito. Uma landing page focada custa bastante menos do que uma aplicação ou uma plataforma de software à medida. Depois de uma conversa curta, enviamos uma proposta clara e detalhada, sem custos escondidos."
         },
         "timeline": {
           "question": "Quanto tempo demora um projeto?",
-          "answer": "Depende do âmbito e da rapidez com que os conteúdos e o feedback chegam. A proposta inclui um calendário com etapas claras, e pode acompanhar cada uma delas na sua área de cliente."
+          "answer": "Depende do âmbito e da rapidez com que os conteúdos e o feedback chegam. A proposta inclui um calendário com etapas claras, e podes acompanhar cada uma delas na tua área de cliente."
         },
         "content": {
           "question": "Preciso de ter os conteúdos prontos?",
-          "answer": "Não. Traga o que tiver e vemos juntos o que falta. A redação de conteúdos é um dos nossos serviços, se preferir que tratemos disso."
+          "answer": "Não. Traz o que tiveres e vemos juntos o que falta. A redação de conteúdos é um dos nossos serviços, se preferires que tratemos disso."
         },
         "international": {
           "question": "Trabalham com empresas fora de Portugal?",
-          "answer": "Sim. Trabalhamos em português e inglês, e as reuniões são online, por isso a localização do seu negócio não é um obstáculo."
+          "answer": "Sim. Trabalhamos em português e inglês, e as reuniões são online, por isso a localização do teu negócio não é um obstáculo."
         },
         "afterLaunch": {
           "question": "O que acontece depois de o site estar online?",
-          "answer": "Não desaparecemos. Com a manutenção, o seu site fica atualizado, monitorizado e com cópias de segurança, e podemos continuar a melhorá-lo à medida que o seu negócio cresce."
+          "answer": "Não desaparecemos. Com a manutenção, o teu site fica atualizado, monitorizado e com cópias de segurança, e podemos continuar a melhorá-lo à medida que o teu negócio cresce."
         }
       }
     }
@@ -402,59 +402,59 @@
     "lastUpdated": "Última atualização: {date}",
     "onThisPage": "Nesta página",
     "questionsTitle": "Dúvidas sobre esta página?",
-    "questionsBody": "Escreva para <email></email> e respondemos diretamente.",
+    "questionsBody": "Escreve para <email></email> e respondemos diretamente.",
     "privacy": {
       "title": "Política de <greenUnderline>Privacidade</greenUnderline>",
-      "lead": "Esta política explica que dados pessoais a NortBrand recolhe através deste site, porque os recolhe e que escolhas tem ao seu dispor.",
+      "lead": "Esta política explica que dados pessoais a NortBrand recolhe através deste site, porque os recolhe e que escolhas tens ao teu dispor.",
       "sections": {
         "whoWeAre": {
           "title": "Quem somos",
-          "body": "A NortBrand («NortBrand», «nós») é um estúdio de webdesign e produtos digitais em Portugal, que exerce atividade como trabalhador independente (NIF 298581175). Somos responsáveis pelos dados pessoais recolhidos através deste site e da sua área de cliente. Pode contactar-nos através de <email></email>."
+          "body": "A NortBrand («NortBrand», «nós») é um estúdio de webdesign e produtos digitais em Portugal, que exerce atividade como trabalhador independente (NIF 298581175). Somos responsáveis pelos dados pessoais recolhidos através deste site e da área de cliente. Podes contactar-nos através de <email></email>."
         },
         "collect": {
           "title": "Dados que recolhemos",
-          "body": "Recolhemos apenas o que nos fornece, o que a área de cliente precisa para funcionar e alguns dados técnicos para manter o site a funcionar em segurança.",
+          "body": "Recolhemos apenas o que nos forneces, o que a área de cliente precisa para funcionar e alguns dados técnicos para manter o site a funcionar em segurança.",
           "items": {
-            "contactForm": "Pedidos de conversa: o seu nome, email, telefone (opcional), o serviço que lhe interessa e a sua mensagem.",
-            "newsletter": "Newsletter: o seu email e idioma, depois de confirmar a subscrição.",
-            "portal": "Área de cliente (apenas clientes): o seu nome, email e idioma, as tarefas, ficheiros, atualizações e mensagens do seu projeto, e um registo de acessos e convites.",
-            "usage": "Estatísticas, apenas se aceitar os cookies de análise: páginas visitadas, tipo de dispositivo e país, nunca o seu nome nem email.",
-            "technical": "Dados de segurança e de erros: uma versão codificada de forma irreversível (hash) do seu endereço IP, para travar spam e tentativas repetidas de início de sessão, e relatórios de erros sem nomes nem emails."
+            "contactForm": "Pedidos de conversa: o teu nome, email, telefone (opcional), o serviço que te interessa e a tua mensagem.",
+            "newsletter": "Newsletter: o teu email e idioma, depois de confirmares a subscrição.",
+            "portal": "Área de cliente (apenas clientes): o teu nome, email e idioma, as tarefas, ficheiros, atualizações e mensagens do teu projeto, e um registo de acessos e convites.",
+            "usage": "Estatísticas, apenas se aceitares os cookies de análise: páginas visitadas, tipo de dispositivo e país, nunca o teu nome nem email.",
+            "technical": "Dados de segurança e de erros: uma versão codificada de forma irreversível (hash) do teu endereço IP, para travar spam e tentativas repetidas de início de sessão, e relatórios de erros sem nomes nem emails."
           }
         },
         "use": {
-          "title": "Como utilizamos os seus dados",
-          "body": "Usamos os seus dados apenas para as finalidades abaixo; entre parênteses, indicamos o fundamento legal de cada uma ao abrigo do RGPD. Não vendemos os seus dados pessoais nem os usamos para publicidade.",
+          "title": "Como utilizamos os teus dados",
+          "body": "Usamos os teus dados apenas para as finalidades abaixo; entre parênteses, indicamos o fundamento legal de cada uma ao abrigo do RGPD. Não vendemos os teus dados pessoais nem os usamos para publicidade.",
           "items": {
-            "reply": "Responder ao seu pedido de conversa e preparar uma proposta (diligências pré-contratuais).",
-            "deliver": "Prestar os nossos serviços e gerir a sua área de cliente (execução de contrato).",
-            "newsletter": "Enviar a newsletter que subscreveu (o seu consentimento, que pode retirar a qualquer momento).",
-            "analytics": "Perceber como o site é usado e melhorá-lo, com o Google Analytics (o seu consentimento).",
+            "reply": "Responder ao teu pedido de conversa e preparar uma proposta (diligências pré-contratuais).",
+            "deliver": "Prestar os nossos serviços e gerir a tua área de cliente (execução de contrato).",
+            "newsletter": "Enviar a newsletter que subscreveste (o teu consentimento, que podes retirar a qualquer momento).",
+            "analytics": "Perceber como o site é usado e melhorá-lo, com o Google Analytics (o teu consentimento).",
             "security": "Manter o site e a área de cliente seguros e corrigir erros (o nosso interesse legítimo num serviço seguro e funcional).",
             "legal": "Guardar os registos exigidos por lei, como os de faturação (obrigação legal)."
           }
         },
         "cookies": {
           "title": "Cookies e análise",
-          "body": "Usamos os cookies abaixo. Os essenciais estão sempre ativos; os de análise só são usados se os aceitar, e o Google Analytics nunca é carregado antes disso. Pode alterar a sua escolha a qualquer momento em «Definições de cookies», no rodapé.",
+          "body": "Usamos os cookies abaixo. Os essenciais estão sempre ativos; os de análise só são usados se os aceitares, e o Google Analytics nunca é carregado antes disso. Podes alterar a tua escolha a qualquer momento em «Definições de cookies», no rodapé.",
           "items": {
-            "consent": "nb_consent (essencial): guarda a sua escolha de cookies. 6 meses.",
-            "locale": "NEXT_LOCALE (essencial): guarda o seu idioma. 1 ano.",
-            "portalSession": "nb_portal_session (essencial, apenas na área de cliente): mantém a sessão iniciada durante 30 dias, ou durante o período definido pela equipa do seu projeto (até 90 dias).",
-            "portalAuth": "sb-…-auth-token (essencial, apenas na área de cliente): a sua sessão no nosso fornecedor de base de dados, a Supabase. Deixa de funcionar quando a sessão expira ou quando termina sessão.",
-            "analytics": "_ga e _ga_ seguido do ID da nossa propriedade (análise, apenas com o seu consentimento): Google Analytics. 2 anos, a menos que retire o consentimento, o que os apaga."
+            "consent": "nb_consent (essencial): guarda a tua escolha de cookies. 6 meses.",
+            "locale": "NEXT_LOCALE (essencial): guarda o teu idioma. 1 ano.",
+            "portalSession": "nb_portal_session (essencial, apenas na área de cliente): mantém a sessão iniciada durante 30 dias, ou durante o período definido pela equipa do teu projeto (até 90 dias).",
+            "portalAuth": "sb-…-auth-token (essencial, apenas na área de cliente): a tua sessão no nosso fornecedor de base de dados, a Supabase. Deixa de funcionar quando a sessão expira ou quando terminas sessão.",
+            "analytics": "_ga e _ga_ seguido do ID da nossa propriedade (análise, apenas com o teu consentimento): Google Analytics. 2 anos, a menos que retires o consentimento, o que os apaga."
           }
         },
         "sharing": {
-          "title": "Partilha dos seus dados",
+          "title": "Partilha dos teus dados",
           "body": "Só partilhamos dados pessoais com os prestadores de serviços abaixo, e apenas na medida em que precisam deles para gerir o site e o nosso trabalho. Quando algum deles trata dados fora da União Europeia, a transferência está protegida pelas garantias exigidas pelo RGPD, como o Quadro de Privacidade de Dados UE-EUA ou as cláusulas contratuais-tipo da Comissão Europeia.",
           "items": {
             "vercel": "Vercel: alojamento do site (servidores em Dublin, Irlanda; as páginas são entregues a partir de servidores em todo o mundo).",
             "supabase": "Supabase: base de dados, início de sessão e armazenamento de ficheiros dos pedidos, da lista da newsletter e da área de cliente (Irlanda).",
             "resend": "Resend: envia os nossos emails a partir da sua região na UE (Irlanda) e guarda a lista da newsletter.",
             "sentry": "Sentry: monitorização de erros, sem nomes nem emails (UE, Alemanha).",
-            "google": "Google: Google Analytics, apenas com o seu consentimento. Os dados podem ser transferidos para os Estados Unidos.",
-            "sanity": "Sanity: aloja os artigos e as imagens do blog. Quando lê o blog, os seus servidores veem o seu endereço IP, como acontece com qualquer alojamento."
+            "google": "Google: Google Analytics, apenas com o teu consentimento. Os dados podem ser transferidos para os Estados Unidos.",
+            "sanity": "Sanity: aloja os artigos e as imagens do blog. Quando lês o blog, os servidores da Sanity veem o teu endereço IP, como acontece com qualquer alojamento."
           }
         },
         "retention": {
@@ -463,37 +463,37 @@
           "items": {
             "requests": "Pedidos de conversa que não dão origem a projetos: 12 meses; depois, são apagados.",
             "clients": "Dados da área de cliente: durante o projeto e até 12 meses depois de ser arquivado; depois, são apagados.",
-            "newsletter": "Newsletter: até cancelar a subscrição. Nessa altura, apagamos o seu contacto no fornecedor de email e guardamos apenas o registo de que cancelou, para nunca mais lhe enviarmos emails.",
+            "newsletter": "Newsletter: até cancelares a subscrição. Nessa altura, apagamos o teu contacto no fornecedor de email e guardamos apenas o registo de que cancelaste, para nunca mais te enviarmos emails.",
             "analytics": "Dados de análise: 2 meses no Google Analytics.",
             "security": "Registos contra spam: 1 hora.",
             "billing": "Contratos e registos de faturação: durante o período exigido pela lei fiscal portuguesa."
           }
         },
         "rights": {
-          "title": "Os seus direitos",
-          "body": "Ao abrigo do RGPD, pode pedir o acesso, a retificação, o apagamento ou uma cópia dos seus dados pessoais, bem como opor-se ao seu tratamento ou pedir a sua limitação. Quando o fundamento é o seu consentimento, pode retirá-lo a qualquer momento. Escreva para <email></email> e respondemos no prazo de um mês. Pode também apresentar reclamação à Comissão Nacional de Proteção de Dados (CNPD, www.cnpd.pt)."
+          "title": "Os teus direitos",
+          "body": "Ao abrigo do RGPD, podes pedir o acesso, a retificação, o apagamento ou uma cópia dos teus dados pessoais, bem como opor-te ao seu tratamento ou pedir a sua limitação. Quando o fundamento é o teu consentimento, podes retirá-lo a qualquer momento. Escreve para <email></email> e respondemos no prazo de um mês. Podes também apresentar reclamação à Comissão Nacional de Proteção de Dados (CNPD, www.cnpd.pt)."
         },
         "contact": {
-          "title": "Contacte-nos",
-          "body": "Para qualquer questão sobre esta política ou sobre os seus dados, escreva para <email></email>."
+          "title": "Contacta-nos",
+          "body": "Para qualquer questão sobre esta política ou sobre os teus dados, escreve para <email></email>."
         }
       }
     },
     "terms": {
       "title": "<greenUnderline>Termos</greenUnderline> de Utilização",
-      "lead": "Ao utilizar este site, aceita os termos abaixo. Mantivemo-los claros e curtos, porque são para ser lidos.",
+      "lead": "Ao utilizares este site, aceitas os termos abaixo. Mantivemo-los claros e curtos, porque são para ser lidos.",
       "sections": {
         "acceptance": {
           "title": "Aceitação dos termos",
-          "body": "Ao aceder ou utilizar o site da NortBrand, aceita estes Termos de Utilização. Se não concordar, não utilize o site."
+          "body": "Ao acederes ou utilizares o site da NortBrand, aceitas estes Termos de Utilização. Se não concordares, não utilizes o site."
         },
         "use": {
           "title": "Utilização do site",
-          "body": "Pode utilizar este site apenas para fins lícitos. Não tente perturbar o seu funcionamento, aceder a áreas para as quais não tem autorização, nem utilizá-lo de forma que prejudique a NortBrand ou outros visitantes."
+          "body": "Podes utilizar este site apenas para fins lícitos. Não tentes perturbar o seu funcionamento, aceder a áreas para as quais não tens autorização, nem utilizá-lo de forma que prejudique a NortBrand ou outros visitantes."
         },
         "ip": {
           "title": "Propriedade intelectual",
-          "body": "Todos os conteúdos deste site, incluindo textos, gráficos, logótipos e designs, pertencem à NortBrand ou aos seus licenciantes e estão protegidos pela legislação de propriedade intelectual. Não pode copiá-los nem reutilizá-los sem autorização escrita."
+          "body": "Todos os conteúdos deste site, incluindo textos, gráficos, logótipos e designs, pertencem à NortBrand ou aos seus licenciantes e estão protegidos pela legislação de propriedade intelectual. Não podes copiá-los nem reutilizá-los sem autorização escrita."
         },
         "enquiries": {
           "title": "Pedidos e propostas",
@@ -513,18 +513,18 @@
         },
         "law": {
           "title": "Lei aplicável",
-          "body": "Estes termos regem-se pela lei portuguesa. Para qualquer litígio são competentes os tribunais da comarca de Braga, salvo se a lei lhe der o direito de recorrer a outro tribunal, como pode acontecer se for consumidor."
+          "body": "Estes termos regem-se pela lei portuguesa. Para qualquer litígio são competentes os tribunais da comarca de Braga, salvo se a lei te der o direito de recorrer a outro tribunal, como pode acontecer se fores consumidor."
         },
         "contact": {
           "title": "Contacto",
-          "body": "Dúvidas sobre estes termos? Escreva para <email></email>."
+          "body": "Dúvidas sobre estes termos? Escreve para <email></email>."
         }
       }
     }
   },
   "NotFound": {
     "title": "Não <greenUnderline>encontrámos esta página</greenUnderline>.",
-    "lead": "A ligação pode estar quebrada ou a página pode ter mudado de sítio. Pode seguir por aqui.",
+    "lead": "A ligação pode estar quebrada ou a página pode ter mudado de sítio. Podes seguir por aqui.",
     "home": "Voltar ao início",
     "contact": "Falar connosco"
   },
@@ -533,17 +533,17 @@
   },
   "Emails": {
     "consultationConfirmation": {
-      "subject": "Recebemos o seu pedido",
-      "preview": "Respondemos no prazo de um dia útil com horários para a sua chamada.",
+      "subject": "Recebemos o teu pedido",
+      "preview": "Respondemos no prazo de um dia útil com horários para a tua chamada.",
       "greeting": "Olá, {name},",
-      "intro": "Obrigado por nos ter contactado sobre {service}. Recebemos o seu pedido e vamos responder no prazo de um dia útil com alguns horários para a sua conversa gratuita de 30 minutos.",
-      "summaryTitle": "O que nos enviou",
+      "intro": "Obrigado por nos teres contactado sobre {service}. Recebemos o teu pedido e vamos responder no prazo de um dia útil com alguns horários para a tua conversa gratuita de 30 minutos.",
+      "summaryTitle": "O que nos enviaste",
       "serviceLabel": "Serviço",
       "phoneLabel": "Telefone",
       "messageLabel": "Mensagem",
       "signoff": "Até breve,",
       "team": "A equipa {studio}",
-      "footer": "Recebeu este email porque enviou um pedido de contacto em {site}. Dúvidas? Responda a este email ou escreva para {email}."
+      "footer": "Recebeste este email porque enviaste um pedido de contacto em {site}. Dúvidas? Responde a este email ou escreve para {email}."
     },
     "consultationAlert": {
       "subject": "Novo pedido de conversa: {name} · {service}",
@@ -559,42 +559,42 @@
       "referenceLabel": "Referência",
       "noPhone": "Não indicado",
       "receivedAt": "{date} (hora de Lisboa)",
-      "footer": "Responda a este email para falar diretamente com {name}. Prometemos resposta no prazo de um dia útil."
+      "footer": "Responde a este email para falar diretamente com {name}. Prometemos resposta no prazo de um dia útil."
     },
     "newsletterConfirmation": {
-      "subject": "Confirme a sua subscrição da newsletter {studio}",
-      "preview": "Um clique e fica na lista.",
-      "heading": "Confirme a sua subscrição",
-      "intro": "Recebemos um pedido para enviar a newsletter {studio} para {email}. Carregue no botão para confirmar.",
+      "subject": "Confirma a tua subscrição da newsletter {studio}",
+      "preview": "Um clique e ficas na lista.",
+      "heading": "Confirma a tua subscrição",
+      "intro": "Recebemos um pedido para enviar a newsletter {studio} para {email}. Carrega no botão para confirmar.",
       "button": "Confirmar subscrição",
       "expiry": "Esta ligação é válida durante 7 dias.",
-      "fallback": "Se o botão não funcionar, copie esta ligação para o seu navegador:",
-      "ignore": "Não fez este pedido? Ignore este email e não voltará a receber notícias nossas.",
-      "footer": "Recebeu este email porque este endereço foi introduzido no formulário da newsletter em {site}."
+      "fallback": "Se o botão não funcionar, copia esta ligação para o teu navegador:",
+      "ignore": "Não fizeste este pedido? Ignora este email e não voltarás a receber notícias nossas.",
+      "footer": "Recebeste este email porque este endereço foi introduzido no formulário da newsletter em {site}."
     },
     "portalCode": {
-      "preview": "O seu código de 6 dígitos para abrir o projeto.",
-      "heading": "O seu código de acesso",
-      "intro": "Use este código para abrir o seu projeto na área de cliente da {studio}.",
-      "codeLabel": "O seu código",
+      "preview": "O teu código de 6 dígitos para abrir o projeto.",
+      "heading": "O teu código de acesso",
+      "intro": "Usa este código para abrir o teu projeto na área de cliente da {studio}.",
+      "codeLabel": "O teu código",
       "expiry": "É válido durante 10 minutos. Depois de 3 tentativas erradas, deixa de funcionar e o início de sessão fica em pausa durante 15 minutos.",
-      "ignore": "Não pediu para iniciar sessão? Pode ignorar este email; ninguém abre o seu projeto sem o código.",
+      "ignore": "Não pediste para iniciar sessão? Podes ignorar este email; ninguém abre o teu projeto sem o código.",
       "footer": "{site} · Área de cliente"
     },
     "portalWelcome": {
-      "subject": "A sua área de cliente para o projeto {project}",
-      "preview": "Inicie sessão com este email e o ID do projeto {projectId}.",
-      "heading": "Acompanhe o projeto {project} passo a passo",
+      "subject": "A tua área de cliente para o projeto {project}",
+      "preview": "Inicia sessão com este email e o ID do projeto {projectId}.",
+      "heading": "Acompanha o projeto {project} passo a passo",
       "intro": "{lead}, da {studio}, criou uma área de cliente para o projeto de {client}. Etapas, tarefas, ficheiros e atualizações, tudo num só lugar.",
-      "idLabel": "O ID do seu projeto",
-      "howTo": "Use este endereço de email ({email}) e o ID do projeto. Sempre que iniciar sessão, enviamos-lhe um código de 6 dígitos; não há palavra-passe para memorizar.",
+      "idLabel": "O ID do teu projeto",
+      "howTo": "Usa este endereço de email ({email}) e o ID do projeto. Sempre que iniciares sessão, enviamos-te um código de 6 dígitos; não há palavra-passe para memorizar.",
       "button": "Abrir área de cliente",
-      "fallback": "Se o botão não funcionar, copie esta ligação para o seu navegador:",
-      "footer": "Recebe este email porque a {studio} convidou {email} para um projeto. Dúvidas? Responda a este email.",
+      "fallback": "Se o botão não funcionar, copia esta ligação para o teu navegador:",
+      "footer": "Recebes este email porque a {studio} convidou {email} para um projeto. Dúvidas? Responde a este email.",
       "newIdSubject": "Novo ID do projeto {project}",
-      "newIdPreview": "Inicie sessão com o novo ID do projeto: {projectId}.",
+      "newIdPreview": "Inicia sessão com o novo ID do projeto: {projectId}.",
       "newIdHeading": "O ID do projeto {project} mudou",
-      "newIdIntro": "A {studio} criou um novo ID para o projeto de {client} e, por segurança, terminou a sua sessão. Use o novo ID abaixo da próxima vez que iniciar sessão."
+      "newIdIntro": "A {studio} criou um novo ID para o projeto de {client} e, por segurança, terminou a tua sessão. Usa o novo ID abaixo da próxima vez que iniciares sessão."
     },
     "portalUpdate": {
       "subject": "{project}: atualização de {author}",
@@ -602,55 +602,55 @@
       "heading": "Atualização sobre {project}",
       "byline": "{author} · {studio}",
       "button": "Abrir área de cliente",
-      "fallback": "Se o botão não funcionar, copie esta ligação para o seu navegador:",
-      "footer": "Recebe este email porque acompanha {project} na área de cliente da {studio}. Dúvidas? Responda a este email.",
-      "subjectNeedsYou": "{project}: {author} aguarda algo da sua parte",
-      "headingNeedsYou": "A equipa aguarda algo da sua parte"
+      "fallback": "Se o botão não funcionar, copia esta ligação para o teu navegador:",
+      "footer": "Recebes este email porque acompanhas {project} na área de cliente da {studio}. Dúvidas? Responde a este email.",
+      "subjectNeedsYou": "{project}: {author} aguarda algo da tua parte",
+      "headingNeedsYou": "A equipa aguarda algo da tua parte"
     },
     "portalDigest": {
       "subject": "{project}: as novidades de hoje",
-      "preview": "{count, plural, one {# nova atualização} other {# novas atualizações}} da sua equipa.",
+      "preview": "{count, plural, one {# nova atualização} other {# novas atualizações}} da tua equipa.",
       "heading": "Hoje em {project}",
-      "needsYou": "À sua espera",
+      "needsYou": "À tua espera",
       "milestone": "Marco",
       "meta": "{author} · {time}",
-      "team": "A sua equipa",
+      "team": "A tua equipa",
       "button": "Abrir área de cliente",
-      "fallback": "Se o botão não funcionar, copie esta ligação para o seu navegador:",
-      "footer": "Recebe este email uma vez por dia, só quando há novidades em {project}. Dúvidas? Responda a este email."
+      "fallback": "Se o botão não funcionar, copia esta ligação para o teu navegador:",
+      "footer": "Recebes este email uma vez por dia, só quando há novidades em {project}. Dúvidas? Responde a este email."
     }
   },
   "Newsletter": {
     "card": {
-      "title": "Ideias que <red>valem a pena ler</red>, no seu email.",
+      "title": "Ideias que <red>valem a pena ler</red>, no teu email.",
       "body": "Um email por mês sobre design, marca e sites que funcionam. Nada de spam.",
       "emailLabel": "Endereço de email",
-      "emailPlaceholder": "O seu email",
+      "emailPlaceholder": "O teu email",
       "submit": "Subscrever",
       "submitting": "A subscrever…",
-      "consent": "Ao subscrever, aceita receber emails ocasionais da NortBrand. Leia a nossa <link>Política de Privacidade</link>.",
+      "consent": "Ao subscrever, aceitas receber emails ocasionais da NortBrand. Lê a nossa <link>Política de Privacidade</link>.",
       "successTitle": "Falta só um passo.",
-      "successBody": "Enviámos uma ligação de confirmação para {email}. Clique nela para concluir a subscrição.",
-      "successNote": "Pode cancelar a subscrição a qualquer momento.",
-      "rateLimited": "Demasiadas tentativas. Aguarde uma hora e tente novamente.",
-      "failed": "Não foi possível concluir a subscrição. Tente novamente."
+      "successBody": "Enviámos uma ligação de confirmação para {email}. Clica nela para concluir a subscrição.",
+      "successNote": "Podes cancelar a subscrição a qualquer momento.",
+      "rateLimited": "Demasiadas tentativas. Aguarda uma hora e tenta novamente.",
+      "failed": "Não foi possível concluir a subscrição. Tenta novamente."
     },
     "errors": {
-      "emailInvalid": "Indique um endereço de email válido"
+      "emailInvalid": "Indica um endereço de email válido"
     },
     "confirm": {
-      "readyTitle": "Confirme a sua <red>subscrição</red>.",
-      "readyLead": "Carregue no botão para começar a receber a newsletter da NortBrand em {email}.",
+      "readyTitle": "Confirma a tua <red>subscrição</red>.",
+      "readyLead": "Carrega no botão para começar a receber a newsletter da NortBrand em {email}.",
       "confirm": "Confirmar subscrição",
       "confirming": "A confirmar…",
       "confirmedTitle": "Subscrição <green>confirmada</green>.",
-      "confirmedLead": "Obrigado por confirmar. O primeiro email chega com a próxima edição.",
+      "confirmedLead": "Obrigado por confirmares. O primeiro email chega com a próxima edição.",
       "expiredTitle": "Esta ligação <red>expirou</red>.",
-      "expiredLead": "As ligações de confirmação são válidas durante 7 dias. Subscreva novamente abaixo e enviamos-lhe uma nova.",
+      "expiredLead": "As ligações de confirmação são válidas durante 7 dias. Subscreve novamente abaixo e enviamos-te uma nova.",
       "invalidTitle": "Esta ligação <red>não funciona</red>.",
-      "invalidLead": "Pode estar incompleta ou ter sido substituída por uma mais recente. Subscreva novamente abaixo e enviamos-lhe uma nova.",
+      "invalidLead": "Pode estar incompleta ou ter sido substituída por uma mais recente. Subscreve novamente abaixo e enviamos-te uma nova.",
       "failedTitle": "Algo <red>correu mal</red>.",
-      "failedLead": "Não foi possível confirmar a sua subscrição. Tente novamente daqui a pouco.",
+      "failedLead": "Não foi possível confirmar a tua subscrição. Tenta novamente daqui a pouco.",
       "tryAgain": "Tentar novamente",
       "home": "Voltar ao início"
     },
@@ -660,11 +660,11 @@
       "unsubscribe": "Cancelar subscrição",
       "unsubscribing": "A cancelar…",
       "doneTitle": "Subscrição <green>cancelada</green>.",
-      "doneLead": "Deixará de receber a newsletter. Mudou de ideias? Pode voltar a subscrever quando quiser.",
+      "doneLead": "Deixas de receber a newsletter. Mudaste de ideias? Podes voltar a subscrever quando quiseres.",
       "invalidTitle": "Esta ligação <red>não funciona</red>.",
-      "invalidLead": "Pode estar incompleta. Use a ligação de cancelamento de qualquer newsletter ou escreva para <email>{address}</email> e removemos o seu endereço.",
+      "invalidLead": "Pode estar incompleta. Usa a ligação de cancelamento de qualquer newsletter ou escreve para <email>{address}</email> e removemos o teu endereço.",
       "failedTitle": "Algo <red>correu mal</red>.",
-      "failedLead": "Não foi possível cancelar a subscrição. Tente novamente daqui a pouco.",
+      "failedLead": "Não foi possível cancelar a subscrição. Tenta novamente daqui a pouco.",
       "tryAgain": "Tentar novamente",
       "home": "Voltar ao início"
     }
@@ -673,7 +673,7 @@
     "banner": {
       "label": "Consentimento de cookies",
       "title": "Cookies, sem complicações.",
-      "body": "Utilizamos cookies essenciais para que este site funcione. Com o seu consentimento, usamos também cookies de análise para perceber como é utilizado e melhorá-lo.",
+      "body": "Utilizamos cookies essenciais para que este site funcione. Com o teu consentimento, usamos também cookies de análise para perceber como é utilizado e melhorá-lo.",
       "manage": "Gerir preferências",
       "privacy": "Política de Privacidade",
       "reject": "Rejeitar não essenciais",
@@ -681,26 +681,26 @@
     },
     "preferences": {
       "title": "Preferências de cookies",
-      "body": "Escolha os cookies que aceita que utilizemos. Pode alterar esta escolha a qualquer momento.",
+      "body": "Escolhe os cookies que aceitas que utilizemos. Podes alterar esta escolha a qualquer momento.",
       "essentialTitle": "Cookies essenciais",
       "essentialBody": "Necessários para o site funcionar, incluindo para guardar esta escolha. Sempre ativos.",
       "analyticsTitle": "Cookies de análise",
-      "analyticsBody": "Ajudam-nos a perceber como o site é utilizado, para o podermos melhorar. Desativados, a menos que os aceite.",
+      "analyticsBody": "Ajudam-nos a perceber como o site é utilizado, para o podermos melhorar. Desativados, a menos que os aceites.",
       "rejectAll": "Rejeitar todos",
       "save": "Guardar preferências",
       "close": "Fechar"
     },
-    "saved": "A sua escolha de cookies foi guardada."
+    "saved": "A tua escolha de cookies foi guardada."
   },
   "Blog": {
     "eyebrow": "Blog",
-    "title": "Ideias sobre design, marca e sites que funcionam.",
-    "lead": "Notas do estúdio sobre o que faz realmente a diferença para negócios locais e empresas de serviços.",
+    "title": "Ideias sobre design, marca e produtos digitais que funcionam.",
+    "lead": "Notas do estúdio sobre o que faz realmente a diferença para as empresas no digital.",
     "featuredLabel": "Artigo em destaque",
     "readMore": "Ler mais",
     "byline": "{author} · {date}",
     "articlesEyebrow": "Artigos",
-    "articlesTitle": "Leia os nossos <indent>artigos <greenUnderline>mais recentes</greenUnderline></indent>",
+    "articlesTitle": "Lê os nossos <indent>artigos <greenUnderline>mais recentes</greenUnderline></indent>",
     "searchLabel": "Pesquisar artigos",
     "searchPlaceholder": "Pesquisar artigos…",
     "categoriesLabel": "Filtrar por categoria",
@@ -710,8 +710,8 @@
     "sortOldest": "Mais antigos",
     "showing": "A mostrar {shown} de {total, plural, one {# artigo} other {# artigos}}",
     "noResultsTitle": "Nenhum artigo encontrado.",
-    "noResultsQuery": "Não encontrámos nada para «{q}». Experimente outra palavra-chave ou limpe os filtros.",
-    "noResultsFilters": "Ainda não há artigos aqui. Experimente outro tema ou limpe os filtros.",
+    "noResultsQuery": "Não encontrámos nada para «{q}». Experimenta outra palavra-chave ou limpa os filtros.",
+    "noResultsFilters": "Ainda não há artigos aqui. Experimenta outro tema ou limpa os filtros.",
     "clearFilters": "Limpar filtros",
     "popularTopics": "Temas populares",
     "paginationLabel": "Paginação",
@@ -725,47 +725,47 @@
     "readTime": "{minutes} min de leitura",
     "onThisPage": "Nesta página",
     "backToTop": "Voltar ao topo",
-    "getStarted": "Comece a trabalhar com a NortBrand",
+    "getStarted": "Começa a trabalhar com a NortBrand",
     "tags": "Etiquetas",
     "share": "Partilhar",
     "shareNative": "Partilhar este artigo",
     "shareEmail": "Partilhar por email",
     "copyLink": "Copiar ligação",
     "linkCopied": "Ligação copiada",
-    "copyFailed": "Não foi possível copiar a ligação. Copie-a a partir da barra de endereço.",
+    "copyFailed": "Não foi possível copiar a ligação. Copia-a a partir da barra de endereço.",
     "writtenBy": "Escrito por",
     "moreArticles": "Mais artigos",
-    "keepReading": "Continue a ler",
+    "keepReading": "Continua a ler",
     "relatedTitle": "Mais do <indent><greenUnderline>estúdio</greenUnderline></indent>"
   },
   "Portal": {
     "signIn": {
-      "eyebrow": "Acompanhe o seu projeto",
-      "title": "Aceda ao seu projeto.",
-      "intro": "Use o email que temos registado e o ID do projeto que está no seu email de boas-vindas.",
+      "eyebrow": "Acompanha o teu projeto",
+      "title": "Acede ao teu projeto.",
+      "intro": "Usa o email que temos registado e o ID do projeto que está no teu email de boas-vindas.",
       "email": "Email",
       "emailPlaceholder": "nome@empresa.pt",
       "projectId": "ID do projeto",
       "projectIdPlaceholder": "NB-0000",
-      "projectIdHint": "Está no seu email de boas-vindas da NortBrand.",
+      "projectIdHint": "Está no teu email de boas-vindas da NortBrand.",
       "send": "Enviar código",
       "sending": "A enviar…",
-      "sendNote": "Enviamos-lhe um código de 6 dígitos por email. Sem palavras-passe.",
-      "lostId": "Perdeu o ID do projeto?",
-      "contactUs": "Contacte-nos",
-      "noMatch": "Não encontrámos um projeto para esse email e ID. Verifique o seu email de boas-vindas ou contacte-nos.",
-      "locked": "Três códigos errados seguidos. Por segurança, o início de sessão fica em pausa durante 15 minutos. Depois, peça um novo código.",
-      "rateLimited": "Demasiados pedidos. Aguarde alguns minutos e tente novamente.",
-      "failed": "Algo correu mal do nosso lado. Tente novamente dentro de momentos.",
-      "codeTitle": "Verifique o seu email.",
+      "sendNote": "Enviamos-te um código de 6 dígitos por email. Sem palavras-passe.",
+      "lostId": "Perdeste o ID do projeto?",
+      "contactUs": "Contacta-nos",
+      "noMatch": "Não encontrámos um projeto para esse email e ID. Verifica o teu email de boas-vindas ou contacta-nos.",
+      "locked": "Três códigos errados seguidos. Por segurança, o início de sessão fica em pausa durante 15 minutos. Depois, pede um novo código.",
+      "rateLimited": "Demasiados pedidos. Aguarda alguns minutos e tenta novamente.",
+      "failed": "Algo correu mal do nosso lado. Tenta novamente dentro de momentos.",
+      "codeTitle": "Verifica o teu email.",
       "codeIntro": "Enviámos um código de 6 dígitos para {email}. É válido durante 10 minutos.",
       "codeLabel": "Código de 6 dígitos",
       "codeSubmit": "Abrir o meu projeto",
       "codeChecking": "A verificar…",
-      "codeWrongOne": "Esse código não está correto. Resta-lhe 1 tentativa.",
-      "codeWrongOther": "Esse código não está correto. Restam-lhe {tries} tentativas.",
-      "resendWait": "Não recebeu? Pode reenviar dentro de",
-      "resendPrompt": "Não recebeu?",
+      "codeWrongOne": "Esse código não está correto. Resta-te 1 tentativa.",
+      "codeWrongOther": "Esse código não está correto. Restam-te {tries} tentativas.",
+      "resendWait": "Não recebeste? Podes reenviar dentro de",
+      "resendPrompt": "Não recebeste?",
       "resendAction": "Enviar novo código",
       "codeSentAgain": "Enviámos um novo código.",
       "wrongAddress": "Email errado?",
@@ -773,12 +773,12 @@
       "expiredTitle": "Esse código expirou.",
       "expiredBody": "Por segurança, os códigos só funcionam durante 10 minutos. Enviamos um novo para {email}.",
       "expiredAction": "Enviar novo código",
-      "signedOutTitle": "A sua sessão terminou.",
-      "signedOutBody": "Por segurança, as sessões terminam ao fim de 30 dias. Inicie sessão novamente com um novo código; demora um minuto.",
+      "signedOutTitle": "A tua sessão terminou.",
+      "signedOutBody": "Por segurança, as sessões terminam ao fim de 30 dias. Inicia sessão novamente com um novo código; demora um minuto.",
       "signedOutAction": "Iniciar sessão novamente",
       "brandEyebrow": "Área de cliente",
-      "brandTitle": "O seu projeto,<br></br>à vista.",
-      "brandBody": "Veja no que estamos a trabalhar, o que já está pronto e o que vem a seguir. A qualquer hora, em qualquer dispositivo.",
+      "brandTitle": "O teu projeto,<br></br>à vista.",
+      "brandBody": "Vê no que estamos a trabalhar, o que já está pronto e o que vem a seguir. A qualquer hora, em qualquer dispositivo.",
       "stages": {
         "discovery": "Descoberta",
         "design": "Design",
@@ -788,9 +788,9 @@
         "care": "Acompanhamento"
       },
       "errors": {
-        "emailInvalid": "Introduza um email válido.",
-        "projectIdInvalid": "Introduza o ID do projeto, por exemplo NB-4821.",
-        "codeInvalid": "Introduza o código de 6 dígitos do email."
+        "emailInvalid": "Introduz um email válido.",
+        "projectIdInvalid": "Introduz o ID do projeto, por exemplo NB-4821.",
+        "codeInvalid": "Introduz o código de 6 dígitos do email."
       }
     },
     "shell": {
@@ -803,17 +803,17 @@
         "files": "Ficheiros",
         "updates": "Atualizações"
       },
-      "yourTeam": "A sua equipa",
+      "yourTeam": "A tua equipa",
       "messageTeam": "Falar com a equipa",
       "messageShort": "Mensagem",
       "account": "Conta",
       "signOut": "Terminar sessão",
       "switchProject": "Mudar de projeto",
-      "loading": "A carregar o seu projeto"
+      "loading": "A carregar o teu projeto"
     },
     "states": {
-      "setupTitle": "Estamos a preparar o seu projeto.",
-      "setupBody": "A sua equipa vai publicar aqui a primeira atualização dentro de um dia útil. Até lá, o email de boas-vindas tem tudo o que precisa.",
+      "setupTitle": "Estamos a preparar o teu projeto.",
+      "setupBody": "A tua equipa vai publicar aqui a primeira atualização dentro de um dia útil. Até lá, o email de boas-vindas tem tudo o que precisas.",
       "setupAction": "Falar com a equipa"
     },
     "status": {
@@ -826,7 +826,7 @@
     "health": {
       "on_track": "Dentro do prazo",
       "at_risk": "Requer atenção",
-      "waiting_on_client": "À sua espera"
+      "waiting_on_client": "À tua espera"
     },
     "overview": {
       "summary": "Etapa {current} de {total} · {stage} · {done} de {tasks} tarefas concluídas · Lançamento previsto para {launch}",
@@ -843,7 +843,7 @@
       "launchDays": "{days, plural, one {Falta # dia para o lançamento} other {Faltam # dias para o lançamento}}",
       "launchToday": "Lançamento hoje",
       "launched": "Lançado",
-      "waitingTitle": "Estamos à sua espera",
+      "waitingTitle": "Estamos à tua espera",
       "waitingBody": "{task}. {owner} pediu a {day}.",
       "waitingBodyNoOwner": "{task}.",
       "stagesTitle": "Etapas do projeto",
@@ -857,22 +857,22 @@
       "allShort": "Todas",
       "workingEmpty": "De momento, não há tarefas em aberto nesta etapa.",
       "due": "Prazo: {day}",
-      "waitingOnYou": "À sua espera",
+      "waitingOnYou": "À tua espera",
       "updatesTitle": "Últimas atualizações",
       "updateTitle": "Última atualização",
       "viewAll": "Ver todas",
       "allUpdates": "Todas as atualizações",
-      "updatesEmpty": "A sua equipa vai publicar aqui a primeira atualização em breve.",
+      "updatesEmpty": "A tua equipa vai publicar aqui a primeira atualização em breve.",
       "today": "Hoje",
       "yesterday": "Ontem",
       "team": "Equipa NortBrand",
-      "loadFailed": "Não conseguimos carregar o seu projeto agora. Atualize a página daqui a pouco."
+      "loadFailed": "Não conseguimos carregar o teu projeto agora. Atualiza a página daqui a pouco."
     },
     "tasks": {
       "eyebrow": "Tarefas",
-      "title": "Todas as tarefas do seu projeto",
+      "title": "Todas as tarefas do teu projeto",
       "summary": "{total} tarefas · {done} concluídas · {inProgress} em curso · {inReview} em revisão · {blocked} em pausa · {todo} por fazer",
-      "summaryShort": "{total} tarefas · {done} concluídas · {waiting} à sua espera",
+      "summaryShort": "{total} tarefas · {done} concluídas · {waiting} à tua espera",
       "filterLabel": "Filtrar por estado",
       "filters": {
         "all": "Todas",
@@ -901,7 +901,7 @@
       "checklistCount": "{done} de {total}",
       "latest": "Atualizações desta tarefa",
       "noOwner": "Equipa NortBrand",
-      "notFound": "Esta tarefa não está disponível. Pode ter sido movida ou já não estar visível para si.",
+      "notFound": "Esta tarefa não está disponível. Pode ter sido movida ou já não estar visível para ti.",
       "dueToday": "Prazo: hoje"
     },
     "timeline": {
@@ -917,7 +917,7 @@
       "stateUpcoming": "Por começar",
       "chartLabel": "Cronograma do projeto, de {start} a {end}",
       "milestonesTitle": "Marcos",
-      "milestonesIntro": "Os momentos em que falamos consigo.",
+      "milestonesIntro": "Os momentos em que falamos contigo.",
       "milestoneDone": "Concluído",
       "milestoneUpcoming": "Por vir",
       "milestonesEmpty": "A equipa vai adicionar os marcos aqui à medida que o plano ganha forma.",
@@ -950,18 +950,18 @@
     "updates": {
       "eyebrow": "Atualizações",
       "title": "O que há de novo",
-      "intro": "Publicações da sua equipa, as mais recentes primeiro. Publicamos de poucos em poucos dias.",
+      "intro": "Publicações da tua equipa, as mais recentes primeiro. Publicamos de poucos em poucos dias.",
       "groups": {
         "today": "Hoje",
         "yesterday": "Ontem",
         "thisWeek": "Esta semana",
         "earlier": "Anteriores"
       },
-      "needsYou": "À sua espera",
+      "needsYou": "À tua espera",
       "milestone": "Marco",
       "edited": "editado",
       "linkedTask": "Tarefa: {title}",
-      "empty": "A sua equipa vai publicar aqui a primeira atualização dentro de um dia útil.",
+      "empty": "A tua equipa vai publicar aqui a primeira atualização dentro de um dia útil.",
       "arrivedOne": "1 nova atualização",
       "arrivedMany": "{count} novas atualizações"
     }

@@ -76,14 +76,14 @@ ServiceGrid (server)
 
 ### Accessibility behaviour (acceptance criteria)
 
-| Requirement                      | Who provides it                                                                                        |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| Trap focus                       | Radix Dialog `FocusScope` (vaul is built on Radix Dialog)                                              |
-| Close on Esc                     | Radix `DismissableLayer`                                                                               |
-| Return focus to the trigger      | Radix, because the trigger is a `DialogTrigger` / `DrawerTrigger`                                      |
-| Each trigger has a distinct name | `aria-label="What’s included: Web Design"`: it contains the visible text, so voice control still works |
-| Title and description announced  | `DialogTitle` / `DrawerTitle` and `…Description`                                                       |
-| Sticky CTA hides while open      | Radix scroll lock sets `body[data-scroll-locked]` (rule in `globals.css`)                              |
+| Requirement                      | Who provides it                                                                                                  |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Trap focus                       | Radix Dialog `FocusScope` (vaul is built on Radix Dialog)                                                        |
+| Close on Esc                     | Radix `DismissableLayer`                                                                                         |
+| Return focus to the trigger      | Radix, because the trigger is a `DialogTrigger` / `DrawerTrigger`                                                |
+| Each trigger has a distinct name | `aria-label="What’s included: UX/UI & Brand Design"`: it contains the visible text, so voice control still works |
+| Title and description announced  | `DialogTitle` / `DrawerTitle` and `…Description`                                                                 |
+| Sticky CTA hides while open      | Radix scroll lock sets `body[data-scroll-locked]` (rule in `globals.css`)                                        |
 
 **Bug found and fixed: the drawer did not trap focus.** vaul's `autoFocus` defaults to
 `false`, which cancels Radix's "focus the first element on open". With nothing focused
@@ -179,7 +179,7 @@ code is still `ServiceDetails`.
 **One interactive element per card.** The "What's included" trigger is stretched over the
 card: `static` (so its `::after` anchors to the card, not the button) plus
 `after:absolute after:inset-0`. A click anywhere opens the details, while keyboard and
-screen-reader users meet one clearly named button ("What’s included: Web Design"). The
+screen-reader users meet one clearly named button ("What’s included: UX/UI & Brand Design"). The
 focus ring stays on the button. Because the `::after` belongs to the button, hovering
 anywhere on the card hovers the button: the grid cancels the secondary button's tint
 (`hover:bg-bg-surface`) and nudges its arrow 4 px instead of 2.

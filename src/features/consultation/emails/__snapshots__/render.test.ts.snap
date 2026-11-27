@@ -2,7 +2,7 @@
 
 exports[`renderConsultationAlert > matches the snapshot 1`] = `
 {
-  "subject": "New consultation request: Ana Silva · Web Design",
+  "subject": "New consultation request: Ana Silva · UX/UI & Brand Design",
   "text": "NortBrand
 
 
@@ -22,7 +22,7 @@ Phone
 
 Service
 
-Web Design
+UX/UI & Brand Design
 
 Language
 
@@ -54,7 +54,7 @@ exports[`renderConsultationConfirmation > matches the snapshot (en) 1`] = `
 
 HI ANA SILVA,
 
-Thanks for getting in touch about Web Design. We’ve received your request and will reply within one business day with a few times for your free 30-minute call.
+Thanks for getting in touch about UX/UI & Brand Design. We’ve received your request and will reply within one business day with a few times for your free 30-minute call.
 
 ----------------------------------------
 
@@ -62,7 +62,7 @@ What you sent us
 
 Service
 
-Web Design
+UX/UI & Brand Design
 
 Phone
 
@@ -83,21 +83,21 @@ You’re receiving this because you sent a consultation request on NortBrand. Qu
 
 exports[`renderConsultationConfirmation > matches the snapshot (pt) 1`] = `
 {
-  "subject": "Recebemos o seu pedido",
+  "subject": "Recebemos o teu pedido",
   "text": "NortBrand
 
 
 OLÁ, ANA SILVA,
 
-Obrigado por nos ter contactado sobre Webdesign. Recebemos o seu pedido e vamos responder no prazo de um dia útil com alguns horários para a sua conversa gratuita de 30 minutos.
+Obrigado por nos teres contactado sobre UX/UI & branding. Recebemos o teu pedido e vamos responder no prazo de um dia útil com alguns horários para a tua conversa gratuita de 30 minutos.
 
 ----------------------------------------
 
-O que nos enviou
+O que nos enviaste
 
 Serviço
 
-Webdesign
+UX/UI & branding
 
 Telefone
 
@@ -112,6 +112,6 @@ A equipa NortBrand
 
 ----------------------------------------
 
-Recebeu este email porque enviou um pedido de contacto em NortBrand. Dúvidas? Responda a este email ou escreva para studio@nortbrand.pt.",
+Recebeste este email porque enviaste um pedido de contacto em NortBrand. Dúvidas? Responde a este email ou escreve para studio@nortbrand.pt.",
 }
 `;

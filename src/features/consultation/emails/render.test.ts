@@ -43,20 +43,21 @@ describe("renderConsultationAlert", () => {
     const email = await renderConsultationAlert(request, requestId, receivedAt);
 
     expect(email.subject).toBe(
-      "New consultation request: Ana Silva · Web Design",
+      "New consultation request: Ana Silva · UX/UI & Brand Design",
     );
     for (const value of [
       "Ana Silva",
       "ana@example.com",
       "+351 912 345 678",
-      "Web Design",
+      "UX/UI & Brand Design",
       "English",
       "Thursday, 15 October 2026 at 21:46 (Lisbon time)",
       requestId,
       "Two languages, a booking form.",
     ]) {
       expect(email.text).toContain(value);
-      expect(email.html).toContain(value);
+      // The HTML escapes "&" (in "UX/UI & Brand Design").
+      expect(email.html).toContain(value.replaceAll("&", "&amp;"));
     }
     expect(email.html).toContain('href="mailto:ana@example.com"');
     expect(email.html).toContain('href="tel:+351912345678"');
@@ -105,7 +106,7 @@ describe("renderConsultationConfirmation", () => {
     // The plain-text version uppercases headings, so the greeting is checked in HTML.
     expect(email.html).toContain("Hi Ana Silva,");
     expect(email.text).toContain("within one business day");
-    expect(email.text).toContain("Web Design");
+    expect(email.text).toContain("UX/UI & Brand Design");
     expect(email.html).toContain('lang="en"');
     expectSafeEmail(email.html);
   });

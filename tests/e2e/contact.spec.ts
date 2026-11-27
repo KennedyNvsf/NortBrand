@@ -39,7 +39,7 @@ test.describe("contact page", () => {
     await page.goto("/en/contact");
     const faq = page.getByRole("region", { name: /Frequently asked/ });
     const first = faq.getByRole("button", {
-      name: "How much does a website cost?",
+      name: "How much does a project cost?",
     });
     const second = faq.getByRole("button", {
       name: "How long does a project take?",
