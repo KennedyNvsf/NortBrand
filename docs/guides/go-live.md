@@ -27,19 +27,27 @@ sitemap submission wait for launch day, so nothing asks Google to index draft co
 | 5. TLS                       | ✅ certificates issued for both hosts                                                                                                                                                                                                                                                                                                           |
 | `www` → apex 308 redirect    | ✅ set through the API (`vercel api … -f redirect=nortbrand.pt -F redirectStatusCode=308`): `www.nortbrand.pt/<path>?<query>` → 308 to the same path and query on the apex                                                                                                                                                                      |
 | 6. Sanity CORS and webhook   | ✅ origin `https://nortbrand.pt` (credentials); webhook `nortbrand-production` (`LbNY4vUQyejp6fR9`) → `https://nortbrand.pt/api/revalidate`, dataset `production`, signed with a **new** `SANITY_REVALIDATE_SECRET` (rotated in Vercel, production redeployed). Signed test → 200 (`blog-list`, `blog-posts`); unsigned or wrongly signed → 401 |
-| 6. Resend webhook            | ⏳ lead: `contact.updated` → `https://nortbrand.pt/api/newsletter/resend-webhook`                                                                                                                                                                                                                                                               |
+| 6. Resend webhook            | ✅ `contact.updated` → `https://nortbrand.pt/api/newsletter/resend-webhook`, enabled 11 November; its test delivery (an unsubscribe) answered **200** `{"result":"unsubscribed"}` (checked 28 November)                                                                                                                                         |
 | Keep-alive (#101)            | ✅ `KEEPALIVE_URL` deleted; a manual run called `https://nortbrand.pt/…` → `{"status":"ok"}`                                                                                                                                                                                                                                                    |
 | `nort-brand-ruby.vercel.app` | still public; redirect it to `nortbrand.pt` on launch day (step 3)                                                                                                                                                                                                                                                                              |
 | 8. Search Console            | ⏸ launch day                                                                                                                                                                                                                                                                                                                                    |
+| Sanity previews              | Not set up, on purpose (lead, 28 November): previews have no stable URL and sit behind Vercel's protection, so a `development` webhook can't reach them, and a wildcard CORS origin with credentials would let any matching `vercel.app` site use an editor's session. Edit in the Studio on `nortbrand.pt` or `localhost`                      |
+| Sanity tokens                | ✅ 28 November: the four tokens Vercel's Sanity integration had created (two Editor write, two Viewer read, never used) deleted; `vercel-production` (the site's) and `base` remain, both Viewer                                                                                                                                                |
 
 Checks run on 11 November against `https://nortbrand.pt`: `/` → 307 to `/pt` (or `/en`
 with an English `Accept-Language`); `/en`, `/pt` and every nav page 200; health `ok`;
 `robots.txt` allows crawling with the production sitemap; canonical and `hreflang` on
 `/pt` point to `https://nortbrand.pt/…`.
 
-**What's left for launch morning:** freeze `main`, merge the content tickets (#77, #78,
-#79), redeploy, redirect the `vercel.app` alias, run § 4, then § 3 step 8 (Search Console).
-Steps 3–5 of § 3 are already done.
+**Rechecked 28 November** against `https://nortbrand.pt`: `/` → 307 to `/pt` (`/en` with an
+English `Accept-Language`); `/en`, `/pt` and every nav page 200; `www` → 308 to the apex,
+path and query kept; TLS valid; `robots.txt` and health as above. The content tickets
+(#77, #78, #79, #175) are merged and `pnpm check:release` passes on `main`.
+
+**What's left for launch morning:** freeze `main`, redeploy, redirect the `vercel.app`
+alias, run § 4, then § 3 step 8 (Search Console). Steps 3–6 of § 3 are already done.
+Before then, § 2's open boxes: the launch posts in Sanity `production` (the sitemap has
+no posts yet), Zoho's paid plan, and the Vercel team's failed payment.
 
 ## 1. The shape of launch day
 
@@ -58,19 +66,22 @@ Each item is a ticket or a check. Launch waits until every box is ticked.
 
 **Content and code**
 
-- [ ] #77 final English copy, #78 reviewed Privacy and Terms, #79 contact details, #82
-      image licences: merged.
-- [ ] `pnpm check:release` passes on `main` (no pseudo translations, no draft legal
-      text, no `site.ts` contact placeholders).
+- [x] #77 final English copy, #78 reviewed Privacy and Terms, #79 contact details, #82
+      image licences, #175 final content round: merged (28 November).
+- [x] `pnpm check:release` passes on `main` (no pseudo translations, no draft legal
+      text, no `site.ts` contact placeholders). Since #174 (26 November).
 - [ ] Zoho Mail is on a paid plan (Mail Lite 5 GB, 1 user) before the Mail Premium
       trial ends on **8 December**, or `studio@nortbrand.pt` stops receiving
       ([Environments](./environments.md) § 3a).
-- [ ] #84 accessibility and QA audit: done. The Services hero video's WCAG 2.2.2
-      exception is accepted (tech debt), not a blocker.
+- [x] #84 accessibility and QA audit: done (28 November; #177 fixed). The Services hero
+      video's WCAG 2.2.2 exception is accepted (tech debt), not a blocker.
 - [ ] `pnpm audit`: no critical or high finding outside the two CLI-only ones in tech
       debt ([Dependencies](./dependencies.md) § 4).
 - [ ] The three launch posts in Sanity `production` have their final text and dates
-      ([Editing the blog](./editing-the-blog.md)).
+      ([Editing the blog](./editing-the-blog.md)). On 28 November `production` had no
+      published post, so the sitemap listed pages only.
+- [ ] The Vercel team's failed payment is settled (the dashboard showed "Payment failed,
+      pay any open invoices before your account is shut down" on 24 November).
 
 **Accounts (#45)**
 
@@ -92,7 +103,8 @@ Each item is a ticket or a check. Launch waits until every box is ticked.
 - [x] Sentry and GA4 values are in Vercel (§ 4, § 5).
 - [ ] Look through the consultation requests and newsletter rows in `nortbrand-prod`
       that arrived through the public `nort-brand-ruby.vercel.app` alias before launch
-      (docs/tech-debt.md). Delete test and spam rows; keep real ones.
+      (docs/tech-debt.md). Delete test and spam rows; keep real ones. (The three
+      studio-inbox test requests were deleted on 26 November; recheck on the day.)
 
 **DNS preparation (T−2)**
 
@@ -102,7 +114,10 @@ Each item is a ticket or a check. Launch waits until every box is ticked.
       the cut-over adds two records and the rollback is deleting them; no old site
       comes back. - Email records, never to be touched: `_dmarc` TXT `v=DMARC1; p=none;`,
       `resend._domainkey.send` TXT (DKIM), `rsend.send` and `send.send` CNAME
-      (Resend SPF and bounces). No MX.
+      (Resend SPF and bounces). Since 24 November also Zoho Mail for
+      `studio@nortbrand.pt` ([Environments](./environments.md) § 3a): MX `mx.zoho.eu` (10),
+      `mx2.zoho.eu` (20), `mx3.zoho.eu` (50); apex TXT `v=spf1 include:zohomail.eu ~all`
+      and `zoho-verification=…`; `zmail._domainkey` TXT (DKIM).
 - [x] TTL: the zone's default TTL is already **300 seconds**, so a new record or a
       rollback spreads in minutes. Nothing to lower.
 
@@ -138,7 +153,8 @@ Do the steps in this order. Each one ends with its check; don't move on until it
 
 4. 🔒 **Point DNS at Vercel**, in the Dynadot dashboard (Domains → `nortbrand.pt` → DNS
    settings): the apex record and the `www` record, exactly as Vercel shows them. Leave every `send.*`, `_dmarc`,
-   `resend._domainkey.*` and MX record alone: they are the email.
+   `resend._domainkey.*`, `zmail._domainkey`, MX and SPF/Zoho TXT record alone: they are
+   the email.
    Check: both hosts show **Valid Configuration** on Vercel (minutes with a 300 s TTL).
 5. **TLS.** Vercel issues the certificates by itself once DNS resolves. Check:
    `curl -sI https://nortbrand.pt/en` returns `200`, with no certificate warning, and
@@ -147,9 +163,8 @@ Do the steps in this order. Each one ends with its check; don't move on until it
    - 🔒 **Sanity** ([Environments](./environments.md) § 9): add `https://nortbrand.pt`
      to **CORS origins** (credentials allowed). Create the production webhook to
      `https://nortbrand.pt/api/revalidate`, dataset `production`, with the production
-     `SANITY_REVALIDATE_SECRET`. For previews, add the project's preview origin as a pattern
-     (`https://nortbrand-*-<team>.vercel.app`; Sanity accepts `*` in an origin) and a
-     second webhook on dataset `development`, the dataset previews read (§ 7).
+     `SANITY_REVALIDATE_SECRET`. No preview origin and no `development` webhook (status table above: no stable
+     preview URL, and a credentialed wildcard origin is unsafe).
    - 🔒 **Resend** (§ 3, step 7): the `contact.updated` webhook to
      `https://nortbrand.pt/api/newsletter/resend-webhook`, its secret in
      `RESEND_WEBHOOK_SECRET` (Production), then redeploy.
