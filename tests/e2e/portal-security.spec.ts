@@ -64,18 +64,45 @@ async function teamSignIn(page: Page) {
   await expect(page).toHaveURL(/\/team$/);
 }
 
+/**
+ * Opens a portal page that is expected to send the visitor elsewhere, then waits until
+ * the page has settled on a URL matching `settlesOn`. The redirect can replace the
+ * navigation before its load event (the team layout signs a client's session out and
+ * redirects), which page.goto reports as "interrupted by another navigation" or
+ * ERR_ABORTED although the behaviour is correct (#182). So wait only until the request is
+ * committed, accept those two errors, and assert where the page ends up.
+ */
+async function openExpectingRedirect(
+  page: Page,
+  path: string,
+  settlesOn: RegExp,
+) {
+  try {
+    await page.goto(path, { waitUntil: "commit" });
+  } catch (error) {
+    if (!/interrupted by another navigation|ERR_ABORTED/.test(String(error))) {
+      throw error;
+    }
+  }
+  // page.goto used to wait for the load event; this replaces that wait, so give it as
+  // long (a cold first render of a dynamic portal page can take several seconds).
+  await expect(page, path).toHaveURL(settlesOn, { timeout: 20_000 });
+  await page.waitForLoadState();
+}
+
+const TEAM_SIGN_IN = /\/team\/sign-in/;
+const CLIENT_SIGN_IN = /\/(en|pt)\/portal(\?|$)/;
+
 test.describe("Portal sessions stay apart", () => {
   test("without a session, every portal page leads to its sign-in", async ({
     page,
   }) => {
     test.slow();
     for (const path of TEAM_PAGES) {
-      await page.goto(path);
-      await expect(page, path).toHaveURL(/\/team\/sign-in/);
+      await openExpectingRedirect(page, path, TEAM_SIGN_IN);
     }
     for (const path of CLIENT_PAGES) {
-      await page.goto(path);
-      await expect(page, path).toHaveURL(/\/(en|pt)\/portal(\?|$)/);
+      await openExpectingRedirect(page, path, CLIENT_SIGN_IN);
     }
   });
 
@@ -83,8 +110,7 @@ test.describe("Portal sessions stay apart", () => {
     test.slow();
     await clientSignIn(page);
     for (const path of TEAM_PAGES) {
-      await page.goto(path);
-      await expect(page, path).toHaveURL(/\/team\/sign-in/);
+      await openExpectingRedirect(page, path, TEAM_SIGN_IN);
       await expect(page.getByText("E2E Café website")).toHaveCount(0);
     }
   });
@@ -93,8 +119,7 @@ test.describe("Portal sessions stay apart", () => {
     test.slow();
     await teamSignIn(page);
     for (const path of CLIENT_PAGES) {
-      await page.goto(path);
-      await expect(page, path).toHaveURL(/\/(en|pt)\/portal(\?|$)/);
+      await openExpectingRedirect(page, path, CLIENT_SIGN_IN);
     }
   });
 });
