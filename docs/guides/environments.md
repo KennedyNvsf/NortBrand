@@ -618,9 +618,14 @@ the repository.
 2. **Datasets:** `production` (launch content) and `development` (local work, previews and
    test posts). Never point local work at `production`.
 3. **API → CORS origins:** `http://localhost:3000` with credentials allowed (the embedded
-   Studio needs it); add the production and preview origins in #45.
+   Studio needs it), and `https://nortbrand.pt` (#85). No preview origin: a wildcard over
+   `vercel.app` URLs with credentials would let any matching site use an editor's session
+   (lead, 2026-11-28).
 4. **API → Tokens:** a **Viewer** token, `nortbrand-website-read`, for
    `SANITY_API_READ_TOKEN` (server-only). One per environment; never in chat or the repo.
+   Today: `vercel-production` (the site) and `base`. The four tokens Vercel's Sanity
+   integration created (two Editor write, two Viewer read, never used) were deleted on
+   2026-11-28 (#85); the app never needs write access.
 5. **`.env.local`:** `NEXT_PUBLIC_SANITY_PROJECT_ID=p4bc960d`,
    `NEXT_PUBLIC_SANITY_DATASET=development`, `SANITY_API_READ_TOKEN=<viewer token>`.
 6. **Studio:** open `http://localhost:3000/studio` and sign in with your Sanity account.
@@ -630,8 +635,9 @@ the repository.
    prefers the EU).
 8. **Webhook** (#59), one per deployed environment, set up with #45 (Sanity cannot reach
    `localhost`): **API → Webhooks → Create**:
-   - URL `https://<site>/api/revalidate`, dataset `production` (or `development` for
-     previews), HTTP method **POST**, API version `v2026-10-01`;
+   - URL `https://<site>/api/revalidate`, dataset `production`, HTTP method **POST**,
+     API version `v2026-10-01` (production only: previews have no stable URL and sit
+     behind deployment protection, so they show content changes after a redeploy);
    - trigger on **create, update and delete**;
    - filter `_type in ["post", "author", "category", "translation.metadata"]`;
    - projection `{ _type }`;
