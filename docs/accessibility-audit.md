@@ -7,13 +7,13 @@ of each check. Target: WCAG 2.2 AA plus the project rules in CLAUDE.md › Acces
 | ----------------------------- | ---------- | -------------------------------- | ------------------------------------------------------------- |
 | Early pass (1440, 768, 390)   | 2026-10-25 | `main` before #93                | Done. Three failures found, each fixed in its own ticket      |
 | Automated pass (this report)  | 2026-11-06 | `main` at `152d8ec` (after #95)  | Done. No open failure                                         |
-| Screen readers                | —          | —                                | **Pending**, needs a person (§ 5)                             |
+| Screen readers                | 2026-11-28 | `main` at `c8908dc` (after #179) | Done by the lead (§ 5): VoiceOver and NVDA, no failure        |
 | WebKit engine (§ 4.1)         | 2026-11-07 | `main` at `76576f9` (after #105) | Done. No open failure; keyboard limited (§ 4.1)               |
-| Real Safari (iOS)             | —          | —                                | **Pending**, needs an iPhone (§ 5)                            |
+| Real Safari (iOS)             | 2026-11-28 | `main` at `c8908dc` (after #179) | Done by the lead (§ 5): no failure                            |
 | Rerun with final copy + legal | 2026-11-27 | `main` at `9646605` (after #175) | Done (§ 3a). Chromium: no failure. WebKit: one, fixed in #177 |
 | Portal (automated, § 6)       | 2026-11-22 | `main` at `1a56354` + #143       | Done. One failure fixed in #143; no open failure              |
 
-#84 stays open until the pending passes are recorded here.
+Every pass is recorded; #84 closed on 2026-11-28.
 
 ## 1. Summary
 
@@ -184,19 +184,23 @@ inside Safari) on Windows, at 1440 and 390, on all 28 pages: 56 page checks.
 - **What WebKit can't show:** iOS Safari's own behaviour (the bottom toolbar, safe areas,
   zoom on input focus) and VoiceOver. Those stay on the iPhone check in § 5.
 
-## 5. Still to do before #84 closes
+## 5. Screen readers and real Safari (2026-11-28)
 
-| Item                    | Who                    | What                                                                                                                                    |
-| ----------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| VoiceOver (iOS)         | a person, on an iPhone | Home, Services (tabs), Contact (form: errors, send failed, success), Blog (filters), one post, mobile menu, cookie banner               |
-| NVDA (Windows, Firefox) | a person               | The same pages                                                                                                                          |
-| Real Safari (iOS)       | a person, on an iPhone | The same pages: layout under the toolbar and safe areas, no zoom when a form field is focused, the menu and cookie sheet. Engine: § 4.1 |
+The lead ran the person-and-device passes on `main` after #179 (the #177 fix live) and
+reported them done with **no failure**, so no new ticket.
 
-For each screen-reader pass, record here: landmarks and headings read in order; every
-control has a name and role; form errors are announced; the menu, dialog and banner move
-and return focus correctly; and the PT pages are read in Portuguese.
+| Pass                    | Who  | Pages and checks                                                                                                                                | Result |
+| ----------------------- | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| VoiceOver (iOS)         | Lead | Home, Services (What's included), Contact (form: errors, send failed, success), Blog (filters), one post, mobile menu, cookie banner, EN and PT | Pass   |
+| NVDA (Windows, Firefox) | Lead | The same pages                                                                                                                                  | Pass   |
+| Real Safari (iOS)       | Lead | The same pages: layout under the toolbar and safe areas, no zoom when a form field is focused, the menu and cookie banner                       | Pass   |
 
-Any failure found becomes its own ticket (`|A11Y| …`) and is listed in § 1.
+What each screen-reader pass covered: landmarks and headings read in order; every control
+has a name and role; form errors are announced; the menu, dialog and banner move and
+return focus correctly; and the PT pages are read in Portuguese. The result was reported
+as a whole; individual findings weren't itemised.
+
+A failure found later becomes its own ticket (`|A11Y| …`) and is listed in § 1.
 
 ## 6. Client portal and team portal (#143)
 
@@ -250,5 +254,5 @@ their own row as designed. 1.4.10 Reflow (AA).
 
 ### Not covered here
 
-Screen readers, real Safari on iOS and the WebKit keyboard pass are the same pending
-items as for the marketing site (§ 5): they need a person and a device.
+Screen readers and real Safari on iOS were covered by the lead's pass (§ 5), which ran
+on the marketing pages; the portal screens weren't part of it and remain automated-only.
