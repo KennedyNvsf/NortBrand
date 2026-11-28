@@ -4,18 +4,16 @@ What runs on every pull request to `main`, and how to read a failure (#44).
 
 ## 1. The checks
 
-`.github/workflows/ci.yml` runs seven jobs in parallel on GitHub's Ubuntu runners.
+`.github/workflows/ci.yml` runs six jobs in parallel on GitHub's Ubuntu runners.
 
-| Check                               | Required | What it proves                                                                                                              |
-| ----------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------- |
-| **Typecheck, lint, test, build**    | yes      | Types, ESLint, Prettier, Vitest, a production build, and no service-role key in client bundles (`pnpm check:bundles`, #132) |
-| **e2e (desktop)**                   | yes      | Every Playwright spec in Chromium at 1280 × 720, on this PR's production build                                              |
-| **e2e (mobile)**                    | yes      | The same specs at iPhone 14 size (390 px, touch, mobile UA) in Chromium                                                     |
-| **Database (pgTAP)**                | yes      | Every migration applies to a fresh Postgres, and `supabase/tests` passes                                                    |
-| **e2e (webkit 1/2, informational)** | no       | The mobile specs in real WebKit, in two shards                                                                              |
-| **e2e (webkit 2/2, informational)** | no       | The other half                                                                                                              |
-| **Lighthouse (mobile)**             | yes¹     | 5 pages × EN/PT meet the Lighthouse budgets (§ 4)                                                                           |
-| **e2e (preview)**                   | no²      | The host-independent specs against this PR's own Vercel preview (§ 2.1)                                                     |
+| Check                            | Required | What it proves                                                                                                              |
+| -------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **Typecheck, lint, test, build** | yes      | Types, ESLint, Prettier, Vitest, a production build, and no service-role key in client bundles (`pnpm check:bundles`, #132) |
+| **e2e (desktop)**                | yes      | Every Playwright spec in Chromium at 1280 × 720, on this PR's production build                                              |
+| **e2e (mobile)**                 | yes      | The same specs at iPhone 14 size (390 px, touch, mobile UA) in Chromium                                                     |
+| **Database (pgTAP)**             | yes      | Every migration applies to a fresh Postgres, and `supabase/tests` passes                                                    |
+| **Lighthouse (mobile)**          | yes¹     | 5 pages × EN/PT meet the Lighthouse budgets (§ 4)                                                                           |
+| **e2e (preview)**                | no²      | The host-independent specs against this PR's own Vercel preview (§ 2.1)                                                     |
 
 ¹ Once the lead adds it to the branch protection rule (a repository setting).
 ² Informational at first (#45). The lead makes it required after a run of green PRs.
@@ -29,9 +27,16 @@ results:
 
 A check like that would block merges for reasons unrelated to the change. Chromium at the
 iPhone viewport covers what the mobile harness checks (layout, overflow at 390 px, axe,
-touch targets). WebKit still runs on every PR: a red WebKit check is a prompt to look,
-and if it is real, to fix it. Locally, `pnpm test:e2e` runs desktop Chromium and WebKit
-mobile, as the brief asks. The `mobile-chromium` project exists only in CI.
+touch targets). Locally, `pnpm test:e2e` runs desktop Chromium and WebKit mobile, as the
+brief asks. The `mobile-chromium` project exists only in CI.
+
+**WebKit is local only (#184, before the repository went private).** Until then WebKit ran
+on every PR as two informational shards: the slowest jobs, and the ones that failed for
+reasons unrelated to the change. They were dropped so the private repository's free
+Actions minutes suffice. Run the WebKit project yourself before merging anything
+Safari-sensitive (focus and scrolling, fixed or sticky layers, form zoom, `:has()` and
+other newer CSS): `pnpm test:e2e --project=mobile`, or a single spec, for example
+`pnpm test:e2e focus-obscured --project=mobile` (#177 only fails in WebKit).
 
 ## 2. How the e2e jobs work
 
@@ -54,8 +59,9 @@ checkout → pnpm install → playwright install <browser> --with-deps
   - It never fails a test. After 5 s it records a `settle-timeout` annotation (visible in the HTML report) and lets axe run. Motion itself is tested in `motion.spec.ts`.
   - The 100 ms gap is waited out in the test runner, not inside the page (#112). A timer inside `page.evaluate` never fires when a WebKit page stalls, and `page.evaluate` has no timeout of its own, so the first version hung each test until the 60 s limit (14 times in PR #111's WebKit shards). Each in-page call is now synchronous and raced against the 5 s deadline.
 - **Retries.** Each test retries up to twice in CI. A trace is recorded on the first retry.
-- **WebKit shards.** WebKit is several times slower than Chromium on the runner (the first
-  run took 18 minutes), so it runs as two parallel shards (`--shard=1/2`, `2/2`).
+- **WebKit shards (until #184).** WebKit was several times slower than Chromium on the
+  runner (the first run took 18 minutes), so it ran as two parallel shards; it now runs
+  locally only (§ 1).
 - **CI timeouts.** In CI, each test gets 60 s and each assertion 10 s
   (`playwright.config.ts`). Locally the defaults of 30 s and 5 s stay, so real slowness
   still fails on a laptop.

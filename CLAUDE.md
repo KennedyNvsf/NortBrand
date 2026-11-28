@@ -518,9 +518,9 @@ Ticket → Branch → Implement → Validate → Push → Pull Request → Walkt
   - Every commit builds.
 - **CI (every PR):** required: typecheck/lint/format/unit/build, e2e (desktop), e2e
   (mobile, Chromium at iPhone 14 size), Database (pgTAP), Lighthouse (mobile) (budgets in
-  `lighthouserc.json`; required once added to branch protection). Informational: e2e in
-  WebKit (two shards), not a merge gate because it is unstable on the runners; e2e
-  (preview), the host-independent specs against the PR's own Vercel preview
+  `lighthouserc.json`; required once added to branch protection). WebKit runs locally only
+  since #184 (`pnpm test:e2e --project=mobile`; run it for Safari-sensitive changes).
+  Informational: e2e (preview), the host-independent specs against the PR's own Vercel preview
   (`E2E_BASE_URL`, `tests/e2e/target.ts`), required once it has proven stable (#45).
   Guide: docs/guides/ci.md.
 - **Validation before pushing**
