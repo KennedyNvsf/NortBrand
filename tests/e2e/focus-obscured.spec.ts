@@ -1,5 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import { onPreview } from "./target";
+
 /*
  * WCAG 2.4.11 Focus Not Obscured (Minimum), #177: a control that takes keyboard focus is
  * never entirely covered by the sticky header or a bottom layer (Sticky CTA, promo card,
@@ -97,6 +99,9 @@ test.describe("focus is never hidden under a fixed layer", () => {
 
   test.describe("with the cookie banner up", () => {
     test.use({ storageState: { cookies: [], origins: [] } });
+    // Fresh browser state drops a preview's bypass cookie (target.ts); the banner
+    // doesn't depend on the host, so the local run covers it.
+    test.skip(onPreview, "needs a fresh browser state");
 
     test("on /en/contact", async ({ page, browserName }) => {
       test.setTimeout(90_000);
