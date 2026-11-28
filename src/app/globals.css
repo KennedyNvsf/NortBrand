@@ -657,8 +657,17 @@ body[data-scroll-locked] [data-slot="sticky-cta"] {
     @apply border-border;
   }
 
+  /* Focus and in-page anchors stop clear of the fixed layers (WCAG 2.4.11, #177): below
+     the header, and above whatever bottom layer is showing (Sticky CTA, promo card,
+     cookie banner), which src/lib/fixed-bottom-inset.ts measures into
+     --fixed-bottom-inset. Safari otherwise scrolls a focused control only just into
+     view, under them. This replaces per-element scroll-margin on anchor targets. */
   html {
     -webkit-text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--header-height) + var(--spacing-md));
+    scroll-padding-bottom: calc(
+      var(--fixed-bottom-inset, 0px) + var(--spacing-md)
+    );
   }
 
   body {
@@ -779,6 +788,16 @@ body[data-promo-card] [data-slot="sticky-cta"] {
   visibility: hidden;
   transition-property: opacity, translate, visibility;
   transition-delay: 0s, 0s, var(--duration-base);
+}
+
+/* At the very end of the page there is nothing left to scroll, so the footer's last row
+   would stay under a bottom layer that doesn't step aside there (#177). While the promo
+   card or the cookie banner is up, the page gets that much room at the end. The Sticky
+   CTA needs none: it hides over the footer (data-sticky-cta-hide), and padding that
+   came and went with it would make the page jump. */
+body[data-promo-card],
+body:has([data-consent-banner]) {
+  padding-bottom: var(--fixed-bottom-inset, 0px);
 }
 
 /*

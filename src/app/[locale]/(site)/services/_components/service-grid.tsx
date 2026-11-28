@@ -26,7 +26,7 @@ import { serviceIllustrations } from "./service-illustrations";
  *   horizontal, with it in a 272 px panel on the left. The wide cards are horizontal:
  *   the last two on desktop, the full-width fifth on tablet. Mobile is all vertical.
  * - Each card's id is its slug, so /services#web-design (Home cards, footer links)
- *   lands on it; scroll-mt keeps it clear of the fixed header.
+ *   lands on it; the page's scroll-padding keeps it clear of the header (#177).
  * - One interactive element per card: the "What's included" trigger. Its ::after
  *   covers the card (it is made `static`, so the after anchors to the card), so a click
  *   anywhere opens the details, while keyboard and screen-reader users meet a single,
@@ -133,7 +133,7 @@ export async function ServiceGrid() {
                   id={slug}
                   aria-labelledby={titleId}
                   className={cn(
-                    "group/card relative flex w-full scroll-mt-24 flex-col overflow-hidden rounded-lg border border-border-default bg-bg-surface shadow-card",
+                    "group/card relative flex w-full flex-col overflow-hidden rounded-lg border border-border-default bg-bg-surface shadow-card",
                     // Hover: the shadow deepens (no lift, Motion Spec › Service cards).
                     "transition-shadow duration-(--duration-base) ease-emphasized hover:shadow-card-hover",
                     // Press: the shadow flattens. No scale or shift while pressed: moving

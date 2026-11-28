@@ -3,15 +3,15 @@
 The written report for #84. It records what was checked, on which pages, and the result
 of each check. Target: WCAG 2.2 AA plus the project rules in CLAUDE.md › Accessibility.
 
-| Pass                          | Date       | Build                            | Status                                                   |
-| ----------------------------- | ---------- | -------------------------------- | -------------------------------------------------------- |
-| Early pass (1440, 768, 390)   | 2026-10-25 | `main` before #93                | Done. Three failures found, each fixed in its own ticket |
-| Automated pass (this report)  | 2026-11-06 | `main` at `152d8ec` (after #95)  | Done. No open failure                                    |
-| Screen readers                | —          | —                                | **Pending**, needs a person (§ 5)                        |
-| WebKit engine (§ 4.1)         | 2026-11-07 | `main` at `76576f9` (after #105) | Done. No open failure; keyboard limited (§ 4.1)          |
-| Real Safari (iOS)             | —          | —                                | **Pending**, needs an iPhone (§ 5)                       |
-| Rerun with final copy + legal | 2026-11-27 | `main` at `9646605` (after #175) | Done (§ 3a). Chromium: no failure. WebKit: one, #177     |
-| Portal (automated, § 6)       | 2026-11-22 | `main` at `1a56354` + #143       | Done. One failure fixed in #143; no open failure         |
+| Pass                          | Date       | Build                            | Status                                                        |
+| ----------------------------- | ---------- | -------------------------------- | ------------------------------------------------------------- |
+| Early pass (1440, 768, 390)   | 2026-10-25 | `main` before #93                | Done. Three failures found, each fixed in its own ticket      |
+| Automated pass (this report)  | 2026-11-06 | `main` at `152d8ec` (after #95)  | Done. No open failure                                         |
+| Screen readers                | —          | —                                | **Pending**, needs a person (§ 5)                             |
+| WebKit engine (§ 4.1)         | 2026-11-07 | `main` at `76576f9` (after #105) | Done. No open failure; keyboard limited (§ 4.1)               |
+| Real Safari (iOS)             | —          | —                                | **Pending**, needs an iPhone (§ 5)                            |
+| Rerun with final copy + legal | 2026-11-27 | `main` at `9646605` (after #175) | Done (§ 3a). Chromium: no failure. WebKit: one, fixed in #177 |
+| Portal (automated, § 6)       | 2026-11-22 | `main` at `1a56354` + #143       | Done. One failure fixed in #143; no open failure              |
 
 #84 stays open until the pending passes are recorded here.
 
@@ -21,17 +21,17 @@ of each check. Target: WCAG 2.2 AA plus the project rules in CLAUDE.md › Acces
   The final-content rerun (§ 3a) covers 30 pages × 4 widths = 120 page checks in
   Chromium, with the final English, the final (informal) Portuguese and the reviewed
   legal text.
-- **One open failure, ticketed:** #177. In WebKit (Safari's engine), some controls that
+- **One failure from the final-content rerun, fixed in #177.** In WebKit (Safari's engine), some controls that
   take keyboard focus at the edge of the screen end up entirely under the sticky header or
   the mobile bottom bar (WCAG 2.4.11 Focus Not Obscured, AA). Chromium passes (§ 4.1).
 - **Three failures from the early pass are fixed:**
 
-  | Ticket | Failure                                                       | WCAG                                 |
-  | ------ | ------------------------------------------------------------- | ------------------------------------ |
-  | #93    | Services tab panel took focus with no visible ring            | 2.4.7 Focus Visible (AA)             |
-  | #94    | The 404 showed the Home page's title                          | 2.4.2 Page Titled (A)                |
-  | #95    | Logo links, chips and short footer links were under 44 px     | Project rule (2.5.8 passes)          |
-  | #177   | Keyboard focus hidden under the header or bottom bar (WebKit) | 2.4.11 Focus Not Obscured (AA), open |
+  | Ticket | Failure                                                       | WCAG                           |
+  | ------ | ------------------------------------------------------------- | ------------------------------ |
+  | #93    | Services tab panel took focus with no visible ring            | 2.4.7 Focus Visible (AA)       |
+  | #94    | The 404 showed the Home page's title                          | 2.4.2 Page Titled (A)          |
+  | #95    | Logo links, chips and short footer links were under 44 px     | Project rule (2.5.8 passes)    |
+  | #177   | Keyboard focus hidden under the header or bottom bar (WebKit) | 2.4.11 Focus Not Obscured (AA) |
 
 - **One accepted exception:** the Services hero video loops with no pause control, which
   fails WCAG 2.2.2 Pause, Stop, Hide (A). It is the lead's decision (#80 closed as not
@@ -127,7 +127,10 @@ plus the three translated posts per locale: 30 pages.
   fixed bar (the Sticky CTA, or the promo card in its slot: Services' "What's included"
   triggers, the footer's Cookie settings, 390). The check: no sampled point of the focused
   control reaches `elementFromPoint`. Chromium scrolls further and has no such stop. The
-  page sets no `scroll-padding`; the fix is tracked in #177.
+  page set no `scroll-padding`. **Fixed in #177:** the page reserves the header and the
+  showing bottom layer as scroll padding, a layer that appears over a keyboard-focused
+  control scrolls it back into view, and `tests/e2e/focus-obscured.spec.ts` guards it
+  (Chromium desktop and the WebKit mobile project: no stop left hidden).
 
 ## 4. How each check was run
 
@@ -188,7 +191,6 @@ inside Safari) on Windows, at 1440 and 390, on all 28 pages: 56 page checks.
 | VoiceOver (iOS)         | a person, on an iPhone | Home, Services (tabs), Contact (form: errors, send failed, success), Blog (filters), one post, mobile menu, cookie banner               |
 | NVDA (Windows, Firefox) | a person               | The same pages                                                                                                                          |
 | Real Safari (iOS)       | a person, on an iPhone | The same pages: layout under the toolbar and safe areas, no zoom when a form field is focused, the menu and cookie sheet. Engine: § 4.1 |
-| #177                    | Claude                 | Fix and verify in WebKit; then mark it fixed in § 1                                                                                     |
 
 For each screen-reader pass, record here: landmarks and headings read in order; every
 control has a name and role; form errors are announced; the menu, dialog and banner move

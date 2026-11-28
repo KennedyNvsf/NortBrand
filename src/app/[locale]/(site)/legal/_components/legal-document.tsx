@@ -70,7 +70,7 @@ export async function LegalDocument({
                     key={section.id}
                     id={section.id}
                     aria-labelledby={`${section.id}-title`}
-                    className="flex scroll-mt-28 flex-col gap-md pb-4.5"
+                    className="flex flex-col gap-md pb-4.5"
                   >
                     <span
                       aria-hidden

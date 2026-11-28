@@ -46,16 +46,13 @@ function components(
       h2: ({ children, value }) => (
         <h2
           id={id(value)}
-          className="scroll-mt-28 pt-2 text-[28px] leading-[1.18] font-bold tracking-[-0.005em] text-text-primary md:pt-5 md:text-[32px]"
+          className="pt-2 text-[28px] leading-[1.18] font-bold tracking-[-0.005em] text-text-primary md:pt-5 md:text-[32px]"
         >
           {children}
         </h2>
       ),
       h3: ({ children, value }) => (
-        <h3
-          id={id(value)}
-          className="scroll-mt-28 text-h4 font-semibold text-text-primary"
-        >
+        <h3 id={id(value)} className="text-h4 font-semibold text-text-primary">
           {children}
         </h3>
       ),

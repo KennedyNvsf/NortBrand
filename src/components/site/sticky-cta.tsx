@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { BookingButton } from "@/components/site/booking-button";
 import { useConsent } from "@/features/consent/consent-store";
+import { useFixedBottomInset } from "@/lib/fixed-bottom-inset";
 import { cn } from "@/lib/utils";
 
 /*
@@ -60,9 +61,13 @@ export function StickyCta() {
   const t = useTranslations("StickyCta");
   const decided = useConsent().status === "decided";
   const visible = useStickyCtaVisible() && decided;
+  const ref = useRef<HTMLElement>(null);
+  // Focus and anchors stop above the bar while it shows (#177).
+  useFixedBottomInset("sticky-cta", ref, visible);
 
   return (
     <aside
+      ref={ref}
       data-slot="sticky-cta"
       data-visible={visible || undefined}
       aria-label={t("label")}
