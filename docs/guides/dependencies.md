@@ -92,6 +92,15 @@ major and minor versions without review.
 Neither one is in the site's bundle or on the server at runtime. Both process our own
 input, not visitors'. Re-check them whenever `sanity` or `shadcn` is upgraded.
 
+**Pre-launch audit (2026-11-28, #184):** `pnpm audit` reports 13 (2 high, 10 moderate,
+1 low); `pnpm audit --prod` reports 3 moderate. None is in what the site runs:
+
+- the 2 high: `zod` 3.25.76 (above) and `systeminformation` < 5.33.16 (GHSA-3f7j-7jwc-fxfj,
+  a Windows command injection), both inside the `shadcn` CLI, a dev dependency. The app's
+  own `zod` is 4.6.7, already patched;
+- the 3 "production" moderates: `minimatch` inside the Sanity CLI (`next-sanity` →
+  `sanity` → `@sanity/cli`), which the site never runs.
+
 **Lighthouse CI is kept out of `package.json` (decided 2026-11-05, #83).** `@lhci/cli`
 0.15.1 brings five high findings through Lighthouse and Puppeteer (`tmp`,
 `extract-zip` ×2, `basic-ftp`, `zod` 3), and `zod` 3 can't be patched with an override.

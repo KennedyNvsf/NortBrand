@@ -90,10 +90,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Required: desktop and mobile (iPhone 14 viewport and touch) in Chromium.
-        # Informational: real WebKit, which hangs and crashes intermittently on these
-        # runners (decided 2026-10-16; docs/tech-debt.md). It runs in two shards and is
-        # not a required check, so its failures are visible but never block a merge.
+        # Desktop and mobile (iPhone 14 viewport and touch) in Chromium, both required.
+        # Real WebKit ran here as two informational shards until #184; it hangs and
+        # crashes intermittently on these runners and cost the most minutes, so it runs
+        # locally now (`pnpm test:e2e`, project "mobile"; docs/guides/ci.md).
         include:
           - check: e2e (desktop)
             project: desktop
@@ -103,14 +103,6 @@ jobs:
             project: mobile-chromium
             browser: chromium
             shard: 1/1
-          - check: e2e (webkit 1/2, informational)
-            project: mobile
-            browser: webkit
-            shard: 1/2
-          - check: e2e (webkit 2/2, informational)
-            project: mobile
-            browser: webkit
-            shard: 2/2
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

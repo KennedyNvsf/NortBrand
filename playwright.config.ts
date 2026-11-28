@@ -62,7 +62,7 @@ export default defineConfig({
     { name: "mobile", use: { ...devices["iPhone 14"] } },
     // CI only (#44): the iPhone 14 viewport, touch and user agent in Chromium. It is the
     // required mobile check, because WebKit on GitHub's Linux runners hangs and crashes
-    // intermittently; WebKit ("mobile") still runs there as an informational check.
+    // intermittently. WebKit ("mobile") runs locally only since #184 (docs/guides/ci.md).
     ...(process.env.CI
       ? [
           {
