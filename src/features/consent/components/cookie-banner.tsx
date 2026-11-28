@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useRef } from "react";
 import { m, useReducedMotion } from "motion/react";
 import { useTranslations } from "next-intl";
 
@@ -15,6 +15,7 @@ import {
   consentBannerSpec,
   reducedMotionDuration,
 } from "@/lib/motion";
+import { useFixedBottomInset } from "@/lib/fixed-bottom-inset";
 import { cn } from "@/lib/utils";
 
 import { openConsentPreferences, saveConsent } from "../consent-store";
@@ -36,9 +37,13 @@ export function CookieBanner() {
   const titleId = useId();
   const bodyId = useId();
   const reduced = useReducedMotion() ?? false;
+  const ref = useRef<HTMLElement>(null);
+  // Focus and anchors stop above the banner while it shows (#177).
+  useFixedBottomInset("cookie-banner", ref, true);
 
   return (
     <m.section
+      ref={ref}
       aria-labelledby={titleId}
       aria-describedby={bodyId}
       data-consent-banner=""

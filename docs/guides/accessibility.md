@@ -100,5 +100,24 @@ A failure tells you which element failed, its box, and where the first miss land
 - Text links inside paragraphs are exempt. Keep them `display: inline` so the check
   recognises them.
 
+## 6. Focus stays clear of fixed layers (#177)
+
+WCAG 2.4.11 Focus Not Obscured (AA): a control that takes keyboard focus must never be
+entirely covered. Safari scrolls a focused control only just into view, so without help it
+ends up under the sticky header or a layer fixed to the bottom.
+
+- **Top:** `html { scroll-padding-top }` is the header height plus 16 px (globals.css). It
+  also places in-page anchor targets, so don't add `scroll-mt-*` to them: the offsets add
+  up.
+- **Bottom:** each fixed bottom layer calls `useFixedBottomInset(id, ref, active)`
+  (`src/lib/fixed-bottom-inset.ts`): the Sticky CTA, the promo card and the cookie banner.
+  The tallest one showing becomes `--fixed-bottom-inset`, which `scroll-padding-bottom`
+  reserves. A layer that appears over a keyboard-focused control scrolls it back into view.
+- **End of the page:** with nothing left to scroll, the footer's last row could stay under
+  the promo card or the cookie banner, so while either is up `body` gets that much bottom
+  padding. The Sticky CTA hides over the footer, so it doesn't need it.
+- **A new fixed layer** at the bottom (a toast that stays, a chat button): register it with
+  the hook, and add it to `tests/e2e/focus-obscured.spec.ts` if it appears on its own.
+
 The pre-launch audit report, with results for every page and check, is in
 [`docs/accessibility-audit.md`](../accessibility-audit.md) (#84).

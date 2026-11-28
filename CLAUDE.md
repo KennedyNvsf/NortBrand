@@ -455,6 +455,8 @@ Rules:
   `touch-target` utility to grow a small element's hit area without changing its look.
   The page harness hit-tests every control at 390 px (docs/guides/accessibility.md).
 - Errors always pair an icon with text.
+- Focus is never hidden under a fixed layer (2.4.11, #177): `scroll-padding` on `html`; a
+  new bottom-fixed layer registers with `useFixedBottomInset` (docs/guides/accessibility.md § 6).
 - `prefers-reduced-motion` falls back to opacity fades of 150 ms or less.
 
 ## Confirmed assumptions

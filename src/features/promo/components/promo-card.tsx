@@ -1,9 +1,10 @@
 "use client";
 
 import { X } from "lucide-react";
-import type { AnimationEvent } from "react";
+import { useRef, type AnimationEvent } from "react";
 
 import { BookingButton } from "@/components/site/booking-button";
+import { useFixedBottomInset } from "@/lib/fixed-bottom-inset";
 import { ICON_STROKE } from "@/lib/icons";
 
 import type { PromoCopy } from "./promo-copy";
@@ -30,12 +31,17 @@ export function PromoCard({
   /** Called once the exit animation has finished, so the card can unmount. */
   onExited: () => void;
 }) {
+  const ref = useRef<HTMLElement>(null);
+  // Focus and anchors stop above the card while it shows (#177).
+  useFixedBottomInset("promo-card", ref, !closing);
+
   const handleAnimationEnd = (event: AnimationEvent<HTMLElement>) => {
     if (closing && event.target === event.currentTarget) onExited();
   };
 
   return (
     <aside
+      ref={ref}
       aria-labelledby="promo-card-title"
       data-motion="promo-card"
       data-state={closing ? "closed" : "open"}
